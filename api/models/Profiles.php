@@ -25,49 +25,59 @@ use Yii;
  */
 class Profiles extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'profiles';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'profiles';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['ProfileStatusID', 'PlanID', 'PlanOptionID', 'CreatedBy', 'Deleted'], 'integer'],
-            [['PlanExpiry', 'CreatedDate'], 'safe'],
-            [['FirstName', 'LastName', 'Mobile', 'ValidationCode'], 'string', 'max' => 45],
-            [['Email'], 'string', 'max' => 250],
-            [['PasswordHash', 'AuthKey'], 'string', 'max' => 128],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['ProfileStatusID', 'PlanID', 'PlanOptionID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['PlanExpiry', 'CreatedDate'], 'safe'],
+			[['FirstName', 'LastName', 'Mobile', 'ValidationCode'], 'string', 'max' => 45],
+			[['Email'], 'string', 'max' => 250],
+			[['PasswordHash', 'AuthKey'], 'string', 'max' => 128],
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'ProfileID' => 'Profile ID',
-            'FirstName' => 'First Name',
-            'LastName' => 'Last Name',
-            'Email' => 'Email',
-            'Mobile' => 'Mobile',
-            'PasswordHash' => 'Password Hash',
-            'AuthKey' => 'Auth Key',
-            'ValidationCode' => 'Validation Code',
-            'ProfileStatusID' => 'Profile Status ID',
-            'PlanID' => 'Plan ID',
-            'PlanOptionID' => 'Plan Option ID',
-            'PlanExpiry' => 'Plan Expiry',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'ProfileID' => 'Profile ID',
+			'FirstName' => 'First Name',
+			'LastName' => 'Last Name',
+			'Email' => 'Email',
+			'Mobile' => 'Mobile',
+			'PasswordHash' => 'Password Hash',
+			'AuthKey' => 'Auth Key',
+			'ValidationCode' => 'Validation Code',
+			'ProfileStatusID' => 'Profile Status ID',
+			'PlanID' => 'Plan ID',
+			'PlanOptionID' => 'Plan Option ID',
+			'PlanExpiry' => 'Plan Expiry',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
+
+	public function getProfiles() 
+	{
+		return $this->hasOne(Users::className(), ['ProfileID' => 'CreatedBy'])->from(profiles::tableName());
+	}
+
+	public function getProfilestatus() 
+	{
+		return $this->hasOne(UserStatus::className(), ['ProfileStatusID' => 'ProfileStatusID'])->from(profilestatus::tableName());
+	}
 }
