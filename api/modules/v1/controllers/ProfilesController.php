@@ -30,7 +30,11 @@ class ProfilesController extends ActiveController
 			'class' => \yii\filters\Cors::className(),
 			'cors' => [
 					// restrict access to
-					'Origin' => ['https://localhost'],
+					'Origin' => ['capacitor://localhost',
+					'ionic://localhost',
+					'http://localhost',
+					'http://localhost:8080',
+					'http://localhost:8100'],
 					// Allow only POST and PUT methods
 					'Access-Control-Request-Method' => ['POST', 'PUT'],
 					// Allow only headers 'X-Wsse'
@@ -72,14 +76,14 @@ class ProfilesController extends ActiveController
 
 	public function actionIndex()
 	{
-		$model = Profiles::find()->select('Profiles.ProfileID,
-													Profiles.FirstName,
-													Profiles.LastName,
-													Profiles.Mobile,
-													Profiles.Email,
-													Profiles.ProfilestatusID,
-													Profiles.CreatedDate,
-													Profiles.CreatedBy')
+		$model = Profiles::find()->select('profiles.ProfileID,
+													profiles.FirstName,
+													profiles.LastName,
+													profiles.Mobile,
+													profiles.Email,
+													profiles.ProfilestatusID,
+													profiles.CreatedDate,
+													profiles.CreatedBy')
 										->joinWith([
 											'profiles as u' => function($query){
 													$query->select('u.ProfileID, u.FirstName, u.LastName');

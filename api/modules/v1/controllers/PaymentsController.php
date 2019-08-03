@@ -2,21 +2,21 @@
 
 namespace api\modules\v1\controllers;
 use yii;
-use app\models\Plans;
-use app\models\PlanBenefits;
-use app\models\PlanOptions;
+use app\models\Payments;
+use app\models\Profiles;
+use app\models\Predictions;
 use yii\helpers\ArrayHelper;
 
 use yii\rest\ActiveController;
 
 /**
- * Plans Controller API
+ * Payments Controller API
  *
  * @author Joseph 
  */
-class PlansController extends ActiveController
+class PaymentsController extends ActiveController
 {
-	public $modelClass = 'app\models\Plans';   
+	public $modelClass = 'app\models\Payments';   
 
 	public function behaviors()
 	{
@@ -71,22 +71,46 @@ class PlansController extends ActiveController
 	{
 		$actions = parent::actions();
 		unset($actions['index']);
+		unset($actions['create']);
 		return $actions;
 	}
 
 	public function actionIndex()
 	{
-		$model = Plans::find()->all();
-		$AllPlans = [];
-		foreach ($model as $key => $plan) {
-			$AllPlans[$key] = ['PlanID' => $plan->PlanID, 'PlanName' => $plan->PlanName];
-			$AllPlans[$key]['benefits'] = PlanBenefits::find()->where(['PlanID' => $plan->PlanID])->joinWith('benefits')->asArray()->all();  
-			$AllPlans[$key]['options'] = PlanOptions::find()->where(['PlanID' => $plan->PlanID])->asArray()->all();  
-		}	
-		return $AllPlans;
+		$Date = $_GET['date'];
+		$model = Predictions::find()->joinWith('regions')->joinWith('leagues')
+										->where("predictions.Deleted = 0 AND Date(GameTime) = '$Date'")
+										->orderBy('GameTime')
+										->asArray()
+										->all();
+		return $model;
 	}
 
-	public function actionOption($id) {
-		return PlanOptions::findOne($id);
+	public function actionCreate() {
+		$model = new Payments();
+
+		$params['Payments'] = Yii::$app->request->post();
+
+		if ($model->load($params) && $model->save()) {
+			$ProfileID = Yii::$app->request->post()['ProfileID'];
+			$profile = Profiles::findOne($ProfileID);
+			$profile->PlanID = $model->PlanID;
+			$profile->PlanOptionID = Yii::$app->request->post()['PlanOptionID'];
+			$profile->PlanExpiry = '2019-09-01';
+			$profile->save();
+			return array(
+				'code' => '00',
+				'message' => 'Successful',
+				'data' => []
+			);
+
+		} else {
+			return array(
+				'code' => '01',
+				'message' => 'Failed to Create Record',
+				'data' => $model->getErrors()
+			);
+		}
+
 	}
 }

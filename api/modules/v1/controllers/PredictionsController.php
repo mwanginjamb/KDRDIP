@@ -28,7 +28,11 @@ class PredictionsController extends ActiveController
 			'class' => \yii\filters\Cors::className(),
 			'cors' => [
 					// restrict access to
-					'Origin' => ['https://localhost'],
+					'Origin' => ['capacitor://localhost',
+					'ionic://localhost',
+					'http://localhost',
+					'http://localhost:8080',
+					'http://localhost:8100'],
 					// Allow only POST and PUT methods
 					'Access-Control-Request-Method' => ['POST', 'PUT'],
 					// Allow only headers 'X-Wsse'
