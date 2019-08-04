@@ -2,22 +2,22 @@
 
 namespace api\modules\v1\controllers;
 use yii;
-use app\models\Apiusers;
+use app\models\Support;
 use yii\helpers\ArrayHelper;
 
 use yii\rest\ActiveController;
 
 /**
- * Apiusers Controller API
+ * Support Controller API
  *
  * @author Joseph 
  */
-class ApiusersController extends ActiveController
+class SupportController extends ActiveController
 {
-    public $modelClass = 'app\models\Apiusers';   
-	
+	public $modelClass = 'app\models\Support';   
+
 	public function behaviors()
-    {
+	{
         $behaviors = parent::behaviors();
     /*
         $behaviors['authenticator'] = [
@@ -28,10 +28,10 @@ class ApiusersController extends ActiveController
             'class' => \yii\filters\Cors::className(),
             'cors' => [
                 'Origin' => ['capacitor://localhost',
-  'ionic://localhost',
-  'http://localhost',
-  'http://localhost:8080',
-  'http://localhost:8100'],
+										'ionic://localhost',
+										'http://localhost',
+										'http://localhost:8080',
+										'http://localhost:8100'],
                 'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
                 'Access-Control-Request-Headers' => ['*'],
                 'Access-Control-Allow-Credentials' => true,
@@ -40,7 +40,7 @@ class ApiusersController extends ActiveController
         ];	
  
         return $behaviors;
-    }	
+    }		
 
 	protected function verbs()
 	{
@@ -67,7 +67,16 @@ class ApiusersController extends ActiveController
 
 	public function actionIndex()
 	{
-		$model = Apiusers::find()->where(['Deleted'=> 0])->orderBy('Username')->all();
+		$Mobile = isset($_GET['Mobile']) ? $_GET['Mobile'] : '0';
+		$model = Support::find()->joinWith('supportstatus')
+										->where("support.Deleted = 0 AND Mobile = '$Mobile'")
+										->orderBy('CreatedDate DESC')
+										->asArray()
+										->all();
 		return $model;
+	}
+
+	public function actionOption($id) {
+		return PlanOptions::findOne($id);
 	}
 }

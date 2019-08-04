@@ -18,7 +18,7 @@ class ProfilesController extends ActiveController
 {
     public $modelClass = 'app\models\Profiles';   
 	
-	public function behaviors()
+    public function behaviors()
 	{
         $behaviors = parent::behaviors();
     /*
@@ -27,29 +27,22 @@ class ProfilesController extends ActiveController
         ];
         */
         $behaviors['corsFilter'] = [
-			'class' => \yii\filters\Cors::className(),
-			'cors' => [
-					// restrict access to
-					'Origin' => ['capacitor://localhost',
-					'ionic://localhost',
-					'http://localhost',
-					'http://localhost:8080',
-					'http://localhost:8100'],
-					// Allow only POST and PUT methods
-					'Access-Control-Request-Method' => ['POST', 'PUT'],
-					// Allow only headers 'X-Wsse'
-					'Access-Control-Request-Headers' => ['X-Wsse'],
-					// Allow credentials (cookies, authorization headers, etc.) to be exposed to the browser
-					'Access-Control-Allow-Credentials' => true,
-					// Allow OPTIONS caching
-					'Access-Control-Max-Age' => 3600,
-					// Allow the X-Pagination-Current-Page header to be exposed to the browser.
-					'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-			],
-		];
+            'class' => \yii\filters\Cors::className(),
+            'cors' => [
+                'Origin' => ['capacitor://localhost',
+										'ionic://localhost',
+										'http://localhost',
+										'http://localhost:8080',
+										'http://localhost:8100'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'],
+                'Access-Control-Request-Headers' => ['*'],
+                'Access-Control-Allow-Credentials' => true,
+                'Access-Control-Max-Age' => 86400,
+            ],
+        ];	
  
         return $behaviors;
-	}	
+    }	
 
 	protected function verbs()
 	{
@@ -76,14 +69,14 @@ class ProfilesController extends ActiveController
 
 	public function actionIndex()
 	{
-		$model = Profiles::find()->select('profiles.ProfileID,
-													profiles.FirstName,
-													profiles.LastName,
-													profiles.Mobile,
-													profiles.Email,
-													profiles.ProfilestatusID,
-													profiles.CreatedDate,
-													profiles.CreatedBy')
+		$model = Profiles::find()->select('Profiles.ProfileID,
+													Profiles.FirstName,
+													Profiles.LastName,
+													Profiles.Mobile,
+													Profiles.Email,
+													Profiles.ProfilestatusID,
+													Profiles.CreatedDate,
+													Profiles.CreatedBy')
 										->joinWith([
 											'profiles as u' => function($query){
 													$query->select('u.ProfileID, u.FirstName, u.LastName');
@@ -98,26 +91,26 @@ class ProfilesController extends ActiveController
 		$params = Yii::$app->request->post();
 		if (!empty($params)) 
 		{
-			$Email = Yii::$app->request->post()['Email'];
+			$Mobile = Yii::$app->request->post()['Mobile'];
 
-			$model = Profiles::findOne([ 'Email'=> $Email, 'ProfileStatusID' => 2 ]);
+			$model = Profiles::findOne([ 'Mobile'=> $Mobile, 'ProfileStatusID' => 2 ]);
 			
 			if (!empty($model))
 			{
 				if (Yii::$app->security->validatePassword($params['Password'], $model->PasswordHash))
 				{	
 					$model = Profiles::find()->select('
-																	Profiles.ProfileID,
-																	Profiles.FirstName,
-																	Profiles.LastName,
-																	Profiles.Email,
-																	Profiles.Mobile,																
-																	Profiles.ProfileStatusID,
-																	Profiles.PlanID,
-																	Profiles.PlanOptionID,
-																	Profiles.PlanExpiry'
+																	profiles.ProfileID,
+																	profiles.FirstName,
+																	profiles.LastName,
+																	profiles.Email,
+																	profiles.Mobile,																
+																	profiles.ProfileStatusID,
+																	profiles.PlanID,
+																	profiles.PlanOptionID,
+																	profiles.PlanExpiry'
 																)
-										->where([ 'Email'=> $Email ])->asArray()->one();
+										->where([ 'Mobile'=> $Mobile ])->asArray()->one();
 
 					return array('code' => '00', 'message' => 'Successful', 'data' => $model);
 				} else
@@ -145,6 +138,7 @@ class ProfilesController extends ActiveController
 		}
 		$_params['Profiles'] = $params; 
 		$model = new Profiles();
+		$model->ProfileStatusID = 2; 
 		if ($model->load($_params) && $model->save()) {
 			$data = array(
 				'ProfileID' => $model->ProfileID,

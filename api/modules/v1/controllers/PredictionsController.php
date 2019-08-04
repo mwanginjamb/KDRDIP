@@ -29,10 +29,10 @@ class PredictionsController extends ActiveController
 			'cors' => [
 					// restrict access to
 					'Origin' => ['capacitor://localhost',
-					'ionic://localhost',
-					'http://localhost',
-					'http://localhost:8080',
-					'http://localhost:8100'],
+  'ionic://localhost',
+  'http://localhost',
+  'http://localhost:8080',
+  'http://localhost:8100'],
 					// Allow only POST and PUT methods
 					'Access-Control-Request-Method' => ['POST', 'PUT'],
 					// Allow only headers 'X-Wsse'
