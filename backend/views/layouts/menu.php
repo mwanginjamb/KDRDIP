@@ -43,7 +43,7 @@ $currentPage = Yii::$app->controller->id;
 							</li>
 						</ul>
 					</li>
-					<li class=" nav-item"><a href="#"><i class="material-icons">people_outline</i><span class="menu-title" data-i18n="nav.project.main">Members</span></a>
+					<li class=" nav-item"><a href="#"><i class="material-icons">people_outline</i><span class="menu-title" data-i18n="nav.project.main">Profiles</span></a>
 						<ul class="menu-content">
 							<li <?= ($currentPage == 'profiles') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/profiles"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Profiles</span></a>
 							</li>

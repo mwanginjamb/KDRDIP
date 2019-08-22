@@ -10,7 +10,7 @@ use yii\rest\ActiveController;
 /**
  * Predictions Controller API
  *
- * @author Joseph 
+ * @author Joseph
  */
 class PredictionsController extends ActiveController
 {
@@ -21,7 +21,7 @@ class PredictionsController extends ActiveController
 		$behaviors = parent::behaviors();
 	/*
 		$behaviors['authenticator'] = [
-				'class' => HttpBearerAuth::className(),	
+				'class' => HttpBearerAuth::className(),
 		];
 		*/
 		$behaviors['corsFilter'] = [
@@ -29,10 +29,11 @@ class PredictionsController extends ActiveController
 			'cors' => [
 					// restrict access to
 					'Origin' => ['capacitor://localhost',
-  'ionic://localhost',
-  'http://localhost',
-  'http://localhost:8080',
-  'http://localhost:8100'],
+						'ionic://localhost',
+						'http://localhost',
+						'http://localhost:8080',
+						'http://localhost:8100'
+					],
 					// Allow only POST and PUT methods
 					'Access-Control-Request-Method' => ['POST', 'PUT'],
 					// Allow only headers 'X-Wsse'
@@ -47,7 +48,7 @@ class PredictionsController extends ActiveController
 		];
 
 		return $behaviors;
-	}		
+	}
 
 	protected function verbs()
 	{
@@ -75,8 +76,9 @@ class PredictionsController extends ActiveController
 	public function actionIndex()
 	{
 		$Date = $_GET['date'];
+		$Free = isset($_GET['free']) ? ' AND Free = 1' : '';
 		$model = Predictions::find()->joinWith('regions')->joinWith('leagues')
-										->where("predictions.Deleted = 0 AND Date(GameTime) = '$Date'")
+										->where("predictions.Deleted = 0 AND Date(GameTime) = '$Date' $Free")
 										->orderBy('GameTime')
 										->asArray()
 										->all();

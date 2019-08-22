@@ -20,11 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
 		<div class="content-body">
 				<section class="flexbox-container">
 					<div class="col-12 d-flex align-items-center justify-content-center">
-						<div class="col-lg-3 col-md-6 col-5 box-shadow-2 p-0">
+						<div class="col-lg-4 col-md-8 col-5 box-shadow-2 p-0">
 								<div class="card border-grey border-lighten-3 m-0">
 									<div class="card-header border-0">
 										<div class="card-title text-center">
-												<div class="p-1"><img src="<?= $baseUrl; ?>/app-assets/images/logo/logo-dark.png" alt="branding logo"></div>
+												<div class="p-1"><img src="<?= $baseUrl; ?>/app-assets/images/logo/appicon.png" alt="branding logo"></div>
 										</div>
 										<h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span><?= Html::encode($this->title) ?></span></h6>
 									</div>

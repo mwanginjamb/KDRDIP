@@ -32,6 +32,7 @@ class AppAsset extends AssetBundle
 		'app-assets/fonts/simple-line-icons/style.css',
 		'app-assets/css/core/colors/material-palette-gradient.css',
 		'app-assets/vendors/css/tables/datatable/datatables.min.css',
+		'app-assets/css/plugins/forms/checkboxes-radios.css',
 
 		// BEGIN: Custom CSS
 		'assets/css/style.css'
@@ -63,7 +64,9 @@ class AppAsset extends AssetBundle
 		'app-assets/js/scripts/forms/form-login-register.js',
 		'app-assets/js/scripts/tables/datatables/datatable-basic.js',
 		'app-assets/vendors/js/ui/headroom.min.js',
-    	'app-assets/vendors/js/tables/datatable/datatables.min.js',
+		'app-assets/vendors/js/tables/datatable/datatables.min.js',
+		'app-assets/vendors/js/forms/icheck/icheck.min.js',
+		'app-assets/js/scripts/forms/checkbox-radio.js'
 		// END: Page JS-->
 	];
 	public $depends = [

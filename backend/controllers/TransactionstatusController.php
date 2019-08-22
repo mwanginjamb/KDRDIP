@@ -14,114 +14,112 @@ use yii\filters\VerbFilter;
  */
 class TransactionstatusController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		return [
+			'verbs' => [
+					'class' => VerbFilter::className(),
+					'actions' => [
+						'delete' => ['POST'],
+					],
+			],
+		];
+	}
 
-    /**
-     * Lists all TransactionStatus models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => TransactionStatus::find(),
-        ]);
+	/**
+	 * Lists all TransactionStatus models.
+	 * @return mixed
+	 */
+	public function actionIndex()
+	{
+		return $this->render('index', [
+			'model' => TransactionStatus::find()->all(),
+		]);
+	}
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+	/**
+	 * Displays a single TransactionStatus model.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionView($id)
+	{
+		return $this->render('view', [
+			'model' => $this->findModel($id),
+		]);
+	}
 
-    /**
-     * Displays a single TransactionStatus model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+	/**
+	 * Creates a new TransactionStatus model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		$model = new TransactionStatus();
 
-    /**
-     * Creates a new TransactionStatus model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new TransactionStatus();
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			// return $this->redirect(['view', 'id' => $model->TransactionStatusID]);
+			return $this->redirect(['index']);
+		}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->TransactionStatusID]);
-        }
+		return $this->render('create', [
+			'model' => $model,
+		]);
+	}
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+	/**
+	 * Updates an existing TransactionStatus model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
 
-    /**
-     * Updates an existing TransactionStatus model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			// return $this->redirect(['view', 'id' => $model->TransactionStatusID]);
+			return $this->redirect(['index']);
+		}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->TransactionStatusID]);
-        }
+		return $this->render('update', [
+			'model' => $model,
+		]);
+	}
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+	/**
+	 * Deletes an existing TransactionStatus model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
 
-    /**
-     * Deletes an existing TransactionStatus model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+		return $this->redirect(['index']);
+	}
 
-        return $this->redirect(['index']);
-    }
+	/**
+	 * Finds the TransactionStatus model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return TransactionStatus the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if (($model = TransactionStatus::findOne($id)) !== null) {
+			return $model;
+		}
 
-    /**
-     * Finds the TransactionStatus model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return TransactionStatus the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = TransactionStatus::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+		throw new NotFoundHttpException('The requested page does not exist.');
+	}
 }

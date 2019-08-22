@@ -95,9 +95,8 @@ class ProfilesController extends ActiveController
 			$model = Profiles::findOne([ 'Mobile'=> $Mobile, 'ProfileStatusID' => 2 ]);
 			
 			if (!empty($model)) {
-				if (Yii::$app->security->validatePassword($params['Password'], $model->PasswordHash)) {	
-					$model = Profiles::find()->select('
-																	profiles.ProfileID,
+				if (Yii::$app->security->validatePassword($params['Password'], $model->PasswordHash)) {
+					$model = Profiles::find()->select('profiles.ProfileID,
 																	profiles.FirstName,
 																	profiles.LastName,
 																	profiles.Email,
@@ -105,8 +104,7 @@ class ProfilesController extends ActiveController
 																	profiles.ProfileStatusID,
 																	profiles.PlanID,
 																	profiles.PlanOptionID,
-																	profiles.PlanExpiry'
-																)
+																	profiles.PlanExpiry')
 										->where([ 'Mobile'=> $Mobile ])->asArray()->one();
 
 					return ['code' => '00', 'message' => 'Successful', 'data' => $model];
@@ -162,7 +160,7 @@ class ProfilesController extends ActiveController
 		return $channel;
 	}
 
-	public function actionExists()
+	public function actionValidate()
 	{
 		if (!empty(Yii::$app->request->post())) {
 			$Mobile = Yii::$app->request->post()['Mobile'];
@@ -173,9 +171,20 @@ class ProfilesController extends ActiveController
 			
 			$model = Profiles::findOne(['Mobile' => $Mobile]);
 			if (!empty($model)) {
-				return ['ProfileID' => $model->ProfileID, 'ProfilestatusID' => $model->ProfilestatusID];
+				$model->ValidationCode = $this->generatecode($Mobile);
+				if ($model->save()) {
+					$mobile = trim($model->Mobile);
+					if ($mobile[0]=='0') {
+						$mobile = substr($mobile, 1, 15);
+					}
+					$mobile = '254' . $mobile;
+					send_sms($mobile, 'Your Code is ' . $model->ValidationCode, 'SHINDA');
+					return ['ProfileID' => $model->ProfileID];
+				} else {
+					throw new \yii\web\HttpException(401, 'Failed to Validate');
+				}				
 			} else {
-				throw new \yii\web\HttpException(401, 'Record Not found');
+				throw new \yii\web\HttpException(401, 'Mobile Not found');
 			}
 		} else {
 			throw new \yii\web\HttpException(400, 'There are no query string');
@@ -187,20 +196,25 @@ class ProfilesController extends ActiveController
 		return 0;
 	}
 
-	public function actionResendcode()
+	public static function generateCode($Mobile)
+	{
+		$model = Profiles::findOne(Yii::$app->request->post()['Mobile']);
+		return (string) rand(1000, 9999);
+	}
+
+	public function actionGeneratecode()
 	{
 		if (!empty(Yii::$app->request->post())) {
-			$model = Profiles::findOne(Yii::$app->request->post()['ProfileID']);
+			$model = Profiles::findOne(Yii::$app->request->post()['Mobile']);
 			if (!empty($model)) {
-				$model->ConfirmationCode = (string) rand(1000, 9999);
+				$model->ValidationCode = $this->generatecode(Yii::$app->request->post()['Mobile']);
 				if ($model->save()) {
-					$country = Countries::findOne($model->CountryID);
 					$mobile = trim($model->Mobile);
 					if ($mobile[0]=='0') {
 						$mobile = substr($mobile, 1, 15);
 					}
-					$mobile = $country->Code . $mobile;
-					send_sms1($mobile, 'Your Code is ' . $model->ConfirmationCode, 'TBAG');
+					$mobile = '254' . $mobile;
+					send_sms($mobile, 'Your Code is ' . $model->ValidationCode, 'SHINDA');
 					return [];
 				} else {
 					throw new \yii\web\HttpException(400, 'Failed to retrieve Code');
@@ -220,7 +234,7 @@ class ProfilesController extends ActiveController
 		$params = ['Profiles' => Yii::$app->request->post()];
 		$model = Profiles::findOne(Yii::$app->request->post()['ProfileID']);
 
-		if ($model->ConfirmationCode == Yii::$app->request->post()['ConfirmationCode']) {
+		if ($model->ValidationCode == Yii::$app->request->post()['ValidationCode']) {
 			$channel = [
 							'code' => '00',
 							'message' => 'Successful',

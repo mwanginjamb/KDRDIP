@@ -7,41 +7,55 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Users */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+<div class="card-content collapse show">
+	<div class="card-body">
 
-<div class="users-form">
+		<?php $form = ActiveForm::begin(); ?>
+		<div class="form-body">
+			<div class="row">
+				<div class="col-md-6">					
+					<?= $form->field($model, 'FirstName')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'LastName')->textInput(['maxlength' => true]) ?>
+				</div>
+			</div>
 
-    <?php $form = ActiveForm::begin(); ?>
+			<div class="row">
+				<div class="col-md-6">					
+					<?= $form->field($model, 'Mobile')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'Email')->textInput(['maxlength' => true]) ?>
+				</div>
+			</div>
 
-    <?= $form->field($model, 'FirstName')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">					
+					<?= $form->field($model, 'UserGroupID')->dropDownList($usergroups, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'UserStatusID')->dropDownList($userstatus, ['prompt'=>'Select']); ?>
+				</div>
+			</div>
 
-    <?= $form->field($model, 'LastName')->textInput(['maxlength' => true]) ?>
+			<?php if ($model->isNewRecord) {?>
 
-    <?= $form->field($model, 'Email')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">					
+					<?= $form->field($model, 'Password')->passwordInput() ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ConfirmPassword')->passwordInput() ?>
+				</div>
+			</div>
+			<?php } ?>
 
-    <?= $form->field($model, 'Mobile')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'PasswordHash')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'AuthKey')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ValidationCode')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'ResetCode')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'UserStatusID')->textInput() ?>
-
-    <?= $form->field($model, 'UserGroupID')->textInput() ?>
-
-    <?= $form->field($model, 'CreatedDate')->textInput() ?>
-
-    <?= $form->field($model, 'CreatedBy')->textInput() ?>
-
-    <?= $form->field($model, 'Deleted')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+			<div class="form-actions">
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
+			</div>
+		</div>
+		<?php ActiveForm::end(); ?>
+	</div>
 </div>

@@ -123,3 +123,7 @@ a.desc:after {
 .help-block-error {
 	color: red;
 }
+
+.help-block {
+	color: red;
+}

@@ -14,6 +14,7 @@ use Yii;
  * @property string $Teams
  * @property string $Prediction
  * @property string $FinalOutcome
+ * @property string $Results
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -37,7 +38,7 @@ class Predictions extends \yii\db\ActiveRecord
 			[['RegionID', 'LeagueID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['GameTime', 'CreatedDate'], 'safe'],
 			[['Teams'], 'string', 'max' => 250],
-			[['Prediction', 'FinalOutcome'], 'string', 'max' => 45],
+			[['Prediction', 'FinalOutcome', 'Results'], 'string', 'max' => 45],
 		];
 	}
 
@@ -54,8 +55,10 @@ class Predictions extends \yii\db\ActiveRecord
 			'Teams' => 'Teams',
 			'Prediction' => 'Prediction',
 			'FinalOutcome' => 'Final Outcome',
+			'Results' => 'Results',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
+			
 			'Deleted' => 'Deleted',
 		];
 	}

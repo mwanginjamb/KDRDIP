@@ -16,41 +16,39 @@ use Yii;
  */
 class PaymentMethods extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'paymentmethods';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'paymentmethods';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['PaymentMethodID'], 'required'],
-            [['PaymentMethodID', 'CreatedBy', 'Deleted'], 'integer'],
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['PaymentMethodName'], 'string', 'max' => 45],
-            [['PaymentMethodID'], 'unique'],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['PaymentMethodName'], 'string', 'max' => 45],
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'PaymentMethodID' => 'Payment Method ID',
-            'PaymentMethodName' => 'Payment Method Name',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'PaymentMethodID' => 'Payment Method ID',
+			'PaymentMethodName' => 'Payment Method Name',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }
