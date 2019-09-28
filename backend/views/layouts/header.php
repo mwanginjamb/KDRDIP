@@ -10,7 +10,7 @@ $user = Yii::$app->user->identity;
 					<ul class="nav navbar-nav flex-row">
 						<li class="nav-item mobile-menu d-lg-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
 						<li class="nav-item mr-auto"><a class="navbar-brand" href="index.html">
-									<h3 class="brand-text">Admin Portal</h3>
+									<h3 class="brand-text">M & E</h3>
 							</a></li>
 						<li class="nav-item d-none d-lg-block nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="toggle-icon ft-toggle-right font-medium-3 white" data-ticon="ft-toggle-right"></i></a></li>
 						<li class="nav-item d-lg-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="material-icons mt-1">more_vert</i></a></li>
@@ -25,7 +25,7 @@ $user = Yii::$app->user->identity;
 													<input class="round form-control" type="text" placeholder="Search Here"></a></div>
 									</a></li> -->
 							<li class="nav-item d-none d-lg-block d-none"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
-							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Shinda Scores</a>
+							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Montoring and Evaluation</a>
 									<ul class="mega-dropdown-menu dropdown-menu row">
 										<li class="col-md-2">
 											<h6 class="dropdown-menu-header text-uppercase mb-1"><i class="material-icons">list_alt</i> News</h6>
@@ -218,7 +218,7 @@ $user = Yii::$app->user->identity;
 									</ul>
 							</li>
 							<li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><span class="mr-1 user-name text-bold-700"><?= $user->FirstName .' '. $user->LastName; ?></span><span class="avatar avatar-online"><img src="<?= $baseUrl; ?>/app-assets/images/portrait/small/avatar-s-19.png" alt="avatar"><i></i></span></a>
-									<div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="user-profile.html"><i class="material-icons">person_outline</i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="material-icons">mail_outline</i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="material-icons">content_paste</i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="material-icons">chat_bubble_outline</i> Chats</a>
+									<div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="<?= $baseUrl; ?>/profile/view"><i class="material-icons">person_outline</i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="material-icons">mail_outline</i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="material-icons">content_paste</i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="material-icons">chat_bubble_outline</i> Chats</a>
 										<div class="dropdown-divider"></div><a class="dropdown-item" href="<?= $baseUrl; ?>/site/logout"><i class="material-icons">power_settings_new</i> Logout</a>
 									</div>
 							</li>

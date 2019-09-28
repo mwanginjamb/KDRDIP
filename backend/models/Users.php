@@ -88,4 +88,14 @@ class Users extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(UserStatus::className(), ['UserStatusID' => 'UserStatusID'])->from(userstatus::tableName());
 	}
+
+	public function getFullName()
+	{
+		return $this->FirstName . ' ' . $this->LastName;
+	}
+
+	public function getUsers()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(['origin' => users::tableName()]);
+	}
 }

@@ -35,8 +35,12 @@ class UserstatusController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$dataProvider = new ActiveDataProvider([
+			'query' => UserStatus::find(),
+		]);
+
 		return $this->render('index', [
-			'model' => UserStatus::find()->all(),
+			'dataProvider' => $dataProvider,
 		]);
 	}
 
@@ -61,6 +65,7 @@ class UserstatusController extends Controller
 	public function actionCreate()
 	{
 		$model = new UserStatus();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			// return $this->redirect(['view', 'id' => $model->UserStatusID]);

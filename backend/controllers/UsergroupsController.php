@@ -35,8 +35,12 @@ class UsergroupsController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$dataProvider = new ActiveDataProvider([
+			'query' => UserGroups::find(),
+		]);
+
 		return $this->render('index', [
-			'model' => UserGroups::find()->all(),
+			'dataProvider' => $dataProvider,
 		]);
 	}
 
@@ -61,6 +65,7 @@ class UsergroupsController extends Controller
 	public function actionCreate()
 	{
 		$model = new UserGroups();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			// return $this->redirect(['view', 'id' => $model->UserGroupID]);

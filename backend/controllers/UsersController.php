@@ -7,6 +7,7 @@ use app\models\Users;
 use app\models\UserGroups;
 use app\models\UserStatus;
 use yii\web\Controller;
+use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
@@ -37,8 +38,13 @@ class UsersController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => $dataProvider = Users::find()->joinWith('userstatus')->joinWith('usergroups'),
+		]);
+		
 		return $this->render('index', [
-			'model' => Users::find()->joinWith('userstatus')->joinWith('usergroups')->all(),
+			'dataProvider' => $dataProvider,
 		]);
 	}
 
@@ -63,6 +69,7 @@ class UsersController extends Controller
 	public function actionCreate()
 	{
 		$model = new Users();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
 		
 		if (Yii::$app->request->post())
 		{

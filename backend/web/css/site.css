@@ -127,3 +127,123 @@ a.desc:after {
 .help-block {
 	color: red;
 }
+
+.custom-table {
+	background-color: #FFFFFF;
+	border: 0;
+	margin-bottom: 1rem;
+	max-width: 100%;
+	width: 100%;
+}
+
+.custom-table tbody td, .custom-table tbody th {
+	font-size: 1rem;
+	font-weight: 400;
+	height: 2.5rem;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	padding-left: 15px !important;
+	padding-right: 15px !important;
+}
+
+.custom-table thead td, .custom-table thead th {
+	font-size: 1rem;
+	font-weight: 400;
+	height: 2.5rem;
+	padding-top: 10px 15px !important;
+	padding-bottom: 10px !important;
+	padding-left: 15px !important;
+	padding-right: 15px !important;
+}
+
+.lines-table {
+	background-color: #FFFFFF;
+	border: 0;
+	margin-bottom: 0rem;
+	max-width: 100%;
+	width: 100%;
+}
+
+.lines-table tbody td, .lines-table tbody th {
+	font-size: 1rem;
+	font-weight: 400;
+	height: 1rem;
+	padding: 0px 15px !important;
+}
+
+.lines-table thead td, .lines-table thead th {
+	font-size: 1rem;
+	font-weight: 400;
+	height: 2.5rem;
+	padding: 0px 15px !important;
+}
+
+.lines-table .form-group {
+	margin-bottom: 1px;
+}
+
+form div.required label.control-label:after {
+	content:" * "; 
+	color:red;
+}
+
+select.form-control {
+	height: 42px;
+}
+ 
+.select2-container--krajee .select2-selection {
+	border-radius: 0px;
+	height:35px;
+}
+
+.select2-container--krajee .select2-selection--single .select2-selection__arrow {
+	border: none;
+	border-left: none;
+	height: 35px;
+	width: 20px;
+}
+
+.lines-input {
+	padding: 0px 5px !important;
+	line-height: 2 !important;
+	height: 28px !important;
+}
+
+.lines-input select.form-control {
+	height: 28px !important;
+}
+
+input[type='checkbox'].form-control {
+	border-color: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	height: 20px;
+	content:" * "; 
+}
+
+input[type='checkbox'].form-control:focus {
+	border-color: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	height: 20px;
+}
+
+.grid-view .summary {
+	padding: 10px 0px;
+}
+
+.btn {
+	text-transform: capitalize !important;
+}
+
+.disabled-field {
+	border-style: dotted;
+	background-color: #FFFFFF;
+	border-width: 0 0 1px;
+	border-style: dotted;
+	color: rgba(0, 0, 0, 0.38);
+	opacity: 1;
+	border: 1px dotted rgba(0, 0, 0, 0.3);
+	padding: 2.8px 14px;
+	line-height: 2.5;
+}

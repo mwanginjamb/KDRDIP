@@ -2,14 +2,9 @@
 
 /* @var $this yii\web\View */
 $baseUrl = Yii::$app->request->baseUrl;
-$this->title = 'Shinda Score';
+$this->title = 'Monitoring $ Evaluation';
 ?>
-<!-- BEGIN: Content-->
-<div class="app-content content">
-		<div class="content-header row">
-		</div>
-		<div class="content-wrapper">
-			<div class="content-body">
+
 					<!-- Revenue, Hit Rate & Deals -->
 					<div class="row">
 						<div class="col-xl-6 col-12">
@@ -431,7 +426,3 @@ $this->title = 'Shinda Score';
 						</div>
 					</div>
 					<!-- Analytics map based session -->
-			</div>
-		</div>
-	</div>
-	<!-- END: Content-->
