@@ -22,6 +22,7 @@ AppAsset::register($this);
 <head>
 <meta charset="<?= Yii::$app->charset ?>">
 	<?php $this->registerCsrfMetaTags() ?>
+	<?= Html::csrfMetaTags() ?>
 	
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">

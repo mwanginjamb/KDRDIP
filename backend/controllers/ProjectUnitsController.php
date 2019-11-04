@@ -14,114 +14,115 @@ use yii\filters\VerbFilter;
  */
 class ProjectUnitsController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function behaviors()
+	{
+		return [
+			'verbs' => [
+					'class' => VerbFilter::className(),
+					'actions' => [
+						'delete' => ['POST'],
+					],
+			],
+		];
+	}
 
-    /**
-     * Lists all ProjectUnits models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => ProjectUnits::find(),
-        ]);
+	/**
+	 * Lists all ProjectUnits models.
+	 * @return mixed
+	 */
+	public function actionIndex()
+	{
+		$dataProvider = new ActiveDataProvider([
+			'query' => ProjectUnits::find(),
+		]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+		return $this->render('index', [
+			'dataProvider' => $dataProvider,
+		]);
+	}
 
-    /**
-     * Displays a single ProjectUnits model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+	/**
+	 * Displays a single ProjectUnits model.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionView($id)
+	{
+		return $this->render('view', [
+			'model' => $this->findModel($id),
+		]);
+	}
 
-    /**
-     * Creates a new ProjectUnits model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new ProjectUnits();
+	/**
+	 * Creates a new ProjectUnits model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		$model = new ProjectUnits();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ProjectUnitID]);
-        }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->ProjectUnitID]);
+		}
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+		return $this->render('create', [
+			'model' => $model,
+		]);
+	}
 
-    /**
-     * Updates an existing ProjectUnits model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+	/**
+	 * Updates an existing ProjectUnits model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->ProjectUnitID]);
-        }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->ProjectUnitID]);
+		}
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+		return $this->render('update', [
+			'model' => $model,
+		]);
+	}
 
-    /**
-     * Deletes an existing ProjectUnits model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+	/**
+	 * Deletes an existing ProjectUnits model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
-    }
+		return $this->redirect(['index']);
+	}
 
-    /**
-     * Finds the ProjectUnits model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return ProjectUnits the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = ProjectUnits::findOne($id)) !== null) {
-            return $model;
-        }
+	/**
+	 * Finds the ProjectUnits model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return ProjectUnits the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if (($model = ProjectUnits::findOne($id)) !== null) {
+			return $model;
+		}
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+		throw new NotFoundHttpException('The requested page does not exist.');
+	}
 }

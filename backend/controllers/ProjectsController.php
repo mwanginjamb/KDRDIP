@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\projects;
+use app\models\Projects;
 use app\models\ProjectStatus;
 use app\models\FundingSources;
 use app\models\ProjectFunding;
@@ -18,6 +18,9 @@ use app\models\ProjectNotes;
 use app\models\ProjectUnits;
 use app\models\ProjectRoles;
 use app\models\Counties;
+use app\models\SubCounties;
+use app\models\Indicators;
+use app\models\Budget;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -51,7 +54,7 @@ class ProjectsController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => projects::find(),
+			'query' => Projects::find(),
 		]);
 
 		return $this->render('index', [
@@ -93,7 +96,15 @@ class ProjectsController extends Controller
 
 		$projectNotes = new ActiveDataProvider([
 			'query' => ProjectNotes::find()->where(['ProjectID'=> $id]),
-		]);		
+		]);
+
+		$indicators = new ActiveDataProvider([
+			'query' => Indicators::find()->where(['ProjectID'=> $id]),
+		]);
+		
+		$budgetProvider = new ActiveDataProvider([
+			'query' => Budget::find()->where(['ProjectID'=> $id]),
+		]);
 
 		return $this->render('view', [
 			'model' => $this->findModel($id),
@@ -104,6 +115,8 @@ class ProjectsController extends Controller
 			'projectBeneficiaries' => $projectBeneficiaries,
 			'projectTeams' => $projectTeams,
 			'projectNotes' => $projectNotes,
+			'indicators' => $indicators,
+			'budgetProvider' => $budgetProvider,
 		]);
 	}
 
@@ -136,6 +149,8 @@ class ProjectsController extends Controller
 		$projectUnits = ArrayHelper::map(projectUnits::find()->all(), 'ProjectUnitID', 'ProjectUnitName');
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
+		
 		
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -181,7 +196,8 @@ class ProjectsController extends Controller
 			'projectUnits' => $projectUnits,
 			'projectRoles' => $projectRoles,
 			'projectTeams' => $projectTeams,
-			'counties' => $counties
+			'counties' => $counties,
+			'subCounties' => $subCounties,
 		]);
 	}
 
@@ -223,6 +239,7 @@ class ProjectsController extends Controller
 		$projectUnits = ArrayHelper::map(projectUnits::find()->all(), 'ProjectUnitID', 'ProjectUnitName');
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -268,7 +285,8 @@ class ProjectsController extends Controller
 			'projectUnits' => $projectUnits,
 			'projectRoles' => $projectRoles,
 			'projectTeams' => $projectTeams,
-			'counties' => $counties
+			'counties' => $counties,
+			'subCounties' => $subCounties,
 		]);
 	}
 
@@ -295,7 +313,7 @@ class ProjectsController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if (($model = projects::findOne($id)) !== null) {
+		if (($model = Projects::findOne($id)) !== null) {
 			return $model;
 		}
 
@@ -392,14 +410,18 @@ class ProjectsController extends Controller
 					$_column = new ProjectBeneficiaries();
 					$_column->ProjectID = $model->ProjectID;
 					$_column->CountyID = $column['CountyID'];
-					$_column->Beneficiaries = $column['Beneficiaries'];
+					$_column->SubCountyID = $column['SubCountyID'];
+					$_column->HostPopulation = $column['HostPopulation'];
+					$_column->RefugeePopulation = $column['RefugeePopulation'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
 			} else {
 				$_column = ProjectBeneficiaries::findOne($column['ProjectBeneficiaryID']);
 				$_column->CountyID = $column['CountyID'];
-				$_column->Beneficiaries = $column['Beneficiaries'];
+				$_column->SubCountyID = $column['SubCountyID'];
+				$_column->HostPopulation = $column['HostPopulation'];
+				$_column->RefugeePopulation = $column['RefugeePopulation'];
 				$_column->save();
 			}
 		}
@@ -446,6 +468,19 @@ class ProjectsController extends Controller
 				$_column->Notes = $column['Notes'];
 				$_column->save();
 			}
+		}
+	}
+
+	public function actionSubCounties($id)
+	{
+		$model = SubCounties::find()->where(['CountyID' => $id])->all();
+			
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item->SubCountyID . "'>" . $item->SubCountyName . "</option>";
+			}
+		} else {
+			echo '<option>-</option>';
 		}
 	}
 }

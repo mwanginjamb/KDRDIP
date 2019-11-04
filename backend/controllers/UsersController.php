@@ -6,6 +6,8 @@ use Yii;
 use app\models\Users;
 use app\models\UserGroups;
 use app\models\UserStatus;
+use app\models\MessageTemplates;
+use app\models\UserGroupRights;
 use yii\web\Controller;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -148,5 +150,83 @@ class UsersController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public static function sendEmailNotification($FormID)
+	{
+		$Code = '';
+		
+		switch ($FormID) {
+			case 26: // Quotations Approval
+				$Code = '001';
+				break;
+			case 13: // Purchases Approval
+				$Code = '002';
+				break;
+			case 12: // Requisition Approval
+				$Code = '003';
+				break;
+			case 14: // Stock Take Approval
+				$Code = '004';
+				break;
+			case 29: // Quotation Review
+				$Code = '005';
+				break;
+			case 28: // Purchase Review
+				$Code = '006';
+				break;
+			case 27: // Requisition Review
+				$Code = '007';
+				break;
+			case 30: // Stock Take Review
+				$Code = '008';
+				break;
+		}
+		
+		$template = MessageTemplates::findone(['Code' => $Code]);
+		
+		$sql = "SELECT users.UserID, users.FirstName, users.LastName, users.Email FROM usergrouprights 
+				JOIN users ON users.UserGroupID = usergrouprights.UserGroupID
+				WHERE FormID = $FormID AND Edit=1";
+		
+		$users = UserGroupRights::findBySql($sql)->asArray()->all();
+		$EmailArray = [];
+		foreach ($users as $key => $user) {
+			$EmailArray[] = ['Email' => $user['Email'], 'Name'=> $user['FirstName'] . ' ' . $user['LastName']];
+		}
+		//print_r($EmailArray);
+		if (!empty($template))
+		{
+			$subject = $template->Subject;
+			$message = $template->Message;
+			
+			//echo $message; exit;
+		}
+		if (count($EmailArray)!=0)
+		{
+			$sent = SendMail($EmailArray,$subject ,$message);			
+			if ($sent==1)
+			{
+				return "Saved Details Successfully";
+			} else
+			{
+				return "Failed to send Mail";
+			}
+		} else
+		{
+			return "No Email address";
+		}		
+	}
+	
+	public function actionTestemail()
+	{
+		$sent = SendMail('ngugi.joseph@gmail.com','Test Email' ,'Test Email');			
+		if ($sent==1)
+		{
+			return "Saved Details Successfully";
+		} else
+		{
+			return "Failed to send Mail";
+		}
 	}
 }

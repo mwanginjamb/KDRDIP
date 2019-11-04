@@ -263,7 +263,7 @@ footer.footer-light {
 }
 
 footer.footer-dark {
-  background : #2C303B;
+  background : #6BA342;
 }
 footer.footer-dark span {
   color : #FFFFFF;
@@ -489,7 +489,7 @@ footer .ft-heart:before {
 }
 .main-menu.menu-dark {
   color : #DCDCDC;
-  background : #2C303B;
+  background : #6BA342;
 }
 .main-menu.menu-dark .main-menu-header {
   padding : 20px;
@@ -497,13 +497,13 @@ footer .ft-heart:before {
 .main-menu.menu-dark .main-menu-header .menu-search {
   background : #16181E;
   padding : 0.5rem 1rem;
-  color : #C3C3C3;
+  color : #000000;
 }
 .main-menu.menu-dark .main-menu-header .menu-search:focus {
   border-color : #0B0C0F;
 }
 .main-menu.menu-dark .navigation {
-  background : #2C303B;
+  background : #6BA342;
 }
 .main-menu.menu-dark .navigation .navigation-header {
   color : #DCDCDC;
@@ -550,9 +550,10 @@ footer .ft-heart:before {
   top : 3px;
 }
 .main-menu.menu-dark .navigation > li.open > a {
-  color : #C3C3C3;
-  background : #23262F;
+  color : #000000;
+  background : #FBDF12;
   border-right : 4px solid #00BCD4;
+  font-weight: 900;
 }
 .main-menu.menu-dark .navigation > li.open .hover > a {
   -webkit-transform : translateX(-4px);
@@ -565,7 +566,8 @@ footer .ft-heart:before {
   display : none;
 }
 .main-menu.menu-dark .navigation > li.hover > a, .main-menu.menu-dark .navigation > li:hover > a, .main-menu.menu-dark .navigation > li.active > a {
-  color : #C3C3C3;
+  color : #000000;
+  font-weight: 900;
 }
 .main-menu.menu-dark .navigation > li.hover > a > i, .main-menu.menu-dark .navigation > li:hover > a > i, .main-menu.menu-dark .navigation > li.active > a > i {
   -webkit-transform : translateX(6px);
@@ -598,7 +600,7 @@ footer .ft-heart:before {
   background : #1F2229;
 }
 .main-menu.menu-dark .navigation > li .active .hover > a {
-  background : #23262F;
+  background : #FBDF12;
 }
 .main-menu.menu-dark .navigation > li ul {
   padding : 0;
@@ -644,10 +646,10 @@ footer .ft-heart:before {
   background-color : transparent;
 }
 .main-menu.menu-dark .navigation > li > ul {
-  background : #2C303B;
+  background : #6BA342;
 }
 .main-menu.menu-dark ul.menu-popout {
-  background : #2C303B;
+  background : #6BA342;
 }
 .main-menu.menu-dark ul.menu-popout li a {
   color : #DCDCDC;
@@ -1904,27 +1906,27 @@ body.vertical-layout.vertical-menu.menu-expanded .main-menu-footer .content {
 }
 
 .navbar-light .search-input .input, .navbar-semi-dark .search-input .input {
-  color : #2C303B;
+  color : #6BA342;
 }
 .navbar-light .search-input .input::-webkit-input-placeholder, .navbar-semi-dark .search-input .input::-webkit-input-placeholder {
-  color : #2C303B;
+  color : #6BA342;
 }
 .navbar-light .search-input .input:-moz-placeholder, .navbar-semi-dark .search-input .input:-moz-placeholder {
-  color : #2C303B;
+  color : #6BA342;
 }
 .navbar-light .search-input .input::-moz-placeholder, .navbar-semi-dark .search-input .input::-moz-placeholder {
-  color : #2C303B;
+  color : #6BA342;
 }
 .navbar-light .search-input .input:-ms-input-placeholder, .navbar-semi-dark .search-input .input:-ms-input-placeholder {
-  color : #2C303B;
+  color : #6BA342;
 }
 .navbar-light .search-input .input::placeholder, .navbar-semi-dark .search-input .input::placeholder {
-  color : #2C303B;
+  color : #6BA342;
 }
 
 .navbar-light .search-input.open .input, .navbar-semi-dark .search-input.open .input {
-  color : #2C303B;
-  border-bottom : 1px solid #2C303B;
+  color : #6BA342;
+  border-bottom : 1px solid #6BA342;
 }
 
 .navbar-dark .search-input .input, .navbar-semi-light .search-input .input {
@@ -1954,8 +1956,8 @@ body.vertical-layout.vertical-menu.menu-expanded .main-menu-footer .content {
 @media (max-width: 991.98px) {
   #navbar-mobile .search-input.open .input {
     width : 136px;
-    color : #2C303B;
-    border-bottom : 1px solid #2C303B;
+    color : #6BA342;
+    border-bottom : 1px solid #6BA342;
     overflow : hidden;
     position : relative;
     background : none;
@@ -2603,7 +2605,7 @@ body.vertical-layout.vertical-menu.menu-expanded .main-menu-footer .content {
 .btn-reddit:not(:disabled):not(.disabled):active, .btn-reddit:not(:disabled):not(.disabled).active, .show > .btn-reddit.dropdown-toggle {
   color : #2A2E30;
   background-color : #BCDEFF;
-  border-color : black;
+  border-color : #000000;
 }
 .btn-reddit:not(:disabled):not(.disabled):active:focus, .btn-reddit:not(:disabled):not(.disabled).active:focus, .show > .btn-reddit.dropdown-toggle:focus {
   -webkit-box-shadow : 0 0 0 0.2rem rgba(6, 7, 7, 0.5);
@@ -4320,8 +4322,8 @@ body:after {
 
 /* Code Mirror */
 .CodeMirror {
-  border-top : 1px solid black;
-  border-bottom : 1px solid black;
+  border-top : 1px solid #000000;
+  border-bottom : 1px solid #000000;
 }
 .CodeMirror .CodeMirror-selected {
   background-color : skyblue !important;
@@ -4347,7 +4349,7 @@ body:after {
 
 iframe#preview {
   height : 300px;
-  border : 1px solid black;
+  border : 1px solid #000000;
   width : 100%;
 }
 

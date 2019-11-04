@@ -535,11 +535,11 @@ input:focus ~ .bg-primary {
 }
 
 .primary {
-  color : #673AB7 !important;
+  color : #6BA342 !important;
 }
 
 .bg-primary {
-  background-color : #673AB7 !important;
+  background-color : #6BA342 !important;
 }
 .bg-primary .card-header, .bg-primary .card-footer {
   background-color : transparent;
@@ -550,32 +550,32 @@ input:focus ~ .bg-primary {
 }
 
 .selectboxit.selectboxit-btn.bg-primary {
-  background-color : #673AB7 !important;
+  background-color : #6BA342 !important;
 }
 
 .alert-primary {
-  border-color : #673AB7 !important;
+  border-color : #6BA342 !important;
   background-color : #8E69CF;
 }
 
 .border-primary {
-  border-color : #673AB7;
+  border-color : #6BA342;
   border : 1px solid;
 }
 
 .overlay-primary {
-  background : #673AB7;
+  background : #6BA342;
   /* The Fallback */
   background : rgba(103, 58, 183, 0.8);
 }
 
 .color-info.primary {
-  background-color : #673AB7 !important;
+  background-color : #6BA342 !important;
 }
 
 .btn-primary {
   border-color : #512E90 !important;
-  background-color : #673AB7 !important;
+  background-color : #6BA342 !important;
   color : #FFFFFF;
 }
 .btn-primary:hover {
@@ -595,12 +595,12 @@ input:focus ~ .bg-primary {
 
 .btn-outline-primary {
   border : 1px solid;
-  border-color : #673AB7;
+  border-color : #6BA342;
   background-color : transparent;
-  color : #673AB7;
+  color : #6BA342;
 }
 .btn-outline-primary:hover {
-  background-color : #673AB7;
+  background-color : #6BA342;
   color : #FFFFFF !important;
 }
 .btn-outline-primary.btn-glow {
@@ -609,7 +609,7 @@ input:focus ~ .bg-primary {
 }
 
 input[type='checkbox'].bg-primary + .custom-control-label:before, input[type='radio'].bg-primary + .custom-control-label:before {
-  background-color : #673AB7 !important;
+  background-color : #6BA342 !important;
 }
 
 /* .custom-control-label{
@@ -618,28 +618,28 @@ input[type='checkbox'].bg-primary + .custom-control-label:before, input[type='ra
         }
       } */
 input:focus ~ .bg-primary {
-  -webkit-box-shadow : 0 0 0 0.075rem #FFFFFF, 0 0 0 0.21rem #673AB7 !important;
-          box-shadow : 0 0 0 0.075rem #FFFFFF, 0 0 0 0.21rem #673AB7 !important;
+  -webkit-box-shadow : 0 0 0 0.075rem #FFFFFF, 0 0 0 0.21rem #6BA342 !important;
+          box-shadow : 0 0 0 0.075rem #FFFFFF, 0 0 0 0.21rem #6BA342 !important;
 }
 
 .border-primary {
-  border-color : #673AB7 !important;
+  border-color : #6BA342 !important;
 }
 
 .border-top-primary {
-  border-top : 1px solid #673AB7;
+  border-top : 1px solid #6BA342;
 }
 
 .border-bottom-primary {
-  border-bottom : 1px solid #673AB7;
+  border-bottom : 1px solid #6BA342;
 }
 
 .border-left-primary {
-  border-left : 1px solid #673AB7;
+  border-left : 1px solid #6BA342;
 }
 
 .border-right-primary {
-  border-right : 1px solid #673AB7;
+  border-right : 1px solid #6BA342;
 }
 
 .primary.darken-1 {
@@ -15305,20 +15305,20 @@ input:focus ~ .bg-transparent {
 }
 
 .bg-gradient-x2-primary {
-  background-image : -webkit-gradient(linear, left top, right top, from(#8259CB), color-stop(50%, #673AB7), to(#916DD1));
-  background-image : -webkit-linear-gradient(left, #8259CB, #673AB7 50%, #916DD1);
-  background-image :    -moz-linear-gradient(left, #8259CB, #673AB7 50%, #916DD1);
-  background-image :      -o-linear-gradient(left, #8259CB, #673AB7 50%, #916DD1);
-  background-image :         linear-gradient(to right, #8259CB, #673AB7 50%, #916DD1);
+  background-image : -webkit-gradient(linear, left top, right top, from(#8259CB), color-stop(50%, #6BA342), to(#916DD1));
+  background-image : -webkit-linear-gradient(left, #8259CB, #6BA342 50%, #916DD1);
+  background-image :    -moz-linear-gradient(left, #8259CB, #6BA342 50%, #916DD1);
+  background-image :      -o-linear-gradient(left, #8259CB, #6BA342 50%, #916DD1);
+  background-image :         linear-gradient(to right, #8259CB, #6BA342 50%, #916DD1);
   background-repeat : no-repeat;
 }
 
 .bg-gradient-y2-primary {
-  background-image : -webkit-gradient(linear, left top, left bottom, from(#8259CB), color-stop(50%, #673AB7), to(#916DD1));
-  background-image : -webkit-linear-gradient(#8259CB, #673AB7 50%, #916DD1);
-  background-image :    -moz-linear-gradient(#8259CB, #673AB7 50%, #916DD1);
-  background-image :      -o-linear-gradient(#8259CB, #673AB7 50%, #916DD1);
-  background-image :         linear-gradient(#8259CB, #673AB7 50%, #916DD1);
+  background-image : -webkit-gradient(linear, left top, left bottom, from(#8259CB), color-stop(50%, #6BA342), to(#916DD1));
+  background-image : -webkit-linear-gradient(#8259CB, #6BA342 50%, #916DD1);
+  background-image :    -moz-linear-gradient(#8259CB, #6BA342 50%, #916DD1);
+  background-image :      -o-linear-gradient(#8259CB, #6BA342 50%, #916DD1);
+  background-image :         linear-gradient(#8259CB, #6BA342 50%, #916DD1);
   background-repeat : no-repeat;
 }
 

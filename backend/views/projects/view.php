@@ -42,9 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										'method' => 'post',
 									],
 							]) ?>
-						</p>
-
-						
+						</p>					
 
 						<div class="card">
 							<!-- <div class="card-header">
@@ -76,9 +74,17 @@ $this->params['breadcrumbs'][] = $this->title;
 											<a class="nav-link" id="base-tab7" data-toggle="tab" aria-controls="tab7" href="#tab7" aria-expanded="false">Project Team</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab8" data-toggle="tab" aria-controls="tab8" href="#tab8" aria-expanded="false">Notes</a>
+											<a class="nav-link" id="base-tab8" data-toggle="tab" aria-controls="tab8" href="#tab8" aria-expanded="false">Indicators</a>
 										</li>
-										
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab9" data-toggle="tab" aria-controls="tab9" href="#tab9" aria-expanded="false">Targets</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab10" data-toggle="tab" aria-controls="tab10" href="#tab10" aria-expanded="false">Budget</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab11" data-toggle="tab" aria-controls="tab11" href="#tab11" aria-expanded="false">Notes</a>
+										</li>										
 									</ul>
 									<div class="tab-content px-1 pt-1">
 										<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -276,11 +282,25 @@ $this->params['breadcrumbs'][] = $this->title;
 														'contentOptions' => ['style' => 'text-align:left'],
 													],
 													[
-														'label'=>'Beneficiaries',
-														'headerOptions' => ['width' => '20%', 'style'=>'color:black; text-align:left'],
+														'label'=>'Sub County',
+														'headerOptions' => ['width' => '30%', 'style'=>'color:black; text-align:left'],
 														'format'=>'text',
-														'value' => 'Beneficiaries',
+														'value' => 'subCounties.SubCountyName',
 														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'label'=>'Host Population',
+														'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
+														'format'=> ['decimal', 2],
+														'value' => 'HostPopulation',
+														'contentOptions' => ['style' => 'text-align:right'],
+													],
+													[
+														'label'=>'Refugee Population',
+														'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
+														'format'=> ['decimal', 2],
+														'value' => 'RefugeePopulation',
+														'contentOptions' => ['style' => 'text-align:right'],
 													],
 												],
 											]); ?>
@@ -333,6 +353,107 @@ $this->params['breadcrumbs'][] = $this->title;
 											]); ?>
 										</div>
 										<div class="tab-pane" id="tab8" aria-labelledby="base-tab8">
+											<h4 class="form-section">Indicators</h4>
+											<div class="form-actions" style="margin-top:0px">
+												<?= Html::a('<i class="ft-plus"></i> New Indicator', ['indicators/create', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
+											</div>
+											<!-- <table class="table table-striped table-bordered dataex-key-basic">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Position</th>
+													<th>Office</th>
+													<th>Age</th>
+													<th>Start date</th>
+													<th>Salary</th>
+												</tr>
+											</thead>
+											<tbody>
+											<?php 
+											foreach ($indicators->models as $key => $indicator) { ?>
+												<tr>
+													<td>Tiger Nixon</td>
+													<td>System Architect</td>
+													<td>Edinburgh</td>
+													<td>61</td>
+													<td>2011/04/25</td>
+													<td>$320,800</td>
+												</tr>												
+												<?php
+											} ?>
+											</tbody>
+											</table> -->
+											<?= GridView::widget([
+												'dataProvider' => $indicators,
+												'showFooter' =>false,
+												'layout' => '{items}',
+												'tableOptions' => [
+													'class' => 'custom-table table-striped table-bordered',
+												],
+												'columns' => [
+													[
+														'attribute' => 'IndicatorID',
+														'label' => 'ID',
+														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
+														'contentOptions' => ['style' => 'text-align:center'],
+													],
+													[
+														'label'=>'Indicator',
+														'headerOptions' => ['style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'IndicatorName',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													'unitsOfMeasure.UnitOfMeasureName',
+													'BaseLine',
+													'EndTarget',
+													'subComponents.SubComponentName',
+													[
+														'class' => 'yii\grid\ActionColumn',
+														'headerOptions' => ['width' => '8%', 'style'=>'color:black; text-align:center'],
+														'template' => '{view}',
+														'buttons' => [
+									
+															'view' => function ($url, $model) {
+																return (Html::a('<i class="ft-eye"></i> Update', ['indicators/update', 'id' => $model->IndicatorID, 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary']));
+															},															
+														],
+													],
+												],
+											]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab9" aria-labelledby="base-tab9">
+											<h4 class="form-section">Targets</h4>
+											<table class="custom-table table-striped table-bordered"><thead>
+											<tr>
+												<th width="5%" style="color:black; text-align:center">ID</th>
+												<th style="color:black; text-align:left">Indicator</th>
+												<th>Unit Of Measure Name</th>
+												<th>Base Line</th>
+												<th>End Target</th>
+												<th>Sub Component Name</th>
+												<th width="8%" style="color:black; text-align:center">&nbsp;</th>
+											</tr>
+											</thead>
+												<tbody>
+												<tr>
+													<td style="text-align:center">2</td>
+													<td style="text-align:left"></td>
+													<td>Number</td><td>1121.00</td>
+													<td>3343.00</td><td>test</td>
+													<td></td>
+												</tr>
+												</tbody>
+											</table>
+										</div>
+
+										<div class="tab-pane" id="tab10" aria-labelledby="base-tab10">
+											<!-- <h4 class="form-section">Budget</h4> -->
+											<?= $this->render('/budget/index', ['pid' => $model->ProjectID, 'dataProvider' => $budgetProvider]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab11" aria-labelledby="base-tab11">
 											<h4 class="form-section">Notes</h4>	 
 											<?= GridView::widget([
 												'dataProvider' => $projectNotes,

@@ -209,7 +209,9 @@ use yii\widgets\ActiveForm;
 					<tr>
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">County</td>
-						<td style="padding: 4px !important" width="15%">Beneficiaries</td>
+						<td style="padding: 4px !important" width="30%">Sub County</td>
+						<td style="padding: 4px !important" width="15%">Host Population</td>
+						<td style="padding: 4px !important" width="15%">Refugee Population</td>
 					</tr>	
 					</thead>
 					<?php
@@ -220,8 +222,17 @@ use yii\widgets\ActiveForm;
 								<?= $x+1; ?>
 								<?= $form->field($column, '[' . $x . ']ProjectBeneficiaryID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 							</td>
-							<td><?= $form->field($column, '[' . $x . ']CountyID', ['template' => '{label}{input}'])->dropDownList($counties, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
-							<td><?= $form->field($column, '[' . $x . ']Beneficiaries')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']CountyID', ['template' => '{label}{input}'])->dropDownList($counties, ['prompt'=>'','class'=>'form-control',
+														'onchange' => '
+														$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-counties?id=') . '"+$(this).val(), function( data ) {
+
+															$( "select#projectbeneficiaries-' . $x . '-subcountyid" ).html( data );
+														});
+													'])->label(false) ?>
+							</td>
+							<td><?= $form->field($column, '[' . $x . ']SubCountyID', ['template' => '{label}{input}'])->dropDownList(isset($subCounties[$column->CountyID]) ? $subCounties[$column->CountyID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']HostPopulation')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']RefugeePopulation')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
 						</tr>
 						<?php
 					} ?>

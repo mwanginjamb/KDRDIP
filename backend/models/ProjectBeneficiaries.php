@@ -8,9 +8,11 @@ use Yii;
  * This is the model class for table "projectbeneficiaries".
  *
  * @property int $ProjectBeneficiaryID
- * @property int $CountyID
  * @property int $ProjectID
- * @property int $Beneficiaries
+ * @property int $CountyID
+ * @property int $SubCountyID
+ * @property int $HostPopulation
+ * @property int $RefugeePopulation
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -31,7 +33,7 @@ class ProjectBeneficiaries extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['CountyID', 'Beneficiaries', 'CreatedBy', 'Deleted', 'ProjectID'], 'integer'],
+			[['ProjectID', 'CountyID', 'SubCountyID', 'HostPopulation', 'RefugeePopulation', 'CreatedBy', 'Deleted'], 'integer'],
 			[['CreatedDate'], 'safe'],
 		];
 	}
@@ -43,9 +45,11 @@ class ProjectBeneficiaries extends \yii\db\ActiveRecord
 	{
 		return [
 			'ProjectBeneficiaryID' => 'Project Beneficiary ID',
-			'CountyID' => 'County',
-			'ProjectID' => 'Project',
-			'Beneficiaries' => 'Beneficiaries',
+			'ProjectID' => 'Project ID',
+			'CountyID' => 'County ID',
+			'SubCountyID' => 'Sub County ID',
+			'HostPopulation' => 'Host Population',
+			'RefugeePopulation' => 'Refugee Population',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
@@ -55,6 +59,11 @@ class ProjectBeneficiaries extends \yii\db\ActiveRecord
 	public function getCounties()
 	{
 		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
+	}
+
+	public function getSubCounties()
+	{
+		return $this->hasOne(SubCounties::className(), ['SubCountyID' => 'SubCountyID'])->from(subcounties::tableName());
 	}
 
 	public function getUsers()

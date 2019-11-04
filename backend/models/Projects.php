@@ -17,6 +17,7 @@ use Yii;
  * @property string $ApprovalDate
  * @property int $ProjectStatusID
  * @property string $Justification
+ * @property int $ReportingPeriodID
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -37,7 +38,7 @@ class Projects extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID'], 'integer'],
 			[['Objective', 'Justification'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost'], 'number'],
@@ -59,6 +60,7 @@ class Projects extends \yii\db\ActiveRecord
 			'StartDate' => 'Start Date',
 			'EndDate' => 'End Date',
 			'ProjectCost' => 'Project Cost',
+			'ReportingPeriodID' => 'Reporting Period',
 			'ApprovalDate' => 'Approval Date',
 			'ProjectStatusID' => 'Project Status',
 			'Justification' => 'Justification',

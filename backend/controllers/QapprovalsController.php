@@ -1,0 +1,238 @@
+<?php
+
+namespace backend\controllers;
+
+use Yii;
+use app\models\Quotation;
+use app\models\QuotationProducts;
+use app\models\ApprovalNotes;
+use app\models\ApprovalStatus;
+use app\models\QuotationSupplier;
+use app\models\Product;
+use yii\data\ActiveDataProvider;
+use yii\web\Controller;
+use yii\web\NotFoundHttpException;
+use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+use backend\controllers\UsersController;
+
+/**
+ * RequisitionController implements the CRUD actions for Quotation model.
+ */
+class QapprovalsController extends Controller
+{
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+			'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'rules' => [
+					/*
+					// Guest Users
+                    [
+                        'allow' => true,
+                        'actions' => ['login', 'signup'],
+                        'roles' => ['?'],
+                    ], */
+					// Authenticated Users
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Lists all Quotation models.
+     * @return mixed
+     */
+    public function actionIndex($option)
+    {
+		$StatusID = $option==1 ? 1 : 2;
+        $dataProvider = new ActiveDataProvider([
+            'query' => Quotation::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
+        ]);
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider, 'option' => $option,
+        ]);
+    }
+
+    /**
+     * Displays a single Quotation model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id, $option)
+    {	
+		$identity = Yii::$app->user->identity;
+		$UserID = $identity->UserID;
+		$params = Yii::$app->request->post();
+
+		$dataProvider = new ActiveDataProvider([
+            'query' => QuotationProducts::find()->joinWith('product')->where(['QuotationID'=> $id]),
+        ]);
+		
+		$supplierProvider = new ActiveDataProvider([
+            'query' => QuotationSupplier::find()->joinWith('suppliers')
+											->where(['QuotationID'=> $id]),
+        ]);
+		$model = $this->findModel($id);
+		
+		$notes = new ApprovalNotes();
+		
+		if (Yii::$app->request->post())
+		{
+			if ($params['option']==1 && isset($params['Approve']))
+			{
+				$model->ApprovalStatusID = 2;
+			} else if ($params['option']==2 && isset($params['Approve']))
+			{
+				$model->ApprovalStatusID = 3;
+
+				//$model->PostingDate = date('Y-m-d h:i:s');
+				//$model->Posted = 1;
+				$model->ApprovedBy  = $UserID;
+				$model->ApprovalDate = date('Y-m-d h:i:s');
+			}
+			
+			if (isset($params['Reject']))
+			{
+				$model->ApprovalStatusID = 4;
+			}
+		}
+		
+		if (Yii::$app->request->post() && $model->save()) 
+		{			
+			$params = Yii::$app->request->post();
+			$option = $params['option'];
+			//print_r($params); exit;
+			$notes->Note = $params['ApprovalNotes']['Note'];
+			$notes->ApprovalStatusID = $model->ApprovalStatusID;
+			$notes->ApprovalTypeID = 3;
+			$notes->ApprovalID = $id;
+			$notes->CreatedBy = $UserID;
+			
+			$notes->save();	
+			
+			if ($model->ApprovalStatusID == 2)
+			{
+				$result = UsersController::sendEmailNotification(26); 
+			}
+			return $this->redirect(['index', 'option'=> $option]);
+		} else
+		{
+			//print_r($model->getErrors()); exit;
+			$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where("ApprovalStatusID > 1")->all(), 'ApprovalStatusID', 'ApprovalStatusName');
+			$detailmodel = Quotation::find()->where(['QuotationID'=> $id])->joinWith('approvalstatus')->one();
+			return $this->render('view', [
+				'model' => $model,'detailmodel' => $detailmodel, 
+				'dataProvider' => $dataProvider, 'approvalstatus' => $approvalstatus, 
+				'supplierProvider' => $supplierProvider, 'notes' => $notes, 'option' => $option,
+			]);
+		}
+    }
+
+    /**
+     * Updates an existing Quotation model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {	
+		$model = $this->findModel($id);
+		$lines = QuotationProducts::find()->where(['QuotationID' => $id])->all();
+		
+        if ($model->load(Yii::$app->request->post()) && $model->save()) 
+		{
+			$params = Yii::$app->request->post();
+			$lines = $params['QuotationProducts'];
+			
+			foreach ($lines as $key => $line)
+			{
+				//print_r($lines);exit;
+				 
+				if ($line['RequisitionLineID'] == '')
+				{				
+					if ($line['ProductID'] != '')
+					{
+						$_line = new QuotationProducts();
+						$_line->QuotationID = $id;
+						$_line->ProductID = $line['ProductID'];
+						$_line->Quantity = $line['Quantity'];
+						$_line->Description = $line['Description'];
+						$_line->save();
+						//print_r($_line->getErrors());
+					}
+				} else
+				{
+					$_line = QuotationProducts::findOne($line['RequisitionLineID']);
+					$_line->QuotationID = $id;
+					$_line->ProductID = $line['ProductID'];
+					$_line->Quantity = $line['Quantity'];
+					$_line->Description = $line['Description'];
+					$_line->save();
+				}
+				
+				//print_r($_line->getErrors());
+			}
+			
+            return $this->redirect(['view', 'id' => $model->QuotationID]);
+        } else {
+			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
+			$modelcount = count($lines);
+			for ($x = $modelcount; $x <= 9; $x++) 
+			{ 
+				$lines[$x] = new QuotationProducts();
+			}
+			
+            return $this->render('update', [
+                'model' => $model, 'lines' => $lines, 'products' => $products
+            ]);
+        }
+    }
+
+    /**
+     * Deletes an existing Quotation model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Quotation model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Quotation the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Quotation::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+    }
+}

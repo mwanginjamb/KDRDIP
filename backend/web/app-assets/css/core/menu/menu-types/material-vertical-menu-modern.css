@@ -510,7 +510,7 @@ body.vertical-layout.vertical-menu-modern.menu-collapsed.menu-flipped .footer {
 }
 
 .material-vertical-layout .main-menu .main-menu-content .navigation li.active > a {
-  background : #673AB7;
+  background : #000000;
   color : #FFFFFF;
 }
 
@@ -815,7 +815,7 @@ body.vertical-layout.vertical-menu-modern.menu-collapsed.menu-flipped .footer {
 }
 
 .material-vertical-layout .main-menu .main-menu-content .navigation li.active > a {
-  background : #673AB7;
+  background : #000000;
   color : #FFFFFF;
 }
 

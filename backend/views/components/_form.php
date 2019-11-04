@@ -42,6 +42,7 @@ use yii\widgets\ActiveForm;
 						
 				</div>			
 			</div>
+			
 			<h4 class="form-section" style="margin-bottom: 0px">Sub Components</h4>
 			<table width="100%" class="custom-table" id="ColumnsTable">
 			<thead>

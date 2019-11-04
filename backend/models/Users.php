@@ -93,6 +93,11 @@ class Users extends \yii\db\ActiveRecord
 	{
 		return $this->FirstName . ' ' . $this->LastName;
 	}
+	
+	public function getFull_Name()
+	{
+		return $this->FirstName . ' ' . $this->LastName;
+	}
 
 	public function getUsers()
 	{

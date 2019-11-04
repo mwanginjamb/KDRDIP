@@ -335,10 +335,10 @@ form .form-control:-ms-input-placeholder {
   color : #AEB5DA;
 }
 form .form-section {
-  color : #2C303B;
+  color : #6BA342;
   line-height : 3rem;
   margin-bottom : 20px;
-  border-bottom : 1px solid #2C303B;
+  border-bottom : 1px solid #6BA342;
 }
 form .form-section i {
   font-size : 20px;
@@ -1232,10 +1232,10 @@ select.form-control {
     color : #FFFFFF;
   }
   [data-menu='vertical-menu-modern'] .navbar-dark .navbar-container .navbar-nav .nav-link, [data-menu='vertical-menu-modern'] .navbar-semi-dark .navbar-container .navbar-nav .nav-link {
-    color : #2C303B;
+    color : #6BA342;
   }
   [data-menu='vertical-menu-modern'] .navbar-light .navbar-header .navbar-nav .nav-link {
-    color : #2C303B;
+    color : #6BA342;
   }
   [data-menu='vertical-menu-modern'] .navbar-header .navbar-nav .open-navbar-container, [data-menu='vertical-menu-modern'] .navbar-header .navbar-nav .nav-menu-main {
     padding : 1rem;
@@ -1259,7 +1259,7 @@ select.form-control {
 }
 
 .navbar-dark {
-  background : #2C303B;
+  background : #6BA342;
 }
 .navbar-dark .navbar-brand {
   color : #FFFFFF !important;
@@ -1268,11 +1268,11 @@ select.form-control {
   color : #FFFFFF !important;
 }
 .navbar-dark.navbar-horizontal {
-  background : #2C303B;
+  background : #6BA342;
 }
 .navbar-dark .nav-search .form-control, .navbar-dark .nav-search .btn-secondary {
   color : #FFFFFF;
-  background : #2C303B;
+  background : #6BA342;
 }
 .navbar-dark .navbar-nav li {
   line-height : 1;
@@ -1288,7 +1288,7 @@ select.form-control {
   background : #FFFFFF;
 }
 .navbar-semi-dark .navbar-header {
-  background : #2C303B;
+  background : #6BA342;
 }
 .navbar-semi-dark .navbar-header .brand-text {
   color : #FFFFFF;
@@ -1607,7 +1607,7 @@ select.form-control {
     color : #6B6F82;
   }
   .navbar-light .navbar-header .navbar-nav .nav-link, .navbar-semi-light .navbar-header .navbar-nav .nav-link {
-    color : #2C303B;
+    color : #6BA342;
   }
   .navbar-light .navbar-container .navbar-nav .nav-link, .navbar-semi-light .navbar-container .navbar-nav .nav-link {
     color : #6B6F82;

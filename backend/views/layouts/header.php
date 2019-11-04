@@ -10,7 +10,7 @@ $user = Yii::$app->user->identity;
 					<ul class="nav navbar-nav flex-row">
 						<li class="nav-item mobile-menu d-lg-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="#"><i class="ft-menu font-large-1"></i></a></li>
 						<li class="nav-item mr-auto"><a class="navbar-brand" href="index.html">
-									<h3 class="brand-text">M & E</h3>
+									<h3 class="brand-text">KDRDIP</h3>
 							</a></li>
 						<li class="nav-item d-none d-lg-block nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="toggle-icon ft-toggle-right font-medium-3 white" data-ticon="ft-toggle-right"></i></a></li>
 						<li class="nav-item d-lg-none"><a class="nav-link open-navbar-container" data-toggle="collapse" data-target="#navbar-mobile"><i class="material-icons mt-1">more_vert</i></a></li>
@@ -25,7 +25,7 @@ $user = Yii::$app->user->identity;
 													<input class="round form-control" type="text" placeholder="Search Here"></a></div>
 									</a></li> -->
 							<li class="nav-item d-none d-lg-block d-none"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
-							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Montoring and Evaluation</a>
+							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">KENYA DEVELOPMENT RESPONSE TO DISPLACEMENT IMPACTS PROJECT</a>
 									<ul class="mega-dropdown-menu dropdown-menu row">
 										<li class="col-md-2">
 											<h6 class="dropdown-menu-header text-uppercase mb-1"><i class="material-icons">list_alt</i> News</h6>
