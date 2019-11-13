@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\Productcategory;
+use app\models\ProductCategory;
 use app\models\Stores;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -58,7 +58,7 @@ class ProductcategoryController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => Productcategory::find(),
+			'query' => ProductCategory::find(),
 		]);
 
 		return $this->render('index', [
@@ -88,7 +88,7 @@ class ProductcategoryController extends Controller
 		$identity = Yii::$app->user->identity;
 		$UserID = $identity->UserID;
 	
-		$model = new Productcategory();
+		$model = new ProductCategory();
 		$model->CreatedBy = $UserID;
 	
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -143,7 +143,7 @@ class ProductcategoryController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if (($model = Productcategory::findOne($id)) !== null) {
+		if (($model = ProductCategory::findOne($id)) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');

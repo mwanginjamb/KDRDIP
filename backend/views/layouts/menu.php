@@ -66,12 +66,16 @@ print_r(Yii::$app->controller); exit; */
 							</li>							
 							<li <?= ($currentPage == 'suppliers') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/suppliers"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Suppliers</span></a>
 							</li>							
+							<li <?= ($currentPage == 'requisition') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/requisition"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisition</span></a>
+							</li>
 							<li <?= ($currentPage == 'quotation') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/quotation"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotation</span></a>
 							</li>
 							<li <?= ($currentPage == 'purchases') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/purchases"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases</span></a>
 							</li>	
 							<li <?= ($currentPage == 'deliveries') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/deliveries"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Deliveries</span></a>
-							</li>						
+							</li>		
+							<li <?= ($currentPage == 'stocktake') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
+							</li>					
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 								<ul class="menu-content">									
 									<li <?= ($currentPage == 'qapprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/qapprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotations</span></a>
@@ -79,6 +83,10 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentPage == 'papprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/papprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases</span></a>
 									</li>
 									<li <?= ($currentPage == 'approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisitions</span></a>
+									</li>
+									<li <?= ($currentRoute == 'srapprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/srapprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Store Requisitions</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'stocktake/approvallist' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake/approvallist?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
 									</li>									
 								</ul>
 							</li>
@@ -89,14 +97,18 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentPage == 'papprovals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/papprovals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases</span></a>
 									</li>	
 									<li <?= ($currentPage == 'approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisitions</span></a>
-									</li>									
+									</li>	
+									<li <?= ($currentRoute == 'srapprovals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/srapprovals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Store Requisitions</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'stocktake/approvallist' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake/approvallist?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
+									</li>							
 								</ul>
 							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Stores</span></a>
 								<ul class="menu-content">		
 									<li <?= ($currentPage == 'stores') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stores"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stores</span></a>
 									</li>							
-									<li <?= ($currentPage == 'requisition') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/requisition"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisition</span></a>
+									<li <?= ($currentPage == 'store-requisition') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/store-requisition"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisition</span></a>
 									</li>									
 									<li <?= ($currentPage == 'store-issues') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/store-issues"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Store Issues</span></a>
 									</li>	

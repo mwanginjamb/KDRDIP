@@ -21,7 +21,7 @@ class PriceList extends \yii\db\ActiveRecord
 	 */
 	public static function tableName()
 	{
-		return 'PriceList';
+		return 'pricelist';
 	}
 
 	/**

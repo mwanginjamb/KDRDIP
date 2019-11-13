@@ -11,6 +11,8 @@ use Yii;
  * @property integer $QuotationID
  * @property integer $ProductID
  * @property double $Quantity
+ * @property integer $QuotationTypeID
+ * @property integer $AccountID
  */
 class QuotationProducts extends \yii\db\ActiveRecord
 {
@@ -28,7 +30,7 @@ class QuotationProducts extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['QuotationID', 'ProductID'], 'integer'],
+			[['QuotationID', 'ProductID', 'QuotationTypeID', 'AccountID'], 'integer'],
 			[['Quantity'], 'number'],
 		];
 	}
@@ -43,6 +45,8 @@ class QuotationProducts extends \yii\db\ActiveRecord
 			'QuotationID' => 'Quotation ID',
 			'ProductID' => 'Product ID',
 			'Quantity' => 'Quantity',
+			'AccountID' => 'Account',
+			'QuotationTypeID' => 'Quotation Types'
 		];
 	}
 
@@ -59,6 +63,15 @@ class QuotationProducts extends \yii\db\ActiveRecord
 	public function getUnit_Total()
 	{
 		return '';
-	}	
+	}
 
+	public function getAccounts()
+	{
+		return $this->hasOne(Accounts::className(), ['AccountID' => 'AccountID'])->from(accounts::tableName());
+	}
+
+	public function getQuotationTypes()
+	{
+		return $this->hasOne(QuotationTypes::className(), ['QuotationTypeID' => 'QuotationTypeID'])->from(quotationtypes::tableName());
+	}
 }

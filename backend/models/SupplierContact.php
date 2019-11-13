@@ -22,7 +22,7 @@ class SupplierContact extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'SupplierContact';
+        return 'suppliercontact';
     }
 
     /**

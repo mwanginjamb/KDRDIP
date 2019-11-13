@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Payments;
+use app\models\Search;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;

@@ -16,6 +16,9 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use backend\controllers\UsersController;
 use app\models\FilterData;
+use app\models\QuotationTypes;
+use app\models\Accounts;
+use app\models\ApprovalNotes;
 
 use kartik\mpdf\Pdf;
 use yii\filters\AccessControl;
@@ -63,23 +66,28 @@ class QuotationController extends Controller
 	 */
 	public function actionView($id)
 	{
-	$dataProvider = new ActiveDataProvider([
+		$dataProvider = new ActiveDataProvider([
 			'query' => QuotationProducts::find()->joinWith('product')
 										->where(['QuotationID'=> $id]),
 		]);
 	
-	$supplierProvider = new ActiveDataProvider([
+		$supplierProvider = new ActiveDataProvider([
 			'query' => QuotationSupplier::find()->joinWith('suppliers')
 										->where(['QuotationID'=> $id]),
 		]);
+
+		$approvalNotesProvider = new ActiveDataProvider([
+			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 3]),
+	  	]);
 	
-	$model = Quotation::find()->where(['QuotationID'=> $id])
+		$model = Quotation::find()->where(['QuotationID'=> $id])
 							->joinWith('approvalstatus')
 							->joinWith('users')
 							->one();
 							
 		return $this->render('view', [
-			'model' => $model, 'dataProvider' => $dataProvider, 'supplierProvider' => $supplierProvider
+			'model' => $model, 'dataProvider' => $dataProvider, 'supplierProvider' => $supplierProvider,
+			'approvalNotesProvider' => $approvalNotesProvider
 		]);
 	}
 
@@ -90,79 +98,69 @@ class QuotationController extends Controller
 	 */
 	public function actionCreate()
 	{
-	
-	$identity = Yii::$app->user->identity;
-	$UserID = $identity->UserID;
-	
-	$model = new Quotation();
-	$model->CreatedBy = $UserID;
+		$identity = Yii::$app->user->identity;
+		$UserID = $identity->UserID;
 		
-	if ($model->load(Yii::$app->request->post()) && $model->save()) 
-	{
-		$QuotationID = $model->QuotationID;
-		
-		$params = Yii::$app->request->post();
-		$lines = $params['QuotationProducts'];
-		
-		foreach ($lines as $key => $line)
-		{
-			//print_r($lines);exit;
-				
-			if ($line['ProductID'] != '')
-			{
-				$_line = new QuotationProducts();
-				$_line->QuotationID = $QuotationID;
-				$_line->ProductID = $line['ProductID'];
-				$_line->Quantity = $line['Quantity'];
-				$_line->save();				
-			}
-		}
-		
-		$quotationsuppliers = $params['QuotationSupplier'];
-		foreach ($quotationsuppliers as $key => $line)
-		{				 
-			if ($line['QuotationSupplierID'] == '')
-			{				
-				if ($line['SupplierID'] != '')
-				{
-					$_line = new QuotationSupplier();
+		$model = new Quotation();
+		$model->CreatedBy = $UserID;
+			
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$QuotationID = $model->QuotationID;
+			
+			$params = Yii::$app->request->post();
+			$lines = $params['QuotationProducts'];
+			
+			foreach ($lines as $key => $line) {
+				if ($line['ProductID'] != '') {
+					$_line = new QuotationProducts();
 					$_line->QuotationID = $QuotationID;
-					$_line->SupplierID = $line['SupplierID'];
+					$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
+					$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
+					$_line->Quantity = $line['Quantity'];
+					$_line->QuotationTypeID = $line['QuotationTypeID'];
 					$_line->save();
-					//print_r($_line->getErrors());
 				}
-			} else
-			{
-				$_line = QuotationSupplier::findOne($line['QuotationSupplierID']);
-				$_line->QuotationID = $id;
-				$_line->SupplierID = $line['SupplierID'];
-				$_line->save();
 			}
 			
-			//print_r($_line->getErrors());
+			$quotationsuppliers = $params['QuotationSupplier'];
+			foreach ($quotationsuppliers as $key => $line) {
+				if ($line['QuotationSupplierID'] == '') {
+					if ($line['SupplierID'] != '') {
+						$_line = new QuotationSupplier();
+						$_line->QuotationID = $QuotationID;
+						$_line->SupplierID = $line['SupplierID'];
+						$_line->save();
+						//print_r($_line->getErrors());
+					}
+				} else {
+					$_line = QuotationSupplier::findOne($line['QuotationSupplierID']);
+					$_line->QuotationID = $id;
+					$_line->SupplierID = $line['SupplierID'];
+					$_line->save();
+				}
+			}
+			
+				return $this->redirect(['view', 'id' => $model->QuotationID]);
 		}
-		
-			return $this->redirect(['view', 'id' => $model->QuotationID]);
-		} else {
+
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
+		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
+		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
 		
 		$productmodelcount = 0;
 		$suppliermodelcount = 0;
 		
-		if (Yii::$app->request->post())
-		{
+		if (Yii::$app->request->post()) {
 			//print_r(Yii::$app->request->post()); exit;
 			$params = Yii::$app->request->post();
 			
-			foreach ($params['QuotationProducts'] as $x => $product)
-			{
+			foreach ($params['QuotationProducts'] as $x => $product) {
 				$lines[$x] = new QuotationProducts();
 				$lines[$x]['ProductID'] = $product['ProductID'];
 				$lines[$x]['Quantity'] = $product['Quantity'];
 			}
-			foreach ($params['QuotationSupplier'] as $x => $supplier)
-			{
+			foreach ($params['QuotationSupplier'] as $x => $supplier) {
 				$quotationsuppliers[$x] = new QuotationSupplier();
 				$quotationsuppliers[$x]['SupplierID'] = $supplier['SupplierID'];
 			}
@@ -171,30 +169,23 @@ class QuotationController extends Controller
 			$suppliermodelcount = count($quotationsuppliers);
 		}
 		
-		for ($x = $productmodelcount; $x <= 9; $x++) 
-		{ 
-			$lines[$x] = new QuotationProducts();
-		}			
-		
-		for ($x = $suppliermodelcount; $x <= 9; $x++) 
-		{ 
-			$quotationsuppliers[$x] = new QuotationSupplier();
-		}
-		
-		/* for ($x = 0; $x <= 9; $x++) 
-		{ 
+		for ($x = $productmodelcount; $x <= 9; $x++) {
 			$lines[$x] = new QuotationProducts();
 		}
 		
-		for ($x = 0; $x <= 9; $x++) 
-		{ 
+		for ($x = $suppliermodelcount; $x <= 9; $x++) {
 			$quotationsuppliers[$x] = new QuotationSupplier();
-		} */
-			return $this->render('create', [
-					'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
-			'products' => $products, 'quotationsuppliers' => $quotationsuppliers,
-			]);
 		}
+
+		return $this->render('create', [
+			'model' => $model,
+			'suppliers' => $suppliers,
+			'lines' => $lines, 
+			'products' => $products,
+			'quotationsuppliers' => $quotationsuppliers,
+			'quotationTypes' => $quotationTypes,
+			'accounts' => $accounts
+		]);
 	}
 
 	/**
@@ -206,107 +197,110 @@ class QuotationController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
-	$lines = QuotationProducts::find()->where(['QuotationID' => $id])->all();
-	$quotationsuppliers = QuotationSupplier::find()->where(['QuotationID' => $id])->all();
+		$quotationProducts = QuotationProducts::find()->where(['QuotationID' => $id])->all();
+		$quotationsuppliers = QuotationSupplier::find()->where(['QuotationID' => $id])->all();
+
+		// Convert Lines
+		foreach ($quotationProducts as $key => $line) {
+			$lines[$key] = new QuotationProducts();
+			$lines[$key] = $line;
+			if ($line->QuotationTypeID != 1) {
+				$lines[$key]->ProductID = $line->AccountID;
+			}
+			// $lines[$key]->QuotationID 
+			// $lines[$key]->ProductID 
+			// $lines[$key]->Quantity 
+			// $lines[$key]->QuotationTypeID
+			// $lines[$key]->AccountID
+		}
+
 	
-	if ($model->load(Yii::$app->request->post()) && $model->save()) 
-	{
-		$params = Yii::$app->request->post();
-		$lines = $params['QuotationProducts'];
-		
-		foreach ($lines as $key => $line)
-		{				 
-			if ($line['QuotationProductID'] == '')
-			{				
-				if ($line['ProductID'] != '')
-				{
-					$_line = new QuotationProducts();
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$params = Yii::$app->request->post();
+			$lines = $params['QuotationProducts'];
+			
+			foreach ($lines as $key => $line) {
+				if ($line['QuotationProductID'] == '') {
+					if ($line['ProductID'] != '') {
+						$_line = new QuotationProducts();
+						$_line->QuotationID = $id;
+						$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
+						$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
+						$_line->Quantity = $line['Quantity'];
+						$_line->QuotationTypeID = $line['QuotationTypeID'];
+						$_line->save();
+					}
+				} else {
+					$_line = QuotationProducts::findOne($line['QuotationProductID']);
 					$_line->QuotationID = $id;
-					$_line->ProductID = $line['ProductID'];
+					$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
+					$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
 					$_line->Quantity = $line['Quantity'];
 					$_line->save();
-					
 				}
-			} else
-			{
-				$_line = QuotationProducts::findOne($line['QuotationProductID']);
-				$_line->QuotationID = $id;
-				$_line->ProductID = $line['ProductID'];
-				$_line->Quantity = $line['Quantity'];
-				$_line->save();
 			}
-		}
-		
-		$quotationsuppliers = $params['QuotationSupplier'];
-		foreach ($quotationsuppliers as $key => $line)
-		{				 
-			if ($line['QuotationSupplierID'] == '')
-			{				
-				if ($line['SupplierID'] != '')
-				{
-					$_line = new QuotationSupplier();
+			
+			$quotationsuppliers = $params['QuotationSupplier'];
+			foreach ($quotationsuppliers as $key => $line) {
+				if ($line['QuotationSupplierID'] == '') {
+					if ($line['SupplierID'] != '') {
+						$_line = new QuotationSupplier();
+						$_line->QuotationID = $id;
+						$_line->SupplierID = $line['SupplierID'];
+						$_line->save();
+					}
+				} else {
+					$_line = QuotationSupplier::findOne($line['QuotationSupplierID']);
 					$_line->QuotationID = $id;
 					$_line->SupplierID = $line['SupplierID'];
 					$_line->save();
-					
 				}
-			} else
-			{
-				$_line = QuotationSupplier::findOne($line['QuotationSupplierID']);
-				$_line->QuotationID = $id;
-				$_line->SupplierID = $line['SupplierID'];
-				$_line->save();
 			}
 			
-			//print_r($_line->getErrors());
-		}			
-		
 			return $this->redirect(['view', 'id' => $model->QuotationID]);
-		} else 
-	{
+		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
+		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
+		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
+
+		$products[1] = $products;
+		$products[2] = $accounts; 
 		
-		if (Yii::$app->request->post())
-		{
+		if (Yii::$app->request->post()) {
 			$params = Yii::$app->request->post();
 			
-			foreach ($params['QuotationProducts'] as $x => $product)
-			{
+			foreach ($params['QuotationProducts'] as $x => $product) {
 				$lines[$x] = new QuotationProducts();
 				$lines[$x]['ProductID'] = $product['ProductID'];
 				$lines[$x]['Quantity'] = $product['Quantity'];
 				$lines[$x]['QuotationProductID'] = $product['QuotationProductID'];
 			}
-			foreach ($params['QuotationSupplier'] as $x => $supplier)
-			{
+			foreach ($params['QuotationSupplier'] as $x => $supplier) {
 				$quotationsuppliers[$x] = new QuotationSupplier();
 				$quotationsuppliers[$x]['SupplierID'] = $supplier['SupplierID'];
 				$quotationsuppliers[$x]['QuotationSupplierID'] = $supplier['QuotationSupplierID'];					
 			}
-			
 			$productmodelcount = count($lines);
 			$suppliermodelcount = count($quotationsuppliers);
-		} else
-		{			
+		} else {
 			$modelcount = count($lines);
-			for ($x = $modelcount; $x <= 9; $x++) 
-			{ 
+			for ($x = $modelcount; $x <= 9; $x++) {
 				$lines[$x] = new QuotationProducts();
 			}
 			
 			$modelcount = count($quotationsuppliers);
-			for ($x = $modelcount; $x <= 9; $x++) 
-			{ 
+			for ($x = $modelcount; $x <= 9; $x++) {
 				$quotationsuppliers[$x] = new QuotationSupplier();
 			}
 		}
 		
 		return $this->render('update', [
-				'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
-		'products' => $products, 'quotationsuppliers' => $quotationsuppliers,
+			'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
+			'products' => $products, 'quotationsuppliers' => $quotationsuppliers,
+			'quotationTypes' => $quotationTypes,
+			'accounts' => $accounts
 		]);
-	}
 	}
 
 	/**
@@ -461,5 +455,22 @@ class QuotationController extends Controller
 
 		$json = json_encode($Fields);
 		echo $json;
+	}
+
+	public function actionGetTypes($id, $TypeID)
+	{
+		if ($TypeID == 1) {
+			$model = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
+		} else {
+			$model = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
+		}
+			
+		if (!empty($model)) {
+			foreach ($model as $key => $item) {
+				echo "<option value='" . $key . "'>" . $item . "</option>";
+			}
+		} else {
+			echo '<option>-</option>';
+		}
 	}
 }

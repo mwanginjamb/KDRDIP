@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\Purchases;
 use app\models\Suppliers;
-use app\models\Pricelist;
+use app\models\PriceList;
 use app\models\Company;
 use app\models\PurchaseLines;
 use app\models\UserCategory;
@@ -69,31 +69,31 @@ class PurchasesController extends Controller
 	 */
 	public function actionIndex()
 	{
-	$UserID = Yii::$app->user->identity->UserID;
+		$UserID = Yii::$app->user->identity->UserID;
 		
 		$dataProvider = new ActiveDataProvider([
-			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['Purchases.CreatedBy' => $UserID]),
-		'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
-	]);
+			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['purchases.CreatedBy' => $UserID]),
+			'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
+		]);
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
 		]);
-}
+	}
 
 	public function actionApproved()
 	{
-	$UserID = Yii::$app->user->identity->UserID;
+		$UserID = Yii::$app->user->identity->UserID;
 		
 		$dataProvider = new ActiveDataProvider([
 			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['Purchases.ApprovalStatusID' => 3]),
-		'sort'=> ['defaultOrder' => ['PostingDate'=>SORT_DESC]],
-	]);
+			'sort'=> ['defaultOrder' => ['PostingDate'=>SORT_DESC]],
+		]);
 
 		return $this->render('Approved', [
 			'dataProvider' => $dataProvider,
 		]);
-	}	
+	}
 
 	/**
 	 * Displays a single Purchases model.
@@ -114,9 +114,10 @@ class PurchasesController extends Controller
 								->joinWith('approvalstatus')->joinWith('suppliers')
 								->joinWith('users')
 								->one();
-			return $this->render('view', [
-				'model' => $model, 'dataProvider' => $dataProvider, 'notes' => $notes,
-			]);
+
+		return $this->render('view', [
+			'model' => $model, 'dataProvider' => $dataProvider, 'notes' => $notes,
+		]);
 	}
 
 	public function actionViewapproved($id)
@@ -177,7 +178,7 @@ class PurchasesController extends Controller
 		} else {
 			$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
-			$pricelist = ArrayHelper::map(Pricelist::find()->all(), 'SupplierCode', 'ProductName');
+			$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
 			$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
 			for ($x = 0; $x <= 19; $x++) { 
 				$lines[$x] = new PurchaseLines();
@@ -259,7 +260,7 @@ class PurchasesController extends Controller
 																OR ProductCategory2ID IN (".implode(",",$suppliercategory).")
 																OR ProductCategory3ID IN (".implode(",",$suppliercategory).")")
 													->all(), 'ProductID', 'ProductName');
-		$pricelist = ArrayHelper::map(Pricelist::find()->where(['SupplierID' => $model->SupplierID])->all(), 'SupplierCode', 'ProductName');
+		$pricelist = ArrayHelper::map(PriceList::find()->where(['SupplierID' => $model->SupplierID])->all(), 'SupplierCode', 'ProductName');
 		$modelcount = count($lines);
 		for ($x = $modelcount; $x <= 19; $x++) 
 		{ 
@@ -286,7 +287,7 @@ class PurchasesController extends Controller
 public function Getunitprice($SupplierID, $ProductID, $SupplierCode)
 {
 	$unitprice = 0;
-	$model = Pricelist::findone(['SupplierCode' => $SupplierCode, 'SupplierID' => $SupplierID]);
+	$model = PriceList::findone(['SupplierCode' => $SupplierCode, 'SupplierID' => $SupplierID]);
 	if ($model)
 	{
 		$unitprice = $model->Price;
@@ -304,7 +305,7 @@ public function Getunitprice($SupplierID, $ProductID, $SupplierCode)
 public function actionGetunitprice($SupplierID, $ProductID, $SupplierCode)
 {
 	$unitprice = 0;
-	$model = Pricelist::findone(['SupplierCode' => $SupplierCode, 'SupplierID' => $SupplierID]);
+	$model = PriceList::findone(['SupplierCode' => $SupplierCode, 'SupplierID' => $SupplierID]);
 	if ($model)
 	{
 		$unitprice = $model->Price;
@@ -440,7 +441,7 @@ public function actionGetfields($id, $SupplierID)
 	}		
 	$str .= '</select>';
 	
-	$pricelist = ArrayHelper::map(Pricelist::find()->where(['SupplierID' => $SupplierID])->all(), 'SupplierCode', 'ProductName');
+	$pricelist = ArrayHelper::map(PriceList::find()->where(['SupplierID' => $SupplierID])->all(), 'SupplierCode', 'ProductName');
 	
 	$str1 = '<select id="purchaselines-'.$row.'-suppliercode" class="form-control-min" name="PurchaseLines['.$row.'][SupplierCode]" onchange="populate_unitprice(this.value, '.$row.',1)"><option value=""></option>';
 	foreach ($pricelist as $key => $value)

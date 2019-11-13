@@ -70,6 +70,9 @@ $FormID = 25;
 
 						<?= DetailView::widget([
 							'model' => $model,
+							'options' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
 							'attributes' => [
 								'QuotationID',
 								'Description',
@@ -84,79 +87,132 @@ $FormID = 25;
 							],
 						]) ?>
 
-						
-						<div class="row">
-							<div class="col-lg-6">
-								<h4 class="form-section" style="margin-bottom: 0px">Products</h4>
-								<?= GridView::widget([
-									'dataProvider' => $dataProvider,
-									'showFooter' =>false,
-									'columns' => [
-										[
-											'label'=>'ID',
-											'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-											'contentOptions' => ['style' => 'text-align:center'],
-											'format'=>'text',
-											'value' => 'QuotationProductID',
-											'contentOptions' => ['style' => 'text-align:left'],
-										],					
-										[
-											'label'=>'Product Name',
-											'headerOptions' => ['style'=>'color:black; text-align:left'],
-											'format'=>'text',
-											'value' => 'product.ProductName',
-											'contentOptions' => ['style' => 'text-align:left'],
-										],
-										[
-											'label'=>'Quantity',
-											'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:right'],
-											'format'=>['decimal',2],
-											'value' => 'Quantity',
-											'contentOptions' => ['style' => 'text-align:right'],
-										],		
-									],
-								]); ?>
-							</div>
-							<div class="col-lg-6">
-								<h4 class="form-section" style="margin-bottom: 0px">Suppliers</h4>
-								<?= GridView::widget([
-									'dataProvider' => $supplierProvider,
-									'showFooter' =>false,
-									'columns' => [
-										[
-											'label'=>'ID',
-											'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-											'contentOptions' => ['style' => 'text-align:center'],
-											'format'=>'text',
-											'value' => 'QuotationSupplierID',
-											'contentOptions' => ['style' => 'text-align:left'],
-										],
-										[
-											'label'=>'Supplier',
-											'headerOptions' => ['style'=>'color:black; text-align:left'],
-											'format'=>'text',
-											'value' => 'suppliers.SupplierName',
-											'contentOptions' => ['style' => 'text-align:left'],
-										],
-										[
-											'class' => 'yii\grid\ActionColumn',
-											'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
-											'template' => '{view}',
-											'buttons' => [
+						<h4 class="form-section" style="margin-bottom: 0px">Products</h4>
+						<?= GridView::widget([
+							'dataProvider' => $dataProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'QuotationProductID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],	
+								[
+									'label'=>'Type',
+									'headerOptions' => ['width' => '12%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'quotationTypes.QuotationTypeName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],				
+								[
+									'label'=>'Description',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => function ($model) {
+										return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
+									},								
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Quantity',
+									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:right'],
+									'format'=>['decimal',2],
+									'value' => 'Quantity',
+									'contentOptions' => ['style' => 'text-align:right'],
+								],		
+							],
+						]); ?>
 
-												'view' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID){
-													$baseUrl = Yii::$app->request->baseUrl;
-													return ($ApprovalStatusID == 2) ? Html::a('<span class="fa fa-eye"></span> RFQ', $baseUrl.'/quotation/rfq?id='.$model->QuotationID.'&sid='.$model->SupplierID, [
-																'title' => Yii::t('app', 'View'),
-																'class'=>'gridbtn btn-primary btn-xs',                                  
-																]) : '';
-												},
-											],
-										],
+						<h4 class="form-section" style="margin-bottom: 0px">Suppliers</h4>
+						<?= GridView::widget([
+							'dataProvider' => $supplierProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'QuotationSupplierID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Supplier',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'suppliers.SupplierName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'class' => 'yii\grid\ActionColumn',
+									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
+									'template' => '{view}',
+									'buttons' => [
+
+										'view' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID){
+											$baseUrl = Yii::$app->request->baseUrl;
+											return ($ApprovalStatusID == 2) ? Html::a('<i class="ft-eye"></i> View RFQ', $baseUrl.'/quotation/rfq?id='.$model->QuotationID.'&sid='.$model->SupplierID, [
+														'title' => Yii::t('app', 'View'),
+														'class'=>'btn-sm btn-primary btn-xs',                                
+														]) : '';
+										},
 									],
-								]); ?>
-							</div>
-						</div>
+								],
+							],
+						]); ?>
+
+<h4 class="form-section" style="margin-bottom: 0px">Notes</h4>
+						<?= GridView::widget([
+							'dataProvider' => $approvalNotesProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'ApprovalNoteID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Notes',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'Note',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Date',
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format' => ['date', 'php:d/m/Y h:i a'],
+									'value' => 'CreatedDate',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Created By',
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'users.fullName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],	
+							],
+						]); ?>
 
 					</div>
 				</div>

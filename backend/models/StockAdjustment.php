@@ -20,7 +20,7 @@ class StockAdjustment extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'StockAdjustment';
+        return 'stockadjustment';
     }
 
     /**

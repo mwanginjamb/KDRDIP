@@ -121,54 +121,59 @@ function addSupplierRow()
 				</div>			
 			</div>
 
-			<div class="row">
-				<div class="col-md-6">
-					<h4 class="form-section" style="margin-bottom: 0px">Select Products</h4>
-					<table width="100%" class="table table-striped table-bordered-min" id="ProductTable">
-					<thead>
-					<tr>
-						<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
-						<td style="padding: 4px 4px 4px 4px !important">Product</td>
-						<td style="padding: 4px 4px 4px 4px !important" width="25%">Quantity</td>
-					</tr>	
-					</thead>
-					<?php 
-					foreach ($lines as $x => $line) 
-					{ ?>
-						<tr>
-							<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']QuotationProductID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
-							<td><?= $form->field($line, '[' . $x . ']ProductID', ['template' => '{label}{input}'])->dropDownList($products, ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
-							<td><?= $form->field($line, '[' . $x . ']Quantity', ['template' => '{label}{input}'])->textInput(['class'=>'form-control', 'type' => 'number'])->label(false) ?></td>
-						</tr>
-						<?php
-					} ?>
-					</table>
-					<div style="height:30px">
-						<?= Html::button('Add Row', [ 'class' => 'bigbtn btn-primary', 'style' => 'float:right', 'onclick' => 'addProductRow()' ]); ?>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<h4 class="form-section" style="margin-bottom: 0px">Select Suppliers</h4>
-					<table width="100%" class="table table-striped table-bordered-min" id="SupplierTable">
-					<thead>
-					<tr>
-						<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
-						<td style="padding: 4px 4px 4px 4px !important">Supplier</td>
-					</tr>	
-					</thead>
-					<?php 
-					foreach ($quotationsuppliers as $x => $line) 
-					{ ?>
-						<tr>
-							<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']QuotationSupplierID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
-							<td><?= $form->field($line, '[' . $x . ']SupplierID', ['template' => '{label}{input}'])->dropDownList($suppliers, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
-						</tr>
-						<?php
-					} ?>			
-					</table>
-					<?= Html::button('Add Row', [ 'class' => 'bigbtn btn-primary', 'style' => 'float:right', 'onclick' => 'addSupplierRow()' ]); ?>
-				</div>			
+			<h4 class="form-section" style="margin-bottom: 0px">Select Products</h4>
+			<table width="100%" class="custom-table table-striped table-bordered-min" id="ProductTable">
+			<thead>
+			<tr>
+				<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
+				<td style="padding: 4px 4px 4px 4px !important" width="25%">Type</td>
+				<td style="padding: 4px 4px 4px 4px !important">Product</td>
+				<td style="padding: 4px 4px 4px 4px !important" width="25%">Quantity</td>
+			</tr>	
+			</thead>
+			<?php 
+			foreach ($lines as $x => $line) 
+			{ ?>
+				<tr>
+					<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']QuotationProductID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
+					<td><?= $form->field($line, '[' . $x . ']QuotationTypeID', ['template' => '{label}{input}'])->dropDownList($quotationTypes, ['prompt'=>'', 'class'=>'form-control',
+															'onchange'=>'
+															$.post( "' . Yii::$app->urlManager->createUrl('quotation/get-types?id=').'"+$(this).val()+"&TypeID="+$("#quotationproducts-'.$x.'-quotationtypeid").val(), 
+															function( data ) {
+																$( "select#quotationproducts-'.$x.'-productid" ).html( data );
+															});
+														'])->label(false) ?>
+					</td>					
+					<td><?= $form->field($line, '[' . $x . ']ProductID', ['template' => '{label}{input}'])->dropDownList(isset($products[$line->QuotationTypeID]) ? $products[$line->QuotationTypeID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>					
+					<td><?= $form->field($line, '[' . $x . ']Quantity', ['template' => '{label}{input}'])->textInput(['class'=>'form-control', 'type' => 'number'])->label(false) ?></td>
+				</tr>
+				<?php
+			} ?>
+			</table>
+			<div style="height:30px">
+				<?= Html::button('Add Row', [ 'class' => 'bigbtn btn-primary', 'style' => 'float:right', 'onclick' => 'addProductRow()' ]); ?>
 			</div>
+
+			<h4 class="form-section" style="margin-bottom: 0px">Select Suppliers</h4>
+			<table width="100%" class="custom-table table-striped table-bordered-min" id="SupplierTable">
+			<thead>
+			<tr>
+				<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
+				<td style="padding: 4px 4px 4px 4px !important">Supplier</td>
+			</tr>	
+			</thead>
+			<?php 
+			foreach ($quotationsuppliers as $x => $line) 
+			{ ?>
+				<tr>
+					<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']QuotationSupplierID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
+					<td><?= $form->field($line, '[' . $x . ']SupplierID', ['template' => '{label}{input}'])->dropDownList($suppliers, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
+				</tr>
+				<?php
+			} ?>			
+			</table>
+			<?= Html::button('Add Row', [ 'class' => 'bigbtn btn-primary', 'style' => 'float:right', 'onclick' => 'addSupplierRow()' ]); ?>
+			<p></p>
 			
 			<div class="row">
 				<div class="col-md-6">

@@ -25,7 +25,7 @@ class Deliveries extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'Deliveries';
+        return 'deliveries';
     }
 
     /**

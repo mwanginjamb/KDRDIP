@@ -22,49 +22,49 @@ use Yii;
  */
 class Purchases extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'Purchases';
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'purchases';
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['CreatedDate', 'PostingDate', 'ApprovalDate'], 'safe'],
-            [['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed'], 'integer'],
-            [['Notes'], 'string'],
-			['SupplierID','required'],
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['CreatedDate', 'PostingDate', 'ApprovalDate'], 'safe'],
+			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed'], 'integer'],
+			[['Notes'], 'string'],
+		['SupplierID','required'],
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'PurchaseID' => 'Purchase ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-            'Notes' => 'Notes',
-            'Posted' => 'Posted',
-            'PostingDate' => 'Posting Date',
-            'ApprovalStatusID' => 'Approval Status',
-            'SupplierID' => 'Supplier',
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'PurchaseID' => 'Purchase ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+			'Notes' => 'Notes',
+			'Posted' => 'Posted',
+			'PostingDate' => 'Posting Date',
+			'ApprovalStatusID' => 'Approval Status',
+			'SupplierID' => 'Supplier',
 			'Postedstring' => 'Posted',
 			'ApprovedBy' => 'Approved By',
 			'ApprovalDate' => 'Approval Date',
 			'Closed' => 'Closed',
 			'ClosedString' => 'Closed',
-        ];
-    }
+		];
+	}
 	
 	public function getPostedstring()
 	{
@@ -76,28 +76,28 @@ class Purchases extends \yii\db\ActiveRecord
 		return ($this->Closed == 0) ? 'NO' : 'YES';
 	}
 	
-	public function getSuppliers() 
+	public function getSuppliers()
 	{
-        return $this->hasOne(Suppliers::className(), ['SupplierID' => 'SupplierID'])->from(suppliers::tableName());
-    }
+		return $this->hasOne(Suppliers::className(), ['SupplierID' => 'SupplierID'])->from(suppliers::tableName());
+	}
 
-	public function getApprovalstatus() 
+	public function getApprovalstatus()
 	{
-        return $this->hasOne(Approvalstatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
-    }
+		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
+	}
 
-	public function getUsers() 
+	public function getUsers()
 	{
-        return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
-    }	
+		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
 	
-	public function getApprovers() 
+	public function getApprovers()
 	{
-        return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy'])->from(users::tableName());
-    }	
+		return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy'])->from(users::tableName());
+	}
 	
 	public function getPurchaseName()
 	{
-	   return isset($this->suppliers) ? $this->PurchaseID.' - '.$this->suppliers->SupplierName : $this->PurchaseID;
+	   return isset($this->suppliers) ? $this->PurchaseID. ' - ' . $this->suppliers->SupplierName : $this->PurchaseID;
 	}
 }

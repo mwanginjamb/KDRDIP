@@ -43,8 +43,9 @@ class Product extends \yii\db\ActiveRecord
 	{
 		return [
 			[['ProductName', 'Image', 'Description'], 'string'],
-			[['Deleted', 'CreatedBy', 'ProductCategoryID', 'ProductCategory2ID', 'ProductCategory3ID', 'UsageUnitID', 'ReOrderLevel', 
+			[['CreatedBy', 'ProductCategoryID', 'ProductCategory2ID', 'ProductCategory3ID', 'UsageUnitID', 'ReOrderLevel', 
 			'Active', 'QtyPerUnit'], 'integer'],
+			[['Deleted'], 'boolean'],
 			[['CreatedDate'], 'safe'],
 			[['UnitPrice', 'VATRate', 'ServiceRate', 'SalesRate'], 'number'],
 			[['ProductName', 'UnitPrice','ProductCategoryID'], 'required']

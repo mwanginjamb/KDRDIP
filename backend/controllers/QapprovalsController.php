@@ -90,7 +90,13 @@ class QapprovalsController extends Controller
 		$supplierProvider = new ActiveDataProvider([
             'query' => QuotationSupplier::find()->joinWith('suppliers')
 											->where(['QuotationID'=> $id]),
-        ]);
+		  ]);
+
+		$approvalNotesProvider = new ActiveDataProvider([
+			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 3]),
+	  ]);
+		  
+		
 		$model = $this->findModel($id);
 		
 		$notes = new ApprovalNotes();
@@ -143,6 +149,7 @@ class QapprovalsController extends Controller
 				'model' => $model,'detailmodel' => $detailmodel, 
 				'dataProvider' => $dataProvider, 'approvalstatus' => $approvalstatus, 
 				'supplierProvider' => $supplierProvider, 'notes' => $notes, 'option' => $option,
+				'approvalNotesProvider' => $approvalNotesProvider
 			]);
 		}
     }

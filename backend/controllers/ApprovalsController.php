@@ -22,80 +22,77 @@ use backend\controllers\UsersController;
  */
 class ApprovalsController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-			'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'create', 'update', 'delete'],
-                'rules' => [
-					/*
-					// Guest Users
-                    [
-                        'allow' => true,
-                        'actions' => ['login', 'signup'],
-                        'roles' => ['?'],
-                    ], */
-					// Authenticated Users
-                    [
-                        'allow' => true,
-                        'actions' => ['index', 'view', 'create', 'update', 'delete'],
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		return [
+		'access' => [
+					'class' => AccessControl::className(),
+					'only' => ['index', 'view', 'create', 'update', 'delete'],
+					'rules' => [
+				/*
+				// Guest Users
+						[
+							'allow' => true,
+							'actions' => ['login', 'signup'],
+							'roles' => ['?'],
+						], */
+				// Authenticated Users
+						[
+							'allow' => true,
+							'actions' => ['index', 'view', 'create', 'update', 'delete'],
+							'roles' => ['@'],
+						],
+					],
+			],
+			'verbs' => [
+					'class' => VerbFilter::className(),
+					'actions' => [
+						'delete' => ['POST'],
+					],
+			],
+		];
+	}
 
-    /**
-     * Lists all Requisition models.
-     * @return mixed
-     */
-    public function actionIndex($option)
-    {
+	/**
+	 * Lists all Requisition models.
+	 * @return mixed
+	 */
+	public function actionIndex($option)
+	{
 		$StatusID = $option==1 ? 1 : 2;
-        $dataProvider = new ActiveDataProvider([
-            'query' => Requisition::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
-        ]);
+		$dataProvider = new ActiveDataProvider([
+			'query' => Requisition::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
+		]);
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider, 'option' => $option,
-        ]);
-    }
+		return $this->render('index', [
+			'dataProvider' => $dataProvider, 'option' => $option,
+		]);
+	}
 
-    /**
-     * Displays a single Requisition model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id,$option)
-    {	
+	/**
+	 * Displays a single Requisition model.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionView($id, $option)
+	{
 		$identity = Yii::$app->user->identity;
 		$UserID = $identity->UserID;
 		
 		$params = Yii::$app->request->post();
 		$dataProvider = new ActiveDataProvider([
-            'query' => RequisitionLine::find()->joinWith('product')->where(['RequisitionID'=> $id]),
-        ]);
+				'query' => RequisitionLine::find()->joinWith('product')->where(['RequisitionID'=> $id]),
+			]);
 		$model = $this->findModel($id);
 
 		$notes = new ApprovalNotes();
-		if (Yii::$app->request->post())
-		{
-			if ($params['option']==1 && isset($params['Approve']))
-			{
+		if (Yii::$app->request->post()) {
+			if ($params['option']==1 && isset($params['Approve'])) {
 				$model->ApprovalStatusID = 2;
-			} else if ($params['option']==2 && isset($params['Approve']))
-			{
+			} else if ($params['option']==2 && isset($params['Approve'])) {
 				$model->ApprovalStatusID = 3;
 
 				$model->PostingDate = date('Y-m-d h:i:s');
@@ -104,13 +101,12 @@ class ApprovalsController extends Controller
 				$model->ApprovalDate = date('Y-m-d h:i:s');
 			}
 			
-			if (isset($params['Reject']))
-			{
+			if (isset($params['Reject'])) {
 				$model->ApprovalStatusID = 4;
 			}
 		}
-		if (Yii::$app->request->post() && $model->save()) 
-		{
+
+		if (Yii::$app->request->post() && $model->save()) {
 			$params = Yii::$app->request->post();
 			
 			// Add Notes to the notes table
@@ -119,7 +115,7 @@ class ApprovalsController extends Controller
 			$notes->ApprovalTypeID = 1;
 			$notes->ApprovalID = $id;
 			$notes->CreatedBy = $UserID;
-			$notes->save();		
+			$notes->save();
 			
 			// Make adjustment to the stock
 			$lines = RequisitionLine::find()->where(['RequisitionID'=> $id])->all();
@@ -132,48 +128,40 @@ class ApprovalsController extends Controller
 				$stock->ProductID = $line->ProductID;
 				$stock->save();
 			}
-			if ($model->ApprovalStatusID ==2)
-			{
+			if ($model->ApprovalStatusID ==2) {
 				$result = UsersController::sendEmailNotification(12); 
 			}
 			return $this->redirect(['index', 'option'=> $option]);
-		} else
-		{
-			$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where("ApprovalStatusID > 1")->all(), 'ApprovalStatusID', 'ApprovalStatusName');
-			$detailmodel = Requisition::find()->where(['RequisitionID'=> $id])->joinWith('approvalstatus')->one();
-			return $this->render('view', [
-				'model' => $model,'detailmodel' => $detailmodel, 'dataProvider' => $dataProvider, 
-				'approvalstatus' => $approvalstatus, 'notes' => $notes, 'option' => $option,
-			]);
 		}
-    }
 
-    /**
-     * Updates an existing Requisition model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {	
-		
-		$model = $this->findModel($id);
-		
+		$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where("ApprovalStatusID > 1")->all(), 'ApprovalStatusID', 'ApprovalStatusName');
+		$detailmodel = Requisition::find()->where(['RequisitionID'=> $id])->joinWith('approvalstatus')->one();
+		return $this->render('view', [
+			'model' => $model,'detailmodel' => $detailmodel, 'dataProvider' => $dataProvider, 
+			'approvalstatus' => $approvalstatus, 'notes' => $notes, 'option' => $option,
+		]);
+	}
+
+	/**
+	 * Updates an existing Requisition model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionUpdate($id)
+	{	
+		$model = $this->findModel($id);	
 		$lines = RequisitionLine::find()->where(['RequisitionID' => $id])->all();
-		
-        if ($model->load(Yii::$app->request->post()) && $model->save()) 
-		{
+	
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$params = Yii::$app->request->post();
 			$lines = $params['RequisitionLine'];
-			
-			foreach ($lines as $key => $line)
-			{
+		
+			foreach ($lines as $key => $line) {
 				//print_r($lines);exit;
-				 
-				if ($line['RequisitionLineID'] == '')
-				{				
-					if ($line['ProductID'] != '')
-					{
+					
+				if ($line['RequisitionLineID'] == '') {
+					if ($line['ProductID'] != '') {
 						$_line = new RequisitionLine();
 						$_line->RequisitionID = $id;
 						$_line->ProductID = $line['ProductID'];
@@ -182,8 +170,7 @@ class ApprovalsController extends Controller
 						$_line->save();
 						//print_r($_line->getErrors());
 					}
-				} else
-				{
+				} else {
 					$_line = RequisitionLine::findOne($line['RequisitionLineID']);
 					$_line->RequisitionID = $id;
 					$_line->ProductID = $line['ProductID'];
@@ -191,51 +178,48 @@ class ApprovalsController extends Controller
 					$_line->Description = $line['Description'];
 					$_line->save();
 				}
-				
-				//print_r($_line->getErrors());
 			}
-			
-            return $this->redirect(['view', 'id' => $model->RequisitionID]);
-        } else {
-			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
-			$modelcount = count($lines);
-			for ($x = $modelcount; $x <= 9; $x++) 
-			{ 
-				$lines[$x] = new RequisitionLine();
-			}
-			
-            return $this->render('update', [
-                'model' => $model, 'lines' => $lines, 'products' => $products
-            ]);
-        }
-    }
+		
+			return $this->redirect(['view', 'id' => $model->RequisitionID]);
+		}
 
-    /**
-     * Deletes an existing Requisition model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
+		$modelcount = count($lines);
+		for ($x = $modelcount; $x <= 9; $x++) { 
+			$lines[$x] = new RequisitionLine();
+		}
+		
+		return $this->render('update', [
+				'model' => $model, 'lines' => $lines, 'products' => $products
+		]);
+	}
 
-        return $this->redirect(['index']);
-    }
+	/**
+	 * Deletes an existing Requisition model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
 
-    /**
-     * Finds the Requisition model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return Requisition the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = Requisition::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
-        }
-    }
+		return $this->redirect(['index']);
+	}
+
+	/**
+	 * Finds the Requisition model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return Requisition the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if (($model = Requisition::findOne($id)) !== null) {
+			return $model;
+		} else {
+			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
 }

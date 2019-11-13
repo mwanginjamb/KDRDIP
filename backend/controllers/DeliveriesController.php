@@ -69,7 +69,7 @@ class DeliveriesController extends Controller
 		$UserID = Yii::$app->user->identity->UserID;
 	
 		$dataProvider = new ActiveDataProvider([
-			'query' => Deliveries::find()->where(['Deliveries.CreatedBy'=> $UserID]),
+			'query' => Deliveries::find()->where(['deliveries.CreatedBy'=> $UserID]),
 		'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
 		]);
 
@@ -88,18 +88,18 @@ class DeliveriesController extends Controller
 		$model = $this->findModel($id);
 		$lines = [];
 		
-		$sql = "Select * from DeliveryLines
-				JOIN PurchaseLines ON PurchaseLines.PurchaseLineID = DeliveryLines.PurchaseLineID 
-				LEFT JOIN Purchases ON Purchases.PurchaseID = PurchaseLines.PurchaseID
-				LEFT JOIN Product ON Product.ProductID = PurchaseLines.ProductID
-				LEFT JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
+		$sql = "Select * from deliverylines
+				JOIN purchaselines ON purchaselines.PurchaseLineID = deliverylines.PurchaseLineID 
+				LEFT JOIN purchases ON purchases.PurchaseID = purchaselines.PurchaseID
+				LEFT JOIN product ON product.ProductID = purchaselines.ProductID
+				LEFT JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
 				WHERE DeliveryID = $id";
 				
 		$data = PurchaseLines::findBySql($sql)->asArray()->all();
 		
-		$sql = "SELECT PurchaseLineID, sum(DeliveredQuantity) as Delivered FROM Deliveries
-					JOIN DeliveryLines ON DeliveryLines.DeliveryID = Deliveries.DeliveryID
-					WHERE PurchaseID = ".$model->PurchaseID."
+		$sql = "SELECT PurchaseLineID, sum(DeliveredQuantity) as Delivered FROM deliveries
+					JOIN deliverylines ON deliverylines.DeliveryID = deliveries.DeliveryID
+					WHERE PurchaseID = " . $model->PurchaseID . "
 					GROUP BY PurchaseLineID";
 				
 		$delivered = ArrayHelper::map(DeliveryLines::findBySql($sql)->asArray()->all(), 'PurchaseLineID', 'Delivered') ;
@@ -170,16 +170,16 @@ class DeliveriesController extends Controller
 			}
 			return $this->redirect(['view', 'id' => $model->DeliveryID]);
 		} else {
-			$sql = "Select *, ProductName, UsageUnitName FROM PurchaseLines 
-					LEFT JOIN Purchases ON Purchases.PurchaseID = PurchaseLines.PurchaseID
-					LEFT JOIN Product ON Product.ProductID = PurchaseLines.ProductID
-					LEFT JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
-					WHERE PurchaseLines.PurchaseID =" . $model->PurchaseID;
+			$sql = "Select *, ProductName, UsageUnitName FROM purchaselines 
+					LEFT JOIN purchases ON purchases.PurchaseID = purchaselines.PurchaseID
+					LEFT JOIN product ON product.ProductID = purchaselines.ProductID
+					LEFT JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
+					WHERE purchaselines.PurchaseID =" . $model->PurchaseID;
 			
 			$data = PurchaseLines::findBySql($sql)->asArray()->all();
 			
-			$sql = "SELECT PurchaseLineID, sum(DeliveredQuantity) as Delivered FROM Deliveries
-					JOIN DeliveryLines ON DeliveryLines.DeliveryID = Deliveries.DeliveryID
+			$sql = "SELECT PurchaseLineID, sum(DeliveredQuantity) as Delivered FROM deliveries
+					JOIN deliverylines ON deliverylines.DeliveryID = deliveries.DeliveryID
 					WHERE PurchaseID = " . $model->PurchaseID . " GROUP BY PurchaseLineID";
 					
 			$delivered = ArrayHelper::map(DeliveryLines::findBySql($sql)->asArray()->all(), 'PurchaseLineID', 'Delivered');
@@ -271,17 +271,17 @@ class DeliveriesController extends Controller
 		
 		$sql = "SELECT temp.*, ProductName, DeliveryLineID, UsageUnitName FROM 
 				(
-				SELECT PurchaseLines.*, DeliveredQuantity, DeliveryID, DeliveryLineID FROM DeliveryLines
-				RIGHT JOIN PurchaseLines ON PurchaseLines.PurchaseLineID = DeliveryLines.PurchaseLineID
+				SELECT purchaselines.*, DeliveredQuantity, DeliveryID, DeliveryLineID FROM deliverylines
+				RIGHT JOIN purchaselines ON purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
 				) temp 
-				LEFT JOIN Purchases ON Purchases.PurchaseID = temp.PurchaseID
-				LEFT JOIN Product ON Product.ProductID = temp.ProductID
-				LEFT JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
-				WHERE temp.PurchaseID =".$model->PurchaseID;
+				LEFT JOIN purchases ON purchases.PurchaseID = temp.PurchaseID
+				LEFT JOIN product ON product.ProductID = temp.ProductID
+				LEFT JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
+				WHERE temp.PurchaseID =" . $model->PurchaseID;
 				
 		$data = PurchaseLines::findBySql($sql)->asArray()->all();
 		
-		$sql = "SELECT PurchaseLineID, sum(DeliveredQuantity) as Delivered FROM DeliveryLines
+		$sql = "SELECT PurchaseLineID, sum(DeliveredQuantity) as Delivered FROM deliverylines
 				WHERE DeliveryID = $id
 				GROUP BY PurchaseLineID";
 				

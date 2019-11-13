@@ -117,7 +117,7 @@ class SuppliersController extends Controller
 		]);
 		
 		$ordersProvider = new ActiveDataProvider([
-			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['Purchases.SupplierID' => $id]),
+			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['purchases.SupplierID' => $id]),
 		]);
 
 		$categoriesProvider = new ActiveDataProvider([
@@ -247,13 +247,13 @@ class SuppliersController extends Controller
 			}
 
 			$ordersProvider = new ActiveDataProvider([
-				'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['Purchases.SupplierID' => $id]),
+				'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['purchases.SupplierID' => $id]),
 			]);
 			$priceList = PriceList::find()->where(['SupplierID' => $id])->all();
 
-			$sql = "SELECT ProductCategory.*, SupplierCategory.ProductCategoryID as PCID, SupplierCategoryID, 
-						SupplierID, Selected FROM SupplierCategory 
-						RIGHT JOIN ProductCategory ON ProductCategory.ProductCategoryID = SupplierCategory.ProductCategoryID
+			$sql = "SELECT productcategory.*, suppliercategory.ProductCategoryID as PCID, SupplierCategoryID, 
+						SupplierID, Selected FROM suppliercategory 
+						RIGHT JOIN productcategory ON productcategory.ProductCategoryID = suppliercategory.ProductCategoryID
 						AND SupplierID = '$id'";
 			
 			$supplierCategory = SupplierCategory::findBySql($sql)->asArray()->all();
@@ -529,7 +529,7 @@ class SuppliersController extends Controller
 	public function actionOrders($id)
 	{
 		$dataProvider = new ActiveDataProvider([
-				'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['Purchases.SupplierID' => $id]),
+				'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['purchases.SupplierID' => $id]),
 			]);
 
 			return $this->renderPartial('orders', [

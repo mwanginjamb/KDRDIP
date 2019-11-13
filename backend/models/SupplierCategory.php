@@ -19,7 +19,7 @@ class SupplierCategory extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'SupplierCategory';
+        return 'suppliercategory';
     }
 
     /**

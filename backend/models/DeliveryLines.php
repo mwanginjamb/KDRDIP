@@ -19,7 +19,7 @@ class DeliveryLines extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'DeliveryLines';
+        return 'deliverylines';
     }
 
     /**

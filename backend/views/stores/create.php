@@ -12,8 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">
 	
-	<p>Enter details below</p>
-	
 	<?= $this->render('_form', [
 		'model' => $model,
 	]) ?>

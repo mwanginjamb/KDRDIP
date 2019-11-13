@@ -43,9 +43,9 @@ $FormID = 26;
 							<?php // $form->field($model, 'ApprovalStatusID')->dropDownList($approvalstatus,['prompt'=>'Select...']) ?>
 
 							<div class="form-group">
-								<?= Html::submitButton('Approve', ['class' => 'btn btn-success', 'name'=>'Approve']); ?>
-								<?= Html::submitButton('Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']); ?>
-								<?= Html::a('Close', ['index', 'option' => $option], ['class' => 'btn btn-warning']) ?>
+								<?= Html::submitButton('<i class="ft-check"></i> Approve', ['class' => 'btn btn-success', 'name'=>'Approve']); ?>
+								<?= Html::submitButton('<i class="ft-x"></i> Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']); ?>
+								<?= Html::a('<i class="ft-x"></i> Close', ['index', 'option' => $option], ['class' => 'btn btn-warning']) ?>
 							</div>
 							
 							<?php ActiveForm::end(); ?>	
@@ -53,75 +53,134 @@ $FormID = 26;
 						</div>
 						<?= DetailView::widget([
 							'model' => $detailmodel,
+							'options' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
 							'attributes' => [
 								'QuotationID',
 								'Description',
 								'CreatedDate',
-								'users.fullName',
+								[
+									'attribute' => 'users.fullName',
+									'label' => 'Created By',
+								],
 								'Notes:ntext',
 								'ApprovalDate',
 								'approvalstatus.ApprovalStatusName',
 							],
-						]) ?>
+						]) ?>						
 
-							
-							<div class="row">
-								<div class="col-lg-6">
-									<p style="font-weight:bold">Products</p>
-									<?= GridView::widget([
-										'dataProvider' => $dataProvider,
-										'showFooter' =>false,
-										'columns' => [
-											[
-												'label'=>'ID',
-												'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-												'contentOptions' => ['style' => 'text-align:center'],
-												'format'=>'text',
-												'value' => 'QuotationProductID',
-												'contentOptions' => ['style' => 'text-align:left'],
-											],
-											[
-												'label'=>'Product Name',
-												'headerOptions' => ['style'=>'color:black; text-align:left'],
-												'format'=>'text',
-												'value' => 'product.ProductName',
-												'contentOptions' => ['style' => 'text-align:left'],
-											],
-											[
-												'label'=>'Quantity',
-												'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:right'],
-												'format'=>['decimal',2],
-												'value' => 'Quantity',
-												'contentOptions' => ['style' => 'text-align:right'],
-											],		
-										],
-									]); ?>
-								</div>
-								<div class="col-lg-6">
-									<p style="font-weight:bold">Suppliers</p>
-									<?= GridView::widget([
-										'dataProvider' => $supplierProvider,
-										'showFooter' =>false,
-										'columns' => [
-											[
-												'label'=>'ID',
-												'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-												'contentOptions' => ['style' => 'text-align:center'],
-												'format'=>'text',
-												'value' => 'QuotationSupplierID',
-												'contentOptions' => ['style' => 'text-align:left'],
-											],
-											[
-												'label'=>'Supplier',
-												'headerOptions' => ['style'=>'color:black; text-align:left'],
-												'format'=>'text',
-												'value' => 'suppliers.SupplierName',
-												'contentOptions' => ['style' => 'text-align:left'],
-											],
-										],
-									]); ?>
-								</div>
-							</div>
+						<h4 class="form-section" style="margin-bottom: 0px">Products</h4>
+						<?= GridView::widget([
+							'dataProvider' => $dataProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'QuotationProductID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],	
+								[
+									'label'=>'Type',
+									'headerOptions' => ['width' => '12%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'quotationTypes.QuotationTypeName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],				
+								[
+									'label'=>'Description',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => function ($model) {
+										return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
+									},								
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Quantity',
+									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:right'],
+									'format'=>['decimal',2],
+									'value' => 'Quantity',
+									'contentOptions' => ['style' => 'text-align:right'],
+								],		
+							],
+						]); ?>
+
+						<h4 class="form-section" style="margin-bottom: 0px">Suppliers</h4>
+						<?= GridView::widget([
+							'dataProvider' => $supplierProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'QuotationSupplierID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Supplier',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'suppliers.SupplierName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+							],
+						]); ?>
+
+						<h4 class="form-section" style="margin-bottom: 0px">Notes</h4>
+						<?= GridView::widget([
+							'dataProvider' => $approvalNotesProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'ApprovalNoteID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Notes',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'Note',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Date',
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format' => ['date', 'php:d/m/Y h:i a'],
+									'value' => 'CreatedDate',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Created By',
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'users.fullName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],	
+							],
+						]); ?>
 						</div>
 					</div>
 				</div>

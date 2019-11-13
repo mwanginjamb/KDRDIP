@@ -18,46 +18,46 @@ use Yii;
  */
 class RequisitionLine extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'RequisitionLine';
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'requisitionline';
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted', 'RequisitionID', 'ProductID'], 'integer'],
-            [['Quantity'], 'number'],
-            [['Description'], 'string'],
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted', 'RequisitionID', 'ProductID'], 'integer'],
+			[['Quantity'], 'number'],
+			[['Description'], 'string'],
+		];
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'RequisitionLineID' => 'Requisition Line ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-            'RequisitionID' => 'Requisition ID',
-            'ProductID' => 'Product ID',
-            'Quantity' => 'Quantity',
-            'Description' => 'Description',
-        ];
-    }
-	
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'RequisitionLineID' => 'Requisition Line ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+			'RequisitionID' => 'Requisition ID',
+			'ProductID' => 'Product ID',
+			'Quantity' => 'Quantity',
+			'Description' => 'Description',
+		];
+	}
+
 	public function getProduct() 
 	{
-        return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(product::tableName());
-    }
+		return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(product::tableName());
+	}
 }

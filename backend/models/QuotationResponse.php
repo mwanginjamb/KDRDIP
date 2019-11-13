@@ -19,7 +19,7 @@ class QuotationResponse extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'QuotationResponse';
+        return 'quotationresponse';
     }
 
     /**

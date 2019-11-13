@@ -24,7 +24,7 @@ class PurchaseLines extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'PurchaseLines';
+        return 'purchaselines';
     }
 
     /**

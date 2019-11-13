@@ -76,6 +76,8 @@ class Users extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'FullName' => 'Created By',
+			'Full_Name' => 'Created By',
 		];
 	}
 
