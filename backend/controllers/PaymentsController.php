@@ -4,11 +4,16 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Payments;
+use app\models\PaymentMethods;
+use app\models\Invoices;
+use app\models\Suppliers;
+use app\models\BankAccounts;
 use app\models\Search;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * PaymentsController implements the CRUD actions for Payments model.
@@ -95,13 +100,23 @@ class PaymentsController extends Controller
 	public function actionCreate()
 	{
 		$model = new Payments();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->PaymentID]);
 		}
 
+		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
+		$invoices = ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
+		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
+		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
+
 		return $this->render('create', [
 			'model' => $model,
+			'suppliers' => $suppliers,
+			'invoices' => $invoices,
+			'paymentMethods' => $paymentMethods,
+			'bankAccounts' => $bankAccounts
 		]);
 	}
 
@@ -119,9 +134,17 @@ class PaymentsController extends Controller
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->PaymentID]);
 		}
+		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
+		$invoices = ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
+		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
+		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
 
 		return $this->render('update', [
 			'model' => $model,
+			'suppliers' => $suppliers,
+			'invoices' => $invoices,
+			'paymentMethods' => $paymentMethods,
+			'bankAccounts' => $bankAccounts
 		]);
 	}
 

@@ -18,6 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'unitsOfMeasure' => $unitsOfMeasure,
 		'projectTeams' => $projectTeams,
 		'indicatorTargets' => $indicatorTargets,
+		'activities' => $activities
 	]) ?>
 
 </section>

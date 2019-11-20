@@ -6,6 +6,7 @@ use Yii;
 use app\models\Purchases;
 use app\models\Suppliers;
 use app\models\PriceList;
+use app\models\Quotation;
 use app\models\Company;
 use app\models\PurchaseLines;
 use app\models\UserCategory;
@@ -72,7 +73,8 @@ class PurchasesController extends Controller
 		$UserID = Yii::$app->user->identity->UserID;
 		
 		$dataProvider = new ActiveDataProvider([
-			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus')->where(['purchases.CreatedBy' => $UserID]),
+			'query' => Purchases::find()->joinWith('suppliers')->joinWith('approvalstatus'),
+												// ->where(['purchases.CreatedBy' => $UserID]),
 			'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
 		]);
 
@@ -180,12 +182,14 @@ class PurchasesController extends Controller
 			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 			$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
 			$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
+			$quotations = ArrayHelper::map(Quotation::find()->all(), 'QuotationID', 'QuotationID');
 			for ($x = 0; $x <= 19; $x++) { 
 				$lines[$x] = new PurchaseLines();
 			}
 			return $this->render('create', [
-					'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
-			'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
+				'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines,
+				'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
+				'quotations' => $quotations
 			]);
 		}
 	}
@@ -246,7 +250,7 @@ class PurchasesController extends Controller
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
 		$usercategories = ArrayHelper::getColumn(UserCategory::find()->where(['UserID' => $UserID, 'Selected' => 1])->all(),'ProductCategoryID');
-
+		$quotations = ArrayHelper::map(Quotation::find()->all(), 'QuotationID', 'QuotationID');
 		$scategory = ArrayHelper::getColumn(SupplierCategory::find()->where(['SupplierID' => $model->SupplierID, 'Selected' => 1])->all(),'ProductCategoryID');
 		// print_r($scategory); exit;
 		$suppliercategory = array(0);
@@ -269,8 +273,8 @@ class PurchasesController extends Controller
 		return $this->render('update', [
 			'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
 			'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
-		]);
-		
+			'quotations' => $quotations
+		]);		
 	}
 
 	public function actionSubmit($id)

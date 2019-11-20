@@ -148,8 +148,12 @@ function myDeleteFunction() {
 	?>
 	<table width="100%">
 	<tr> 
-		<td width="50%"><?= $form->field($model, 'SupplierID')->dropDownList($suppliers,['prompt'=>'Select...', 'disabled' => $disabled]) ?></td>
-		<td></td>
+		<td width="50%">
+			<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...', 'disabled' => $disabled]) ?>
+		</td>
+		<td>
+			<?= $form->field($model, 'QuotationID')->dropDownList($quotations, ['prompt'=>'Select...', 'disabled' => $disabled]) ?>
+		</td>
     </tr>
 	</table>
 	<?php 

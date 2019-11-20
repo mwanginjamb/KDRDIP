@@ -9,12 +9,12 @@ $this->title = 'Create Bank Accounts';
 $this->params['breadcrumbs'][] = ['label' => 'Bank Accounts', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="bank-accounts-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'banks' => $banks,
+		'bankBranches' => $bankBranches
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

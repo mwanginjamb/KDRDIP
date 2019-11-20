@@ -19,6 +19,7 @@ use Yii;
  * @property integer $ApprovedBy
  * @property string $ApprovalDate
  * @property integer $Closed
+ * @property integer $QuotationID
  */
 class Purchases extends \yii\db\ActiveRecord
 {
@@ -37,7 +38,7 @@ class Purchases extends \yii\db\ActiveRecord
 	{
 		return [
 			[['CreatedDate', 'PostingDate', 'ApprovalDate'], 'safe'],
-			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed'], 'integer'],
+			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed', 'QuotationID'], 'integer'],
 			[['Notes'], 'string'],
 		['SupplierID','required'],
 		];
@@ -63,6 +64,7 @@ class Purchases extends \yii\db\ActiveRecord
 			'ApprovalDate' => 'Approval Date',
 			'Closed' => 'Closed',
 			'ClosedString' => 'Closed',
+			'QuotationID' => 'Quotation'
 		];
 	}
 	

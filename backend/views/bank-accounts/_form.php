@@ -7,31 +7,56 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\BankAccounts */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+<div class="card">
+	<div class="card-header">
+		<h4 class="form-section"><?= $this->title; ?></h4>
+		
+		<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+		<div class="heading-elements">
+			<ul class="list-inline mb-0">
+				<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+				<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+				<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+				<!-- <li><a data-action="close"><i class="ft-x"></i></a></li> -->
+			</ul>
+		</div>
+	</div>
+	<div class="card-content collapse show">
+		<div class="card-body">
+			<?php $form = ActiveForm::begin(); ?>
+	 
+	 		<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'AccountNumber')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'AccountName')->textInput(['maxlength' => true]) ?>
+				</div>			
+			</div>
 
-<div class="bank-accounts-form">
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'BankID')->dropDownList($banks, ['prompt'=>'Select...']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'BranchID')->dropDownList($bankBranches, ['prompt'=>'Select...']) ?>
+				</div>			
+			</div>
 
-    <?php $form = ActiveForm::begin(); ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?>
+				</div>
+				<div class="col-md-6">
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'BankID')->textInput() ?>
+			<div class="form-group">
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
+			</div>
 
-    <?= $form->field($model, 'BranchID')->textInput() ?>
-
-    <?= $form->field($model, 'AccountName')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'AccountNumber')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'CreatedDate')->textInput() ?>
-
-    <?= $form->field($model, 'CreatedBy')->textInput() ?>
-
-    <?= $form->field($model, 'Deleted')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+			<?php ActiveForm::end(); ?>
+		</div>
+	 </div>
 </div>

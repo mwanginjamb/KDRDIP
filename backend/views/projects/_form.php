@@ -135,7 +135,8 @@ use yii\widgets\ActiveForm;
 					<tr>
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">Risk</td>
-						<td style="padding: 4px !important" width="20%">Risk Rating</td>
+						<td style="padding: 4px !important" width="15%">Risk Rating</td>
+						<td style="padding: 4px !important" width="15%">Risk Likelihood</td>
 					</tr>	
 					</thead>
 					<?php
@@ -148,6 +149,7 @@ use yii\widgets\ActiveForm;
 							</td>							
 							<td><?= $form->field($column, '[' . $x . ']ProjectRiskName')->textInput(['class' => 'form-control'])->label(false) ?></td>
 							<td><?= $form->field($column, '[' . $x . ']RiskRatingID', ['template' => '{label}{input}'])->dropDownList($riskRating, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']RiskLikelihoodID', ['template' => '{label}{input}'])->dropDownList($riskLikelihood, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
 						</tr>
 						<?php
 					} ?>

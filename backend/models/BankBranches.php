@@ -17,40 +17,50 @@ use Yii;
  */
 class BankBranches extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'bankbranches';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'bankbranches';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['BankID', 'CreatedBy', 'Deleted'], 'integer'],
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['BankBranchName'], 'string', 'max' => 45],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['BankID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['BankBranchName'], 'string', 'max' => 45],
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'BankBranchID' => 'Bank Branch ID',
-            'BankBranchName' => 'Bank Branch Name',
-            'BankID' => 'Bank ID',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'BankBranchID' => 'Bank Branch ID',
+			'BankBranchName' => 'Bank Branch Name',
+			'BankID' => 'Bank ID',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
+
+	public function getUsers()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getBanks()
+	{
+		return $this->hasOne(Banks::className(), ['BankID' => 'BankID'])->from(banks::tableName());
+	}
 }

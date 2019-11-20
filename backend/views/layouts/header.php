@@ -26,7 +26,7 @@ $user = Yii::$app->user->identity;
 									</a></li> -->
 							<li class="nav-item d-none d-lg-block d-none"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
 							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">KENYA DEVELOPMENT RESPONSE TO DISPLACEMENT IMPACTS PROJECT</a>
-									<ul class="mega-dropdown-menu dropdown-menu row">
+					<!-- 				<ul class="mega-dropdown-menu dropdown-menu row">
 										<li class="col-md-2">
 											<h6 class="dropdown-menu-header text-uppercase mb-1"><i class="material-icons">list_alt</i> News</h6>
 											<div id="mega-menu-carousel-example">
@@ -113,14 +113,14 @@ $user = Yii::$app->user->identity;
 													</div>
 											</form>
 										</li>
-									</ul>
+									</ul> -->
 							</li>
 						</ul>
 						<ul class="nav navbar-nav float-right">
 							<!-- <li class="dropdown dropdown-language nav-item"><a class="dropdown-toggle nav-link" id="dropdown-flag" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-gb"></i><span class="selected-language"></span></a>
 									<div class="dropdown-menu" aria-labelledby="dropdown-flag"><a class="dropdown-item" href="#"><i class="flag-icon flag-icon-gb"></i> English</a><a class="dropdown-item" href="#"><i class="flag-icon flag-icon-fr"></i> French</a><a class="dropdown-item" href="#"><i class="flag-icon flag-icon-cn"></i> Chinese</a><a class="dropdown-item" href="#"><i class="flag-icon flag-icon-de"></i> German</a></div>
 							</li> -->
-							<li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="material-icons">notifications_none</i><span class="badge badge-pill badge-danger badge-up badge-glow">5</span></a>
+							<!-- <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="#" data-toggle="dropdown"><i class="material-icons">notifications_none</i><span class="badge badge-pill badge-danger badge-up badge-glow">5</span></a>
 									<ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
 										<li class="dropdown-menu-header">
 											<h6 class="dropdown-header m-0"><span class="grey darken-2">Notifications</span></h6><span class="notification-tag badge badge-danger float-right m-0">5 New</span>
@@ -216,7 +216,7 @@ $user = Yii::$app->user->identity;
 											</a></li>
 										<li class="dropdown-menu-footer"><a class="dropdown-item text-muted text-center" href="javascript:void(0)">Read all messages</a></li>
 									</ul>
-							</li>
+							</li> -->
 							<li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><span class="mr-1 user-name text-bold-700"><?= $user->FirstName .' '. $user->LastName; ?></span><span class="avatar avatar-online"><img src="<?= $baseUrl; ?>/app-assets/images/portrait/small/avatar-s-19.png" alt="avatar"><i></i></span></a>
 									<div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="<?= $baseUrl; ?>/profile/view"><i class="material-icons">person_outline</i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="material-icons">mail_outline</i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="material-icons">content_paste</i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="material-icons">chat_bubble_outline</i> Chats</a>
 										<div class="dropdown-divider"></div><a class="dropdown-item" href="<?= $baseUrl; ?>/site/logout"><i class="material-icons">power_settings_new</i> Logout</a>

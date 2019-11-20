@@ -8,6 +8,7 @@ use app\models\ProjectTeams;
 use app\models\Components;
 use app\models\UnitsOfMeasure;
 use app\models\SubComponents;
+use app\models\Activities;
 use app\models\IndicatorTargets;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -75,6 +76,7 @@ class IndicatorsController extends Controller
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
+			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
 			
 			return $this->redirect(['projects/view', 'id' => $pid]);
 		}
@@ -88,6 +90,10 @@ class IndicatorsController extends Controller
 			$indicatorTargets[$x] = new IndicatorTargets();
 		}
 
+		for ($x = 0; $x <= 9; $x++) {
+			$activities[$x] = new Activities();
+		}
+
 		return $this->render('create', [
 			'model' => $model,
 			'components' => $components,
@@ -95,6 +101,7 @@ class IndicatorsController extends Controller
 			'unitsOfMeasure' => $unitsOfMeasure,
 			'projectTeams' => $projectTeams,
 			'indicatorTargets' => $indicatorTargets,
+			'activities' => $activities
 		]);
 	}
 
@@ -108,10 +115,17 @@ class IndicatorsController extends Controller
 	public function actionUpdate($id, $pid)
 	{
 		$model = $this->findModel($id);
+		$subComponent = SubComponents::findOne($model->SubComponentID);
+		if ($subComponent) {
+			$model->ComponentID = $subComponent->ComponentID;
+		}
+		 
 		$indicatorTargets = IndicatorTargets::find()->where(['IndicatorID' => $id])->all();
+		$activities = Activities::find()->where(['IndicatorID' => $id])->all();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {			
 			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
+			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
 
 			return $this->redirect(['projects/view', 'id' => $pid]);
 		}
@@ -119,6 +133,10 @@ class IndicatorsController extends Controller
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
 		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
+
+		for ($x = count($activities); $x <= 10; $x++) {
+			$activities[$x] = new Activities();
+		}
 
 		for ($x = count($indicatorTargets); $x <= 5; $x++) {
 			$indicatorTargets[$x] = new IndicatorTargets();
@@ -131,6 +149,7 @@ class IndicatorsController extends Controller
 			'unitsOfMeasure' => $unitsOfMeasure,
 			'projectTeams' => $projectTeams,
 			'indicatorTargets' => $indicatorTargets,
+			'activities' => $activities
 		]);
 	}
 
@@ -180,6 +199,25 @@ class IndicatorsController extends Controller
 				$_column = IndicatorTargets::findOne($column['IndicatorTargetID']);
 				$_column->IndicatorTargetName = $column['IndicatorTargetName'];
 				$_column->Target = $column['Target'];
+				$_column->save();
+			}
+		}
+	}
+
+	private static function saveActivities($columns, $model)
+	{
+		foreach ($columns as $key => $column) {
+			if ($column['ActivityID'] == '') {
+				if (trim($column['ActivityName']) != '') {
+					$_column = new Activities();
+					$_column->IndicatorID = $model->IndicatorID;
+					$_column->ActivityName = $column['ActivityName'];
+					$_column->CreatedBy = Yii::$app->user->identity->UserID;
+					$_column->save();
+				}
+			} else {
+				$_column = Activities::findOne($column['ActivityID']);
+				$_column->ActivityName = $column['ActivityName'];
 				$_column->save();
 			}
 		}

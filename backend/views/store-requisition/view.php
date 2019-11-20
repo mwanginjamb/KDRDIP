@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model app\models\StoreRequisition */
 
-$this->title = $model->StoreRequisitionID;
+$this->title = 'View Store Requisition: ' . $model->StoreRequisitionID;
 $this->params['breadcrumbs'][] = ['label' => 'Store Requisitions', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);

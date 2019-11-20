@@ -8,32 +8,66 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="payments-form">
+<div class="card">
+	<div class="card-header">
+		<h4 class="form-section"><?= $this->title; ?></h4>
+		
+		<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+		<div class="heading-elements">
+			<ul class="list-inline mb-0">
+				<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+				<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+				<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+				<!-- <li><a data-action="close"><i class="ft-x"></i></a></li> -->
+			</ul>
+		</div>
+	</div>
+	<div class="card-content collapse show">
+		<div class="card-body">
+			<?php $form = ActiveForm::begin(); ?>
+				 
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Date')->textInput(['type' => 'date']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'Select...']) ?>
+				</div>			
+			</div>
+	 
+	 		<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'InvoiceID')->dropDownList($invoices, ['prompt'=>'Select...']) ?>
+				</div>			
+			</div>
 
-    <?php $form = ActiveForm::begin(); ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'PaymentMethodID')->dropDownList($paymentMethods, ['prompt'=>'Select...']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'RefNumber')->textInput(['type' => 'text']) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'Date')->textInput() ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'Amount')->textInput(['maxlength' => true, 'type' => 'number']) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'SupplierID')->textInput() ?>
+			<div class="form-group">
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
+			</div>
 
-    <?= $form->field($model, 'PaymentMethodID')->textInput() ?>
-
-    <?= $form->field($model, 'Amount')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'RefNumber')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'CreatedDate')->textInput() ?>
-
-    <?= $form->field($model, 'CreatedBy')->textInput() ?>
-
-    <?= $form->field($model, 'Deleted')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+			<?php ActiveForm::end(); ?>
+		</div>
+	 </div>
 </div>

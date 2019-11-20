@@ -69,13 +69,13 @@ class StoreRequisition extends \yii\db\ActiveRecord
 		return $this->hasOne(Approvalstatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
 	}
 	
-	public function getUsers() 
+	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
 	}
 
-	public function getStores() 
+	public function getStores()
 	{
-		return $this->hasOne(Stores::className(), ['StoreID' => 'StoreID'])->from(Stores::tableName());
+		return $this->hasOne(Stores::className(), ['StoreID' => 'StoreID'])->from(stores::tableName());
 	}
 }

@@ -9,6 +9,7 @@ use app\models\FundingSources;
 use app\models\ProjectFunding;
 use app\models\ProjectRisk;
 use app\models\RiskRating;
+use app\models\RiskLikelihood;
 use app\models\ProjectDisbursement;
 use app\models\ProjectSafeguardingPolicies;
 use app\models\SafeguardingPolicies;
@@ -150,7 +151,7 @@ class ProjectsController extends Controller
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
-		
+		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');		
 		
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -198,6 +199,7 @@ class ProjectsController extends Controller
 			'projectTeams' => $projectTeams,
 			'counties' => $counties,
 			'subCounties' => $subCounties,
+			'riskLikelihood' => $riskLikelihood
 		]);
 	}
 
@@ -240,6 +242,7 @@ class ProjectsController extends Controller
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
+		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -287,6 +290,7 @@ class ProjectsController extends Controller
 			'projectTeams' => $projectTeams,
 			'counties' => $counties,
 			'subCounties' => $subCounties,
+			'riskLikelihood' => $riskLikelihood
 		]);
 	}
 
@@ -350,6 +354,7 @@ class ProjectsController extends Controller
 					$_column->ProjectID = $model->ProjectID;
 					$_column->ProjectRiskName = $column['ProjectRiskName'];
 					$_column->RiskRatingID = $column['RiskRatingID'];
+					$_column->RiskLikelihoodID = $column['RiskLikelihoodID'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
@@ -357,6 +362,7 @@ class ProjectsController extends Controller
 				$_column = ProjectRisk::findOne($column['ProjectRiskID']);
 				$_column->ProjectRiskName = $column['ProjectRiskName'];
 				$_column->RiskRatingID = $column['RiskRatingID'];
+				$_column->RiskLikelihoodID = $column['RiskLikelihoodID'];
 				$_column->save();
 			}
 		}

@@ -87,13 +87,14 @@ class StoreRequisitionController extends Controller
 			$params = Yii::$app->request->post();
 			$lines = isset($params['StoreRequisitionLine']) ? $params['RequisitionLine'] : [];
 			
-			foreach ($lines as $key => $line) {				 
+			foreach ($lines as $key => $line) {
 				if ($line['ProductID'] != '') {
 					$_line = new StoreRequisitionLine();
 					$_line->StoreRequisitionID = $StoreRequisitionID;
 					$_line->ProductID = $line['ProductID'];
 					$_line->Quantity = $line['Quantity'];
 					$_line->Description = $line['Description'];
+					$_line->CreatedBy = $UserID;
 					$_line->save();
 					//print_r($_line->getErrors());
 				}
@@ -134,13 +135,14 @@ class StoreRequisitionController extends Controller
 			foreach ($lines as $key => $line) {
 				//print_r($lines);exit;
 					
-				if ($line['RequisitionLineID'] == '') {				
+				if ($line['RequisitionLineID'] == '') {
 					if ($line['ProductID'] != '') {
 						$_line = new StoreRequisitionLine();
 						$_line->StoreRequisitionID = $id;
 						$_line->ProductID = $line['ProductID'];
 						$_line->Quantity = $line['Quantity'];
 						$_line->Description = $line['Description'];
+						$_line->CreatedBy = $UserID;
 						$_line->save();
 						//print_r($_line->getErrors());
 					}

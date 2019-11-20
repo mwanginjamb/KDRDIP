@@ -59,7 +59,7 @@ class Requisition extends \yii\db\ActiveRecord
 	
 	public function getApprovalstatus()
 	{
-		return $this->hasOne(Approvalstatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
+		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
 	}
 	
 	public function getUsers() 

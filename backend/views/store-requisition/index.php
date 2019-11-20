@@ -83,10 +83,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									'buttons' => [
 				
 										'view' => function ($url, $model) {
-											return (Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->RequisitionID], ['class' => 'btn-sm btn-primary']));
+											return (Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->StoreRequisitionID], ['class' => 'btn-sm btn-primary']));
 										},
 										'delete' => function ($url, $model) {
-											return (Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->RequisitionID], [
+											return (Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->StoreRequisitionID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',

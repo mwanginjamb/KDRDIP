@@ -539,22 +539,31 @@ class SuppliersController extends Controller
 
 	public function actionDownloadtemplate()
 	{
-		$source_dir = Yii::$app->params['templates']; 
-		$filename = $source_dir."Price List.xlsx";
+		// $source_dir = Yii::getAlias('@webroot') . Yii::$app->params['templates'];
+		$source_dir = Yii::$app->params['templates'];
+		$filename = $source_dir . 'Price List.xlsx';
 
+/* 		// echo $filename; exit;
+		ini_set('max_execution_time', 5*60); // 5 minutes
+		if (file_exists($filename)) {
+			Yii::$app->response->xSendFile($filename);
+	  	} else {
+			echo 'File not found';
+		} */
+		header('Content-Type: application/vnd.ms-excel');
 		header("Content-Disposition: attachment; filename=\"".basename($filename)."\";");
 		header("Content-Type: application/octet-stream");
 		header("Content-Type: application/download");
-		header("Content-Description: File Transfer");            
+		header("Content-Description: File Transfer");
 		header("Content-Length: " . filesize($filename));
 		flush(); // this doesn't really matter.
-		$fp = fopen($filename, "r");
-		while (!feof($fp))
-		{
+		$fp = fopen($filename, 'r');
+		while (!feof($fp)) {
 			echo fread($fp, 65536);
 			flush(); // this is essential for large downloads
 		} 
 		fclose($fp);
+		exit;
 	}
 
 	/**

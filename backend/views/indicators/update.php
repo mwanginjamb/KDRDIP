@@ -10,7 +10,6 @@ $this->params['breadcrumbs'][] = ['label' => 'Indicators', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->IndicatorID, 'url' => ['view', 'id' => $model->IndicatorID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-?>
 <section class="flexbox-container">
 
 	<?= $this->render('_form', [
@@ -20,6 +19,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'unitsOfMeasure' => $unitsOfMeasure,
 		'projectTeams' => $projectTeams,
 		'indicatorTargets' => $indicatorTargets,
+		'activities' => $activities
 	]) ?>
 
 </section>

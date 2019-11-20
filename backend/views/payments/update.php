@@ -10,12 +10,14 @@ $this->params['breadcrumbs'][] = ['label' => 'Payments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->PaymentID, 'url' => ['view', 'id' => $model->PaymentID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="payments-update">
+<section class="flexbox-container">
+		
+	<?= $this->render('_form', [
+		'model' => $model,
+		'suppliers' => $suppliers,
+		'invoices' => $invoices,
+		'paymentMethods' => $paymentMethods,
+		'bankAccounts' => $bankAccounts
+	]) ?>
 
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

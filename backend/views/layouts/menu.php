@@ -38,14 +38,18 @@ print_r(Yii::$app->controller); exit; */
 							</li>
 							<li <?= ($currentPage == 'fixed-assets') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/fixed-assets"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Fixed Assets</span></a>
 							</li>
+							<li <?= ($currentPage == 'invoices') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoices"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
+							</li>
 							<li <?= ($currentPage == 'payments') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
 							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 								<ul class="menu-content">									
-									<li <?= ($currentPage == 'productcategory') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/productcategory"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Item Categories</span></a>
-									</li>									
-									<li <?= ($currentPage == 'supplier-category') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/supplier-category"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Categories</span></a>
-									</li>									
+									<!-- <li <?= ($currentRoute == 'reports/payment-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/payment-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments Report</span></a>
+									</li> -->									
+									<li <?= ($currentRoute == 'reports/supplierbalances') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/supplierbalances"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Balances</span></a>
+									</li>		
+									<li <?= ($currentRoute == 'reports/supplierstatement') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/supplierstatement"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Statement</span></a>
+									</li>
 								</ul>
 							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
@@ -118,10 +122,18 @@ print_r(Yii::$app->controller); exit; */
 							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 								<ul class="menu-content">									
-									<li <?= ($currentPage == 'productcategory') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/productcategory"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Item Categories</span></a>
+									<li <?= ($currentRoute == 'reports/inventoryreport') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/inventoryreport"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Inventory Report</span></a>
 									</li>									
-									<li <?= ($currentPage == 'supplier-category') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/supplier-category"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Categories</span></a>
-									</li>									
+									<li <?= ($currentRoute == 'reports/purchasesreport') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/purchasesreport"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases Report</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'reports/stocktakingreport') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/stocktakingreport"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take Report</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'reports/stockvariancereport') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/stockvariancereport"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Variance Report</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'reports/puchasesummaryreport') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/puchasesummaryreport"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchase Summary</span></a>
+									</li>
+									<li <?= ($currentRoute == 'reports/stockreport') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/stockreport"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Report Report</span></a>
+									</li>
 								</ul>
 							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
@@ -129,7 +141,11 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentPage == 'productcategory') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/productcategory"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Item Categories</span></a>
 									</li>									
 									<li <?= ($currentPage == 'supplier-category') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/supplier-category"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Categories</span></a>
-									</li>									
+									</li>
+									<li <?= ($currentPage == 'usage-units') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/usage-units"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Usage Units</span></a>
+									</li>		
+									<li <?= ($currentPage == 'procurement-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Methods</span></a>
+									</li>								
 								</ul>
 							</li>
 						</ul>
@@ -156,9 +172,14 @@ print_r(Yii::$app->controller); exit; */
 									</li>
 									<li <?= ($currentPage == 'risk-rating') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/risk-rating"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Risk Rating</span></a>
 									</li>
+									<li <?= ($currentPage == 'risk-likelihood') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/risk-likelihood"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Risk Likelihood</span></a>
+									</li>
 									<li <?= ($currentPage == 'project-roles') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-roles"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Project Roles</span></a>
 									</li>
 									<li <?= ($currentPage == 'project-units') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-units"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Project Units</span></a>								
+									</li>
+									<li <?= ($currentPage == 'units-of-measure') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/units-of-measure"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Units of Measure</span></a>
+									</li>
 								</ul>
 							</li>
 						</ul>

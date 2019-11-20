@@ -30,6 +30,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'projectTeams' => $projectTeams,
 		'counties' => $counties,
 		'subCounties' => $subCounties,
+		'riskLikelihood' => $riskLikelihood
 	]) ?>
 
 </section>

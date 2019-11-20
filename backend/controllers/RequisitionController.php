@@ -66,7 +66,7 @@ class RequisitionController extends Controller
 	$UserID = Yii::$app->user->identity->UserID;
 		
 		$dataProvider = new ActiveDataProvider([
-			'query' => Requisition::find()->joinWith('users')->where(['Requisition.CreatedBy' => $UserID]),
+			'query' => Requisition::find()->joinWith('users')->where(['requisition.CreatedBy' => $UserID]),
 		'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
 	]);
 

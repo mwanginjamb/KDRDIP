@@ -10,6 +10,7 @@ use Yii;
  * @property int $ProjectRiskID
  * @property string $ProjectRiskName
  * @property int $RiskRatingID
+ * @property int $RiskLikelihoodID
  * @property int $ProjectID
  * @property int $CreatedBy
  * @property string $CreatedDate
@@ -32,7 +33,7 @@ class ProjectRisk extends \yii\db\ActiveRecord
 	{
 		return [
 			[['ProjectRiskName'], 'string'],
-			[['RiskRatingID', 'ProjectID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['RiskRatingID', 'ProjectID', 'CreatedBy', 'Deleted', 'RiskLikelihoodID'], 'integer'],
 			[['CreatedDate'], 'safe'],
 		];
 	}
@@ -44,8 +45,9 @@ class ProjectRisk extends \yii\db\ActiveRecord
 	{
 		return [
 			'ProjectRiskID' => 'Project Risk ID',
-			'ProjectRiskName' => 'Project Risk Name',
-			'RiskRatingID' => 'Risk Rating ID',
+			'ProjectRiskName' => 'Project Risk',
+			'RiskRatingID' => 'Risk Rating',
+			'RiskLikelihoodID' => 'Risk Likelihood',
 			'ProjectID' => 'Project ID',
 			'CreatedBy' => 'Created By',
 			'CreatedDate' => 'Created Date',
@@ -56,6 +58,11 @@ class ProjectRisk extends \yii\db\ActiveRecord
 	public function getRiskRating()
 	{
 		return $this->hasOne(RiskRating::className(), ['RiskRatingID' => 'RiskRatingID'])->from(riskrating::tableName());
+	}
+
+	public function getRiskLikelihood()
+	{
+		return $this->hasOne(RiskLikelihood::className(), ['RiskLikelihoodID' => 'RiskLikelihoodID'])->from(risklikelihood::tableName());
 	}
 
 	public function getUsers()

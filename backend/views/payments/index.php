@@ -123,34 +123,3 @@ $this->params['breadcrumbs'][] = $this->title;
 		</div>
 	</div>
 </section>
-<div class="payments-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Payments', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'PaymentID',
-            'Date',
-            'SupplierID',
-            'PaymentMethodID',
-            'Amount',
-            //'RefNumber',
-            //'Description',
-            //'CreatedDate',
-            //'CreatedBy',
-            //'Deleted',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-
-
-</div>

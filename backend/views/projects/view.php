@@ -195,6 +195,13 @@ $this->params['breadcrumbs'][] = $this->title;
 														'value' => 'riskRating.RiskRatingName',
 														'contentOptions' => ['style' => 'text-align:left'],
 													],
+													[
+														'label'=>'Risk Likelihood',
+														'headerOptions' => [ 'width' => '20%', 'style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'riskLikelihood.RiskLikelihoodName',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
 												],
 											]); ?>
 										

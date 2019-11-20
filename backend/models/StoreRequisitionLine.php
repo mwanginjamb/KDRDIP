@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\models\StoreIssues;
+
 use Yii;
 
 /**
@@ -19,6 +21,8 @@ use Yii;
  */
 class StoreRequisitionLine extends \yii\db\ActiveRecord
 {
+	public $IssueQuantity;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -56,17 +60,34 @@ class StoreRequisitionLine extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'IssueQuantity' => 'Quantity Issued',
 		];
 	}
 
-	
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
 	}
 
-	public function getProduct()
+	public function getProducts()
 	{
 		return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(product::tableName());
+	}
+
+	public function getStoreRequisition()
+	{
+		return $this->hasOne(StoreRequisition::className(), ['StoreRequisitionID' => 'StoreRequisitionID'])->from(storerequisition::tableName());
+	}
+
+	public function getIssued()
+	{
+		$issued = StoreIssues::find()->where(['RequisitionLineID' => $this->RequisitionLineID])->sum('Quantity');
+		return (isset($issued)) ? $issued : 0;
+	}
+
+	public function getBalance()
+	{
+		$issued = StoreIssues::find()->where(['RequisitionLineID' => $this->RequisitionLineID])->sum('Quantity');
+		return $this->Quantity - $issued;
 	}
 }

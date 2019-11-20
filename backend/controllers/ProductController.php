@@ -61,38 +61,37 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
-	$searchfor = array (1=> 'ID', 2 => 'Product Name', 3 => 'Product Category');
-		$search = new ProductSearch();
-	$params = Yii::$app->request->post();
-	if (!empty($params))
-	{
-		
-		$where = '';
-		if ($params['ProductSearch']['searchfor'] == 1)
+		$searchfor = array (1=> 'ID', 2 => 'Product Name', 3 => 'Product Category');
+			$search = new ProductSearch();
+		$params = Yii::$app->request->post();
+		if (!empty($params))
 		{
-			$searchstring = $params['ProductSearch']['searchstring']; 
-			$where = "ProductID = '$searchstring'";
 			
-		} else if ($params['ProductSearch']['searchfor'] == 2)
+			$where = '';
+			if ($params['ProductSearch']['searchfor'] == 1)
+			{
+				$searchstring = $params['ProductSearch']['searchstring']; 
+				$where = "ProductID = '$searchstring'";
+			} else if ($params['ProductSearch']['searchfor'] == 2)
+			{
+				$searchstring = $params['ProductSearch']['searchstring']; 
+				$where = "ProductName like '%$searchstring%'";
+			} else if ($params['ProductSearch']['searchfor'] == 3)
+			{
+				$searchstring = $params['ProductSearch']['searchstring']; 
+				$where = "ProductCategoryName like '%$searchstring%'";
+			}
+			$products = Product::find()->joinWith('productcategory')
+											->joinWith('usageunit')
+											->where($where);
+			$search->searchfor = $params['ProductSearch']['searchfor'];
+			$search->searchstring = $params['ProductSearch']['searchstring'];
+		} else
 		{
-			$searchstring = $params['ProductSearch']['searchstring']; 
-			$where = "ProductName like '%$searchstring%'";
-		} else if ($params['ProductSearch']['searchfor'] == 3)
-		{
-			$searchstring = $params['ProductSearch']['searchstring']; 
-			$where = "ProductCategoryName like '%$searchstring%'";
+			$products = Product::find()->joinWith('productcategory')->joinWith('usageunit');
 		}
-		$products = Product::find()->joinWith('productcategory')
-										->joinWith('usageunit')
-										->where($where);
-		$search->searchfor = $params['ProductSearch']['searchfor'];
-		$search->searchstring = $params['ProductSearch']['searchstring'];
-	} else
-	{
-		$products = Product::find()->joinWith('productcategory')->joinWith('usageunit');
-	}
-	
-	$dataProvider = new ActiveDataProvider([
+		
+		$dataProvider = new ActiveDataProvider([
 			'query' => $products,
 		]);
 
