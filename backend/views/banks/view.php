@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Banks */
@@ -63,6 +64,31 @@ $this->params['breadcrumbs'][] = $this->title;
 									],
 							],
 						]) ?>
+
+						<h4 class="form-section">Branches</h4>	 
+						<?= GridView::widget([
+							'dataProvider' => $bankBranches,
+							'showFooter' =>false,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered',
+							],
+							'columns' => [
+								[
+									'attribute' => 'BankBranchID',
+									'label' => 'ID',
+									'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
+									'contentOptions' => ['style' => 'text-align:center'],
+								],
+								[
+									'label'=>'Branch',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'BankBranchName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+							],
+						]); ?>
 					</div>
 				</div>
 			</div>																			

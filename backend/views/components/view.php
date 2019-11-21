@@ -49,6 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'attributes' => [
 									'ComponentID',
 									'ComponentName',
+									'ShortName',
 									'Notes:ntext',
 									[
 										'attribute' => 'CreatedDate',

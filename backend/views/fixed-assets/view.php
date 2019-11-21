@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\FixedAssets */
 
-$this->title = $model->FixedAssetID;
+$this->title = $model->Description;
 $this->params['breadcrumbs'][] = ['label' => 'Fixed Assets', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);

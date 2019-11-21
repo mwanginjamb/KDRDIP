@@ -52,7 +52,7 @@ class FixedAssets extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'FixedAssetID' => 'Fixed Asset ID',
+			'FixedAssetID' => 'Asset ID',
 			'AssetNo' => 'Asset No',
 			'Description' => 'Description',
 			'ProjectID' => 'Project',

@@ -23,15 +23,12 @@
 			<div class="row">
 				<div class="col-lg-3">
 					<?php
-					if (isset($StockFilter) && $StockFilter == true)
-					{ 
-						echo $form->field($model, 'StockTakeID')->dropDownList($stocktake,['prompt'=>'All...']);						
-					} elseif (isset($SupplierFilter) && $SupplierFilter == true)
-					{
-						echo $form->field($model, 'SupplierID')->dropDownList($suppliers,['prompt'=>'All...']);
-					} else
-					{
-						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories,['prompt'=>'All...']);
+					if (isset($StockFilter) && $StockFilter == true) { 
+						echo $form->field($model, 'StockTakeID')->dropDownList($stocktake, ['prompt'=>'All...']);						
+					} elseif (isset($SupplierFilter) && $SupplierFilter == true) {
+						echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
+					} elseif (count($productcategories) > 0) {
+						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
 					}
 					?>
 				</div>

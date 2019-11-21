@@ -44,6 +44,11 @@ $this->params['breadcrumbs'][] = $this->title;
 								],
 								'ComponentName',
 								[
+									'attribute' => 'ShortName',
+									'label' => 'Short Name',
+									'headerOptions' => ['width' => '10%'],
+								],								
+								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
 									'headerOptions' => ['width' => '15%'],

@@ -105,7 +105,7 @@ function addRow()
 			<tr> 
 				<td width="50%"><?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?></td>
 				<td>
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label class="control-label">Created By</label>
 						<input type="text" class="form-control" value="<?= $users->fullName; ?>" disabled style="background:white">
 						<div class="help-block"></div>
@@ -114,7 +114,7 @@ function addRow()
 						<label class="control-label">Created Date</label>
 						<input type="text" class="form-control" value="<?= $model->CreatedDate; ?>" disabled style="background:white">
 						<div class="help-block"></div>
-					</div>
+					</div> -->
 				</td>
 			</tr>
 			</table>

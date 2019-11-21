@@ -9,6 +9,7 @@ use app\models\Components;
 use app\models\UnitsOfMeasure;
 use app\models\SubComponents;
 use app\models\Activities;
+use app\models\Employees;
 use app\models\IndicatorTargets;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -85,10 +86,28 @@ class IndicatorsController extends Controller
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
 		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
+		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 
-		for ($x = 0; $x <= 4; $x++) {
-			$indicatorTargets[$x] = new IndicatorTargets();
+		$sql = "SELECT Temp.*, reportingperiods.ReportingPeriodID as RPID, ReportingPeriodName FROM (
+			SELECT * FROM indicatortargets
+			WHERE IndicatorID = 0
+			) as Temp 
+			right JOIN reportingperiods ON reportingperiods.ReportingPeriodID = Temp.ReportingPeriodID where ProjectID = $pid";
+
+		// $indicatorTargets = IndicatorTargets::find()->where(['IndicatorID' => $id])->all();
+		$indicatorTargetsArr = IndicatorTargets::findBySql($sql)->asArray()->all();
+		foreach ($indicatorTargetsArr as $key => $target) {
+			$indicatorTargets[$key] = new IndicatorTargets();
+			$indicatorTargets[$key]->IndicatorTargetID = $target['IndicatorTargetID'];
+			$indicatorTargets[$key]->IndicatorTargetName = $target['IndicatorTargetName'];
+			$indicatorTargets[$key]->IndicatorID = $target['IndicatorID'];
+			$indicatorTargets[$key]->ReportingPeriodID = $target['RPID'];
+			$indicatorTargets[$key]->Target = $target['Target'];
+			$indicatorTargets[$key]->ReportingPeriodName = $target['ReportingPeriodName'];
 		}
+/* 		for ($x = 0; $x <= 4; $x++) {
+			$indicatorTargets[$x] = new IndicatorTargets();
+		} */
 
 		for ($x = 0; $x <= 9; $x++) {
 			$activities[$x] = new Activities();
@@ -101,7 +120,8 @@ class IndicatorsController extends Controller
 			'unitsOfMeasure' => $unitsOfMeasure,
 			'projectTeams' => $projectTeams,
 			'indicatorTargets' => $indicatorTargets,
-			'activities' => $activities
+			'activities' => $activities,
+			'employees' => $employees
 		]);
 	}
 
@@ -119,11 +139,19 @@ class IndicatorsController extends Controller
 		if ($subComponent) {
 			$model->ComponentID = $subComponent->ComponentID;
 		}
-		 
-		$indicatorTargets = IndicatorTargets::find()->where(['IndicatorID' => $id])->all();
+
+		$sql = "SELECT Temp.*, reportingperiods.ReportingPeriodID as RPID, ReportingPeriodName FROM (
+			SELECT * FROM indicatortargets
+			WHERE IndicatorID = $id
+			) as Temp
+			right JOIN reportingperiods ON reportingperiods.ReportingPeriodID = Temp.ReportingPeriodID where ProjectID = $pid";
+
+		// $indicatorTargets = IndicatorTargets::find()->where(['IndicatorID' => $id])->all();
+		$indicatorTargetsArr = IndicatorTargets::findBySql($sql)->asArray()->all();
 		$activities = Activities::find()->where(['IndicatorID' => $id])->all();
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {			
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			// print_r(Yii::$app->request->post()['IndicatorTargets']); exit;		
 			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
 			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
 
@@ -133,13 +161,24 @@ class IndicatorsController extends Controller
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
 		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
+		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 
 		for ($x = count($activities); $x <= 10; $x++) {
 			$activities[$x] = new Activities();
 		}
 
-		for ($x = count($indicatorTargets); $x <= 5; $x++) {
-			$indicatorTargets[$x] = new IndicatorTargets();
+		// for ($x = count($indicatorTargets); $x <= 5; $x++) {
+		// 	$indicatorTargets[$x] = new IndicatorTargets();
+		// }
+		// print_r($indicatorTargetsArr); exit;
+		foreach ($indicatorTargetsArr as $key => $target) {
+			$indicatorTargets[$key] = new IndicatorTargets();
+			$indicatorTargets[$key]->IndicatorTargetID = $target['IndicatorTargetID'];
+			$indicatorTargets[$key]->IndicatorTargetName = $target['IndicatorTargetName'];
+			$indicatorTargets[$key]->IndicatorID = $target['IndicatorID'];
+			$indicatorTargets[$key]->ReportingPeriodID = $target['RPID'];
+			$indicatorTargets[$key]->Target = $target['Target'];
+			$indicatorTargets[$key]->ReportingPeriodName = $target['ReportingPeriodName'];
 		}
 
 		return $this->render('update', [
@@ -149,7 +188,8 @@ class IndicatorsController extends Controller
 			'unitsOfMeasure' => $unitsOfMeasure,
 			'projectTeams' => $projectTeams,
 			'indicatorTargets' => $indicatorTargets,
-			'activities' => $activities
+			'activities' => $activities,
+			'employees' => $employees
 		]);
 	}
 
@@ -187,11 +227,12 @@ class IndicatorsController extends Controller
 	{
 		foreach ($columns as $key => $column) {
 			if ($column['IndicatorTargetID'] == '') {
-				if (trim($column['IndicatorTargetName']) != '') {
+				if (trim($column['Target']) != '') {
 					$_column = new IndicatorTargets();
 					$_column->IndicatorID = $model->IndicatorID;
 					$_column->IndicatorTargetName = $column['IndicatorTargetName'];
 					$_column->Target = $column['Target'];
+					$_column->ReportingPeriodID = $column['ReportingPeriodID'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
@@ -212,12 +253,18 @@ class IndicatorsController extends Controller
 					$_column = new Activities();
 					$_column->IndicatorID = $model->IndicatorID;
 					$_column->ActivityName = $column['ActivityName'];
+					$_column->ResponsibilityID = $column['ResponsibilityID'];
+					$_column->StartDate = $column['StartDate'];
+					$_column->EndDate = $column['EndDate'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
 			} else {
 				$_column = Activities::findOne($column['ActivityID']);
 				$_column->ActivityName = $column['ActivityName'];
+				$_column->ResponsibilityID = $column['ResponsibilityID'];
+				$_column->StartDate = $column['StartDate'];
+				$_column->EndDate = $column['EndDate'];
 				$_column->save();
 			}
 		}

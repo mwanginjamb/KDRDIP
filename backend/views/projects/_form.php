@@ -49,7 +49,10 @@ use yii\widgets\ActiveForm;
 					<a class="nav-link" id="base-tab7" data-toggle="tab" aria-controls="tab7" href="#tab7" aria-expanded="false">Project Team</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" id="base-tab8" data-toggle="tab" aria-controls="tab8" href="#tab8" aria-expanded="false">Notes</a>
+					<a class="nav-link" id="base-tab8" data-toggle="tab" aria-controls="tab8" href="#tab8" aria-expanded="false">Reporting Periods</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" id="base-tab9" data-toggle="tab" aria-controls="tab9" href="#tab9" aria-expanded="false">Notes</a>
 				</li>
 				
 			</ul>
@@ -61,7 +64,16 @@ use yii\widgets\ActiveForm;
 							<?= $form->field($model, 'ProjectName')->textInput(['maxlength' => true]) ?>
 						</div>
 						<div class="col-md-6">
+							<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'Select']); ?>
+						</div>			
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
 							<?= $form->field($model, 'ProjectParentID')->dropDownList($projects, ['prompt'=>'Select']); ?>
+						</div>
+						<div class="col-md-6">
+							
 						</div>			
 					</div>
 
@@ -272,6 +284,33 @@ use yii\widgets\ActiveForm;
 				</div>
 
 				<div class="tab-pane" id="tab8" aria-labelledby="base-tab8">
+					<h4 class="form-section">Reporting Periods</h4>
+					<table width="100%" class="custom-table" id="ColumnsTable">
+					<thead>
+					<tr>
+						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
+						<td style="padding: 4px !important">Period</td>
+						<td style="padding: 4px !important" width="15%">Expected Date</td>
+					</tr>	
+					</thead>
+					<?php
+					foreach ($reportingPeriods as $x => $column) {
+						?>
+						<tr>
+							<td style="text-align: center;">
+								<?= $x+1; ?>
+								<?= $form->field($column, '[' . $x . ']ReportingPeriodID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+							</td>
+							<td><?= $form->field($column, '[' . $x . ']ReportingPeriodName')->textInput(['class' => 'form-control'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']ExpectedDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
+						</tr>
+						<?php
+					} ?>
+					</table>	 
+					
+				</div>
+
+				<div class="tab-pane" id="tab9" aria-labelledby="base-tab9">
 					<h4 class="form-section">Notes</h4>	 
 					<table width="100%" class="custom-table" id="ColumnsTable">
 					<thead>
@@ -297,7 +336,7 @@ use yii\widgets\ActiveForm;
 			</div>			
 
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['index', 'cid' => $model->ComponentID], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 

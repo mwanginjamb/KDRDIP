@@ -19,7 +19,8 @@ $this->params['breadcrumbs'][] = 'Update';
 		'unitsOfMeasure' => $unitsOfMeasure,
 		'projectTeams' => $projectTeams,
 		'indicatorTargets' => $indicatorTargets,
-		'activities' => $activities
+		'activities' => $activities,
+		'employees' => $employees
 	]) ?>
 
 </section>

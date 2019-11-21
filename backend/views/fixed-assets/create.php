@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\FixedAssets */
 
-$this->title = 'Create Fixed Assets';
+$this->title = 'Create Assets';
 $this->params['breadcrumbs'][] = ['label' => 'Fixed Assets', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

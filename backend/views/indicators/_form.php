@@ -72,6 +72,7 @@ use yii\widgets\ActiveForm;
 			<thead>
 			<tr>
 				<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
+				<td style="padding: 4px !important">Period</td>
 				<td style="padding: 4px !important">Description</td>
 				<td style="padding: 4px !important" width="15%">Target</td>
 			</tr>	
@@ -83,7 +84,9 @@ use yii\widgets\ActiveForm;
 					<td style="text-align: center;">
 						<?= $x+1; ?>
 						<?= $form->field($column, '[' . $x . ']IndicatorTargetID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+						<?= $form->field($column, '[' . $x . ']ReportingPeriodID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 					</td>
+					<td><?= $column->ReportingPeriodName; ?></td>
 					<td><?= $form->field($column, '[' . $x . ']IndicatorTargetName')->textInput(['class' => 'form-control'])->label(false) ?></td>
 					<td><?= $form->field($column, '[' . $x . ']Target')->textInput(['class' => 'form-control'])->label(false) ?></td>
 				</tr>
@@ -97,6 +100,9 @@ use yii\widgets\ActiveForm;
 			<tr>
 				<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 				<td style="padding: 4px !important">Description</td>
+				<td style="padding: 4px !important" width="10%">Start Date</td>
+				<td style="padding: 4px !important" width="10%">End Date</td>
+				<td style="padding: 4px !important" width="15%">Responsibility</td>
 			</tr>	
 			</thead>
 			<?php
@@ -108,6 +114,9 @@ use yii\widgets\ActiveForm;
 						<?= $form->field($column, '[' . $x . ']ActivityID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 					</td>
 					<td><?= $form->field($column, '[' . $x . ']ActivityName')->textInput(['class' => 'form-control'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']StartDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']EndDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ResponsibilityID', ['template' => '{label}{input}'])->dropDownList($employees, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
 				</tr>
 				<?php
 			} ?>

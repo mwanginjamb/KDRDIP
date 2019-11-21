@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Banks;
+use app\models\BankBranches;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -52,8 +53,13 @@ class BanksController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$bankBranches = new ActiveDataProvider([
+			'query' => BankBranches::find()->where(['BankID'=> $id]),
+		]);
+
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'bankBranches' => $bankBranches
 		]);
 	}
 
@@ -68,11 +74,18 @@ class BanksController extends Controller
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$this->saveBankBranches(Yii::$app->request->post()['BankBranches'], $model);
+
 			return $this->redirect(['view', 'id' => $model->BankID]);
+		}
+
+		for ($x = 0; $x <= 4; $x++) {
+			$bankBranches[$x] = new BankBranches();
 		}
 
 		return $this->render('create', [
 			'model' => $model,
+			'bankBranches' => $bankBranches
 		]);
 	}
 
@@ -86,13 +99,20 @@ class BanksController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
+		$bankBranches = BankBranches::find()->where(['BankID' => $id])->all();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$this->saveBankBranches(Yii::$app->request->post()['BankBranches'], $model);
 			return $this->redirect(['view', 'id' => $model->BankID]);
+		}
+
+		for ($x = count($bankBranches); $x <= 4; $x++) {
+			$bankBranches[$x] = new BankBranches();
 		}
 
 		return $this->render('update', [
 			'model' => $model,
+			'bankBranches' => $bankBranches
 		]);
 	}
 
@@ -124,5 +144,24 @@ class BanksController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	private static function saveBankBranches($columns, $model)
+	{
+		foreach ($columns as $key => $column) {
+			if ($column['BankBranchID'] == '') {
+				if (trim($column['BankBranchName']) != '') {
+					$_column = new BankBranches();
+					$_column->BankID = $model->BankID;
+					$_column->BankBranchName = $column['BankBranchName'];
+					$_column->CreatedBy = Yii::$app->user->identity->UserID;
+					$_column->save();
+				}
+			} else {
+				$_column = BankBranches::findOne($column['BankBranchID']);
+				$_column->BankBranchName = $column['BankBranchName'];
+				$_column->save();
+			}
+		}
 	}
 }

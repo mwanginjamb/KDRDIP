@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'ComponentName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
-						
+					<?= $form->field($model, 'ShortName')->textInput(['maxlength' => true]) ?>				
 				</div>			
 			</div>
 

@@ -43,6 +43,29 @@ use yii\widgets\ActiveForm;
 				</div>			
 			</div>
 
+			<h4 class="form-section">Branches</h4>
+
+			<table width="100%" class="custom-table" id="ColumnsTable">
+			<thead>
+			<tr>
+				<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
+				<td style="padding: 4px !important">Branch</td>
+			</tr>	
+			</thead>
+			<?php
+			foreach ($bankBranches as $x => $column) {
+				?>
+				<tr>
+					<td style="text-align: center;">
+						<?= $x+1; ?>
+						<?= $form->field($column, '[' . $x . ']BankBranchID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+					</td>
+					<td><?= $form->field($column, '[' . $x . ']BankBranchName')->textInput(['class' => 'form-control'])->label(false) ?></td>
+				</tr>
+				<?php
+			} ?>
+			</table> 
+
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>

@@ -46,7 +46,7 @@ class ProductCategory extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
-		'StoreID' => 'Store',
+			'StoreID' => 'Store',
 		];
 	}
 

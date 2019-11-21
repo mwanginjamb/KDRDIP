@@ -5,6 +5,11 @@ $user = Yii::$app->user->identity;
 $currentPage = Yii::$app->controller->id;
 $currentRoute = trim(Yii::$app->controller->module->requestedRoute);
 $option = isset($_GET['option']) ? $_GET['option'] : '';
+$cid = isset($_GET['cid']) ? $_GET['cid'] : '';
+
+use app\models\Components;
+
+$components = Components::find()->all();
 
 // echo $currentRoute; exit;
 /* print '<pre>';
@@ -36,7 +41,7 @@ print_r(Yii::$app->controller); exit; */
 							</li>
 							<li <?= ($currentPage == 'bank-accounts') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/bank-accounts"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Bank Accounts</span></a>
 							</li>
-							<li <?= ($currentPage == 'fixed-assets') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/fixed-assets"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Fixed Assets</span></a>
+							<li <?= ($currentPage == 'fixed-assets') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/fixed-assets"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Asset Register</span></a>
 							</li>
 							<li <?= ($currentPage == 'invoices') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoices"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
 							</li>
@@ -49,6 +54,8 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentRoute == 'reports/supplierbalances') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/supplierbalances"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Balances</span></a>
 									</li>		
 									<li <?= ($currentRoute == 'reports/supplierstatement') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/supplierstatement"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Supplier Statement</span></a>
+									</li>
+									<li <?= ($currentRoute == 'reports/asset-register') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/asset-register"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Asset Register</span></a>
 									</li>
 								</ul>
 							</li>
@@ -152,9 +159,26 @@ print_r(Yii::$app->controller); exit; */
 					</li>
 					<li class=" nav-item"><a href="#"><i class="material-icons">work_outline</i><span class="menu-title" data-i18n="nav.project.main">Project  Management</span></a>
 						<ul class="menu-content">
-							<li <?= ($currentPage == 'projects') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Projects</span></a>
+							<!-- <li <?= ($currentPage == 'projects') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Projects</span></a>
+							</li> -->
+
+							<?php
+							foreach ($components as $component) { ?>
+								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main"><?= $component->ShortName; ?></span></a>
+								<ul class="menu-content">									
+									<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Projects</span></a>
+									</li>
+									<li <?= ($currentPage == 'progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
+									</li>
+									<li <?= ($currentPage == 'work-plan' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/work-plan?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
+									</li>
+									<li <?= ($currentPage == 'budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
+									</li>
+								</ul>
 							</li>
-							<li <?= ($currentPage == 'components') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/components"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">Components</span></a>
+								<?php
+							} ?>
+							<li <?= ($currentPage == 'components') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/components"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">Manage Components</span></a>
 							</li>						
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 								<ul class="menu-content">									

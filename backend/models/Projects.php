@@ -18,6 +18,7 @@ use Yii;
  * @property int $ProjectStatusID
  * @property string $Justification
  * @property int $ReportingPeriodID
+ * @property int $ComponentID
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -38,12 +39,12 @@ class Projects extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID'], 'integer'],
+			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'ComponentID'], 'integer'],
 			[['Objective', 'Justification'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
-			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'EndDate', 'ApprovalDate', 'ProjectStatusID'], 'required']
+			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID'], 'required']
 		];
 	}
 
@@ -64,6 +65,7 @@ class Projects extends \yii\db\ActiveRecord
 			'ApprovalDate' => 'Approval Date',
 			'ProjectStatusID' => 'Project Status',
 			'Justification' => 'Justification',
+			'ComponentID' => 'Component',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
@@ -78,6 +80,11 @@ class Projects extends \yii\db\ActiveRecord
 	public function getProjectStatus()
 	{
 		return $this->hasOne(ProjectStatus::className(), ['ProjectStatusID' => 'ProjectStatusID'])->from(projectstatus::tableName());
+	}
+
+	public function getComponents()
+	{
+		return $this->hasOne(Components::className(), ['ComponentID' => 'ComponentID'])->from(components::tableName());
 	}
 
 	public function getUsers()

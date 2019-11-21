@@ -18,9 +18,12 @@ use app\models\ProjectTeams;
 use app\models\ProjectNotes;
 use app\models\ProjectUnits;
 use app\models\ProjectRoles;
+use app\models\ReportingPeriods;
 use app\models\Counties;
 use app\models\SubCounties;
 use app\models\Indicators;
+use app\models\Components;
+use app\models\Activities;
 use app\models\Budget;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -54,12 +57,20 @@ class ProjectsController extends Controller
 	 */
 	public function actionIndex()
 	{
+		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') { 
+			$projects = Projects::find()->where(['ComponentID' => Yii::$app->request->get()['cid']]);
+			$cid = Yii::$app->request->get()['cid'];
+		} else {
+			$projects = Projects::find();
+			$cid = '';
+		}
 		$dataProvider = new ActiveDataProvider([
-			'query' => Projects::find(),
+			'query' => $projects,
 		]);
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'cid' => $cid
 		]);
 	}
 
@@ -107,6 +118,17 @@ class ProjectsController extends Controller
 			'query' => Budget::find()->where(['ProjectID'=> $id]),
 		]);
 
+		$reportingPeriods = new ActiveDataProvider([
+			'query' => ReportingPeriods::find()->where(['ProjectID'=> $id]),
+		]);
+
+		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();
+
+		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');
+/* 		print '<pre>';
+		print_r($activities);
+		exit; */
+
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 			'projectFunding' => $projectFunding,
@@ -118,6 +140,8 @@ class ProjectsController extends Controller
 			'projectNotes' => $projectNotes,
 			'indicators' => $indicators,
 			'budgetProvider' => $budgetProvider,
+			'reportingPeriods' => $reportingPeriods,
+			'activities' => $activities
 		]);
 	}
 
@@ -130,6 +154,9 @@ class ProjectsController extends Controller
 	{
 		$model = new projects();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') {
+			$model->ComponentID = Yii::$app->request->get()['cid'];
+		}
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$this->saveProjectFunding(Yii::$app->request->post()['ProjectFunding'], $model);
@@ -139,6 +166,7 @@ class ProjectsController extends Controller
 			$this->saveprojectBeneficiaries(Yii::$app->request->post()['ProjectBeneficiaries'], $model);
 			$this->saveprojectNotes(Yii::$app->request->post()['ProjectNotes'], $model);
 			$this->saveprojectTeams(Yii::$app->request->post()['ProjectTeams'], $model);
+			$this->saveReportingPeriods(Yii::$app->request->post()['ReportingPeriods'], $model);
 
 			return $this->redirect(['view', 'id' => $model->ProjectID]);
 		}
@@ -151,8 +179,9 @@ class ProjectsController extends Controller
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
-		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');		
-		
+		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
+		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
+	
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
 		}
@@ -181,6 +210,10 @@ class ProjectsController extends Controller
 			$projectTeams[$x] = new ProjectTeams();
 		}
 
+		for ($x = 0; $x <= 4; $x++) {
+			$reportingPeriods[$x] = new ReportingPeriods();
+		}
+
 		return $this->render('create', [
 			'model' => $model,
 			'projects' => $projects,
@@ -199,7 +232,9 @@ class ProjectsController extends Controller
 			'projectTeams' => $projectTeams,
 			'counties' => $counties,
 			'subCounties' => $subCounties,
-			'riskLikelihood' => $riskLikelihood
+			'riskLikelihood' => $riskLikelihood,
+			'components' => $components,
+			'reportingPeriods' => $reportingPeriods
 		]);
 	}
 
@@ -220,6 +255,7 @@ class ProjectsController extends Controller
 		$projectBeneficiaries = ProjectBeneficiaries::find()->where(['ProjectID' => $id])->all();
 		$projectNotes = ProjectNotes::find()->where(['ProjectID' => $id])->all();
 		$projectTeams = ProjectTeams::find()->where(['ProjectID' => $id])->all();
+		$reportingPeriods = ReportingPeriods::find()->where(['ProjectID' => $id])->all();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$this->saveProjectFunding(Yii::$app->request->post()['ProjectFunding'], $model);
@@ -229,6 +265,7 @@ class ProjectsController extends Controller
 			$this->saveprojectBeneficiaries(Yii::$app->request->post()['ProjectBeneficiaries'], $model);
 			$this->saveprojectNotes(Yii::$app->request->post()['ProjectNotes'], $model);
 			$this->saveprojectTeams(Yii::$app->request->post()['ProjectTeams'], $model);
+			$this->saveReportingPeriods(Yii::$app->request->post()['ReportingPeriods'], $model);
 			
 			return $this->redirect(['view', 'id' => $model->ProjectID]);
 		}
@@ -243,6 +280,7 @@ class ProjectsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
 		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
+		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -271,6 +309,10 @@ class ProjectsController extends Controller
 		for ($x = count($projectTeams); $x <= 4; $x++) {
 			$projectTeams[$x] = new ProjectTeams();
 		}
+
+		for ($x = count($reportingPeriods); $x <= 4; $x++) {
+			$reportingPeriods[$x] = new ReportingPeriods();
+		}
 		
 		return $this->render('update', [
 			'model' => $model,
@@ -290,7 +332,9 @@ class ProjectsController extends Controller
 			'projectTeams' => $projectTeams,
 			'counties' => $counties,
 			'subCounties' => $subCounties,
-			'riskLikelihood' => $riskLikelihood
+			'riskLikelihood' => $riskLikelihood,
+			'components' => $components,
+			'reportingPeriods' => $reportingPeriods
 		]);
 	}
 
@@ -453,6 +497,27 @@ class ProjectsController extends Controller
 				$_column->ProjectRoleID = $column['ProjectRoleID'];
 				$_column->Specialization = $column['Specialization'];
 				$_column->ProjectUnitID = $column['ProjectUnitID'];
+				$_column->save();
+			}
+		}
+	}
+
+	private static function saveReportingPeriods($columns, $model)
+	{
+		foreach ($columns as $key => $column) {
+			if ($column['ReportingPeriodID'] == '') {
+				if (trim($column['ReportingPeriodName']) != '') {
+					$_column = new ReportingPeriods();
+					$_column->ProjectID = $model->ProjectID;
+					$_column->ReportingPeriodName = $column['ReportingPeriodName'];
+					$_column->ExpectedDate = $column['ExpectedDate'];
+					$_column->CreatedBy = Yii::$app->user->identity->UserID;
+					$_column->save();
+				}
+			} else {
+				$_column = ReportingPeriods::findOne($column['ReportingPeriodID']);
+				$_column->ReportingPeriodName = $column['ReportingPeriodName'];
+				$_column->ExpectedDate = $column['ExpectedDate'];
 				$_column->save();
 			}
 		}

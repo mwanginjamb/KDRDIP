@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Fixed Assets';
+$this->title = 'Asset Register';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section id="configuration">

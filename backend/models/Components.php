@@ -9,6 +9,7 @@ use Yii;
  *
  * @property int $ComponentID
  * @property string $ComponentName
+ * @property string $ShortName
  * @property string $Cost
  * @property string $Notes
  * @property string $CreatedDate
@@ -36,7 +37,8 @@ class Components extends \yii\db\ActiveRecord
 			[['CreatedDate'], 'safe'],
 			[['CreatedBy', 'Deleted'], 'integer'],
 			[['ComponentName'], 'string', 'max' => 300],
-			[['ComponentName'], 'required']
+			[['ShortName'], 'string', 'max' => 45],
+			[['ComponentName', 'ShortName'], 'required']
 		];
 	}
 
@@ -47,7 +49,8 @@ class Components extends \yii\db\ActiveRecord
 	{
 		return [
 			'ComponentID' => 'Component ID',
-			'ComponentName' => 'Component Name',
+			'ComponentName' => 'Component',
+			'ShortName' => 'Short Name',
 			'Cost' => 'Cost',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',

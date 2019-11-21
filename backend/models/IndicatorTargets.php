@@ -16,6 +16,8 @@ use Yii;
  */
 class IndicatorTargets extends \yii\db\ActiveRecord
 {
+	public $ReportingPeriodName;
+	public $RPID;
 	/**
 	 * {@inheritdoc}
 	 */

@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class="card-body">	
 
 						<p>
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= Html::a('<i class="ft-x"></i> Cancel', ['index', 'cid' => $model->ComponentID], ['class' => 'btn btn-warning mr-1']) ?>
 							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->ProjectID], ['class' => 'btn btn-primary']) ?>
 							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProjectID], [
 									'class' => 'btn btn-danger',
@@ -83,7 +83,10 @@ $this->params['breadcrumbs'][] = $this->title;
 											<a class="nav-link" id="base-tab10" data-toggle="tab" aria-controls="tab10" href="#tab10" aria-expanded="false">Budget</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab11" data-toggle="tab" aria-controls="tab11" href="#tab11" aria-expanded="false">Notes</a>
+											<a class="nav-link" id="base-tab11" data-toggle="tab" aria-controls="tab11" href="#tab11" aria-expanded="false">Reporting Periods</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab12" data-toggle="tab" aria-controls="tab12" href="#tab12" aria-expanded="false">Notes</a>
 										</li>										
 									</ul>
 									<div class="tab-content px-1 pt-1">
@@ -98,6 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
 														'label' => 'Parent Project',
 														'attribute' => 'parentProject.ProjectName',
 													],
+													'components.ComponentName',
 													'Objective:ntext',
 													'Justification:ntext',
 													[
@@ -364,33 +368,68 @@ $this->params['breadcrumbs'][] = $this->title;
 											<div class="form-actions" style="margin-top:0px">
 												<?= Html::a('<i class="ft-plus"></i> New Indicator', ['indicators/create', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
 											</div>
-											<!-- <table class="table table-striped table-bordered dataex-key-basic">
-											<thead>
-												<tr>
-													<th>Name</th>
-													<th>Position</th>
-													<th>Office</th>
-													<th>Age</th>
-													<th>Start date</th>
-													<th>Salary</th>
-												</tr>
+											<table class="custom-table table-striped table-bordered"><thead>
+											<tr>
+												<th width="5%" style="color:black; text-align:center">ID</th>
+												<th style="color:black; text-align:left">Indicator</th>
+												<th width="15%">Unit Of Measure</th>
+												<th width="10%" style="text-align:right">Base Line</th>
+												<th width="10%" style="text-align:right">End Target</th>
+												<th width="15%">Sub Component</th>
+												<th width="11%" style="color:black; text-align:center">&nbsp;</th>
+											</tr>
 											</thead>
-											<tbody>
+											<tbody>											
 											<?php 
 											foreach ($indicators->models as $key => $indicator) { ?>
-												<tr>
-													<td>Tiger Nixon</td>
-													<td>System Architect</td>
-													<td>Edinburgh</td>
-													<td>61</td>
-													<td>2011/04/25</td>
-													<td>$320,800</td>
-												</tr>												
+												<tr data-key="2">
+													<td style="text-align:center"><?= $indicator->IndicatorID; ?></td>
+													<td style="text-align:left"><?= $indicator->IndicatorName; ?></td>
+													<td><?= $indicator->unitsOfMeasure->UnitOfMeasureName; ?></td>
+													<td style="text-align:right"><?= number_format($indicator->BaseLine,2); ?></td>
+													<td style="text-align:right"><?= number_format($indicator->EndTarget,2 ); ?></td>
+													<td><?= $indicator->subComponents->SubComponentName; ?></td>
+													<td><a class="btn-sm btn-primary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-eye"></i> Update</a></td>
+												</tr>	
+												<tr data-key="2">
+													<td colspan="7">
+														<h5>Activities</h5>
+														<table class="custom-table table-striped table-bordered"><thead>
+														<tr>
+															<th width="5%" style="color:black; text-align:center">ID</th>
+															<th style="color:black; text-align:left">Activity</th>
+															<th width="10%">Start Date</th>
+															<th width="10%">End Date</th>
+															<th width="10%">Responsibility</th>
+															<td width="10%">Actual Start Date</td>
+															<td width="10%">Actual End Date</td>
+															<th width="5%" style="color:black; text-align:center">&nbsp;</th>
+														</tr>
+														</thead>
+														<tbody>
+															<?php
+															foreach ($activities[$indicator->IndicatorID] as $key => $activity) { ?>
+															<tr data-key="2">
+																<td style="text-align:center"><?= $activity->ActivityID; ?></td>
+																<td style="text-align:left"><?= $activity->ActivityName; ?></td>
+																<td><?= $activity->StartDate; ?></td>
+																<td><?= $activity->EndDate; ?></td>
+																<td><?= $activity->employees->EmployeeName; ?></td>
+																<td><?= $activity->ActualStartDate; ?></td>
+																<td><?= $activity->ActualEndDate; ?></td>																
+																<td><a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a></td>
+															</tr>	
+															<?php
+															} ?>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+												
 												<?php
 											} ?>
-											</tbody>
-											</table> -->
-											<?= GridView::widget([
+											</tbody></table>
+											<?php /*  GridView::widget([
 												'dataProvider' => $indicators,
 												'showFooter' =>false,
 												'layout' => '{items}',
@@ -427,7 +466,7 @@ $this->params['breadcrumbs'][] = $this->title;
 														],
 													],
 												],
-											]); ?>
+											]); */ ?>
 										</div>
 
 										<div class="tab-pane" id="tab9" aria-labelledby="base-tab9">
@@ -461,6 +500,48 @@ $this->params['breadcrumbs'][] = $this->title;
 										</div>
 
 										<div class="tab-pane" id="tab11" aria-labelledby="base-tab11">
+											<h4 class="form-section">Reporting Periods</h4>	 
+											<?= GridView::widget([
+												'dataProvider' => $reportingPeriods,
+												'showFooter' =>false,
+												'layout' => '{items}',
+												'tableOptions' => [
+													'class' => 'custom-table table-striped table-bordered',
+												],
+												'columns' => [
+													[
+														'attribute' => 'ReportingPeriodID',
+														'label' => 'ID',
+														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
+														'contentOptions' => ['style' => 'text-align:center'],
+													],
+													[
+														'label'=>'Period',
+														'headerOptions' => ['style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'ReportingPeriodName',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'attribute' => 'ExpectedDate',
+														'format' => ['date', 'php:d/m/Y'],
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'attribute' => 'CreatedDate',
+														'format' => ['date', 'php:d/m/Y h:i a'],
+														'headerOptions' => ['width' => '17%'],
+													],
+													[
+														'label' => 'Created By',
+														'attribute' => 'users.fullName',
+														'headerOptions' => ['width' => '15%'],
+													],
+												],
+											]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab12" aria-labelledby="base-tab12">
 											<h4 class="form-section">Notes</h4>	 
 											<?= GridView::widget([
 												'dataProvider' => $projectNotes,
