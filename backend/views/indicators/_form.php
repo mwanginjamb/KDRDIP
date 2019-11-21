@@ -24,16 +24,10 @@ use yii\widgets\ActiveForm;
 	<div class="card-content collapse show">
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(); ?>
-	 
-	 		<div class="row">
-				<div class="col-md-12">
-					<?= $form->field($model, 'IndicatorName')->textInput(['maxlength' => true]) ?>
-				</div>			
-			</div>
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'Select']); ?>
+					<?= $form->field($model, 'IndicatorName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
 					<?= $form->field($model, 'SubComponentID')->dropDownList($subComponents, ['prompt'=>'Select']); ?>	

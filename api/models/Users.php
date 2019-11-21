@@ -23,47 +23,47 @@ use Yii;
  */
 class Users extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'users';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'users';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['UserStatusID', 'CreatedBy', 'Deleted'], 'integer'],
-            [['CreatedDate'], 'safe'],
-            [['FirstName', 'LastName', 'Mobile', 'ValidationCode', 'ResetCode'], 'string', 'max' => 45],
-            [['Email'], 'string', 'max' => 250],
-            [['PasswordHash', 'AuthKey'], 'string', 'max' => 128],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['UserStatusID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['CreatedDate'], 'safe'],
+			[['FirstName', 'LastName', 'Mobile', 'ValidationCode', 'ResetCode'], 'string', 'max' => 45],
+			[['Email'], 'string', 'max' => 250],
+			[['PasswordHash', 'AuthKey'], 'string', 'max' => 128],
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'UserID' => 'User ID',
-            'FirstName' => 'First Name',
-            'LastName' => 'Last Name',
-            'Email' => 'Email',
-            'Mobile' => 'Mobile',
-            'PasswordHash' => 'Password Hash',
-            'AuthKey' => 'Auth Key',
-            'ValidationCode' => 'Validation Code',
-            'ResetCode' => 'Reset Code',
-            'UserStatusID' => 'User Status ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'UserID' => 'User ID',
+			'FirstName' => 'First Name',
+			'LastName' => 'Last Name',
+			'Email' => 'Email',
+			'Mobile' => 'Mobile',
+			'PasswordHash' => 'Password Hash',
+			'AuthKey' => 'Auth Key',
+			'ValidationCode' => 'Validation Code',
+			'ResetCode' => 'Reset Code',
+			'UserStatusID' => 'User Status ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

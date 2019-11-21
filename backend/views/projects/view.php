@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
+use yii\bootstrap\Modal;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\projects */
@@ -11,6 +12,26 @@ $this->title = $model->ProjectName;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+Modal::begin([
+	'header' => '<h4 class="modal-title">Schedule Inspection</h4>',
+	'id' => 'assessmentdateall',
+	'size' => 'modal-xl',
+	'clientOptions' => [
+		'backdrop' => 'static', 'keyboard' => true
+	]
+]);
+
+echo '<div class="form-group field-assessment-date required">
+	<label class="control-label" for="assessment-date">Risk Assessment Date</label>
+	
+
+	<div class="help-block"></div>
+	</div>';
+
+echo '<br /><button type="submit" class="btn btn-primary">Search</button>';
+
+Modal::end();
 ?>
 <section id="configuration">
 	<div class="row">
@@ -41,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										'confirm' => 'Are you sure you want to delete this item?',
 										'method' => 'post',
 									],
-							]) ?>
+							]) ?>				
 						</p>					
 
 						<div class="card">
@@ -389,7 +410,7 @@ $this->params['breadcrumbs'][] = $this->title;
 													<td style="text-align:right"><?= number_format($indicator->BaseLine,2); ?></td>
 													<td style="text-align:right"><?= number_format($indicator->EndTarget,2 ); ?></td>
 													<td><?= $indicator->subComponents->SubComponentName; ?></td>
-													<td><a class="btn-sm btn-primary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-eye"></i> Update</a></td>
+													<td><a class="btn-sm btn-primary" href="/mande/backend/web/indicators/update?id=<?= $indicator->IndicatorID; ?>&amp;pid=<?= $indicator->ProjectID; ?>"><i class="ft-eye"></i> Update</a></td>
 												</tr>	
 												<tr data-key="2">
 													<td colspan="7">
@@ -408,7 +429,8 @@ $this->params['breadcrumbs'][] = $this->title;
 														</thead>
 														<tbody>
 															<?php
-															foreach ($activities[$indicator->IndicatorID] as $key => $activity) { ?>
+															$activitiesList = isset($activities[$indicator->IndicatorID]) ? $activities[$indicator->IndicatorID] : [];
+															foreach ($activitiesList as $key => $activity) { ?>
 															<tr data-key="2">
 																<td style="text-align:center"><?= $activity->ActivityID; ?></td>
 																<td style="text-align:left"><?= $activity->ActivityName; ?></td>
@@ -417,7 +439,9 @@ $this->params['breadcrumbs'][] = $this->title;
 																<td><?= $activity->employees->EmployeeName; ?></td>
 																<td><?= $activity->ActualStartDate; ?></td>
 																<td><?= $activity->ActualEndDate; ?></td>																
-																<td><a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a></td>
+																<td><a href="#" class = "btn-sm btn-danger pull-right" data-toggle = "modal" data-target = "#assessmentdateall"><i class="ft-more-horizontal"></i></a>
+																	<!-- <a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a> -->
+																</td>
 															</tr>	
 															<?php
 															} ?>

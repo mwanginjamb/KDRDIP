@@ -99,6 +99,9 @@ $FormID = 26;
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => function ($model) {
+										/* echo $model->QuotationTypeID;
+										print '<pre>';
+										print_r($model); exit; */
 										return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
 									},								
 									'contentOptions' => ['style' => 'text-align:left'],

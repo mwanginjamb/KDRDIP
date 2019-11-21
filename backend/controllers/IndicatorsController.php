@@ -135,6 +135,8 @@ class IndicatorsController extends Controller
 	public function actionUpdate($id, $pid)
 	{
 		$model = $this->findModel($id);
+		$project = Projects::findOne($id);
+
 		$subComponent = SubComponents::findOne($model->SubComponentID);
 		if ($subComponent) {
 			$model->ComponentID = $subComponent->ComponentID;
@@ -159,7 +161,7 @@ class IndicatorsController extends Controller
 		}
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
-		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->where(['ComponentID' => $project->ComponentID])->all(), 'SubComponentID', 'SubComponentName');
 		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 

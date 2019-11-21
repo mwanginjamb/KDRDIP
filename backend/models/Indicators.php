@@ -41,6 +41,7 @@ class Indicators extends \yii\db\ActiveRecord
 			[['UnitOfMeasureID', 'ProjectID', 'SubComponentID', 'ResponsibilityID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['BaseLine', 'EndTarget'], 'number'],
 			[['CreatedDate'], 'safe'],
+			[['IndicatorName', 'SubComponentID'], 'required']
 		];
 	}
 

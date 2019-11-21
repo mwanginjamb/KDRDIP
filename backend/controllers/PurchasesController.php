@@ -182,8 +182,8 @@ class PurchasesController extends Controller
 			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 			$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
 			$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
-			$quotations = ArrayHelper::map(Quotation::find()->all(), 'QuotationID', 'QuotationID');
-			for ($x = 0; $x <= 19; $x++) { 
+			$quotations = ArrayHelper::map(Quotation::find()->all(), 'QuotationID', 'Description');
+			for ($x = 0; $x <= 19; $x++) {
 				$lines[$x] = new PurchaseLines();
 			}
 			return $this->render('create', [
@@ -484,6 +484,19 @@ public function actionGetfields($id, $SupplierID)
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');
+		}
+	}
+
+	public function actionQuotations($id)
+	{
+		$model = Quotation::find()->where(['SupplierID' => $id])->all();
+			
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item->QuotationID . "'>" . $item->Description . "</option>";
+			}
+		} else {
+			echo '<option>-</option>';
 		}
 	}
 }
