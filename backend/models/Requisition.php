@@ -35,7 +35,8 @@ class Requisition extends \yii\db\ActiveRecord
 		return [
 			[['CreatedDate', 'PostingDate'], 'safe'],
 			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'StoreID'], 'integer'],
-			[['Notes'], 'string'],
+			[['Notes', 'Description'], 'string'],
+			[['Description'], 'required'],
 		];
 	}
 
@@ -53,7 +54,8 @@ class Requisition extends \yii\db\ActiveRecord
 			'Posted' => 'Posted',
 			'PostingDate' => 'Posting Date',
 			'ApprovalStatusID' => 'Approval Status',
-		'StoreID' => 'Store',
+			'StoreID' => 'Store',
+			'Description' => 'Description',
 		];
 	}
 	
@@ -62,12 +64,12 @@ class Requisition extends \yii\db\ActiveRecord
 		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
 	}
 	
-	public function getUsers() 
+	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
 	}
 
-	public function getStores() 
+	public function getStores()
 	{
 		return $this->hasOne(Stores::className(), ['StoreID' => 'StoreID'])->from(Stores::tableName());
 	}

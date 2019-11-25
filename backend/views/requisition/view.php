@@ -63,22 +63,22 @@ $FormID = 6;
 						?>
 						</p>
 
-					<?= DetailView::widget([
-						'model' => $model,
-						'attributes' => [
-								'RequisitionID',
-								'CreatedDate',
-							[
-								'label'=>'Requested By',
-								'attribute' => 'users.fullName',
-							] ,          
-								'Notes:ntext',
-								'PostingDate',
-								'approvalstatus.ApprovalStatusName',
-						],
-					]) ?>
+						<?= DetailView::widget([
+							'model' => $model,
+							'attributes' => [
+									'RequisitionID',
+									'CreatedDate',
+								[
+									'label'=>'Requested By',
+									'attribute' => 'users.fullName',
+								] ,          
+									'Notes:ntext',
+									'PostingDate',
+									'approvalstatus.ApprovalStatusName',
+							],
+						]) ?>
 
-							<?= GridView::widget([
+						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'showFooter' =>false,
 							'columns' => [
@@ -89,15 +89,22 @@ $FormID = 6;
 									'format'=>'text',
 									'value' => 'RequisitionLineID',
 									'contentOptions' => ['style' => 'text-align:left'],
-								],				
+								],
 								[
-									'label'=>'Product Name',
+									'label'=>'Type',
+									'headerOptions' => ['width' => '12%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'quotationTypes.QuotationTypeName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Description',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
-									'value' => 'product.ProductName',
+									'value' => function ($model) {
+										return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
+									},
 									'contentOptions' => ['style' => 'text-align:left'],
-									'footer' => 'Total',
-									'footerOptions' => ['style' => 'font-weight:bold'],
 								],
 								[
 									'label'=>'Quantity',
@@ -105,14 +112,14 @@ $FormID = 6;
 									'format'=>['decimal',2],
 									'value' => 'Quantity',
 									'contentOptions' => ['style' => 'text-align:right'],
-								],		
+								],
 								[
-									'label'=>'Description',
-									'headerOptions' => ['width' => '45%','style'=>'color:black; text-align:right'],
+									'label'=>'Comments',
+									'headerOptions' => ['width' => '45%','style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'Description',
-									'contentOptions' => ['style' => 'text-align:right'],
-								],			
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
 							],
 						]); ?>
 

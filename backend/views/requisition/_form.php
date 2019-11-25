@@ -63,19 +63,20 @@ function addRow()
 			?>
 			<table width="100%">
 			<tr> 
-				<td width="50%"><?= $form->field($model, 'StoreID')->dropDownList($stores, ['prompt'=>'Select...', 'disabled' => $disabled]) ?></td>
+				<td width="50%"><?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?></td>
 				<td>
 					
 				</td>
 			</tr>	
 			</table>
 			<?php
-			if (!$model->isNewRecord)
-			{ ?>
+			/* if (!$model->isNewRecord)
+			{ */?> 
 				<table width="100%" class="custom-table table-striped table-bordered-min" id="RequisitionTable">
 				<thead>
 				<tr>
 					<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
+					<td style="padding: 4px 4px 4px 4px !important" width="15%">Type</td>
 					<td style="padding: 4px 4px 4px 4px !important">Product</td>
 					<td style="padding: 4px 4px 4px 4px !important" width="15%">Quantity</td>
 					<td style="padding: 4px 4px 4px 4px !important" width="45%">Description</td>
@@ -86,7 +87,15 @@ function addRow()
 				{ ?>
 					<tr>
 						<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']RequisitionLineID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
-						<td><?= $form->field($line, '[' . $x . ']ProductID', ['template' => '{label}{input}'])->dropDownList($products, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
+						<td><?= $form->field($line, '[' . $x . ']QuotationTypeID', ['template' => '{label}{input}'])->dropDownList($quotationTypes, ['prompt'=>'', 'class'=>'form-control',
+															'onchange'=>'
+															$.post( "' . Yii::$app->urlManager->createUrl('quotation/get-types?id=').'"+$(this).val()+"&TypeID="+$("#requisitionline-'.$x.'-quotationtypeid").val(), 
+															function( data ) {
+																$( "select#requisitionline-'.$x.'-productid" ).html( data );
+															});
+														'])->label(false) ?>
+						</td>					
+						<td><?= $form->field($line, '[' . $x . ']ProductID', ['template' => '{label}{input}'])->dropDownList(isset($products[$line->QuotationTypeID]) ? $products[$line->QuotationTypeID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
 						<td><?= $form->field($line, '[' . $x . ']Quantity', ['template' => '{label}{input}'])->textInput(['class'=>'form-control'])->label(false) ?></td>
 						<td><?= $form->field($line, '[' . $x . ']Description', ['template' => '{label}{input}'])->textInput(['class'=>'form-control'])->label(false) ?></td>			
 					</tr>
@@ -94,7 +103,7 @@ function addRow()
 				} ?>
 				</table>
 				<?php
-			} ?>
+			//} ?>
 			<table width="100%">
 			<tr> 
 				<td width="50%"></td>
@@ -122,16 +131,6 @@ function addRow()
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
-				<?php
-				if (!$model->isNewRecord) {
-					echo Html::a('Submit', ['submit', 'id' => $model->RequisitionID], [
-					'class' => 'btn btn-danger',
-					'data' => [
-						'confirm' => 'Are you sure you want to submit this item?',
-						'method' => 'post',
-					],
-				]); 
-				} ?>
 			</div>
 
 		<?php ActiveForm::end(); ?>

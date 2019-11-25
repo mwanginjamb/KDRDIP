@@ -76,6 +76,10 @@ $FormID = 25;
 							'attributes' => [
 								'QuotationID',
 								'Description',
+								[
+									'attribute' => 'requisition.Description',
+									'label' => 'Requisition',
+								],
 								'CreatedDate',
 								[
 									'label'=>'Requested By',
@@ -103,14 +107,14 @@ $FormID = 25;
 									'format'=>'text',
 									'value' => 'QuotationProductID',
 									'contentOptions' => ['style' => 'text-align:left'],
-								],	
+								],
 								[
 									'label'=>'Type',
 									'headerOptions' => ['width' => '12%', 'style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'quotationTypes.QuotationTypeName',
 									'contentOptions' => ['style' => 'text-align:left'],
-								],				
+								],
 								[
 									'label'=>'Description',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],

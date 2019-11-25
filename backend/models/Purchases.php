@@ -100,6 +100,6 @@ class Purchases extends \yii\db\ActiveRecord
 	
 	public function getPurchaseName()
 	{
-	   return isset($this->suppliers) ? $this->PurchaseID. ' - ' . $this->suppliers->SupplierName : $this->PurchaseID;
+	   return isset($this->suppliers) ? $this->PurchaseID. ' - ' . ' - ' . date('d/m/Y', strtotime($this->CreatedDate)) .' - ' . $this->suppliers->SupplierName : $this->PurchaseID;
 	}
 }

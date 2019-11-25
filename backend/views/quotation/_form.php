@@ -117,7 +117,7 @@ function addSupplierRow()
 					<?= $form->field($model, 'Description')->textInput() ?>
 				</div>
 				<div class="col-md-6">
-						
+					<?= $form->field($model, 'RequisitionID')->dropDownList($requisitions, ['prompt'=>'Select...']) ?>
 				</div>			
 			</div>
 
@@ -132,8 +132,7 @@ function addSupplierRow()
 			</tr>	
 			</thead>
 			<?php 
-			foreach ($lines as $x => $line) 
-			{ ?>
+			foreach ($lines as $x => $line) { ?>
 				<tr>
 					<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']QuotationProductID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
 					<td><?= $form->field($line, '[' . $x . ']QuotationTypeID', ['template' => '{label}{input}'])->dropDownList($quotationTypes, ['prompt'=>'', 'class'=>'form-control',

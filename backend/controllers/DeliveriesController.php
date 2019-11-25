@@ -104,8 +104,7 @@ class DeliveriesController extends Controller
 				
 		$delivered = ArrayHelper::map(DeliveryLines::findBySql($sql)->asArray()->all(), 'PurchaseLineID', 'Delivered') ;
 		$currentdelivery = ArrayHelper::index(DeliveryLines::find()->where(['DeliveryID'=> $id])->asArray()->all(), 'PurchaseLineID');
-		for ($x = 0; $x < count($data); $x++) 
-		{ 			
+		for ($x = 0; $x < count($data); $x++) { 			
 			$PurchaseLineID = $data[$x]['PurchaseLineID'];
 			$_line = new DeliveryLines();
 			$_line->DeliveryLineID = isset($currentdelivery[$PurchaseLineID]) ? $currentdelivery[$PurchaseLineID]['DeliveryLineID'] : '';//$data[$x]['DeliveryLineID'];
@@ -185,7 +184,7 @@ class DeliveriesController extends Controller
 			$delivered = ArrayHelper::map(DeliveryLines::findBySql($sql)->asArray()->all(), 'PurchaseLineID', 'Delivered');
 			
 			$currentdelivery = ArrayHelper::index(DeliveryLines::find()->where(['DeliveryID'=> $id])->asArray()->all(), 'PurchaseLineID');
-			
+			$lines = [];
 			for ($x = 0; $x < count($data); $x++) { 
 				$PurchaseLineID = $data[$x]['PurchaseLineID'];
 				$_line = new DeliveryLines();

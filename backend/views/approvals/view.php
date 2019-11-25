@@ -77,15 +77,22 @@ $FormID = 12;
 								'format'=>'text',
 								'value' => 'RequisitionLineID',
 								'contentOptions' => ['style' => 'text-align:left'],
-							],				
+							],
 							[
-								'label'=>'Product Name',
+								'label'=>'Type',
+								'headerOptions' => ['width' => '12%', 'style'=>'color:black; text-align:left'],
+								'format'=>'text',
+								'value' => 'quotationTypes.QuotationTypeName',
+								'contentOptions' => ['style' => 'text-align:left'],
+							],
+							[
+								'label'=>'Description',
 								'headerOptions' => ['style'=>'color:black; text-align:left'],
 								'format'=>'text',
-								'value' => 'product.ProductName',
+								'value' => function ($model) {
+									return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
+								},
 								'contentOptions' => ['style' => 'text-align:left'],
-								'footer' => 'Total',
-								'footerOptions' => ['style' => 'font-weight:bold'],
 							],
 							[
 								'label'=>'Quantity',
@@ -93,14 +100,14 @@ $FormID = 12;
 								'format'=>['decimal',2],
 								'value' => 'Quantity',
 								'contentOptions' => ['style' => 'text-align:right'],
-							],		
+							],
 							[
-								'label'=>'Description',
+								'label'=>'Comments',
 								'headerOptions' => ['width' => '45%','style'=>'color:black; text-align:left'],
 								'format'=>'text',
 								'value' => 'Description',
 								'contentOptions' => ['style' => 'text-align:left'],
-							],			
+							],		
 						],
 					]); ?>
 					</div>

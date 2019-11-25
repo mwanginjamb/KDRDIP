@@ -8,6 +8,7 @@ use Yii;
  * This is the model class for table "Quotation".
  *
  * @property integer $QuotationID
+ * @property integer $RequisitionID
  * @property string $CreatedDate
  * @property integer $CreatedBy
  * @property string $Description
@@ -33,9 +34,9 @@ class Quotation extends \yii\db\ActiveRecord
 	{
 		return [
 			[['CreatedDate', 'ApprovalDate'], 'safe'],
-			[['CreatedBy', 'ApprovalStatusID', 'ApprovedBy'], 'integer'],
+			[['CreatedBy', 'ApprovalStatusID', 'ApprovedBy', 'RequisitionID'], 'integer'],
 			[['Description', 'Notes'], 'string'],
-			[['Description'], 'required'],
+			[['Description', 'RequisitionID'], 'required'],
 		];
 	}
 
@@ -46,13 +47,14 @@ class Quotation extends \yii\db\ActiveRecord
 	{
 		return [
 			'QuotationID' => 'Quotation ID',
+			'RequisitionID' => 'Requisition',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Description' => 'Description',
-		'ApprovalStatusID' => 'Status',
-		'ApprovalDate' => 'Approval Date',
-		'ApprovedBy' => 'Approved By',
-		'Notes' => 'Notes',
+			'ApprovalStatusID' => 'Status',
+			'ApprovalDate' => 'Approval Date',
+			'ApprovedBy' => 'Approved By',
+			'Notes' => 'Notes',
 		];
 	}
 
@@ -69,5 +71,10 @@ class Quotation extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getRequisition()
+	{
+		return $this->hasOne(Requisition::className(), ['RequisitionID' => 'RequisitionID'])->from(requisition::tableName());
 	}
 }

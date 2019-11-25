@@ -14,7 +14,12 @@ $this->params['breadcrumbs'][] = $this->title;
 	<p>Enter details below</p>
 
 	<?= $this->render('_form', [
-		'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores,  'users' => $users,
+		'model' => $model,
+		'lines' => $lines,
+		'products' => $products,
+		'stores' => $stores,
+		'users' => $users,
+		'quotationTypes' => $quotationTypes
 	]) ?>
 
 </section>

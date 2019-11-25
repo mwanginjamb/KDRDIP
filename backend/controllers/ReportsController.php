@@ -148,7 +148,7 @@ class ReportsController extends Controller
 			
 			$ProductCategoryID = $params['FilterData']['ProductCategoryID'];
 			
-			$FilterString = "WHERE YEAR(PostingDate) = '".$params['FilterData']['Year']."'"; 
+			$FilterString = "WHERE YEAR(PostingDate) = '" . $params['FilterData']['Year']."'"; 
 				
 			if ((isset($params['FilterData']['ProductCategoryID'])) && ($params['FilterData']['ProductCategoryID']!=0))
 			{

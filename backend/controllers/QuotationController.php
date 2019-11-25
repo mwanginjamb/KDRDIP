@@ -8,6 +8,7 @@ use app\models\QuotationProducts;
 use app\models\Product;
 use app\models\Suppliers;
 use app\models\Company;
+use app\models\Requisition;
 use app\models\QuotationSupplier;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -147,6 +148,7 @@ class QuotationController extends Controller
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
 		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
+		$requisitions = ArrayHelper::map(Requisition::find()->all(), 'RequisitionID', 'Description');
 		
 		$productmodelcount = 0;
 		$suppliermodelcount = 0;
@@ -184,7 +186,8 @@ class QuotationController extends Controller
 			'products' => $products,
 			'quotationsuppliers' => $quotationsuppliers,
 			'quotationTypes' => $quotationTypes,
-			'accounts' => $accounts
+			'accounts' => $accounts,
+			'requisitions' => $requisitions
 		]);
 	}
 
@@ -263,9 +266,10 @@ class QuotationController extends Controller
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
 		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
+		$requisitions = ArrayHelper::map(Requisition::find()->all(), 'RequisitionID', 'Description');
 
 		$products[1] = $products;
-		$products[2] = $accounts; 
+		$products[2] = $accounts;
 		
 		if (Yii::$app->request->post()) {
 			$params = Yii::$app->request->post();
@@ -299,7 +303,8 @@ class QuotationController extends Controller
 			'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
 			'products' => $products, 'quotationsuppliers' => $quotationsuppliers,
 			'quotationTypes' => $quotationTypes,
-			'accounts' => $accounts
+			'accounts' => $accounts,
+			'requisitions' => $requisitions
 		]);
 	}
 
