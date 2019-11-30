@@ -128,11 +128,13 @@ class BudgetController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
+		$model->ProjectID = Yii::$app->request->get()['pid'];
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$params = Yii::$app->request->post();
 			$columns = $params['BudgetLines'];
-			// print_r($params); exit;
+			// print '<pre>';
+			// print_r(Yii::$app->request->get()['pid']); exit;
 			
 			foreach ($columns as $key => $column) {
 				if ($column['BudgetLineID'] == '') {
@@ -140,7 +142,6 @@ class BudgetController extends Controller
 						$_column = new BudgetLines();
 						$_column->BudgetID = $model->BudgetID;
 						$_column->AccountID = $column['AccountID'];
-						$_column->ProjectID = Yii::$app->request->get()['pid'];
 						$_column->CreatedBy = Yii::$app->user->identity->UserID;
 						$_column->save();
 					}
