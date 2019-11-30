@@ -2,13 +2,15 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Invoices';
+$this->title = ($option==1) ? 'Invoice Review' : 'Invoice Approvals';
 $this->params['breadcrumbs'][] = $this->title;
+
+$Rights = Yii::$app->params['rights'];
+$FormID = 12;
 ?>
 <section id="configuration">
 	<div class="row">
@@ -28,32 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
-						
-						<div class="place-right">
-							<?php $form = ActiveForm::begin(); ?>
-							<div class="row">
-								<div class="col-md-4">
-									<?= $form->field($search, 'searchfor')->dropDownList($searchfor,['prompt'=>'Select...']) ?>
-								</div>
-								<div class="col-md-4">
-									<?= $form->field($search, 'searchstring')->textInput() ?>	
-								</div>
-								<div class="col-md-4">
-									<?= Html::submitButton('Search', ['class' => 'btn btn-primary', 'style' => 'margin-top: 27px;']); ?>
-								</div>		
-							</div>
-							<?php ActiveForm::end(); ?>
-						</div>
-						
-	 					<div class="form-actions" style="margin-top:0px">
-							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>	
-						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'layout' => '{items}',
-								'tableOptions' => [
-									'class' => 'custom-table table-striped table-bordered zero-configuration',
-								],
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
 							'columns' => [
 								[
 									'label'=>'ID',
@@ -99,52 +81,40 @@ $this->params['breadcrumbs'][] = $this->title;
 									'contentOptions' => ['style' => 'text-align:right'],
 								],
 								[
+									'label'=>'Requested By',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'users.Full_Name',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],			
+								[
 									'label'=>'Approval Status',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'approvalstatus.ApprovalStatusName',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
-								[
-									'label'=>'Approved Date',
-									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
+									[
+									'label'=>'Posting Date',
+									'headerOptions' => ['width' => '10%','style'=>'color:black; text-align:left'],
 									'format'=>'date',
-									'value' => 'ApprovalDate',
-									'contentOptions' => ['style' => 'text-align:left'],
-								],
-								/* [
-									'label'=>'Date',
-									'headerOptions' => ['width' => '10%', 'style'=>'color:black; text-align:left'],
-									'contentOptions' => ['style' => 'text-align:center'],
-									'format'=>'date',
-									'value' => 'CreatedDate',
+									'value' => 'PostingDate',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
-									'label'=>'Created By',
-									'headerOptions' => ['style'=>'color:black; text-align:left'],
-									'format'=>'text',
-									'value' => 'users.Full_Name',
-									'contentOptions' => ['style' => 'text-align:left'],
-								], */
-								[
-									'class' => 'yii\grid\ActionColumn',
-									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
-									'template' => '{view} {delete}',
+									'class' => 'yii\grid\ActionColumn', 
+									'headerOptions' => ['width' => '7%', 'style'=>'color:black; text-align:center'],
+									'template' => '{update}',
 									'buttons' => [
-				
-										'view' => function ($url, $model) {
-											return (Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->InvoiceID], ['class' => 'btn-sm btn-primary']));
-										},
-										'delete' => function ($url, $model) {
-											return (Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->InvoiceID], [
-												'class' => 'btn-sm btn-danger btn-xs',
-												'data' => [
-													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
-													'method' => 'post',
-												],
-											]));
-										},
+
+										//update button
+										'update' => function ($url, $model) use ($Rights, $FormID, $option) {
+											$baseUrl = Yii::$app->request->baseUrl;
+											return Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/invoice-approvals/view?id=' . $model->InvoiceID.'&option=' . $option, [
+														'title' => Yii::t('app', 'Select'),
+														'class'=>'btn-sm btn-primary btn-xs',
+														]);
+										},						
 									],
 								],
 							],

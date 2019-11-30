@@ -33,10 +33,10 @@ $FormID = 6;
 				<div class="card-content collapse show">
 					<div class="card-body">	
 						<p>
+						<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 						<?php if ($model->ApprovalStatusID == 0)
 						{ ?>
 							
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->RequisitionID], ['class' => 'btn btn-primary']) ?>
 							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->RequisitionID], [
 									'class' => 'btn btn-danger',
@@ -49,12 +49,24 @@ $FormID = 6;
 						}
 						?>
 						
-						<?php if ($model->ApprovalStatusID == 0)
+						<?php 
+						if ($model->ApprovalStatusID == 0)
 						{ ?>
 							<?= Html::a('Send for Approval', ['submit', 'id' => $model->RequisitionID], [
 								'class' => 'btn btn-danger', 'style' => 'width: 140px !important;margin-right: 5px;',
 								'data' => [
 											'confirm' => 'Are you sure you want to submit this item?',
+											'method' => 'post',
+										]
+								]); ?>
+							<?php
+						}
+						if ($model->ApprovalStatusID == 3)
+						{ ?>
+							<?= Html::a('<i class="ft-edit"></i> Create Quotation', ['create-quotation', 'id' => $model->RequisitionID], [
+								'class' => 'btn btn-primary', 'style' => 'width: 140px !important;margin-right: 5px;',
+								'data' => [
+											'confirm' => 'Are you sure you want to Create a Quotation?',
 											'method' => 'post',
 										]
 								]); ?>
@@ -71,7 +83,7 @@ $FormID = 6;
 								[
 									'label'=>'Requested By',
 									'attribute' => 'users.fullName',
-								] ,          
+								],          
 									'Notes:ntext',
 									'PostingDate',
 									'approvalstatus.ApprovalStatusName',
@@ -102,7 +114,7 @@ $FormID = 6;
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => function ($model) {
-										return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
+										return ($model->QuotationTypeID == 1 || $model->QuotationTypeID = '') ? $model->product->ProductName : $model->accounts->AccountName;
 									},
 									'contentOptions' => ['style' => 'text-align:left'],
 								],

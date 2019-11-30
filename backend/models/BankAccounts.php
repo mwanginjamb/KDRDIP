@@ -47,8 +47,8 @@ class BankAccounts extends \yii\db\ActiveRecord
 	{
 		return [
 			'BankAccountID' => 'Bank Account ID',
-			'BankID' => 'Bank ID',
-			'BranchID' => 'Branch ID',
+			'BankID' => 'Bank',
+			'BranchID' => 'Branch',
 			'AccountName' => 'Account Name',
 			'AccountNumber' => 'Account Number',
 			'Notes' => 'Notes',

@@ -104,4 +104,14 @@ class Payments extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(BankAccounts::className(), ['BankAccountID' => 'BankAccountID'])->from(bankaccounts::tableName());
 	}
+
+	public function getApprovers()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy'])->from(users::tableName());
+	}
+
+	public function getApprovalstatus()
+	{
+		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
+	}
 }

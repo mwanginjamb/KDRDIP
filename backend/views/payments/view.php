@@ -34,14 +34,30 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->PaymentID], ['class' => 'btn btn-primary']) ?>
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentID], [
-									'class' => 'btn btn-danger',
+							<?php	
+							if ($model->ApprovalStatusID == 0) { ?>
+								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->PaymentID], ['class' => 'btn btn-primary']) ?>
+								<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentID], [
+										'class' => 'btn btn-danger',
+										'data' => [
+											'confirm' => 'Are you sure you want to delete this item?',
+											'method' => 'post',
+										],
+								]) ?>
+								<?php
+							} ?>
+
+							<?php if ($model->ApprovalStatusID == 0) { ?>
+								<?= Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->PaymentID], [
+									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 									'data' => [
-										'confirm' => 'Are you sure you want to delete this item?',
-										'method' => 'post',
-									],
-							]) ?>
+												'confirm' => 'Are you sure you want to submit this item?',
+												'method' => 'post',
+											]
+									]) ?>
+								<?php
+							}
+							?>	
 						</p>
 
 						<?= DetailView::widget([
@@ -76,10 +92,17 @@ $this->params['breadcrumbs'][] = $this->title;
 										'label' => 'Created Date',
 										'format' => ['date', 'php:d/m/Y h:i a'],
 									],	
-									[						
+								/* 	[						
 										'attribute' => 'users.fullName',
 										'label' => 'Created By'
-									]
+									], */
+									[
+										'label'=>'Requested By',
+										'attribute' => 'users.fullName',
+									] ,
+									// 'Notes:ntext',				
+									'approvalstatus.ApprovalStatusName',
+									'ApprovalDate',
 								],
 						]) ?>
 

@@ -36,7 +36,7 @@ use yii\widgets\ActiveForm;
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?>
+					<?= $form->field($model, 'Notes')->textarea(['rows' => 3]) ?>
 				</div>
 				<div class="col-md-6">
 						

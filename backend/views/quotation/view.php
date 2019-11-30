@@ -36,6 +36,7 @@ $FormID = 25;
 					<div class="card-body">	
 											
 						<p>
+							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 							<?php	
 							if ($model->ApprovalStatusID == 0) { ?>
 								<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
@@ -50,7 +51,7 @@ $FormID = 25;
 							<?php
 							} elseif ($model->ApprovalStatusID == 3) // if the PO has been approved
 							{ ?>
-								<?= Html::a('RFQ', ['rfq', 'id' => $model->QuotationID, 'returnlink' => 'view'], ['class' => 'btn btn-primary', 'style' => 'margin-bottom:10px']) ?>
+								<?= Html::a('<i class="ft-file"></i> RFQ', ['rfq', 'id' => $model->QuotationID, 'returnlink' => 'view'], ['class' => 'btn btn-primary']) ?>
 								<?php
 							}
 							?>
@@ -120,8 +121,13 @@ $FormID = 25;
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => function ($model) {
-										return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
-									},								
+										if ($model->QuotationTypeID == 1) {
+											$result = $model->product->ProductName;
+										} else {
+											$result = isset($model->accounts->AccountName) ? $model->accounts->AccountName : '';
+										}
+										return $result;
+									},
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
@@ -161,12 +167,20 @@ $FormID = 25;
 								[
 									'class' => 'yii\grid\ActionColumn',
 									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
-									'template' => '{view}',
+									'template' => '{response} {view}',
 									'buttons' => [
+
+										'response' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID){
+											$baseUrl = Yii::$app->request->baseUrl;
+											return ($ApprovalStatusID == 3) ? Html::a('<i class="ft-eye"></i> Response', $baseUrl . '/quotation-response/create?qid=' . $model->QuotationID . '&sid='.$model->SupplierID, [
+												'title' => Yii::t('app', 'View'),
+												'class'=>'btn-sm btn-secondary btn-xs',
+												]) : '';
+										},
 
 										'view' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID){
 											$baseUrl = Yii::$app->request->baseUrl;
-											return ($ApprovalStatusID == 2) ? Html::a('<i class="ft-eye"></i> View RFQ', $baseUrl.'/quotation/rfq?id='.$model->QuotationID.'&sid='.$model->SupplierID, [
+											return ($ApprovalStatusID == 3) ? Html::a('<i class="ft-eye"></i> View RFQ', $baseUrl.'/quotation/rfq?id='.$model->QuotationID.'&sid='.$model->SupplierID, [
 														'title' => Yii::t('app', 'View'),
 														'class'=>'btn-sm btn-primary btn-xs',                                
 														]) : '';
@@ -176,7 +190,7 @@ $FormID = 25;
 							],
 						]); ?>
 
-<h4 class="form-section" style="margin-bottom: 0px">Notes</h4>
+						<h4 class="form-section" style="margin-bottom: 0px">Notes</h4>
 						<?= GridView::widget([
 							'dataProvider' => $approvalNotesProvider,
 							'layout' => '{items}',

@@ -177,4 +177,14 @@ class PaymentsController extends Controller
 
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
+
+	public function actionSubmit($id)
+	{
+		$model = $this->findModel($id);
+		$model->ApprovalStatusID = 1;
+		if ($model->save()) {
+			$result = UsersController::sendEmailNotification(29);
+			return $this->redirect(['view', 'id' => $model->PaymentID]);
+		}
+	}
 }

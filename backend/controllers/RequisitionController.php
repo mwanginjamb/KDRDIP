@@ -6,6 +6,8 @@ use Yii;
 use app\models\Requisition;
 use app\models\RequisitionLine;
 use app\models\QuotationTypes;
+use app\models\QuotationProducts;
+use app\models\Quotation;
 use app\models\Accounts;
 use app\models\Product;
 use app\models\Users;
@@ -245,24 +247,34 @@ class RequisitionController extends Controller
 	public function actionGetfields($id, $StoreID)
 	{
 		$UserID = Yii::$app->user->identity->UserID;
+		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
 		
 		$products = ArrayHelper::map(Product::find()->joinWith('productcategory')->where(['StoreID'=>$StoreID])->all(), 'ProductID', 'ProductName');
 
 		$row = $id -1;		
-		$Fields[0] = $id.'<input type="hidden" id="requisitionline-'.$row.'-requisitionlineid" class="form-control" name="RequisitionLine['.$row.'][RequisitionLineID]" type="hidden">';
+		$Fields[0] = $id . '<input type="hidden" id="requisitionline-'.$row.'-requisitionlineid" class="form-control" name="RequisitionLine['.$row.'][RequisitionLineID]" type="hidden">';
 		
-		$str = '<select id="requisitionline-'.$row.'-productid" class="form-control-min" name="RequisitionLine['.$row.'][ProductID]"><option value=""></option>';
-		
-		foreach ($products as $key => $value)
-		{
-			$str .= '<option value="'.$key.'">'.$value.'</option>';
-		}		
+		$str = '<select id="requisitionline-' . $row . '-quotationtypeid" class="form-control" name="RequisitionLine[' . $row . '][QuotationTypeID]" onchange="
+						$.post( &quot;/mande/backend/web/quotation/get-types?id=&quot;+$(this).val()+&quot;&amp;TypeID=&quot;+$(&quot;#requisitionline-' . $row . '-quotationtypeid&quot;).val(), 
+						function( data ) {
+							$( &quot;select#requisitionline-' . $row . '-productid&quot; ).html( data );
+						});
+					">
+					<option value=""></option>';
+		foreach ($quotationTypes as $key => $value) {
+			$str .= '<option value="' . $key . '">' . $value . '</option>';
+		}
 		$str .= '</select>';
 
-		$Fields[1] = $str;
-		$Fields[2] = '<input type="text" id="requisitionline-'.$row.'-quantity" class="form-control-min" name="RequisitionLine['.$row.'][Quantity]">';
-		$Fields[3] = '<input type="text" id="requisitionline-'.$row.'-description" class="form-control-min" name="RequisitionLine['.$row.'][Description]">';
+		$str1 = '<select id="requisitionline-' . $row . '-productid" class="form-control" name="RequisitionLine[' . $row . '][ProductID]">
+					<option value=""></option>
+					</select>';
 
+		$Fields[1] = $str;
+		$Fields[2] = $str1;
+		$Fields[3] = '<input type="text" id="requisitionline-' . $row . '-quantity" class="form-control" name="RequisitionLine[' . $row . '][Quantity]">';
+		$Fields[4] = '<input type="text" id="requisitionline-' . $row . '-description" class="form-control" name="RequisitionLine[' . $row . '][Description]">';
+		
 		$json = json_encode($Fields);
 		echo $json;
 	}
@@ -310,6 +322,28 @@ class RequisitionController extends Controller
 			}
 		} else {
 			echo '<option>-</option>';
+		}
+	}
+
+	public function actionCreateQuotation($id)
+	{
+		$requisition = Requisition::findOne($id);
+		$lines = RequisitionLine::find()->where(['RequisitionID' => $id])->all();
+		$model = new Quotation();
+		$model->Description = $requisition->Description;
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		$model->RequisitionID = $id;
+		if ($model->save()) {
+			foreach ($lines as $key => $line) {
+				$quotationLines = new QuotationProducts();
+				$quotationLines->QuotationID = $model->QuotationID;
+				$quotationLines->ProductID = $line->ProductID;
+				$quotationLines->Quantity = $line->Quantity;
+				$quotationLines->QuotationTypeID = $line->QuotationTypeID;
+				$quotationLines->AccountID = $line->AccountID;
+				$quotationLines->save();
+			}
+			return $this->redirect(['quotation/view', 'id' => $model->QuotationID]);
 		}
 	}
 }

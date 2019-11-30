@@ -45,8 +45,8 @@ class Banks extends \yii\db\ActiveRecord
 	{
 		return [
 			'BankID' => 'Bank ID',
-			'BankCode' => 'Bank Code',
-			'BankName' => 'Bank Name',
+			'BankCode' => 'Code',
+			'BankName' => 'Bank',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

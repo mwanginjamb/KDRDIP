@@ -6,6 +6,8 @@ use Yii;
 use app\models\Invoices;
 use app\models\Suppliers;
 use app\models\Purchases;
+use app\models\Deliveries;
+use app\models\DeliveryLines;
 use app\models\Search;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -79,8 +81,27 @@ class InvoicesController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$model = $this->findModel($id);
+		$PurchaseID = $model->PurchaseID;
+		$sql ="select * from deliverylines
+				join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
+				join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
+				join product on product.ProductID = purchaselines.ProductID
+				WHERE deliveries.PurchaseID = $PurchaseID
+				ORDER BY deliveries.DeliveryID";
+		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+
+		$sql ="select * from purchaselines
+				LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
+				LEFT JOIN product on product.ProductID = purchaselines.ProductID
+				WHERE purchases.PurchaseID = $PurchaseID";
+		
+		$purchases = Purchases::findBySql($sql)->asArray()->all();
+
 		return $this->render('view', [
-			'model' => $this->findModel($id),
+			'model' => $model,
+			'deliveries' => $deliveries,
+			'purchases' => $purchases
 		]);
 	}
 
@@ -98,7 +119,7 @@ class InvoicesController extends Controller
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
-		$purchases = ArrayHelper::map(Purchases::find()->all(), 'PurchaseID', 'PurchaseID');
+		$purchases = []; // ArrayHelper::map(Purchases::find()->all(), 'PurchaseID', 'PurchaseID');
 
 		return $this->render('create', [
 			'model' => $model,
@@ -122,7 +143,8 @@ class InvoicesController extends Controller
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
-		$purchases = ArrayHelper::map(Purchases::find()->all(), 'PurchaseID', 'PurchaseID');
+		$sql = "SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate) ) AS `PurchaseName` FROM `purchases` WHERE `SupplierID`= ".$model->SupplierID; 
+		$purchases = ArrayHelper::map(Purchases::findBySql($sql)->asArray()->all(), 'PurchaseID', 'PurchaseName');
 		return $this->render('update', [
 			'model' => $model,
 			'suppliers' => $suppliers,
@@ -158,5 +180,30 @@ class InvoicesController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public function actionPurchases($id)
+	{
+		// $model = Purchases::find()->where(['SupplierID' => $id])->all();
+		$sql = "SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate)) AS `PurchaseName` FROM `purchases` WHERE `SupplierID`= ".$id; 
+		$model = Purchases::findBySql($sql)->asArray()->all();
+			
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item['PurchaseID'] . "'>" . $item['PurchaseName'] . "</option>";
+			}
+		} else {
+			echo '<option>-</option>';
+		}
+	}
+
+	public function actionSubmit($id)
+	{
+		$model = $this->findModel($id);
+		$model->ApprovalStatusID = 1;
+		if ($model->save()) {
+			$result = UsersController::sendEmailNotification(29);
+			return $this->redirect(['view', 'id' => $model->InvoiceID]);
+		}
 	}
 }

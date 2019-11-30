@@ -68,12 +68,13 @@ class BankAccountsController extends Controller
 	public function actionCreate()
 	{
 		$model = new BankAccounts();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->BankAccountID]);
 		}
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
-		$bankBranches = ArrayHelper::map(BankBranches::find()->all(), 'BankBranchID', 'BankBranchName');
+		$bankBranches = []; //ArrayHelper::map(BankBranches::find()->all(), 'BankBranchID', 'BankBranchName');
 		return $this->render('create', [
 			'model' => $model,
 			'banks' => $banks,
@@ -96,7 +97,7 @@ class BankAccountsController extends Controller
 			return $this->redirect(['view', 'id' => $model->BankAccountID]);
 		}
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
-		$bankBranches = ArrayHelper::map(BankBranches::find()->all(), 'BankBranchID', 'BankBranchName');
+		$bankBranches = ArrayHelper::map(BankBranches::find()->where(['BankID' => $model->BankID ])->all(), 'BankBranchID', 'BankBranchName');
 
 		return $this->render('update', [
 			'model' => $model,
@@ -133,5 +134,18 @@ class BankAccountsController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public function actionBranches($id)
+	{
+		$model = BankBranches::find()->where(['BankID' => $id])->all();
+			
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item->BankBranchID . "'>" . $item->BankBranchName . "</option>";
+			}
+		} else {
+			echo '<option>-</option>';
+		}
 	}
 }

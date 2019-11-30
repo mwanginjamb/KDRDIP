@@ -29,6 +29,8 @@
 						echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
 					} elseif (count($productcategories) > 0) {
 						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
+					} elseif (count($bankAccounts) > 0) {
+						echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
 					}
 					?>
 				</div>

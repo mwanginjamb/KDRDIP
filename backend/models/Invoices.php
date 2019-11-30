@@ -50,7 +50,7 @@ class Invoices extends \yii\db\ActiveRecord
 			'InvoiceID' => 'Invoice ID',
 			'SupplierID' => 'Supplier',
 			'PurchaseID' => 'PO. No.',
-			'InvoiceNumber' => 'Invoice Number',
+			'InvoiceNumber' => 'Supplier Invoice Number',
 			'InvoiceDate' => 'Invoice Date',
 			'Amount' => 'Amount',
 			'CreatedBy' => 'Created By',
@@ -72,5 +72,15 @@ class Invoices extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getApprovers()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy'])->from(users::tableName());
+	}
+
+	public function getApprovalstatus()
+	{
+		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
 	}
 }

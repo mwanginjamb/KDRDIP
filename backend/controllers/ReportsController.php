@@ -14,6 +14,8 @@ use app\models\StockTake;
 use app\models\purchaselines;
 use app\models\Suppliers;
 use app\models\FixedAssets;
+use app\models\Payments;
+use app\models\BankAccounts;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -955,5 +957,82 @@ class ReportsController extends Controller
 				'content' => $content, 'months' => $months, 'years' => $years, 
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true, 'CategoryFilterOnly' => true,
 			]);
+	}
+
+	public function actionBankTransactions()
+	{
+		$params = Yii::$app->request->post();
+		$FilterString = '';
+		$Year = date('Y');
+		$Month = date('m');
+		$BankAccountID = 0;
+		$FilterString2 = '';
+		$productcategories =[];
+		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
+		
+		$Title = 'Bank Transactions';
+
+		$wherestr = 'payments.Deleted = 0';
+		if (!empty($params)) {
+			if (isset($params['FilterData']['BankAccountID']) && $params['FilterData']['BankAccountID'] != '') {
+				$BankAccountID = $params['FilterData']['BankAccountID'];
+				$wherestr .= " AND payments.BankAccountID = '$BankAccountID'";
+			}
+		}
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => Payments::find()->joinWith('bankAccounts')->joinWith('bankAccounts.banks')->where("$wherestr"),
+			'pagination' => false,
+		]);
+		$months = [1 => 'Jan.', 2 => 'Feb.', 3 => 'Mar.', 4 => 'Apr.', 5 => 'May', 6 => 'Jun.', 7 => 'Jul.', 8 => 'Aug.', 9 => 'Sep.', 10 => 'Oct.', 11 => 'Nov.', 12 => 'Dec.'];
+		//print_r( $months ); exit;
+		$years= [];
+		for ($x = 2017; $x <= date('Y'); $x++) {
+			$years[$x] = $x;
+		}
+		$model = new FilterData();
+		$model->Month = $Month;
+		$model->Year = $Year;
+		$model->BankAccountID = $BankAccountID;
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('bank-transactions', ['dataProvider' => $dataProvider]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content, 
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:18px}', 
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [ 
+				'SetHeader'=>[$Title], 
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		// return the pdf output as per the destination setting
+		//return $pdf->render(); 
+		$content = $pdf->render('', 'S'); 
+		$content = chunk_split(base64_encode($content));
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content, 'months' => $months, 'years' => $years,
+			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true, 'CategoryFilterOnly' => true,
+			'bankAccounts' => $bankAccounts
+		]);
 	}
 }

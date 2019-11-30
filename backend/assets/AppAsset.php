@@ -66,7 +66,8 @@ class AppAsset extends AssetBundle
 		'app-assets/vendors/js/ui/headroom.min.js',
 		'app-assets/vendors/js/tables/datatable/datatables.min.js',
 		'app-assets/vendors/js/forms/icheck/icheck.min.js',
-		'app-assets/js/scripts/forms/checkbox-radio.js'
+		'app-assets/js/scripts/forms/checkbox-radio.js',
+		'app-assets/js/scripts/scripts.js'
 		// END: Page JS-->
 	];
 	public $depends = [

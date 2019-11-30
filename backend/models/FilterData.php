@@ -10,6 +10,7 @@ class FilterData extends Model
 	public $ProductCategoryID;
 	public $StockTakeID;
 	public $SupplierID;
+	public $BankAccountID;
 
 	public function rules()
 	{

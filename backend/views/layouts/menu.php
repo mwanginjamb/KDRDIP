@@ -47,6 +47,22 @@ print_r(Yii::$app->controller); exit; */
 							</li>
 							<li <?= ($currentPage == 'payments') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
 							</li>
+							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
+								<ul class="menu-content">									
+									<li <?= ($currentPage == 'invoice-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoice-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
+									</li>
+									<li <?= ($currentPage == 'payments-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
+									</li>				
+								</ul>
+							</li>
+							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
+								<ul class="menu-content">									
+									<li <?= ($currentPage == 'invoice-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoice-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
+									</li>
+									<li <?= ($currentPage == 'payments-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
+									</li>						
+								</ul>
+							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 								<ul class="menu-content">									
 									<!-- <li <?= ($currentRoute == 'reports/payment-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/payment-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments Report</span></a>
@@ -57,6 +73,8 @@ print_r(Yii::$app->controller); exit; */
 									</li>
 									<li <?= ($currentRoute == 'reports/asset-register') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/asset-register"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Asset Register</span></a>
 									</li>
+									<li <?= ($currentRoute == 'reports/bank-transactions') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/bank-transactions"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Bank Transactions</span></a>
+									</li>
 								</ul>
 							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
@@ -66,7 +84,8 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentPage == 'account-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/account-types"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Account Types</span></a>
 									</li>
 									<li <?= ($currentPage == 'payment-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payment-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Methods</span></a>
-									</li>								
+									</li>	
+																
 								</ul>
 							</li>							
 						</ul>

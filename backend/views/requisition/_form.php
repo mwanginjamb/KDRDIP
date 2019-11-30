@@ -17,20 +17,22 @@ $url = Url::home(true);
 <script>
 function addRow() 
 {
-    var table = document.getElementById("RequisitionTable");
+	var table = document.getElementById("RequisitionTable");
 	var rows = table.getElementsByTagName("tr").length;
-    var row = table.insertRow(rows);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
+	var row = table.insertRow(rows);
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
 	var cell3 = row.insertCell(2);
 	var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
 	
 	var fields = fetch_data1('<?= $url; ?>/requisition/getfields?id='+rows+'&StoreID=<?= $model->StoreID; ?>');
-	//console.log(fields);
-    cell1.innerHTML = fields[0];
-    cell2.innerHTML = fields[1];
+	console.log(fields);
+	cell1.innerHTML = fields[0];
+	cell2.innerHTML = fields[1];
 	cell3.innerHTML = fields[2];
 	cell4.innerHTML = fields[3];
+	cell5.innerHTML = fields[4];
 	cell1.style.textAlign = 'center';
 }
 </script>
@@ -107,7 +109,7 @@ function addRow()
 			<table width="100%">
 			<tr> 
 				<td width="50%"></td>
-				<td valign="top" style="text-align:right"><?= (!$model->isNewRecord) ? Html::button('Add Row', [ 'class' => 'bigbtn btn-primary', 'onclick' => 'addRow()' ]) : ''; ?></td>
+				<td valign="top" style="text-align:right"><?= (!$model->isNewRecord) ? Html::a('<i class="ft-plus"></i> Add Row', null, ['class' => 'btn btn-primary', 'onclick' => 'addRow()', 'style' => 'color: white']) : ''; ?></td>
 			</tr>
 			</table>
 			<table width="100%">

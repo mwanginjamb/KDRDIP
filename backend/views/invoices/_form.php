@@ -27,7 +27,13 @@ use yii\widgets\ActiveForm;
 	 
 	 		<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...']) ?>
+					<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...', 
+					'onchange' => '
+					$.post( "' . Yii::$app->urlManager->createUrl('invoices/purchases?id=') . '"+$(this).val(), function( data ) {
+
+						$( "select#invoices-purchaseid" ).html( data );
+					});
+				']) ?>
 				</div>
 				<div class="col-md-6">
 					<?= $form->field($model, 'PurchaseID')->dropDownList($purchases, ['prompt'=>'Select...']) ?>

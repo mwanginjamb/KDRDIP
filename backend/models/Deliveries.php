@@ -20,67 +20,67 @@ use Yii;
  */
 class Deliveries extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'deliveries';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['CreatedDate', 'PostingDate'], 'safe'],
-            [['CreatedBy', 'PurchaseID', 'CompanyID', 'Posted', 'ApprovalStatusID'], 'integer'],
-            [['DeliveryNoteNumber', 'Notes'], 'string'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'DeliveryID' => 'Delivery ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'PurchaseID' => 'Purchase Order No.',
-            'DeliveryNoteNumber' => 'Delivery Note Number',
-            'Notes' => 'Notes',
-            'CompanyID' => 'Company ID',
-            'Posted' => 'Posted',
-            'PostingDate' => 'Posting Date',
-            'ApprovalStatusID' => 'Approval Status ID',
-        ];
-    }
-	
-	public function getPurchases() 
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
 	{
-        return $this->hasOne(Purchases::className(), ['PurchaseID' => 'PurchaseID'])->from(Purchases::tableName());
-    }
-	
-	public function getUsers() 
-	{
-        return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
-    }
+		return 'deliveries';
+	}
 
-	public function getApprovalstatus() 
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
 	{
-        return $this->hasOne(Approvalstatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
-    }
-	
+		return [
+			[['CreatedDate', 'PostingDate'], 'safe'],
+			[['CreatedBy', 'PurchaseID', 'CompanyID', 'Posted', 'ApprovalStatusID'], 'integer'],
+			[['DeliveryNoteNumber', 'Notes'], 'string'],
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'DeliveryID' => 'Delivery ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'PurchaseID' => 'Purchase Order No.',
+			'DeliveryNoteNumber' => 'Delivery Note Number',
+			'Notes' => 'Notes',
+			'CompanyID' => 'Company ID',
+			'Posted' => 'Posted',
+			'PostingDate' => 'Posting Date',
+			'ApprovalStatusID' => 'Approval Status ID',
+		];
+	}
+
+	public function getPurchases()
+	{
+		return $this->hasOne(Purchases::className(), ['PurchaseID' => 'PurchaseID'])->from(Purchases::tableName());
+	}
+
+	public function getUsers()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getApprovalstatus()
+	{
+		return $this->hasOne(Approvalstatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
+	}
+
 	public function getPostedName()
 	{
-	   return $this->Posted ? 'True' : 'False';
+		return $this->Posted ? 'True' : 'False';
 	}
-	
-	public function getApprovers() 
+
+	public function getApprovers()
 	{
-        return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy'])->from(users::tableName());
-    }	
+		return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy'])->from(users::tableName());
+	}
 }

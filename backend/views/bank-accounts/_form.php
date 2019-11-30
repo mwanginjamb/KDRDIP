@@ -36,7 +36,13 @@ use yii\widgets\ActiveForm;
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'BankID')->dropDownList($banks, ['prompt'=>'Select...']) ?>
+					<?= $form->field($model, 'BankID')->dropDownList($banks, ['prompt'=>'Select...',
+					'onchange' => '
+					$.post( "' . Yii::$app->urlManager->createUrl('bank-accounts/branches?id=') . '"+$(this).val(), function( data ) {
+
+						$( "select#bankaccounts-branchid" ).html( data );
+					});
+				']) ?>
 				</div>
 				<div class="col-md-6">
 					<?= $form->field($model, 'BranchID')->dropDownList($bankBranches, ['prompt'=>'Select...']) ?>

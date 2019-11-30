@@ -2,14 +2,17 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Invoices */
+/* @var $model app\models\Requisition */
 
-$this->title = 'View Invoice:' . $model->InvoiceID;
-$this->params['breadcrumbs'][] = ['label' => 'Invoices', 'url' => ['index']];
+$this->title = 'View Invoice: '.$model->InvoiceID;
 $this->params['breadcrumbs'][] = $this->title;
-\yii\web\YiiAsset::register($this);
+
+$Rights = Yii::$app->params['rights'];
+$FormID = 12;
 ?>
 <section id="configuration">
 	<div class="row">
@@ -29,36 +32,24 @@ $this->params['breadcrumbs'][] = $this->title;
 					</div>
 				</div>
 				<div class="card-content collapse show">
-					<div class="card-body">	
+					<div class="card-body">
+						<div class="row">
+							<div class="col-lg-5">
+								<p>Enter Approval details below</p>
+							<?php $form = ActiveForm::begin(); ?>
+							<?= $form->field($notes, 'Note')->textarea(['rows' => 3]) ?>
+							<input type="hidden" id="option" name="option" value="<?= $option; ?>">
+							<?php // $form->field($model, 'ApprovalStatusID')->dropDownList($approvalstatus,['prompt'=>'Select...']) ?>
 
-						<p>
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?php	
-							if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->InvoiceID], ['class' => 'btn btn-primary']) ?>
-								<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->InvoiceID], [
-										'class' => 'btn btn-danger',
-										'data' => [
-											'confirm' => 'Are you sure you want to delete this item?',
-											'method' => 'post',
-										],
-								]) ?>
-							?>
-
-							<?php
-								if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->QuotationID], [
-									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
-									'data' => [
-												'confirm' => 'Are you sure you want to submit this item?',
-												'method' => 'post',
-											]
-									]) ?>
-								<?php
-							}
-							?>	
-						</p>
-
+							<div class="form-group">
+								<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+								<?= Html::submitButton('<i class="ft-check"></i> Approve', ['class' => 'btn btn-success', 'name'=>'Approve']);?>
+								<?= Html::submitButton('<i class="ft-x"></i> Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']); ?>
+							</div>
+							
+							<?php ActiveForm::end(); ?>	
+							</div>
+						</div>
 						<?= DetailView::widget([
 							'model' => $model,
 								'attributes' => [

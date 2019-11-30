@@ -54,10 +54,21 @@ $FormID = 12;
 							'model' => $detailmodel,
 							'attributes' => [
 									'RequisitionID',
-									'CreatedDate',
-									'CreatedBy',
+									[
+										'attribute' => 'CreatedDate',
+										'format' => ['date', 'php:d/m/Y h:i a'],
+										
+									],
+									[
+										'label'=>'Requested By',
+										'attribute' => 'users.fullName',
+									],  
 									'Notes:ntext',
-									'PostingDate',
+									[
+										'attribute' => 'PostingDate',
+										'format' => ['date', 'php:d/m/Y'],
+										
+									],
 									'approvalstatus.ApprovalStatusName',
 							],
 						]) ?>
