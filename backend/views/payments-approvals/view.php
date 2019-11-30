@@ -8,7 +8,24 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Requisition */
 
-$this->title = 'View Payment: '.$model->PaymentID;
+// $this->title = 'View Payment: '.$model->PaymentID;
+switch ($model->ApprovalStatusID) {
+	case 1:
+		$this->title = 'Payment Review:';
+		break;
+	case 2:
+		$this->title = 'Payment Approvals:';
+		break;
+	case 3:
+		$this->title = 'Payment Approved:';
+		break;
+	case 4:
+		$this->title = 'Payment Rejected:';
+		break;
+	default:
+		$this->title = 'Payment Review:';
+}
+$this->title = $this->title . ' ' . $model->PaymentID;
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];
@@ -86,6 +103,24 @@ $FormID = 12;
 										'attribute' => 'users.fullName',
 										'label' => 'Created By'
 									]
+								],
+						]) ?>
+						
+						<h4 class="form-section" style="margin-bottom: 0px">Invoice</h4>
+						<?= DetailView::widget([
+							'model' => $invoice,
+								'attributes' => [
+									'InvoiceID',
+									[
+										'attribute' => 'InvoiceDate',
+										'label' => 'Invoice Date',
+										'format' => ['date', 'php:d/m/Y'],
+									],
+									'InvoiceNumber',
+									[
+										'attribute' => 'Amount',
+										'format' => ['decimal', 2]
+									],
 								],
 						]) ?>
 

@@ -5,6 +5,8 @@ namespace backend\controllers;
 use Yii;
 use app\models\Payments;
 use app\models\PaymentMethods;
+use app\models\DeliveryLines;
+use app\models\Purchases;
 use app\models\Invoices;
 use app\models\Suppliers;
 use app\models\BankAccounts;
@@ -87,8 +89,30 @@ class PaymentsController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$model = $this->findModel($id);
+		$invoice = Invoices::findOne($model->InvoiceID);
+		$PurchaseID = $invoice->PurchaseID;
+
+		$sql ="select * from deliverylines
+		join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
+		join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
+		join product on product.ProductID = purchaselines.ProductID
+		WHERE deliveries.PurchaseID = $PurchaseID
+		ORDER BY deliveries.DeliveryID";
+		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+
+		$sql ="select * from purchaselines
+		LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
+		LEFT JOIN product on product.ProductID = purchaselines.ProductID
+		WHERE purchases.PurchaseID = $PurchaseID";
+
+		$purchases = Purchases::findBySql($sql)->asArray()->all();
+
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'purchases' => $purchases,
+			'deliveries' => $deliveries,
+			'invoice' => $invoice
 		]);
 	}
 

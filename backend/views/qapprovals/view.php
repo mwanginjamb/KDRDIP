@@ -8,7 +8,24 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Requisition */
 
-$this->title = 'View Quotation: '.$model->QuotationID;
+// $this->title = 'View Quotation: '.$model->QuotationID;
+switch ($model->ApprovalStatusID) {
+	case 1:
+		$this->title = 'Quotation Review:';
+		break;
+	case 2:
+		$this->title = 'Quotation Approvals:';
+		break;
+	case 3:
+		$this->title = 'Quotation Approved:';
+		break;
+	case 4:
+		$this->title = 'Quotation Rejected:';
+		break;
+	default:
+		$this->title = 'Quotation Review:';
+}
+$this->title = $this->title . ' ' . $model->QuotationID;
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];

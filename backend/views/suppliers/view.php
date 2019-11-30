@@ -189,6 +189,11 @@ $FormID = 6;
 											'value' => 'productcategory.ProductCategoryName',
 											'contentOptions' => ['style' => 'text-align:left'],
 										],
+										[
+											'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+											'label' => 'Store',
+											'attribute' => 'productcategory.stores.StoreName'
+										]
 									],
 								]); ?>
 							</div>

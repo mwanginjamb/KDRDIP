@@ -7,6 +7,22 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = ($option==1) ? 'Invoice Review' : 'Invoice Approvals';
+switch ($option) {
+	case 1:
+		$this->title = 'Invoice Review';
+		break;
+	case 2:
+		$this->title = 'Invoice Approvals';
+		break;
+	case 3:
+		$this->title = 'Invoice Approved';
+		break;
+	case 4:
+		$this->title = 'Invoice Rejected';
+		break;
+	default:
+		$this->title = 'Invoice Review';
+}
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];

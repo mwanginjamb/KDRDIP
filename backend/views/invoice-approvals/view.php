@@ -8,7 +8,24 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Requisition */
 
-$this->title = 'View Invoice: '.$model->InvoiceID;
+// $this->title = 'View Invoice: '.$model->InvoiceID;
+switch ($model->ApprovalStatusID) {
+	case 1:
+		$this->title = 'Invoice Review:';
+		break;
+	case 2:
+		$this->title = 'Invoice Approvals:';
+		break;
+	case 3:
+		$this->title = 'Invoice Approved:';
+		break;
+	case 4:
+		$this->title = 'Invoice Rejected:';
+		break;
+	default:
+		$this->title = 'Invoice Review:';
+}
+$this->title = $this->title . ' ' . $model->InvoiceID;
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];

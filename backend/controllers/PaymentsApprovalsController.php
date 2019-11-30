@@ -146,7 +146,8 @@ class PaymentsApprovalsController extends Controller
 			'approvalstatus' => $approvalstatus,
 			'notes' => $notes,
 			'option' => $option,
-			'purchases' => $purchases
+			'purchases' => $purchases,
+			'invoice' => $invoice
 		]);
 	}
 

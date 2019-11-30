@@ -63,6 +63,14 @@ print_r(Yii::$app->controller); exit; */
 									</li>						
 								</ul>
 							</li>
+							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Rejected</span></a>
+								<ul class="menu-content">									
+									<li <?= ($currentPage == 'invoice-approvals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoice-approvals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
+									</li>
+									<li <?= ($currentPage == 'payments-approvals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
+									</li>						
+								</ul>
+							</li>
 							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 								<ul class="menu-content">									
 									<!-- <li <?= ($currentRoute == 'reports/payment-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/payment-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments Report</span></a>
@@ -131,6 +139,20 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentRoute == 'srapprovals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/srapprovals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Store Requisitions</span></a>
 									</li>	
 									<li <?= ($currentRoute == 'stocktake/approvallist' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake/approvallist?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
+									</li>							
+								</ul>
+							</li>
+							<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Rejected</span></a>
+								<ul class="menu-content">									
+									<li <?= ($currentPage == 'qapprovals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/qapprovals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotations</span></a>
+									</li>
+									<li <?= ($currentPage == 'papprovals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/papprovals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases</span></a>
+									</li>	
+									<li <?= ($currentPage == 'approvals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/approvals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisitions</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'srapprovals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/srapprovals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Store Requisitions</span></a>
+									</li>	
+									<li <?= ($currentRoute == 'stocktake/approvallist' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake/approvallist?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
 									</li>							
 								</ul>
 							</li>
@@ -223,6 +245,8 @@ print_r(Yii::$app->controller); exit; */
 									</li>
 									<li <?= ($currentPage == 'units-of-measure') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/units-of-measure"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Units of Measure</span></a>
 									</li>
+									<li <?= ($currentPage == 'safeguarding-policies') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/safeguarding-policies"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Safeguarding Policies</span></a>
+									</li>									
 								</ul>
 							</li>
 						</ul>

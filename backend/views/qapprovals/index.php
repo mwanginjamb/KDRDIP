@@ -7,6 +7,22 @@ use yii\grid\GridView;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = ($option==1) ? 'Quotations Review' : 'Quotations Approvals';
+switch ($option) {
+	case 1:
+		$this->title = 'Quotations Review';
+		break;
+	case 2:
+		$this->title = 'Quotations Approvals';
+		break;
+	case 3:
+		$this->title = 'Quotations Approved';
+		break;
+	case 4:
+		$this->title = 'Quotations Rejected';
+		break;
+	default:
+		$this->title = 'Quotations Review';
+}
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];

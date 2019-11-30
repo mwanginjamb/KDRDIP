@@ -8,7 +8,24 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Requisition */
 
-$this->title = 'View Purchase: '.$model->PurchaseID;
+// $this->title = 'View Purchase: '.$model->PurchaseID;
+switch ($model->ApprovalStatusID) {
+	case 1:
+		$this->title = 'Purchase Review:';
+		break;
+	case 2:
+		$this->title = 'Purchase Approvals:';
+		break;
+	case 3:
+		$this->title = 'Purchase Approved:';
+		break;
+	case 4:
+		$this->title = 'Purchase Rejected:';
+		break;
+	default:
+		$this->title = 'Purchase Review:';
+}
+$this->title = $this->title . ' ' . $model->PurchaseID;
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];

@@ -101,7 +101,7 @@ class InvoicesController extends Controller
 		return $this->render('view', [
 			'model' => $model,
 			'deliveries' => $deliveries,
-			'purchases' => $purchases
+			'purchases' => $purchases,
 		]);
 	}
 
@@ -124,7 +124,7 @@ class InvoicesController extends Controller
 		return $this->render('create', [
 			'model' => $model,
 			'suppliers' => $suppliers,
-			'purchases' => $purchases
+			'purchases' => $purchases,
 		]);
 	}
 

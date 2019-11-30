@@ -9,12 +9,10 @@ $this->title = 'Create Safeguarding Policies';
 $this->params['breadcrumbs'][] = ['label' => 'Safeguarding Policies', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="safeguarding-policies-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

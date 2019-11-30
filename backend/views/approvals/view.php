@@ -8,7 +8,25 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Requisition */
 
-$this->title = 'View Requisition: '.$model->RequisitionID;
+// $this->title = 'View Requisition: '.$model->RequisitionID;
+switch ($model->ApprovalStatusID) {
+	case 1:
+		$this->title = 'Requisition Review:';
+		break;
+	case 2:
+		$this->title = 'Requisition Approvals:';
+		break;
+	case 3:
+		$this->title = 'Requisition Approved:';
+		break;
+	case 4:
+		$this->title = 'Requisition Rejected:';
+		break;
+	default:
+		$this->title = 'Requisition Review:';
+}
+$this->title = $this->title . ' ' . $model->RequisitionID;
+
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];
@@ -101,7 +119,12 @@ $FormID = 12;
 								'headerOptions' => ['style'=>'color:black; text-align:left'],
 								'format'=>'text',
 								'value' => function ($model) {
-									return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
+									if ($model->QuotationTypeID == 1) {
+										return isset($model->product->ProductName) ? $model->product->ProductName : '';
+									} else {
+										return isset($model->accounts->AccountName) ? $model->accounts->AccountName : '';
+									}
+									// return ($model->QuotationTypeID == 1) ? $model->product->ProductName : $model->accounts->AccountName;
 								},
 								'contentOptions' => ['style' => 'text-align:left'],
 							],
