@@ -342,7 +342,7 @@ class QuotationController extends Controller
 		$model = $this->findModel($id);
 		$model->ApprovalStatusID = 1;
 		if ($model->save()) {
-			$result = UsersController::sendEmailNotification(29); 
+			$result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->QuotationID]);
 		}
 	}
@@ -417,7 +417,7 @@ class QuotationController extends Controller
 				'content' => $content, 'quotation' => $quotation, 
 			'model' => $model, 'Filter' => false, 'suppliers' => $suppliers
 			]);
-		}
+	}
 
 	public function actionGetproductsfields($id)
 	{
@@ -448,7 +448,7 @@ class QuotationController extends Controller
 		$row = $id -1;
 		$Fields[0] = $id.'<input type="hidden" id="quotationsupplier-'.$row.'-quotationsupplierid" class="form-control" name="QuotationSupplier['.$row.'][QuotationSupplierID]">';
 		
-		$str = '<select id="quotationsupplier-0-supplierid" class="form-control-min" name="QuotationSupplier[0][SupplierID]"><option value=""></option>';
+		$str = '<select id="quotationsupplier-0-supplierid" class="form-control" name="QuotationSupplier[0][SupplierID]"><option value=""></option>';
 		
 		foreach ($suppliers as $key => $value)
 		{

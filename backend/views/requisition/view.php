@@ -114,7 +114,11 @@ $FormID = 6;
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => function ($model) {
-										return ($model->QuotationTypeID == 1 || $model->QuotationTypeID = '') ? $model->product->ProductName : $model->accounts->AccountName;
+										if ($model->QuotationTypeID == 1 || $model->QuotationTypeID = '') {
+											return isset($model->product) ? $model->product->ProductName : '';
+										} else {
+											return isset($model->accounts) ? $model->accounts->AccountName : '';
+										}
 									},
 									'contentOptions' => ['style' => 'text-align:left'],
 								],

@@ -31,7 +31,7 @@ $FormID = 5;
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
 						<div class="form-actions" style="margin-top:0px">
-							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>	
+							<?php // Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>	
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
@@ -73,7 +73,7 @@ $FormID = 5;
 								[
 									'label'=>'Approved Date',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
-									'format'=>'date',
+									'format' => ['date', 'php:d/m/Y h:i a'],
 									'value' => 'ApprovalDate',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],

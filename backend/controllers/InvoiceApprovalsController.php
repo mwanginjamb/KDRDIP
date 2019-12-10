@@ -62,7 +62,7 @@ class InvoiceApprovalsController extends Controller
 	 */
 	public function actionIndex($option)
 	{
-		$StatusID = $option==1 ? 1 : 2;
+		$StatusID = $option; //==1 ? 1 : 2;
 		$dataProvider = new ActiveDataProvider([
 			'query' => Invoices::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
 		]);

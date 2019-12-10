@@ -5,6 +5,9 @@ namespace backend\controllers;
 use Yii;
 use app\models\Indicators;
 use app\models\ProjectTeams;
+use app\models\Projects;
+use app\models\Accounts;
+use app\models\ActivityBudget;
 use app\models\Components;
 use app\models\UnitsOfMeasure;
 use app\models\SubComponents;
@@ -75,6 +78,9 @@ class IndicatorsController extends Controller
 		$model = new Indicators();
 		$model->ProjectID = $pid;
 
+		$project = Projects::findOne($pid);
+		$componentID = !empty($project) ? $project->ComponentID : 0;
+
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
 			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
@@ -84,7 +90,7 @@ class IndicatorsController extends Controller
 
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
-		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->where(['componentID' => $componentID])->all(), 'SubComponentID', 'SubComponentName');
 		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 
@@ -95,6 +101,7 @@ class IndicatorsController extends Controller
 			right JOIN reportingperiods ON reportingperiods.ReportingPeriodID = Temp.ReportingPeriodID where ProjectID = $pid";
 
 		// $indicatorTargets = IndicatorTargets::find()->where(['IndicatorID' => $id])->all();
+		$indicatorTargets = [];
 		$indicatorTargetsArr = IndicatorTargets::findBySql($sql)->asArray()->all();
 		foreach ($indicatorTargetsArr as $key => $target) {
 			$indicatorTargets[$key] = new IndicatorTargets();
@@ -225,6 +232,29 @@ class IndicatorsController extends Controller
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
 
+	public function actionActivityBudget($id)
+	{
+
+		if (Yii::$app->request->post()) {
+			$this->saveActivityBudget(Yii::$app->request->post()['ActivityBudget'], $id);
+			return [];
+			exit;
+		}
+
+		$budget = ActivityBudget::find()->where(['ActivityID' => $id])->all();
+		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
+
+		for ($x = count($budget); $x <= 5; $x++) {
+			$budget[$x] = new ActivityBudget();
+		}
+
+		return $this->renderPartial('activity-budget', [
+			'budget' => $budget,
+			'accounts' => $accounts,
+			'id' => $id
+		]);
+	}
+
 	private static function saveIndicatorTargets($columns, $model)
 	{
 		foreach ($columns as $key => $column) {
@@ -267,6 +297,29 @@ class IndicatorsController extends Controller
 				$_column->ResponsibilityID = $column['ResponsibilityID'];
 				$_column->StartDate = $column['StartDate'];
 				$_column->EndDate = $column['EndDate'];
+				$_column->save();
+			}
+		}
+	}
+
+	private static function saveActivityBudget($columns, $ActivityID)
+	{
+		foreach ($columns as $key => $column) {
+			if ($column['ActivityBudgetID'] == '') {
+				if (trim($column['Description']) != '') {
+					$_column = new ActivityBudget();
+					$_column->ActivityID = $ActivityID;
+					$_column->Description = $column['Description'];
+					$_column->AccountID = $column['AccountID'];
+					$_column->Amount = $column['Amount'];
+					$_column->CreatedBy = Yii::$app->user->identity->UserID;
+					$_column->save();
+				}
+			} else {
+				$_column = ActivityBudget::findOne($column['ActivityBudgetID']);
+				$_column->Description = $column['Description'];
+				$_column->AccountID = $column['AccountID'];
+				$_column->Amount = $column['Amount'];
 				$_column->save();
 			}
 		}

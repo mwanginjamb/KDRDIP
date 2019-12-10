@@ -93,10 +93,15 @@ $FormID = 12;
 									],
 									[
 										'attribute' => 'CreatedDate',
-										'label' => 'Created By',
+										'label' => 'Created Date',
 										'format' => ['date', 'php:d/m/Y h:i a'],
-									],							
-									'users.fullName',
+									],
+									[
+										'attribute' => 'users.fullName',
+										'label' => 'Created By',
+										'format' => 'text',
+									],
+									
 								],
 						]) ?>
 

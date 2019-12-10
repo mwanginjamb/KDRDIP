@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Projects;
+use app\models\ActivityBudget;
 use app\models\ProjectStatus;
 use app\models\FundingSources;
 use app\models\ProjectFunding;
@@ -22,10 +23,13 @@ use app\models\ReportingPeriods;
 use app\models\Counties;
 use app\models\SubCounties;
 use app\models\Indicators;
+use app\models\IndicatorTargets;
+use app\models\IndicatorActuals;
 use app\models\Components;
 use app\models\Activities;
 use app\models\Budget;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -82,6 +86,28 @@ class ProjectsController extends Controller
 	 */
 	public function actionView($id)
 	{
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post();
+			foreach ($params as $key => $value) {
+				$keyArray = explode('_', $key);
+				if (count($keyArray) == 2) {
+					$IndicatorID = $keyArray[0];
+					$ReportingPeriodID = $keyArray[1];
+
+					$actual = IndicatorActuals::findOne(['IndicatorID' => $IndicatorID, 'ReportingPeriodID' => $ReportingPeriodID]); 
+					if (empty($actual)) {
+						$actual = new IndicatorActuals();
+						$actual->IndicatorID = $IndicatorID;
+						$actual->ReportingPeriodID = $ReportingPeriodID;
+						$actual->Actual = $value;
+						$actual->save();
+					} else {
+						$actual->Actual = $value;
+						$actual->save();
+					}
+				}
+			}
+		}
 		$projectFunding = new ActiveDataProvider([
 			'query' => ProjectFunding::find()->where(['ProjectID'=> $id]),
 		]);
@@ -111,11 +137,17 @@ class ProjectsController extends Controller
 		]);
 
 		$indicators = new ActiveDataProvider([
-			'query' => Indicators::find()->where(['ProjectID'=> $id]),
+			'query' => Indicators::find()->joinWith('unitsOfMeasure')->where(['ProjectID'=> $id]),
 		]);
-		
+
+		$sql = "Select * FROM activitybudget 
+		LEFT JOIN activities ON activities.ActivityID = activitybudget.ActivityID
+		LEFT JOIN indicators ON indicators.IndicatorID = activities.IndicatorID
+		LEFT JOIN accounts on accounts.AccountID = activitybudget.AccountID
+		WHERE ProjectID = $id";
+
 		$budgetProvider = new ActiveDataProvider([
-			'query' => Budget::find()->where(['ProjectID'=> $id]),
+			'query' => ActivityBudget::find()->joinWith('activities')->joinWith('activities.indicators')->where(['ProjectID' => $id]),
 		]);
 
 		$reportingPeriods = new ActiveDataProvider([
@@ -123,11 +155,18 @@ class ProjectsController extends Controller
 		]);
 
 		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();
-
 		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');
-/* 		print '<pre>';
-		print_r($activities);
-		exit; */
+		$indicatorTargets = IndicatorTargets::find()->joinWith('indicators')
+									->where(['indicators.ProjectID' => $id])->asArray()->all();
+		$targets = ArrayHelper::index($indicatorTargets, 'ReportingPeriodID', [function ($element) {
+															return $element['IndicatorID'];
+													}]);
+
+		$indicatorActuals = IndicatorActuals::find()->joinWith('indicators')
+													->where(['indicators.ProjectID' => $id])->asArray()->all();
+		$actuals = ArrayHelper::index($indicatorActuals, 'ReportingPeriodID', [function ($element) {
+																			return $element['IndicatorID'];
+																	}]);
 
 		return $this->render('view', [
 			'model' => $this->findModel($id),
@@ -141,7 +180,9 @@ class ProjectsController extends Controller
 			'indicators' => $indicators,
 			'budgetProvider' => $budgetProvider,
 			'reportingPeriods' => $reportingPeriods,
-			'activities' => $activities
+			'activities' => $activities,
+			'targets' => $targets,
+			'actuals' => $actuals
 		]);
 	}
 
@@ -313,7 +354,7 @@ class ProjectsController extends Controller
 		for ($x = count($reportingPeriods); $x <= 4; $x++) {
 			$reportingPeriods[$x] = new ReportingPeriods();
 		}
-		
+
 		return $this->render('update', [
 			'model' => $model,
 			'projects' => $projects,
@@ -334,7 +375,7 @@ class ProjectsController extends Controller
 			'subCounties' => $subCounties,
 			'riskLikelihood' => $riskLikelihood,
 			'components' => $components,
-			'reportingPeriods' => $reportingPeriods
+			'reportingPeriods' => $reportingPeriods,
 		]);
 	}
 
@@ -553,5 +594,10 @@ class ProjectsController extends Controller
 		} else {
 			echo '<option>-</option>';
 		}
+	}
+
+	public function actionModalContent()
+	{
+		return '2122323';
 	}
 }

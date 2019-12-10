@@ -27,12 +27,12 @@ $FormID = 15;
 	<div class="card-content collapse show">
 		<div class="card-body">
 			<?php $form = ActiveForm::begin([
-			'id' => 'contact-form',
+/* 			'id' => 'contact-form',
 				'fieldConfig' => [
 					'options' => ['tag' => false, ],
 					'enableClientValidation'=> false,
 					'enableAjaxValidation'=> false,
-				],
+				], */
 			]); 
 			?>
 

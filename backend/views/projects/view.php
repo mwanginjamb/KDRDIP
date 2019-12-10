@@ -4,35 +4,111 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\bootstrap\Modal;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\projects */
-
+$baseUrl = Yii::$app->request->baseUrl;
 $this->title = $model->ProjectName;
 $this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$activityID = 0;
 \yii\web\YiiAsset::register($this);
 
 Modal::begin([
-	'header' => '<h4 class="modal-title">Schedule Inspection</h4>',
-	'id' => 'assessmentdateall',
+	'header' => '<h4 class="modal-title">Activity Budget</h4>',
+	'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	'id' => 'activity-budget',
 	'size' => 'modal-xl',
-	'clientOptions' => [
-		'backdrop' => 'static', 'keyboard' => true
-	]
-]);
+	]);
 
-echo '<div class="form-group field-assessment-date required">
-	<label class="control-label" for="assessment-date">Risk Assessment Date</label>
-	
+Modal::end();
 
-	<div class="help-block"></div>
-	</div>';
-
-echo '<br /><button type="submit" class="btn btn-primary">Search</button>';
+Modal::begin([
+	'header' => '<h4 class="modal-title">Actuals</h4>',
+	'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	'id' => 'actuals',
+	'size' => 'modal-xl',
+	]);
 
 Modal::end();
 ?>
+<style>
+
+.modal-header .close {
+  /* display:none; */
+  color: black !important;
+}
+
+</style>
+<script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#activity-budget").on("show.bs.modal", function(e) {
+			var id = $(e.relatedTarget).data('activity-id')
+			$.get( "<?= $baseUrl; ?>/indicators/activity-budget?id=" + id, function( data ) {
+					$(".modal-body").html(data);
+			});
+		});
+
+		$("#budget").on('beforeSubmit', function (event) { 
+			event.preventDefault();            
+			var form_data = new FormData($('#form-add-contact')[0]);
+			$.ajax({
+					url: $("#form-add-contact").attr('action'), 
+					dataType: 'JSON',  
+					cache: false,
+					contentType: false,
+					processData: false,
+					data: form_data, //$(this).serialize(),                      
+					type: 'post',                        
+					beforeSend: function() {
+					},
+					success: function(response){                      
+						toastr.success("",response.message); 
+						$('#addContactFormModel').modal('hide');
+					},
+					complete: function() {
+					},
+					error: function (data) {
+						toastr.warning("","There may a error on uploading. Try again later");    
+					}
+				});                
+				return false;
+		});
+
+		
+	});
+
+	function submitForm(id) {
+		$.ajax({
+			type: 'POST',
+			url: $("form").attr("action"),
+			data: $("form").serialize(), 
+			success: function(response) {
+				$("#activity-budget").modal('toggle');
+			},
+		});
+	}
+
+	function closeModal() {
+		$("#activity-budget").modal('hide');
+	}
+
+	$('#activity-budget').on('hidden.bs.modal', function (e) {
+	// do something...
+	})
+
+	// Acutals
+	$("#actuals").on("show.bs.modal", function(e) {
+			var id = $(e.relatedTarget).data('activity-id')
+			$.get( "<?= $baseUrl; ?>/indicators/activity-budget?id=" + id, function( data ) {
+					$(".modal-body").html(data);
+			});
+		});
+</script>
+
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -101,13 +177,16 @@ Modal::end();
 											<a class="nav-link" id="base-tab9" data-toggle="tab" aria-controls="tab9" href="#tab9" aria-expanded="false">Targets</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab10" data-toggle="tab" aria-controls="tab10" href="#tab10" aria-expanded="false">Budget</a>
+											<a class="nav-link" id="base-tab10" data-toggle="tab" aria-controls="tab10" href="#tab10" aria-expanded="false">Actual</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab11" data-toggle="tab" aria-controls="tab11" href="#tab11" aria-expanded="false">Reporting Periods</a>
+											<a class="nav-link" id="base-tab11" data-toggle="tab" aria-controls="tab11" href="#tab11" aria-expanded="false">Budget</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab12" data-toggle="tab" aria-controls="tab12" href="#tab12" aria-expanded="false">Notes</a>
+											<a class="nav-link" id="base-tab12" data-toggle="tab" aria-controls="tab12" href="#tab12" aria-expanded="false">Reporting Periods</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab13" data-toggle="tab" aria-controls="tab13" href="#tab13" aria-expanded="false">Notes</a>
 										</li>										
 									</ul>
 									<div class="tab-content px-1 pt-1">
@@ -387,7 +466,7 @@ Modal::end();
 										<div class="tab-pane" id="tab8" aria-labelledby="base-tab8">
 											<h4 class="form-section">Indicators</h4>
 											<div class="form-actions" style="margin-top:0px">
-												<?= Html::a('<i class="ft-plus"></i> New Indicator', ['indicators/create', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
+												<?= Html::a('<i class="ft-plus"></i> New Indicator', ['/indicators/create', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
 											</div>
 											<table class="custom-table table-striped table-bordered"><thead>
 											<tr>
@@ -410,7 +489,7 @@ Modal::end();
 													<td style="text-align:right"><?= number_format($indicator->BaseLine,2); ?></td>
 													<td style="text-align:right"><?= number_format($indicator->EndTarget,2 ); ?></td>
 													<td><?= $indicator->subComponents->SubComponentName; ?></td>
-													<td><a class="btn-sm btn-primary" href="/mande/backend/web/indicators/update?id=<?= $indicator->IndicatorID; ?>&amp;pid=<?= $indicator->ProjectID; ?>"><i class="ft-eye"></i> Update</a></td>
+													<td><a class="btn-sm btn-primary" href="<?= $baseUrl; ?>/indicators/update?id=<?= $indicator->IndicatorID; ?>&amp;pid=<?= $indicator->ProjectID; ?>"><i class="ft-eye"></i> Update</a></td>
 												</tr>	
 												<tr data-key="2">
 													<td colspan="7">
@@ -436,10 +515,10 @@ Modal::end();
 																<td style="text-align:left"><?= $activity->ActivityName; ?></td>
 																<td><?= $activity->StartDate; ?></td>
 																<td><?= $activity->EndDate; ?></td>
-																<td><?= $activity->employees->EmployeeName; ?></td>
+																<td><?= isset($activity->employees) ? $activity->employees->EmployeeName : ''; ?></td>
 																<td><?= $activity->ActualStartDate; ?></td>
 																<td><?= $activity->ActualEndDate; ?></td>																
-																<td><a href="#" class = "btn-sm btn-danger pull-right" data-toggle = "modal" data-target = "#assessmentdateall"><i class="ft-more-horizontal"></i></a>
+																<td><a href="#activity-budget" class = "btn-sm btn-danger pull-right" data-toggle="modal" data-activity-id="<?= $activity->ActivityID; ?>"><i class="ft-more-horizontal"></i></a>
 																	<!-- <a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a> -->
 																</td>
 															</tr>	
@@ -499,31 +578,86 @@ Modal::end();
 											<tr>
 												<th width="5%" style="color:black; text-align:center">ID</th>
 												<th style="color:black; text-align:left">Indicator</th>
-												<th>Unit Of Measure Name</th>
+												<th>Unit Of Measure</th>
 												<th>Base Line</th>
 												<th>End Target</th>
-												<th>Sub Component Name</th>
-												<th width="8%" style="color:black; text-align:center">&nbsp;</th>
+												<?php
+												foreach ($reportingPeriods->models as $key => $period) { ?>
+													<td><?= $period->ReportingPeriodName ;?></td>
+												<?php } ?>
 											</tr>
 											</thead>
 												<tbody>
-												<tr>
-													<td style="text-align:center">2</td>
-													<td style="text-align:left"></td>
-													<td>Number</td><td>1121.00</td>
-													<td>3343.00</td><td>test</td>
-													<td></td>
-												</tr>
+												<?php
+												foreach ($indicators->models as $key => $indicator) {
+													?>
+													<tr>
+														<td style="text-align:center"><?= $key + 1; ?></td>
+														<td style="text-align:left"><?= $indicator['IndicatorName']; ?></td>
+														<td><?= $indicator['unitsOfMeasure']['UnitOfMeasureName']; ?></td>
+														<td align="right"><?= number_format($indicator['BaseLine'],2); ?></td>
+														<td align="right"><?= number_format($indicator['EndTarget'],2); ?></td>
+														<?php
+														foreach ($reportingPeriods->models as $key => $period) { ?>
+														 	<td align="right"><?= isset($targets[$indicator->IndicatorID][$period->ReportingPeriodID]) ? $targets[$indicator->IndicatorID][$period->ReportingPeriodID]['Target'] : ''; ?></td>
+														<?php } ?>
+													</tr>
+													<?php
+												} ?>
 												</tbody>
 											</table>
 										</div>
 
 										<div class="tab-pane" id="tab10" aria-labelledby="base-tab10">
-											<!-- <h4 class="form-section">Budget</h4> -->
-											<?= $this->render('/budget/index', ['pid' => $model->ProjectID, 'dataProvider' => $budgetProvider]); ?>
+											<form method="post">
+											<h4 class="form-section">Actual</h4>
+											<table class="custom-table table-striped table-bordered"><thead>
+											<tr>
+												<th width="5%" style="color:black; text-align:center">ID</th>
+												<th style="color:black; text-align:left">Indicator</th>
+												<th>Unit Of Measure</th>
+												<th>Base Line</th>
+												<th>End Target</th>
+												<?php
+												foreach ($reportingPeriods->models as $key => $period) { ?>
+													<td width="15%"><?= $period->ReportingPeriodName ;?></td>
+												<?php } ?>
+											</tr>
+											</thead>
+												<tbody>
+												<?php
+												foreach ($indicators->models as $key => $indicator) {
+													?>
+													<tr>
+														<td style="text-align:center"><?= $key + 1; ?></td>
+														<td style="text-align:left"><?= $indicator['IndicatorName']; ?></td>
+														<td><?= $indicator['unitsOfMeasure']['UnitOfMeasureName']; ?></td>
+														<td align="right"><?= number_format($indicator['BaseLine'], 2); ?></td>
+														<td align="right"><?= number_format($indicator['EndTarget'],2); ?></td>
+														<?php
+														foreach ($reportingPeriods->models as $key => $period) {
+															$value = isset($actuals[$indicator->IndicatorID][$period->ReportingPeriodID]) ? $actuals[$indicator->IndicatorID][$period->ReportingPeriodID]['Actual'] : '';
+															$name = $indicator->IndicatorID.'_'.$period->ReportingPeriodID;
+															?>
+															<td align="right">
+																<input name="<?= $name; ?>" type="text" value="<?= $value; ?>" style="width:100%">	
+															</td>
+														<?php } ?>
+													</tr>
+													<?php
+												} ?>
+												</tbody>
+											</table>
+											<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
+											</form>
 										</div>
 
 										<div class="tab-pane" id="tab11" aria-labelledby="base-tab11">
+											<!-- <h4 class="form-section">Budget</h4> -->
+											<?= $this->render('/activity-budget/index', ['id' => $model->ProjectID, 'budgetProvider' => $budgetProvider]);  ?>
+										</div>
+
+										<div class="tab-pane" id="tab12" aria-labelledby="base-tab12">
 											<h4 class="form-section">Reporting Periods</h4>	 
 											<?= GridView::widget([
 												'dataProvider' => $reportingPeriods,
@@ -565,7 +699,7 @@ Modal::end();
 											]); ?>
 										</div>
 
-										<div class="tab-pane" id="tab12" aria-labelledby="base-tab12">
+										<div class="tab-pane" id="tab13" aria-labelledby="base-tab13">
 											<h4 class="form-section">Notes</h4>	 
 											<?= GridView::widget([
 												'dataProvider' => $projectNotes,

@@ -247,3 +247,7 @@ input[type='checkbox'].form-control:focus {
 	padding: 2.8px 14px;
 	line-height: 2.5;
 }
+
+.custom-group {
+	margin-bottom: 0 !important
+}

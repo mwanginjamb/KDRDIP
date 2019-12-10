@@ -12,6 +12,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Quotations', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $ApprovalStatusID = $model->ApprovalStatusID;
+$ExpiryDate = $model->ExpiryDate;
 $Rights = Yii::$app->params['rights'];
 $FormID = 25;
 ?>
@@ -39,7 +40,6 @@ $FormID = 25;
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 							<?php	
 							if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->QuotationID], ['class' => 'btn btn-primary']) ?>
 								<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->QuotationID], [
 										'class' => 'btn btn-danger',
@@ -81,7 +81,18 @@ $FormID = 25;
 									'attribute' => 'requisition.Description',
 									'label' => 'Requisition',
 								],
-								'CreatedDate',
+								[
+									'attribute' => 'StartDate',
+									'format' => ['date', 'php:d/m/Y'],
+								],
+								[
+									'attribute' => 'ExpiryDate',
+									'format' => ['date', 'php:d/m/Y'],
+								],
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],
+								],
 								[
 									'label'=>'Requested By',
 									'attribute' => 'users.fullName',
@@ -170,9 +181,9 @@ $FormID = 25;
 									'template' => '{response} {view}',
 									'buttons' => [
 
-										'response' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID){
+										'response' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID, $ExpiryDate) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return ($ApprovalStatusID == 3) ? Html::a('<i class="ft-eye"></i> Response', $baseUrl . '/quotation-response/create?qid=' . $model->QuotationID . '&sid='.$model->SupplierID, [
+											return ($ApprovalStatusID == 3 && date('Y-m-d', strtotime($ExpiryDate)) <= date('Y-m-d')) ? Html::a('<i class="ft-eye"></i> Response', $baseUrl . '/quotation-response/create?qid=' . $model->QuotationID . '&sid='.$model->SupplierID, [
 												'title' => Yii::t('app', 'View'),
 												'class'=>'btn-sm btn-secondary btn-xs',
 												]) : '';

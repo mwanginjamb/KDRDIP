@@ -164,8 +164,7 @@ class PurchasesController extends Controller
 			{
 				//print_r($lines);exit;
 					
-				if ($line['ProductID'] != '')
-				{
+				if ($line['ProductID'] != '') {
 					$_line = new PurchaseLines();
 					$_line->PurchaseID = $PurchaseID;
 					$_line->ProductID = $line['ProductID'];
@@ -182,7 +181,7 @@ class PurchasesController extends Controller
 			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 			$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
 			$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
-			$quotations = ArrayHelper::map(Quotation::find()->all(), 'QuotationID', 'Description');
+			$quotations = ArrayHelper::map(Quotation::find()->orderBy('QuotationID DESC')->all(), 'QuotationID', 'Description');
 			for ($x = 0; $x <= 19; $x++) {
 				$lines[$x] = new PurchaseLines();
 			}

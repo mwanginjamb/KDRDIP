@@ -205,7 +205,7 @@ print_r(Yii::$app->controller); exit; */
 
 							<?php
 							foreach ($components as $component) { ?>
-								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main"><?= $component->ShortName; ?></span></a>
+								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $component->ComponentName; ?>"><?= $component->ShortName; ?></span></a>
 								<ul class="menu-content">									
 									<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Projects</span></a>
 									</li>

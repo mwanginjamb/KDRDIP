@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
-							'layout' => '{items}',
+							'layout' => '{items}',							
 							'tableOptions' => [
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],

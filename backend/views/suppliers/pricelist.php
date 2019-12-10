@@ -72,7 +72,7 @@ $FormID = 21;
 		{ ?>
 			<div class="form-group">
 				<?= ($Rights[$FormID]['View']) ? Html::button('Save', [ 'class' => 'bigbtn btn-primary', 'onclick' => 'saverecords(\''.$url2.'\',\'details\',\''.$supplier->SupplierID.'\',\''.$baseUrl.'\',1)' ]) : ''; ?>
-				<?= Html::resetButton('Reset', ['class' => 'bigbtn btn-cancel']); ?>
+				
 			</div>
 			<?php
 		} ?>

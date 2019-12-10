@@ -50,7 +50,7 @@ class Deliveries extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'PurchaseID' => 'Purchase Order No.',
-			'DeliveryNoteNumber' => 'Delivery Note Number',
+			'DeliveryNoteNumber' => 'Supplier Delivery Note Number',
 			'Notes' => 'Notes',
 			'CompanyID' => 'Company ID',
 			'Posted' => 'Posted',

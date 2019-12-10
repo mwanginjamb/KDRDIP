@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 							<?php
 								if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->QuotationID], [
+								<?= Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->InvoiceID], [
 									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 									'data' => [
 												'confirm' => 'Are you sure you want to submit this item?',

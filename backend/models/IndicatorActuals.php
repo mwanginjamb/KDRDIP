@@ -5,26 +5,25 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "indicatortargets".
+ * This is the model class for table "indicatoractuals".
  *
- * @property int $IndicatorTargetID
- * @property string $IndicatorTargetName
+ * @property int $IndicatorActualID
  * @property int $IndicatorID
  * @property int $ReportingPeriodID
- * @property string $Target
+ * @property string $Actual
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
  */
-class IndicatorTargets extends \yii\db\ActiveRecord
+class IndicatorActuals extends \yii\db\ActiveRecord
 {
-	public $ReportingPeriodName;
+	public $IndicatorName;
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'indicatortargets';
+		return 'indicatoractuals';
 	}
 
 	/**
@@ -34,9 +33,8 @@ class IndicatorTargets extends \yii\db\ActiveRecord
 	{
 		return [
 			[['IndicatorID', 'ReportingPeriodID', 'CreatedBy', 'Deleted'], 'integer'],
-			[['Target'], 'number'],
+			[['Actual'], 'number'],
 			[['CreatedDate'], 'safe'],
-			[['IndicatorTargetName'], 'string', 'max' => 45],
 		];
 	}
 
@@ -46,11 +44,10 @@ class IndicatorTargets extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'IndicatorTargetID' => 'Indicator Target ID',
-			'IndicatorTargetName' => 'Indicator Target Name',
+			'IndicatorActualID' => 'Indicator Actual ID',
 			'IndicatorID' => 'Indicator ID',
 			'ReportingPeriodID' => 'Reporting Period ID',
-			'Target' => 'Target',
+			'Actual' => 'Actual',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

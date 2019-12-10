@@ -87,6 +87,12 @@ function addSupplierRow()
 }
 </script>
 
+<style>
+.form-group1 {
+    margin-bottom: 0 !important;
+}
+</style>
+
 <div class="card">
 	<div class="card-header">
 		<h4 class="form-section"><?= $this->title; ?></h4>
@@ -104,12 +110,12 @@ function addSupplierRow()
 	<div class="card-content collapse show">
 		<div class="card-body">
 		<?php $form = ActiveForm::begin([
-			'id' => 'contact-form',
+/* 			'id' => 'contact-form',
 				'fieldConfig' => [
 					'options' => ['tag' => false, ],
 					'enableClientValidation'=> false,
 					'enableAjaxValidation'=> false,
-				],
+				], */
 			]); ?>
 	 
 	 		<div class="row">
@@ -121,8 +127,17 @@ function addSupplierRow()
 				</div>			
 			</div>
 
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'StartDate')->textInput(['type' => 'date']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ExpiryDate')->textInput(['type' => 'date']) ?>
+				</div>			
+			</div>
+
 			<h4 class="form-section" style="margin-bottom: 0px">Select Products</h4>
-			<table width="100%" class="custom-table table-striped table-bordered-min" id="ProductTable">
+			<table width="100%" class="custom-table table-bordered-min" id="ProductTable">
 			<thead>
 			<tr>
 				<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
@@ -154,7 +169,7 @@ function addSupplierRow()
 			</div>
 
 			<h4 class="form-section" style="margin-bottom: 0px">Select Suppliers</h4>
-			<table width="100%" class="custom-table table-striped table-bordered-min" id="SupplierTable">
+			<table width="100%" class="custom-table table-bordered-min" id="SupplierTable">
 			<thead>
 			<tr>
 				<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
@@ -166,7 +181,7 @@ function addSupplierRow()
 			{ ?>
 				<tr>
 					<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']QuotationSupplierID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
-					<td><?= $form->field($line, '[' . $x . ']SupplierID', ['template' => '{label}{input}'])->dropDownList($suppliers, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
+					<td><?= $form->field($line, '[' . $x . ']SupplierID', ['template' => '{label}{input}'])->dropDownList($suppliers, ['prompt'=>'','class'=>'form-control form-group1'])->label(false) ?></td>
 				</tr>
 				<?php
 			} ?>			
