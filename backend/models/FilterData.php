@@ -11,6 +11,7 @@ class FilterData extends Model
 	public $StockTakeID;
 	public $SupplierID;
 	public $BankAccountID;
+	public $ProjectID;
 
 	public function rules()
 	{
@@ -28,6 +29,7 @@ class FilterData extends Model
 		'ProductCategoryID' => 'Product Category',
 		'StockTakeID' => 'Stock Take',
 		'SupplierID' => 'Supplier',
+		'ProjectID' => 'Project'
 		];
 	}
 }

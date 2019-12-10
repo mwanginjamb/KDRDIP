@@ -112,9 +112,6 @@ class IndicatorsController extends Controller
 			$indicatorTargets[$key]->Target = $target['Target'];
 			$indicatorTargets[$key]->ReportingPeriodName = $target['ReportingPeriodName'];
 		}
-/* 		for ($x = 0; $x <= 4; $x++) {
-			$indicatorTargets[$x] = new IndicatorTargets();
-		} */
 
 		for ($x = 0; $x <= 9; $x++) {
 			$activities[$x] = new Activities();
@@ -143,6 +140,7 @@ class IndicatorsController extends Controller
 	{
 		$model = $this->findModel($id);
 		$project = Projects::findOne($id);
+		$ComponentID = (!empty($project)) ? $project->ComponentID : 0;
 
 		$subComponent = SubComponents::findOne($model->SubComponentID);
 		if ($subComponent) {
@@ -150,17 +148,16 @@ class IndicatorsController extends Controller
 		}
 
 		$sql = "SELECT Temp.*, reportingperiods.ReportingPeriodID as RPID, ReportingPeriodName FROM (
-			SELECT * FROM indicatortargets
-			WHERE IndicatorID = $id
-			) as Temp
-			right JOIN reportingperiods ON reportingperiods.ReportingPeriodID = Temp.ReportingPeriodID where ProjectID = $pid";
+					SELECT * FROM indicatortargets
+					WHERE IndicatorID = $id
+					) as Temp
+					right JOIN reportingperiods ON reportingperiods.ReportingPeriodID = Temp.ReportingPeriodID 
+					where ProjectID = $pid";
 
-		// $indicatorTargets = IndicatorTargets::find()->where(['IndicatorID' => $id])->all();
 		$indicatorTargetsArr = IndicatorTargets::findBySql($sql)->asArray()->all();
 		$activities = Activities::find()->where(['IndicatorID' => $id])->all();
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// print_r(Yii::$app->request->post()['IndicatorTargets']); exit;		
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {	
 			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
 			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
 
@@ -168,7 +165,7 @@ class IndicatorsController extends Controller
 		}
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
-		$subComponents = ArrayHelper::map(SubComponents::find()->where(['ComponentID' => $project->ComponentID])->all(), 'SubComponentID', 'SubComponentName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->where(['ComponentID' => $ComponentID])->all(), 'SubComponentID', 'SubComponentName');
 		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 
@@ -176,10 +173,6 @@ class IndicatorsController extends Controller
 			$activities[$x] = new Activities();
 		}
 
-		// for ($x = count($indicatorTargets); $x <= 5; $x++) {
-		// 	$indicatorTargets[$x] = new IndicatorTargets();
-		// }
-		// print_r($indicatorTargetsArr); exit;
 		foreach ($indicatorTargetsArr as $key => $target) {
 			$indicatorTargets[$key] = new IndicatorTargets();
 			$indicatorTargets[$key]->IndicatorTargetID = $target['IndicatorTargetID'];

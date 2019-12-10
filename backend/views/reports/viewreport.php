@@ -1,16 +1,16 @@
 <?php
 	use yii\widgets\ActiveForm;
 	use yii\helpers\Html;
+
 	//print_r($dataProvider); exit;
 	$this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="page-default">
 	<div class="container">
 		
-		<?php 
+		<?php
 		//print_r($stocktake); Exit;
-		if ($Filter)
-		{		
+		if ($Filter) {
 			$form = ActiveForm::begin([
 			'id' => 'contact-form',
 				'fieldConfig' => [
@@ -18,30 +18,32 @@
 					'enableClientValidation'=> false,
 					'enableAjaxValidation'=> false,
 				],
-			]); 
+			]);
 			?>
 			<div class="row">
 				<div class="col-lg-3">
 					<?php
-					if (isset($StockFilter) && $StockFilter == true) { 
-						echo $form->field($model, 'StockTakeID')->dropDownList($stocktake, ['prompt'=>'All...']);						
+					if (isset($StockFilter) && $StockFilter == true) {
+						echo $form->field($model, 'StockTakeID')->dropDownList($stocktake, ['prompt'=>'All...']);
 					} elseif (isset($SupplierFilter) && $SupplierFilter == true) {
 						echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
 					} elseif (count($productcategories) > 0) {
-						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
+						echo $form->field($model, 'ProductCategoryID')
+										->dropDownList($productcategories, ['prompt'=>'All...']);
 					} elseif (count($bankAccounts) > 0) {
 						echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
+					} elseif (count($projects) > 0) {
+						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...']);
 					}
 					?>
 				</div>
-				<?php 
-				if (!$CategoryFilterOnly)
-				{ ?>
+				<?php
+				if (!$CategoryFilterOnly) { ?>
 					<div class="col-lg-3">
-						<?= $form->field($model, 'Month')->dropDownList($months,['prompt'=>'All...']) ?>
+						<?= $form->field($model, 'Month')->dropDownList($months, ['prompt'=>'All...']) ?>
 					</div>
 					<div class="col-lg-3">
-						<?= $form->field($model, 'Year')->dropDownList($years,[]) ?>
+						<?= $form->field($model, 'Year')->dropDownList($years, []) ?>
 					</div>
 					
 					<?php
@@ -53,7 +55,7 @@
 				</div>
 			</div>
 
-			<?php ActiveForm::end(); 
+			<?php ActiveForm::end();
 		}
 		?>
 		<iframe src="data:application/pdf;base64,<?= $content; ?>" height="700px" width="100%"></iframe>

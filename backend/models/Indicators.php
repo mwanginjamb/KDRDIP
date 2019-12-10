@@ -81,4 +81,9 @@ class Indicators extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(SubComponents::className(), ['SubComponentID' => 'SubComponentID'])->from(subcomponents::tableName());
 	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
+	}
 }

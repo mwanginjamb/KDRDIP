@@ -475,8 +475,7 @@ Modal::end();
 												<th width="15%">Unit Of Measure</th>
 												<th width="10%" style="text-align:right">Base Line</th>
 												<th width="10%" style="text-align:right">End Target</th>
-												<th width="15%">Sub Component</th>
-												<th width="11%" style="color:black; text-align:center">&nbsp;</th>
+												<th width="20%" style="color:black; text-align:center">&nbsp;</th>
 											</tr>
 											</thead>
 											<tbody>											
@@ -488,8 +487,16 @@ Modal::end();
 													<td><?= $indicator->unitsOfMeasure->UnitOfMeasureName; ?></td>
 													<td style="text-align:right"><?= number_format($indicator->BaseLine,2); ?></td>
 													<td style="text-align:right"><?= number_format($indicator->EndTarget,2 ); ?></td>
-													<td><?= $indicator->subComponents->SubComponentName; ?></td>
-													<td><a class="btn-sm btn-primary" href="<?= $baseUrl; ?>/indicators/update?id=<?= $indicator->IndicatorID; ?>&amp;pid=<?= $indicator->ProjectID; ?>"><i class="ft-eye"></i> Update</a></td>
+													<td>
+														<?= Html::a('<i class="ft-edit"></i> Update', ['indicators/update', 'id' => $indicator->IndicatorID, 'pid' => $indicator->ProjectID], ['class' => 'btn-sm btn-primary']) ?>
+														<?= Html::a('<i class="ft-trash"></i> Delete', ['indicators/delete', 'id' => $indicator->IndicatorID, 'pid' => $indicator->ProjectID], [
+																'class' => 'btn-sm btn-danger',
+																'data' => [
+																	'confirm' => 'Are you sure you want to delete this item?',
+																	'method' => 'post',
+																],
+														]) ?>
+													</td>
 												</tr>	
 												<tr data-key="2">
 													<td colspan="7">
