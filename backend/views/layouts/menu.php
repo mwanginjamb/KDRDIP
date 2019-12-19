@@ -93,7 +93,10 @@ print_r(Yii::$app->controller); exit; */
 									</li>
 									<li <?= ($currentPage == 'payment-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payment-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Methods</span></a>
 									</li>	
-																
+									<li <?= ($currentPage == 'currencies') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/currencies"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Currencies</span></a>
+									</li>
+									<li <?= ($currentRoute == 'bank-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/bank-types"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Bank Types</span></a>
+									</li>						
 								</ul>
 							</li>							
 						</ul>
@@ -215,6 +218,8 @@ print_r(Yii::$app->controller); exit; */
 									</li>
 									<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
 									</li>
+									<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Projects Report</span></a>
+									</li>
 								</ul>
 							</li>
 								<?php
@@ -246,7 +251,9 @@ print_r(Yii::$app->controller); exit; */
 									<li <?= ($currentPage == 'units-of-measure') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/units-of-measure"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Units of Measure</span></a>
 									</li>
 									<li <?= ($currentPage == 'safeguarding-policies') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/safeguarding-policies"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Safeguarding Policies</span></a>
-									</li>									
+									</li>
+									<li <?= ($currentPage == 'communities') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/communities"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Communities</span></a>
+									</li>																		
 								</ul>
 							</li>
 						</ul>

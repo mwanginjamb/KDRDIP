@@ -34,6 +34,8 @@
 						echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
 					} elseif (count($projects) > 0) {
 						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...']);
+					} elseif (count($projectStatus) > 0) {
+						echo $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']);
 					}
 					?>
 				</div>

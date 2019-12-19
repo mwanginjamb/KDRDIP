@@ -4,13 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\BankAccounts */
+/* @var $model app\models\BankTypes */
 
-$this->title = $model->AccountName;
-$this->params['breadcrumbs'][] = ['label' => 'Bank Accounts', 'url' => ['index']];
+$this->title = $model->BankTypeName;
+$this->params['breadcrumbs'][] = ['label' => 'Bank Types', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
+
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -33,8 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->BankAccountID], ['class' => 'btn btn-primary']) ?>
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->BankAccountID], [
+							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->BankTypeID], ['class' => 'btn btn-primary']) ?>
+							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->BankTypeID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
@@ -46,13 +47,8 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'BankAccountID',
-									'AccountName',
-									'AccountNumber',
-									'banks.BankName',
-									'bankBranches.BankBranchName',
-									'counties.CountyName',
-									'communities.CommunityName',
+									'BankTypeID',
+									'BankTypeName',
 									'Notes:ntext',
 									[
 										'attribute' => 'CreatedDate',

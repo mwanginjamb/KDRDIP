@@ -5,23 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "counties".
+ * This is the model class for table "communities".
  *
- * @property int $CountyID
- * @property string $CountyName
+ * @property int $CommunityID
+ * @property string $CommunityName
  * @property string $Notes
- * @property int $RegionID
  * @property string $CreatedDate
  * @property int $CreatedBy
+ * @property int $Deleted
  */
-class Counties extends \yii\db\ActiveRecord
+class Communities extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'counties';
+		return 'communities';
 	}
 
 	/**
@@ -30,11 +30,10 @@ class Counties extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['RegionID', 'CreatedBy'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CountyName'], 'string', 'max' => 45],
-			[['CountyName'], 'required']
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['CommunityName'], 'string', 'max' => 200],
 		];
 	}
 
@@ -44,12 +43,12 @@ class Counties extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'CountyID' => 'County ID',
-			'CountyName' => 'County',
+			'CommunityID' => 'Community ID',
+			'CommunityName' => 'Community',
 			'Notes' => 'Notes',
-			'RegionID' => 'Region',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
 		];
 	}
 

@@ -12,6 +12,9 @@ use Yii;
  * @property int $BranchID
  * @property string $AccountName
  * @property string $AccountNumber
+ * @property int $BankTypeID
+ * @property int $CountyID
+ * @property int $CommunityID
  * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
@@ -33,10 +36,11 @@ class BankAccounts extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['BankID', 'BranchID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['BankID', 'BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['AccountName', 'AccountNumber'], 'string', 'max' => 45],
+			[['AccountName', 'AccountNumber', 'BankID', 'BranchID', 'BankTypeID' ], 'required']
 		];
 	}
 
@@ -51,6 +55,9 @@ class BankAccounts extends \yii\db\ActiveRecord
 			'BranchID' => 'Branch',
 			'AccountName' => 'Account Name',
 			'AccountNumber' => 'Account Number',
+			'BankTypeID' => 'Bank Type',
+			'CountyID' => 'County',
+			'CommunityID' => 'Community',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
@@ -62,16 +69,24 @@ class BankAccounts extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
 	}
-
 	
 	public function getBanks()
 	{
 		return $this->hasOne(Banks::className(), ['BankID' => 'BankID'])->from(banks::tableName());
 	}
-
 	
 	public function getBankBranches()
 	{
 		return $this->hasOne(BankBranches::className(), ['BankBranchID' => 'BranchID'])->from(bankbranches::tableName());
+	}
+
+	public function getCommunities()
+	{
+		return $this->hasOne(Communities::className(), ['CommunityID' => 'CommunityID'])->from(communities::tableName());
+	}
+
+	public function getCounties()
+	{
+		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
 	}
 }

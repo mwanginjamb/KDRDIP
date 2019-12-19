@@ -222,6 +222,8 @@ class ProjectsController extends Controller
 		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
 		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
+		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
+		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
 	
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -275,7 +277,9 @@ class ProjectsController extends Controller
 			'subCounties' => $subCounties,
 			'riskLikelihood' => $riskLikelihood,
 			'components' => $components,
-			'reportingPeriods' => $reportingPeriods
+			'reportingPeriods' => $reportingPeriods,
+			'currencies' => $currencies,
+			'communities' => $communities
 		]);
 	}
 
@@ -322,6 +326,8 @@ class ProjectsController extends Controller
 		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
 		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
+		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
+		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -376,6 +382,8 @@ class ProjectsController extends Controller
 			'riskLikelihood' => $riskLikelihood,
 			'components' => $components,
 			'reportingPeriods' => $reportingPeriods,
+			'currencies' => $currencies,
+			'communities' => $communities
 		]);
 	}
 
@@ -386,12 +394,11 @@ class ProjectsController extends Controller
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
-	public function actionDelete($id, $pid)
+	public function actionDelete($id)
 	{
 		$this->findModel($id)->delete();
 
-		// return $this->redirect(['index']);
-		return $this->redirect(['view', 'id' => $pid]);
+		return $this->redirect(['index']);
 	}
 
 	/**
@@ -419,6 +426,10 @@ class ProjectsController extends Controller
 					$_column->ProjectID = $model->ProjectID;
 					$_column->FundingSourceID = $column['FundingSourceID'];
 					$_column->Amount = $column['Amount'];
+					$_column->BaseCurrencyID = $model->CurrencyID;
+					$_column->CurrencyID = $column['CurrencyID'];
+					$_column->Rate = $column['Rate'];
+					$_column->BaseAmount = $column['BaseAmount'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
@@ -426,6 +437,10 @@ class ProjectsController extends Controller
 				$_column = ProjectFunding::findOne($column['ProjectFundingID']);
 				$_column->FundingSourceID = $column['FundingSourceID'];
 				$_column->Amount = $column['Amount'];
+				$_column->BaseCurrencyID = $model->CurrencyID;
+				$_column->CurrencyID = $column['CurrencyID'];
+				$_column->Rate = $column['Rate'];
+				$_column->BaseAmount = $column['BaseAmount'];
 				$_column->save();
 			}
 		}

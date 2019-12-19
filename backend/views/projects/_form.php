@@ -7,6 +7,18 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\projects */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+
+<script>
+function calculateValue(row)
+{
+	var amount = document.getElementById("projectfunding-"+row+"-amount").value;
+	var rate = document.getElementById("projectfunding-"+row+"-rate").value;
+	
+	var total = amount * rate;
+
+	document.getElementById("projectfunding-"+row+"-baseamount").value = total;
+}
+</script>
 <div class="card">
 	<div class="card-header">
 		<h4 class="form-section"><?= $this->title; ?></h4>
@@ -106,6 +118,15 @@ use yii\widgets\ActiveForm;
 
 					<div class="row">
 						<div class="col-md-6">
+							<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'Select']); ?>
+						</div>
+						<div class="col-md-6">
+							<?= $form->field($model, 'CurrencyID')->dropDownList($currencies, ['prompt'=>'Select']); ?>
+						</div>			
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
 							<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
 						</div>
 						<div class="col-md-6">
@@ -121,7 +142,10 @@ use yii\widgets\ActiveForm;
 					<tr>
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">Funding Source</td>
-						<td style="padding: 4px !important" width="20%">Amount</td>
+						<td style="padding: 4px !important" width="15%">Currency</td>
+						<td style="padding: 4px !important" width="15%">Amount</td>
+						<td style="padding: 4px !important" width="10%">Exchange Rate</td>
+						<td style="padding: 4px !important" width="15%">Converted Amount</td>
 					</tr>	
 					</thead>
 					<?php
@@ -132,8 +156,11 @@ use yii\widgets\ActiveForm;
 								<?= $x+1; ?>
 								<?= $form->field($column, '[' . $x . ']ProjectFundingID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 							</td>
-							<td><?= $form->field($column, '[' . $x . ']FundingSourceID', ['template' => '{label}{input}'])->dropDownList($fundingSources, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
-							<td><?= $form->field($column, '[' . $x . ']Amount')->textInput(['class' => 'form-control'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']FundingSourceID', ['template' => '{label}{input}'])->dropDownList($fundingSources, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>							
+							<td><?= $form->field($column, '[' . $x . ']CurrencyID', ['template' => '{label}{input}'])->dropDownList($currencies, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']Amount')->textInput(['class' => 'form-control', 'onchange' => 'calculateValue(' . $x . ')'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']Rate')->textInput(['class' => 'form-control', 'onchange' => 'calculateValue(' . $x . ')'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']BaseAmount')->textInput(['class' => 'form-control', 'readonly'=> true])->label(false) ?></td>
 						</tr>
 						<?php
 					} ?>

@@ -23,6 +23,7 @@ use app\models\IndicatorActuals;
 use app\models\Projects;
 use app\models\Activities;
 use app\models\ActivityBudget;
+use app\models\ProjectStatus;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -1131,6 +1132,79 @@ class ReportsController extends Controller
 			'content' => $content, 'months' => $months, 'years' => $years,
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
 			'CategoryFilterOnly' => true, 'projects' => $projects,
+			'bankAccounts' => $bankAccounts
+		]);
+	}
+
+	public function actionProjectsReport($cid)
+	{
+		$params = Yii::$app->request->post();
+		$Title = 'Projects Report';
+
+		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+
+		$ProjectStatusID = 0;
+		if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
+			$ProjectStatusID = $params['FilterData']['ProjectStatusID'];
+			$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all(); 
+		} else {
+			$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid])->all();
+		}
+
+		$pStatus = ProjectStatus::findOne($ProjectStatusID);
+
+		$projectStatusName = !empty($pStatus) ? $pStatus->ProjectStatusName : '';
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('projects-report', [
+																				'projectStatus' => $projectStatus,
+																				'projects' => $projects,
+																				'projectStatusName' => $projectStatusName,
+																			]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:18px}',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		// return the pdf output as per the destination setting
+		// return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+		$months = [];
+		$years = [];
+		$productcategories = [];
+		$bankAccounts = [];
+		$model = new FilterData();
+		$model->ProjectID = 0;
+		$model->ProjectStatusID = $ProjectStatusID;
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content, 'months' => $months, 'years' => $years,
+			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
+			'CategoryFilterOnly' => true, 'projectStatus' => $projectStatus,
+			'projects' => [],
 			'bankAccounts' => $bankAccounts
 		]);
 	}

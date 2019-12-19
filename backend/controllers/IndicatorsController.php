@@ -139,7 +139,7 @@ class IndicatorsController extends Controller
 	public function actionUpdate($id, $pid)
 	{
 		$model = $this->findModel($id);
-		$project = Projects::findOne($id);
+		$project = Projects::findOne($pid);
 		$ComponentID = (!empty($project)) ? $project->ComponentID : 0;
 
 		$subComponent = SubComponents::findOne($model->SubComponentID);
@@ -202,11 +202,12 @@ class IndicatorsController extends Controller
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
-	public function actionDelete($id)
+	public function actionDelete($id, $pid)
 	{
 		$this->findModel($id)->delete();
 
-		return $this->redirect(['index']);
+		// return $this->redirect(['index']);
+		return $this->redirect(['projects/view', 'id' => $pid]);
 	}
 
 	/**
@@ -229,9 +230,10 @@ class IndicatorsController extends Controller
 	{
 
 		if (Yii::$app->request->post()) {
+			// print_r(Yii::$app->request->post()); exit;
 			$this->saveActivityBudget(Yii::$app->request->post()['ActivityBudget'], $id);
-			return [];
-			exit;
+			return '';
+			// exit;
 		}
 
 		$budget = ActivityBudget::find()->where(['ActivityID' => $id])->all();
@@ -240,6 +242,8 @@ class IndicatorsController extends Controller
 		for ($x = count($budget); $x <= 5; $x++) {
 			$budget[$x] = new ActivityBudget();
 		}
+		// print('<pre>');
+		// print_r($budget); exit;
 
 		return $this->renderPartial('activity-budget', [
 			'budget' => $budget,
@@ -281,6 +285,8 @@ class IndicatorsController extends Controller
 					$_column->ResponsibilityID = $column['ResponsibilityID'];
 					$_column->StartDate = $column['StartDate'];
 					$_column->EndDate = $column['EndDate'];
+					$_column->ActualStartDate = $column['ActualStartDate'];
+					$_column->ActualEndDate = $column['ActualEndDate'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
@@ -290,6 +296,8 @@ class IndicatorsController extends Controller
 				$_column->ResponsibilityID = $column['ResponsibilityID'];
 				$_column->StartDate = $column['StartDate'];
 				$_column->EndDate = $column['EndDate'];
+				$_column->ActualStartDate = $column['ActualStartDate'];
+				$_column->ActualEndDate = $column['ActualEndDate'];
 				$_column->save();
 			}
 		}
@@ -297,6 +305,7 @@ class IndicatorsController extends Controller
 
 	private static function saveActivityBudget($columns, $ActivityID)
 	{
+		// print_r($columns); exit;
 		foreach ($columns as $key => $column) {
 			if ($column['ActivityBudgetID'] == '') {
 				if (trim($column['Description']) != '') {

@@ -5,23 +5,24 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "counties".
+ * This is the model class for table "currencies".
  *
- * @property int $CountyID
- * @property string $CountyName
+ * @property int $CurrencyID
+ * @property string $CurrencyName
+ * @property string $Symbol
  * @property string $Notes
- * @property int $RegionID
  * @property string $CreatedDate
  * @property int $CreatedBy
+ * @property int $Deleted
  */
-class Counties extends \yii\db\ActiveRecord
+class Currencies extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'counties';
+		return 'currencies';
 	}
 
 	/**
@@ -30,11 +31,10 @@ class Counties extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['RegionID', 'CreatedBy'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CountyName'], 'string', 'max' => 45],
-			[['CountyName'], 'required']
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['CurrencyName', 'Symbol'], 'string', 'max' => 45],
 		];
 	}
 
@@ -44,12 +44,13 @@ class Counties extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'CountyID' => 'County ID',
-			'CountyName' => 'County',
+			'CurrencyID' => 'Currency ID',
+			'CurrencyName' => 'Currency',
+			'Symbol' => 'Symbol',
 			'Notes' => 'Notes',
-			'RegionID' => 'Region',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
 		];
 	}
 

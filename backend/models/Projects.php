@@ -22,6 +22,10 @@ use Yii;
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property int $CurrencyID
+ * @property string $Longitude
+ * @property string $Latitude
+ * @property int $CommunityID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -39,12 +43,13 @@ class Projects extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'ComponentID'], 'integer'],
+			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'ComponentID', 'CurrencyID', 'CommunityID'], 'integer'],
 			[['Objective', 'Justification'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
-			[['ProjectCost'], 'number'],
+			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
-			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID'], 'required']
+			[['ProjectName', 'Objective', 'Justification', 'StartDate',
+				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID'], 'required']
 		];
 	}
 
@@ -69,6 +74,10 @@ class Projects extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'CurrencyID' => 'Currency',
+			'Longitude' => 'Longitude',
+			'Latitude' => 'Latitude',
+			'CommunityID' => 'Community'
 		];
 	}
 
@@ -90,5 +99,15 @@ class Projects extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getCurrencies()
+	{
+		return $this->hasOne(Currencies::className(), ['CurrencyID' => 'CurrencyID'])->from(currencies::tableName());
+	}
+
+	public function getCommunities()
+	{
+		return $this->hasOne(Communities::className(), ['CommunityID' => 'CommunityID'])->from(communities::tableName());
 	}
 }

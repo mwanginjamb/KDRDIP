@@ -18,7 +18,7 @@ $activityID = 0;
 
 Modal::begin([
 	'header' => '<h4 class="modal-title">Activity Budget</h4>',
-	'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	// 'footer' => Html::submitButton(Yii::t('app', 'Save')),
 	'id' => 'activity-budget',
 	'size' => 'modal-xl',
 	]);
@@ -83,12 +83,12 @@ Modal::end();
 
 	function submitForm(id) {
 		$.ajax({
-			type: 'POST',
-			url: $("form").attr("action"),
-			data: $("form").serialize(), 
-			success: function(response) {
+			type: "POST",
+			url: $("#budget").attr('action'),
+			data: $("#budget").serialize(),
+			success: function( response ) {
 				$("#activity-budget").modal('toggle');
-			},
+			}
 		});
 	}
 
@@ -96,9 +96,9 @@ Modal::end();
 		$("#activity-budget").modal('hide');
 	}
 
-	$('#activity-budget').on('hidden.bs.modal', function (e) {
+/* 	$('#activity-budget').on('hidden.bs.modal', function (e) {
 	// do something...
-	})
+	}) */
 
 	// Acutals
 	$("#actuals").on("show.bs.modal", function(e) {
@@ -216,7 +216,12 @@ Modal::end();
 														'attribute' => 'EndDate',
 														'format' => ['date', 'php:d/m/Y'],
 													],
-													'ProjectCost',
+													[
+														'attribute' => 'ProjectCost',
+														'format' => ['decimal', 2],
+													],
+													'currencies.CurrencyName',
+													'communities.CommunityName',
 													[
 														'attribute' => 'projectStatus.ProjectStatusName',
 														'label' => 'Status',
@@ -230,7 +235,6 @@ Modal::end();
 													[
 														'label' => 'Created By',
 														'attribute' => 'users.fullName',
-														
 													],
 											],
 										]) ?> 
@@ -482,12 +486,12 @@ Modal::end();
 											<?php 
 											foreach ($indicators->models as $key => $indicator) { ?>
 												<tr data-key="2">
-													<td style="text-align:center"><?= $indicator->IndicatorID; ?></td>
+													<td style="text-align:center"><?= $key + 1; ?></td>
 													<td style="text-align:left"><?= $indicator->IndicatorName; ?></td>
 													<td><?= $indicator->unitsOfMeasure->UnitOfMeasureName; ?></td>
 													<td style="text-align:right"><?= number_format($indicator->BaseLine,2); ?></td>
 													<td style="text-align:right"><?= number_format($indicator->EndTarget,2 ); ?></td>
-													<td>
+													<td style="text-align:right">
 														<?= Html::a('<i class="ft-edit"></i> Update', ['indicators/update', 'id' => $indicator->IndicatorID, 'pid' => $indicator->ProjectID], ['class' => 'btn-sm btn-primary']) ?>
 														<?= Html::a('<i class="ft-trash"></i> Delete', ['indicators/delete', 'id' => $indicator->IndicatorID, 'pid' => $indicator->ProjectID], [
 																'class' => 'btn-sm btn-danger',
@@ -516,15 +520,15 @@ Modal::end();
 														<tbody>
 															<?php
 															$activitiesList = isset($activities[$indicator->IndicatorID]) ? $activities[$indicator->IndicatorID] : [];
-															foreach ($activitiesList as $key => $activity) { ?>
+															foreach ($activitiesList as $akey => $activity) { ?>
 															<tr data-key="2">
-																<td style="text-align:center"><?= $activity->ActivityID; ?></td>
+																<td style="text-align:center"><?= $akey + 1?></td>
 																<td style="text-align:left"><?= $activity->ActivityName; ?></td>
-																<td><?= $activity->StartDate; ?></td>
-																<td><?= $activity->EndDate; ?></td>
+																<td><?= isset($activity->StartDate)? date('d/m/Y', strtotime($activity->StartDate)) : ''; ?></td>
+																<td><?= isset($activity->EndDate)? date('d/m/Y', strtotime($activity->EndDate))  : ''; ?></td>
 																<td><?= isset($activity->employees) ? $activity->employees->EmployeeName : ''; ?></td>
-																<td><?= $activity->ActualStartDate; ?></td>
-																<td><?= $activity->ActualEndDate; ?></td>																
+																<td><?= isset($activity->ActualStartDate)? date('d/m/Y', strtotime($activity->ActualStartDate))  : ''; ?></td>
+																<td><?= isset($activity->ActualEndDate)? date('d/m/Y', strtotime($activity->ActualEndDate)) : ''; ?></td>																
 																<td><a href="#activity-budget" class = "btn-sm btn-danger pull-right" data-toggle="modal" data-activity-id="<?= $activity->ActivityID; ?>"><i class="ft-more-horizontal"></i></a>
 																	<!-- <a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a> -->
 																</td>

@@ -89,14 +89,16 @@ use yii\widgets\ActiveForm;
 			</table>	
 			
 			<h4 class="form-section">Activities</h4>
-			<table width="100%" class="custom-table" id="ColumnsTable">
+			<table width="100%" class="custom-table1" id="ActivitiesTable">
 			<thead>
 			<tr>
 				<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 				<td style="padding: 4px !important">Description</td>
-				<td style="padding: 4px !important" width="10%">Start Date</td>
-				<td style="padding: 4px !important" width="10%">End Date</td>
-				<td style="padding: 4px !important" width="15%">Responsibility</td>
+				<td style="padding: 4px !important; width: 8%" width="8%">Start Date</td>
+				<td style="padding: 4px !important; width: 8%" width="8%">End Date</td>
+				<td style="padding: 4px !important; width: 8%" width="8%">Actual Start Date</td>
+				<td style="padding: 4px !important; width: 8%" width="8%">Actual End Date</td>
+				<td style="padding: 4px !important; width: 15%" width="15%">Responsibility</td>
 			</tr>	
 			</thead>
 			<?php
@@ -110,6 +112,8 @@ use yii\widgets\ActiveForm;
 					<td><?= $form->field($column, '[' . $x . ']ActivityName')->textInput(['class' => 'form-control'])->label(false) ?></td>
 					<td><?= $form->field($column, '[' . $x . ']StartDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
 					<td><?= $form->field($column, '[' . $x . ']EndDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ActualStartDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ActualEndDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
 					<td><?= $form->field($column, '[' . $x . ']ResponsibilityID', ['template' => '{label}{input}'])->dropDownList($employees, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
 				</tr>
 				<?php

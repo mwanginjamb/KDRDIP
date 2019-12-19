@@ -6,6 +6,9 @@ use Yii;
 use app\models\BankAccounts;
 use app\models\BankBranches;
 use app\models\Banks;
+use app\models\Counties;
+use app\models\Communities;
+use app\models\BankTypes;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -74,11 +77,18 @@ class BankAccountsController extends Controller
 			return $this->redirect(['view', 'id' => $model->BankAccountID]);
 		}
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
-		$bankBranches = []; //ArrayHelper::map(BankBranches::find()->all(), 'BankBranchID', 'BankBranchName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$communities = ArrayHelper::map(Communities::find()->all(), 'CommunityID', 'CommunityName');
+		$bankTypes = ArrayHelper::map(BankTypes::find()->all(), 'BankTypeID', 'BankTypeName');
+
+		$bankBranches = [];
 		return $this->render('create', [
 			'model' => $model,
 			'banks' => $banks,
-			'bankBranches' => $bankBranches
+			'bankBranches' => $bankBranches,
+			'counties' => $counties,
+			'communities' => $communities,
+			'bankTypes' => $bankTypes
 		]);
 	}
 
@@ -98,11 +108,17 @@ class BankAccountsController extends Controller
 		}
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
 		$bankBranches = ArrayHelper::map(BankBranches::find()->where(['BankID' => $model->BankID ])->all(), 'BankBranchID', 'BankBranchName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$communities = ArrayHelper::map(Communities::find()->all(), 'CommunityID', 'CommunityName');
+		$bankTypes = ArrayHelper::map(BankTypes::find()->all(), 'BankTypeID', 'BankTypeName');
 
 		return $this->render('update', [
 			'model' => $model,
 			'banks' => $banks,
-			'bankBranches' => $bankBranches
+			'bankBranches' => $bankBranches,
+			'counties' => $counties,
+			'communities' => $communities,
+			'bankTypes' => $bankTypes
 		]);
 	}
 
