@@ -33,7 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'components' => $components,
 		'reportingPeriods' => $reportingPeriods,
 		'currencies' => $currencies,
-		'communities' => $communities
+		'communities' => $communities,
+		'counties' => $counties
 	]) ?>
 
 </section>

@@ -21,6 +21,9 @@ use Yii;
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property int $UserTypeID
+ * @property int $CountyID
+ * @property int $CommunityID
  */
 class Users extends \yii\db\ActiveRecord
 {
@@ -41,17 +44,22 @@ class Users extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['UserStatusID', 'UserGroupID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['UserStatusID', 'UserGroupID', 'CreatedBy', 'Deleted', 'UserTypeID', 'CountyID', 'CommunityID'], 'integer'],
 			[['CreatedDate'], 'safe'],
 			[['FirstName', 'LastName', 'Mobile', 'ValidationCode', 'ResetCode'], 'string', 'max' => 45],
 			[['Email'], 'email'],
 			[['PasswordHash', 'AuthKey'], 'string', 'max' => 128],
 			[['Email'],'unique'],
-			[['Email', 'FirstName', 'LastName'],'required'],
+			[['Email', 'FirstName', 'LastName', 'UserTypeID'],'required'],
 			[['Password', 'ConfirmPassword'],'required', 'when' => function ($model) {
-					return $model->isNewRecord;
-					}
-				],
+				return $model->isNewRecord;
+			}],
+			[['CountyID'],'required', 'when' => function ($model) {
+				return ($model->UserTypeID == 2 ||  $model->UserTypeID == 3) ? true : false;
+			}],
+			[['CommunityID'],'required', 'when' => function ($model) {
+				return ($model->UserTypeID == 3) ? true : false;
+			}],
 			['Password', 'compare', 'compareAttribute'=>'ConfirmPassword'],
 		];
 	}
@@ -78,6 +86,9 @@ class Users extends \yii\db\ActiveRecord
 			'Deleted' => 'Deleted',
 			'FullName' => 'Created By',
 			'Full_Name' => 'Created By',
+			'CommunityID' => 'Community',
+			'CountyID' => 'County',
+			'UserTypeID' => 'UserType',
 		];
 	}
 
@@ -104,5 +115,20 @@ class Users extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(['origin' => users::tableName()]);
+	}
+
+	public function getUserTypes()
+	{
+		return $this->hasOne(UserTypes::className(), ['UserTypeID' => 'UserTypeID'])->from(usertypes::tableName());
+	}
+
+	public function getCounties()
+	{
+		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
+	}
+
+	public function getCommunities()
+	{
+		return $this->hasOne(Communities::className(), ['CommunityID' => 'CommunityID'])->from(communities::tableName());
 	}
 }

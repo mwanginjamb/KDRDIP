@@ -221,6 +221,7 @@ Modal::end();
 														'format' => ['decimal', 2],
 													],
 													'currencies.CurrencyName',
+													'counties.CountyName',
 													'communities.CommunityName',
 													[
 														'attribute' => 'projectStatus.ProjectStatusName',

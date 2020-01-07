@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Communities */
+/* @var $model app\models\CashBook */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="card">
@@ -27,16 +27,24 @@ use yii\widgets\ActiveForm;
 	 
 	 		<div class="row">
 				<div class="col-md-6">
-				<?= $form->field($model, 'CommunityName')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'Date')->textInput(['maxlength' => true, 'type' => 'date']) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'Select']); ?>
+
+				</div>			
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'AccountID')->dropDownList($bankAccounts, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'Amount')->textInput(['maxlength' => true, 'type' => 'number']) ?>
 				</div>			
 			</div>
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'Notes')->textarea(['rows' => 3]) ?>
+					<?= $form->field($model, 'Description')->textarea(['rows' => 4]) ?>					
 				</div>
 				<div class="col-md-6">
 						

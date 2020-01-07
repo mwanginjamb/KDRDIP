@@ -3,17 +3,17 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\Communities */
+/* @var $model app\models\CashBook */
 
-$this->title = 'Create Communities';
-$this->params['breadcrumbs'][] = ['label' => 'Communities', 'url' => ['index']];
+$this->title = 'New Cash Transfer';
+$this->params['breadcrumbs'][] = ['label' => 'Cash Books', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">
 
 	<?= $this->render('_form', [
 		'model' => $model,
-		'counties' => $counties
+		'bankAccounts' => $bankAccounts
 	]) ?>
 
 </section>

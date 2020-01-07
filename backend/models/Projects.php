@@ -26,6 +26,7 @@ use Yii;
  * @property string $Longitude
  * @property string $Latitude
  * @property int $CommunityID
+ * @property int $CountyID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -43,12 +44,13 @@ class Projects extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'ComponentID', 'CurrencyID', 'CommunityID'], 'integer'],
+			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 
+				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID'], 'integer'],
 			[['Objective', 'Justification'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
-			[['ProjectName', 'Objective', 'Justification', 'StartDate',
+			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
 				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID'], 'required']
 		];
 	}
@@ -77,7 +79,8 @@ class Projects extends \yii\db\ActiveRecord
 			'CurrencyID' => 'Currency',
 			'Longitude' => 'Longitude',
 			'Latitude' => 'Latitude',
-			'CommunityID' => 'Community'
+			'CommunityID' => 'Community',
+			'CountyID' => 'County'
 		];
 	}
 
@@ -109,5 +112,10 @@ class Projects extends \yii\db\ActiveRecord
 	public function getCommunities()
 	{
 		return $this->hasOne(Communities::className(), ['CommunityID' => 'CommunityID'])->from(communities::tableName());
+	}
+
+	public function getCounties()
+	{
+		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
 	}
 }

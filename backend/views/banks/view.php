@@ -12,6 +12,60 @@ $this->params['breadcrumbs'][] = ['label' => 'Banks', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
+<script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#activity-budget").on("show.bs.modal", function(e) {
+			var id = $(e.relatedTarget).data('activity-id')
+			$.get( "<?= $baseUrl; ?>/indicators/activity-budget?id=" + id, function( data ) {
+					$(".modal-body").html(data);
+			});
+		});
+
+		$("#budget").on('beforeSubmit', function (event) { 
+			event.preventDefault();            
+			var form_data = new FormData($('#form-add-contact')[0]);
+			$.ajax({
+					url: $("#form-add-contact").attr('action'), 
+					dataType: 'JSON',  
+					cache: false,
+					contentType: false,
+					processData: false,
+					data: form_data, //$(this).serialize(),                      
+					type: 'post',                        
+					beforeSend: function() {
+					},
+					success: function(response){                      
+						toastr.success("",response.message); 
+						$('#addContactFormModel').modal('hide');
+					},
+					complete: function() {
+					},
+					error: function (data) {
+						toastr.warning("","There may a error on uploading. Try again later");    
+					}
+				});                
+				return false;
+		});
+
+		
+	});
+
+	function submitForm(id) {
+		$.ajax({
+			type: "POST",
+			url: $("#budget").attr('action'),
+			data: $("#budget").serialize(),
+			success: function( response ) {
+				$("#activity-budget").modal('toggle');
+			}
+		});
+	}
+
+	function closeModal() {
+		$("#activity-budget").modal('hide');
+	}
+</script>
 
 <section id="configuration">
 	<div class="row">
@@ -44,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									],
 							]) ?>
 						</p>
-
+							
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [

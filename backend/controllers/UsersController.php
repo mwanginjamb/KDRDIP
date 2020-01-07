@@ -6,6 +6,9 @@ use Yii;
 use app\models\Users;
 use app\models\UserGroups;
 use app\models\UserStatus;
+use app\models\UserTypes;
+use app\models\Communities;
+use app\models\Counties;
 use app\models\MessageTemplates;
 use app\models\UserGroupRights;
 use yii\web\Controller;
@@ -88,11 +91,17 @@ class UsersController extends Controller
 
 		$usergroups = ArrayHelper::map(UserGroups::find()->all(), 'UserGroupID', 'UserGroupName');
 		$userstatus = ArrayHelper::map(UserStatus::find()->all(), 'UserStatusID', 'UserStatusName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$communities = ArrayHelper::map(Communities::find()->all(), 'CommunityID', 'CommunityName');
+		$userTypes = ArrayHelper::map(UserTypes::find()->all(), 'UserTypeID', 'UserTypeName');
 
 		return $this->render('create', [
 			'model' => $model,
 			'usergroups' => $usergroups,
-			'userstatus' => $userstatus
+			'userstatus' => $userstatus,
+			'counties' => $counties,
+			'communities' => $communities,
+			'userTypes' => $userTypes
 		]);
 	}
 
@@ -114,11 +123,17 @@ class UsersController extends Controller
 
 		$usergroups = ArrayHelper::map(UserGroups::find()->all(), 'UserGroupID', 'UserGroupName');
 		$userstatus = ArrayHelper::map(UserStatus::find()->all(), 'UserStatusID', 'UserStatusName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$communities = ArrayHelper::map(Communities::find()->all(), 'CommunityID', 'CommunityName');
+		$userTypes = ArrayHelper::map(UserTypes::find()->all(), 'UserTypeID', 'UserTypeName');
 
 		return $this->render('update', [
 			'model' => $model,
 			'usergroups' => $usergroups,
-			'userstatus' => $userstatus
+			'userstatus' => $userstatus,
+			'counties' => $counties,
+			'communities' => $communities,
+			'userTypes' => $userTypes
 		]);
 	}
 

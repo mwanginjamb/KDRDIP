@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "communities".
+ * This is the model class for table "types".
  *
- * @property int $CommunityID
- * @property string $CommunityName
+ * @property int $TypeID
+ * @property string $TypeName
  * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
- * @property int $CountyID
  */
-class Communities extends \yii\db\ActiveRecord
+class Types extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'communities';
+		return 'types';
 	}
 
 	/**
@@ -33,9 +32,8 @@ class Communities extends \yii\db\ActiveRecord
 		return [
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CreatedBy', 'Deleted', 'CountyID'], 'integer'],
-			[['CommunityName'], 'string', 'max' => 200],
-			[['CountyID', 'CommunityName'], 'required'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['TypeName'], 'string', 'max' => 45],
 		];
 	}
 
@@ -45,9 +43,8 @@ class Communities extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'CommunityID' => 'Community ID',
-			'CommunityName' => 'Community',
-			'CountyID' => 'County',
+			'TypeID' => 'Type ID',
+			'TypeName' => 'Type Name',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
@@ -55,13 +52,9 @@ class Communities extends \yii\db\ActiveRecord
 		];
 	}
 
+	
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
-	}
-
-	public function getCounties()
-	{
-		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
 	}
 }

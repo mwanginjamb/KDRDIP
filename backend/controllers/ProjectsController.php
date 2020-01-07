@@ -224,6 +224,7 @@ class ProjectsController extends Controller
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
 		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 	
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -279,7 +280,8 @@ class ProjectsController extends Controller
 			'components' => $components,
 			'reportingPeriods' => $reportingPeriods,
 			'currencies' => $currencies,
-			'communities' => $communities
+			'communities' => $communities,
+			'counties' => $counties
 		]);
 	}
 
@@ -328,6 +330,7 @@ class ProjectsController extends Controller
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
 		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -383,7 +386,8 @@ class ProjectsController extends Controller
 			'components' => $components,
 			'reportingPeriods' => $reportingPeriods,
 			'currencies' => $currencies,
-			'communities' => $communities
+			'communities' => $communities,
+			'counties' => $counties
 		]);
 	}
 

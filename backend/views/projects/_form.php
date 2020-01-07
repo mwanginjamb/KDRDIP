@@ -118,19 +118,19 @@ function calculateValue(row)
 
 					<div class="row">
 						<div class="col-md-6">
-							<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'Select']); ?>
+							<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'Select']); ?>	
 						</div>
 						<div class="col-md-6">
-							<?= $form->field($model, 'CurrencyID')->dropDownList($currencies, ['prompt'=>'Select']); ?>
+							<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'Select']); ?>
 						</div>			
 					</div>
 
 					<div class="row">
 						<div class="col-md-6">
-							<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
+							<?= $form->field($model, 'CurrencyID')->dropDownList($currencies, ['prompt'=>'Select']); ?>
 						</div>
 						<div class="col-md-6">
-							
+							<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
 						</div>			
 					</div>
 				</div>

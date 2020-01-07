@@ -14,7 +14,10 @@ $this->params['breadcrumbs'][] = $this->title;
 	<?= $this->render('_form', [
 		'model' => $model,
 		'usergroups' => $usergroups,
-		'userstatus' => $userstatus
+		'userstatus' => $userstatus,
+		'counties' => $counties,
+		'communities' => $communities,
+		'userTypes' => $userTypes
 	]) ?>
 
 </section>

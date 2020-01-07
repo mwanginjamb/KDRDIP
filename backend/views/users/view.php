@@ -53,7 +53,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									'Email:email',
 									'Mobile',
 									'userstatus.UserStatusName',
-            					'usergroups.UserGroupName',
+									'usergroups.UserGroupName',
+									'userTypes.UserTypeName',
+									'communities.CommunityName',
+									'counties.CountyName',
 									[
 										'attribute' => 'CreatedDate',
 										'format' => ['date', 'php:d/m/Y h:i a'],

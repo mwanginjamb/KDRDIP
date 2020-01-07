@@ -9,6 +9,7 @@ use app\models\Banks;
 use app\models\Counties;
 use app\models\Communities;
 use app\models\BankTypes;
+use app\models\CashBook;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -58,8 +59,13 @@ class BankAccountsController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$cashBook = new ActiveDataProvider([
+			'query' => CashBook::find()->where(['BankAccountID'=> $id]),
+		]);
+
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'cashBook' => $cashBook
 		]);
 	}
 

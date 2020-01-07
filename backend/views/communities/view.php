@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							'attributes' => [
 									'CommunityID',
 									'CommunityName',
+									'counties.CountyName',
 									'Notes:ntext',
 									[
 										'attribute' => 'CreatedDate',

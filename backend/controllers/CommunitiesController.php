@@ -4,10 +4,12 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Communities;
+use app\models\Counties;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 
 /**
  * CommunitiesController implements the CRUD actions for Communities model.
@@ -71,8 +73,10 @@ class CommunitiesController extends Controller
 			return $this->redirect(['view', 'id' => $model->CommunityID]);
 		}
 
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		return $this->render('create', [
 			'model' => $model,
+			'counties' => $counties
 		]);
 	}
 
@@ -90,9 +94,11 @@ class CommunitiesController extends Controller
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->CommunityID]);
 		}
-
+		
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		return $this->render('update', [
 			'model' => $model,
+			'counties' => $counties
 		]);
 	}
 
