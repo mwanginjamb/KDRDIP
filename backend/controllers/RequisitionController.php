@@ -10,6 +10,7 @@ use app\models\QuotationProducts;
 use app\models\Quotation;
 use app\models\Accounts;
 use app\models\Product;
+use app\models\Projects;
 use app\models\Users;
 use app\models\Stores;
 use yii\data\ActiveDataProvider;
@@ -107,6 +108,7 @@ class RequisitionController extends Controller
 		
 		$model = new Requisition();
 		$model->CreatedBy = $UserID;
+		$lines = [];
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$RequisitionID = $model->RequisitionID;
@@ -120,6 +122,7 @@ class RequisitionController extends Controller
 					$_line->RequisitionID = $RequisitionID;
 					$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
 					$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
+					$_line->ProjectID = isset($line['ProjectID']) ? $line['ProjectID'] : 0;
 					$_line->Quantity = $line['Quantity'];
 					$_line->Description = $line['Description'];
 					$_line->QuotationTypeID = $line['QuotationTypeID'];
@@ -133,14 +136,38 @@ class RequisitionController extends Controller
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
 		$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		$users = Users::findOne($UserID);
 		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
 		$products[1] = $products;
 		$products[2] = $accounts;
 
-		for ($x = 0; $x <= 9; $x++) {
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post();
+			$requisitionLine = isset($params['RequisitionLine']) ? $params['RequisitionLine'] : [];
+			foreach ($requisitionLine as $x => $line) {
+				$lines[$x] = new RequisitionLine();
+				$lines[$x]->RequisitionLineID = $line['RequisitionLineID'];
+            $lines[$x]->QuotationTypeID = $line['QuotationTypeID'];
+            $lines[$x]->ProductID = $line['ProductID'];
+            $lines[$x]->ProjectID = $line['ProjectID'];
+            $lines[$x]->Quantity = $line['Quantity'];
+            $lines[$x]->Description = $line['Description'];
+			}
+		}
+
+		for ($x = count($lines); $x <= 9; $x++) { 
 			$lines[$x] = new RequisitionLine();
 		}
+
+		/* if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post();
+			$lines = isset($params['RequisitionLine']) ? $params['RequisitionLine'] : [];
+		} else {
+			for ($x = 0; $x <= 9; $x++) {
+				$lines[$x] = new RequisitionLine();
+			}
+		} */
 
 		return $this->render('create', [
 			'model' => $model,
@@ -148,7 +175,8 @@ class RequisitionController extends Controller
 			'products' => $products,
 			'stores' => $stores,
 			'users' => $users,
-			'quotationTypes' => $quotationTypes
+			'quotationTypes' => $quotationTypes,
+			'projects' => $projects
 		]);
 	}
 
@@ -183,6 +211,7 @@ class RequisitionController extends Controller
 						$_line->RequisitionID = $id;
 						$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
 						$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
+						$_line->ProjectID = isset($line['ProjectID']) ? $line['ProjectID'] : 0;
 						$_line->Quantity = $line['Quantity'];
 						$_line->Description = $line['Description'];
 						$_line->QuotationTypeID = $line['QuotationTypeID'];
@@ -194,6 +223,7 @@ class RequisitionController extends Controller
 					$_line->RequisitionID = $id;
 					$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
 					$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
+					$_line->ProjectID = isset($line['ProjectID']) ? $line['ProjectID'] : 0;
 					$_line->Quantity = $line['Quantity'];
 					$_line->Description = $line['Description'];
 					$_line->QuotationTypeID = $line['QuotationTypeID'];
@@ -208,6 +238,7 @@ class RequisitionController extends Controller
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 		$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName');
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
 		$users = Users::findOne($model->CreatedBy);
 
@@ -218,18 +249,34 @@ class RequisitionController extends Controller
 		// print '<pre>';
 		// print_r($lines); exit;
 		// print_r($products); exit;
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post();
+			$requisitionLine = isset($params['RequisitionLine']) ? $params['RequisitionLine'] : [];
+			foreach ($requisitionLine as $x => $line) {
+				$lines[$x] = new RequisitionLine();
+				$lines[$x]->RequisitionLineID = $line['RequisitionLineID'];
+            $lines[$x]->QuotationTypeID = $line['QuotationTypeID'];
+            $lines[$x]->ProductID = $line['ProductID'];
+            $lines[$x]->ProjectID = $line['ProjectID'];
+            $lines[$x]->Quantity = $line['Quantity'];
+            $lines[$x]->Description = $line['Description'];
+			}
+		}
 
 		for ($x = count($lines); $x <= 9; $x++) { 
 			$lines[$x] = new RequisitionLine();
 		}
-	
+		/* print '<pre>';
+		print_r($lines); exit; */
+		
 		return $this->render('update', [
 			'model' => $model,
 			'lines' => $lines,
 			'products' => $products,
 			'stores' => $stores,
 			'users' => $users,
-			'quotationTypes' => $quotationTypes
+			'quotationTypes' => $quotationTypes,
+			'projects' => $projects
 		]);
 
 	}

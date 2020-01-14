@@ -14,6 +14,7 @@ use Yii;
  * @property int $AccountID
  * @property double $Quantity
  * @property string $Description
+ * @property int $ProjectID
  * @property int $CompanyID
  * @property string $CreatedDate
  * @property int $CreatedBy
@@ -35,7 +36,7 @@ class RequisitionLine extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['RequisitionID', 'QuotationTypeID', 'ProductID', 'CompanyID', 'CreatedBy', 'AccountID'], 'integer'],
+			[['RequisitionID', 'QuotationTypeID', 'ProductID', 'CompanyID', 'CreatedBy', 'AccountID', 'ProjectID'], 'integer'],
 			[['Quantity'], 'number'],
 			[['CreatedDate'], 'safe'],
 			[['Deleted'], 'boolean'],
@@ -57,6 +58,7 @@ class RequisitionLine extends \yii\db\ActiveRecord
 			'Quantity' => 'Quantity',
 			'Description' => 'Description',
 			'CompanyID' => 'Company ID',
+			'ProjectID' => 'Project ID',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
@@ -76,5 +78,10 @@ class RequisitionLine extends \yii\db\ActiveRecord
 	public function getQuotationTypes()
 	{
 		return $this->hasOne(QuotationTypes::className(), ['QuotationTypeID' => 'QuotationTypeID'])->from(quotationtypes::tableName());
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
 	}
 }

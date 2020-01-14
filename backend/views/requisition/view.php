@@ -123,6 +123,13 @@ $FormID = 6;
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
+									'label'=>'Project',
+									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
+									'format'=> 'text',
+									'value' => 'projects.ProjectName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
 									'label'=>'Quantity',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:right'],
 									'format'=>['decimal',2],

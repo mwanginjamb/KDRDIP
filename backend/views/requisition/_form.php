@@ -80,8 +80,9 @@ function addRow()
 					<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
 					<td style="padding: 4px 4px 4px 4px !important" width="15%">Type</td>
 					<td style="padding: 4px 4px 4px 4px !important">Product</td>
+					<td style="padding: 4px 4px 4px 4px !important" width="15%">Project</td>
 					<td style="padding: 4px 4px 4px 4px !important" width="15%">Quantity</td>
-					<td style="padding: 4px 4px 4px 4px !important" width="45%">Description</td>
+					<td style="padding: 4px 4px 4px 4px !important" width="30%">Description</td>
 				</tr>	
 				</thead>
 				<?php 
@@ -98,6 +99,7 @@ function addRow()
 														'])->label(false) ?>
 						</td>					
 						<td><?= $form->field($line, '[' . $x . ']ProductID', ['template' => '{label}{input}'])->dropDownList(isset($products[$line->QuotationTypeID]) ? $products[$line->QuotationTypeID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
+						<td><?= $form->field($line, '[' . $x . ']ProjectID', ['template' => '{label}{input}'])->dropDownList($projects, ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
 						<td><?= $form->field($line, '[' . $x . ']Quantity', ['template' => '{label}{input}'])->textInput(['class'=>'form-control'])->label(false) ?></td>
 						<td><?= $form->field($line, '[' . $x . ']Description', ['template' => '{label}{input}'])->textInput(['class'=>'form-control'])->label(false) ?></td>			
 					</tr>
