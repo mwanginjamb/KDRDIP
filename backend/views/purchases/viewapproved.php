@@ -50,14 +50,18 @@ $Total = number_format($Total,2);
 			'dataProvider' => $dataProvider,
 			'showFooter' =>true,
 			'columns' => [
-				[
+				/* [
 					'label'=>'ID',
 					'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 					'contentOptions' => ['style' => 'text-align:center'],
 					'format'=>'text',
 					'value' => 'PurchaseLineID',
 					'contentOptions' => ['style' => 'text-align:left'],
-				],		
+				], */	
+				[
+					'class' => 'yii\grid\SerialColumn',
+					'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+				],	
 				[
 					'label'=>'Supplier Code',
 					'headerOptions' => ['width' => '10%','style'=>'color:black; text-align:left'],

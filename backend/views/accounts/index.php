@@ -37,10 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-								[
+								/* [
 									'attribute' => 'AccountID',
 									'label' => 'ID',
 									'headerOptions' => ['width' => '5%'],
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
 									'attribute' => 'AccountCode',

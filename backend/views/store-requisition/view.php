@@ -81,14 +81,18 @@ $this->params['breadcrumbs'][] = $this->title;
 							'dataProvider' => $dataProvider,
 							'showFooter' =>false,
 							'columns' => [
-								[
+								/* [
 									'label'=>'ID',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format'=>'text',
 									'value' => 'RequisitionLineID',
 									'contentOptions' => ['style' => 'text-align:left'],
-								],				
+								],	 */	
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],		
 								[
 									'label'=>'Product Name',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],

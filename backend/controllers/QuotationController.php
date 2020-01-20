@@ -52,7 +52,7 @@ class QuotationController extends Controller
 	{
 		$dataProvider = new ActiveDataProvider([
 			'query' => Quotation::find(),
-		'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
+			'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
 		]);
 
 		return $this->render('index', [

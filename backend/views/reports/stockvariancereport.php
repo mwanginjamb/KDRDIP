@@ -18,14 +18,14 @@ $this->title = 'Stock Variance Report';
 				'class' => 'yii\grid\SerialColumn',
 				'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 			],
-			[
+			/* [
 				'label'=>'ID',
 				'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 				'contentOptions' => ['style' => 'text-align:center'],
 				'format'=>'text',
 				'value' => 'ProductID',
 				'contentOptions' => ['style' => 'text-align:left'],
-			],
+			], */
 			[
 				'label'=>'Product Name',
 				'headerOptions' => ['style'=>'color:black; text-align:left'],

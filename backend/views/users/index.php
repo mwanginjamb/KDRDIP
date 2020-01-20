@@ -41,9 +41,13 @@ $this->params['breadcrumbs'][] = $this->title;
 							],
 							'columns' => [
 								// ['class' => 'yii\grid\SerialColumn'],
-								[
+								/* [
 									'attribute' => 'UserID',
 									'label' => 'No.'
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								'FullName',
 								'Mobile',

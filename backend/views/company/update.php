@@ -8,14 +8,11 @@ use yii\helpers\Html;
 $this->title = 'Update Company: ' . $model->CompanyName;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<section class="page-default">
-	<div class="container">
-	
-		<p>Enter details below</p>
+<section class="flexbox-container">
 
-		<?= $this->render('_form', [
-			'model' => $model, 'country' => $country
-		]) ?>
+	<?= $this->render('_form', [
+		'model' => $model, 'country' => $country
+	]) ?>
 
-	</div>
 </section>
+

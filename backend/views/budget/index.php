@@ -36,10 +36,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered',
 							],
 							'columns' => [
-								[
+								/* [
 									'attribute' => 'BudgetID',
 									'label' => 'ID',
 									'headerOptions' => ['style' => 'width:5% !important'],
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
 									'attribute' => 'FinancialPeriod',

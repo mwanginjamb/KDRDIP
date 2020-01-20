@@ -26,10 +26,14 @@ $Total = number_format($Total, 2);
 		'style' => ' border-collapse: collapse; width: 100%'
 	],
 	'columns' => [
-		[
+		/* [
 			'attribute' => 'ActivityBudgetID',
 			'label' => 'ID',
 			'headerOptions' => ['style' => 'width:5% !important'],
+		], */
+		[
+			'class' => 'yii\grid\SerialColumn',
+			'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 		],
 		[
 			'attribute' => 'accounts.AccountName',

@@ -251,11 +251,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectFundingID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Funding Source',
@@ -284,11 +288,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectRiskID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Risk',
@@ -325,11 +333,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectDisbursementID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Year',
@@ -358,11 +370,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectSafeguardingPolicyID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Safeguarding Policy',
@@ -384,11 +400,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectBeneficiaryID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'County',
@@ -431,11 +451,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectTeamID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Team Member',
@@ -679,11 +703,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ReportingPeriodID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Period',
@@ -721,11 +749,15 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													[
+													/* [
 														'attribute' => 'ProjectNoteID',
 														'label' => 'ID',
 														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
 														'contentOptions' => ['style' => 'text-align:center'],
+													], */
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 													],
 													[
 														'label'=>'Notes',

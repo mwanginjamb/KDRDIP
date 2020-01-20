@@ -273,7 +273,9 @@ print_r(Yii::$app->controller); exit; */
 							<li <?= ($currentPage == 'wards') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/wards"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Wards</span></a>
 							</li>
 							<li <?= ($currentPage == 'departments') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/departments"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Departments</span></a>
-							</li>							
+							</li>
+							<li <?= ($currentPage == 'company') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/company/update?id=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Company</span></a>
+							</li>
 						</ul>
 					</li>
 					<li class=" nav-item"><a href="#"><i class="material-icons">person_outline</i><span class="menu-title" data-i18n="nav.project.main">Security & Admin</span></a>

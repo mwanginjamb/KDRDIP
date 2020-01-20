@@ -137,7 +137,7 @@ class DeliveriesController extends Controller
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['update', 'id' => $model->DeliveryID]);
 		} else {
-			$purchases = ArrayHelper::map(Purchases::find()->joinWith('suppliers')->where(['Closed'=>0])->all(), 'PurchaseID', 'PurchaseName');
+			$purchases = ArrayHelper::map(Purchases::find()->joinWith('suppliers')->where(['Closed'=>0])->orderBy('PurchaseID DESC')->all(), 'PurchaseID', 'PurchaseName');
 			return $this->render('create', [
 					'model' => $model, 'purchases' => $purchases,
 			]);

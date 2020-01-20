@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Company;
-use app\models\Country;
+use app\models\Countries;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -95,7 +95,7 @@ class CompanyController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->CompanyID]);
         } else {
-			$country = ArrayHelper::map(Country::find()->all(), 'CountryID', 'CountryName');
+			$country = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
             return $this->render('create', [
                 'model' => $model, 'country' => $country
             ]);
@@ -115,7 +115,7 @@ class CompanyController extends Controller
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->CompanyID]);
         } else {
-			$country = ArrayHelper::map(Country::find()->all(), 'CountryID', 'CountryName');
+			$country = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
             return $this->render('update', [
                 'model' => $model, 'country' => $country
             ]);

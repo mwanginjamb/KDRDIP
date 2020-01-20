@@ -76,7 +76,7 @@ class Company extends \yii\db\ActiveRecord
 
 	public function getCountry()
 	{
-		return $this->hasOne(Country::className(), ['CountryID' => 'CountryID'])->from(country::tableName());
+		return $this->hasOne(Countries::className(), ['CountryID' => 'CountryID'])->from(countries::tableName());
 	}
 
 	public function getUsers()

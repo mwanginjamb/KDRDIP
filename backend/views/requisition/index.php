@@ -40,13 +40,17 @@ $FormID = 6;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-									[
+								/* [
 									'label'=>'ID',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format'=>'text',
 									'value' => 'RequisitionID',
 									'contentOptions' => ['style' => 'text-align:left'],
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
 									'label'=>'Date',
@@ -56,9 +60,10 @@ $FormID = 6;
 									'value' => 'CreatedDate',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
+								'Description',
 								[
 									'label'=>'Requested By',
-									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'users.fullName',
 									'contentOptions' => ['style' => 'text-align:left'],

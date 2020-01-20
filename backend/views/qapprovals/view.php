@@ -96,14 +96,18 @@ $FormID = 26;
 							],
 							'showFooter' =>false,
 							'columns' => [
-								[
+								/* [
 									'label'=>'ID',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format'=>'text',
 									'value' => 'QuotationProductID',
 									'contentOptions' => ['style' => 'text-align:left'],
-								],	
+								], */	
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],
 								[
 									'label'=>'Type',
 									'headerOptions' => ['width' => '12%', 'style'=>'color:black; text-align:left'],
@@ -142,13 +146,17 @@ $FormID = 26;
 							],
 							'showFooter' =>false,
 							'columns' => [
-								[
+								/* [
 									'label'=>'ID',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format'=>'text',
 									'value' => 'QuotationSupplierID',
 									'contentOptions' => ['style' => 'text-align:left'],
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
 									'label'=>'Supplier',
@@ -169,13 +177,17 @@ $FormID = 26;
 							],
 							'showFooter' =>false,
 							'columns' => [
-								[
+								/* [
 									'label'=>'ID',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format'=>'text',
 									'value' => 'ApprovalNoteID',
 									'contentOptions' => ['style' => 'text-align:left'],
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
 									'label'=>'Notes',

@@ -17,12 +17,16 @@ $FormID = 41;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-			[
+			/* [
 				'label'=>'ID',
 				'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 				'format'=>'text',
 				'value' => 'MessageTemplateID',
 				'contentOptions' => ['style' => 'text-align:left'],
+			], */
+			[
+				'class' => 'yii\grid\SerialColumn',
+				'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 			],
 			[
 				'label'=>'Code',

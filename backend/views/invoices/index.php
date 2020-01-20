@@ -55,13 +55,17 @@ $this->params['breadcrumbs'][] = $this->title;
 									'class' => 'custom-table table-striped table-bordered zero-configuration',
 								],
 							'columns' => [
-								[
+								/* [
 									'label'=>'ID',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format'=>'text',
 									'value' => 'InvoiceID',
 									'contentOptions' => ['style' => 'text-align:left'],
+								], */
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
 									'label'=>'Supplier',

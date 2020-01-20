@@ -1,73 +1,80 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\detail\DetailView;
+use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Company */
 
-$this->title = 'View Company: '.$model->CompanyName;
+$this->title = $model->CompanyName;
+$this->params['breadcrumbs'][] = ['label' => 'Companies', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-
-$Rights = Yii::$app->params['rights'];
-$FormID = 16;
+\yii\web\YiiAsset::register($this);
 ?>
-<section class="page-default">
-	<div class="container">
 
-   
-	<?= ($Rights[$FormID]['Edit']) ? Html::a('Edit', ['update', 'id' => $model->CompanyID], ['class' => 'bigbtn btn-primary']) : ''; ?>
-	<?= ($Rights[$FormID]['Delete']) ? Html::a('Delete', ['delete', 'id' => $model->CompanyID], [
-		'class' => 'bigbtn btn-danger',
-		'data' => [
-			'confirm' => 'Are you sure you want to delete this item?',
-			'method' => 'post',
-		],
-	]) : ''; ?>
-	<?= Html::a('Close', ['index'], ['class' => 'bigbtn btn-cancel place-right']) ?>
-    </p>
-	
-	<?= DetailView::widget([
-        'model' => $model,
-		'condensed'=>true,
-		'hover'=>true,
-		'options' => ['class' => 'table-bordered-min'],
-		'mode'=>DetailView::MODE_VIEW,
-		'attributes'=>[
-			['columns' => [
-				['attribute'=>'CompanyID',	'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'CompanyName','valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-			['columns' => [
-				['attribute'=>'PostalAddress', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'PostalCode', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-			['columns' => [
-				['attribute'=>'Town', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'CountryID', 'value'=>isset($model->country) ? $model->country->CountryName : '', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-			['columns' => [
-				['attribute'=>'Telephone', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'Mobile', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],			
-			['columns' => [
-				['attribute'=>'Email', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'Fax', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-			['columns' => [
-				['attribute'=>'PIN', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'VATNo', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-			['columns' => [
-				['attribute'=>'VATRate', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'Deleted', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-			['columns' => [
-				['attribute'=>'CreatedBy', 'value'=>isset($model->users) ? $model->users->Full_Name : '' ,'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-				['attribute'=>'CreatedDate', 'valueColOptions'=>['style'=>'width:30%; padding: 4px 4px 4px 4px !important;']],
-			],],
-		]
-    ]) ?>
+<section id="configuration">
+	<div class="row">
+		<div class="col-12">
+			<div class="card">
+				<div class="card-header">
+					<h4 class="form-section" style="margin-bottom: 0px"><?= $this->title; ?></h4>
+					
+					<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+					<div class="heading-elements">
+						<ul class="list-inline mb-0">
+							<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+							<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+							<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+							<!-- <li><a data-action="close"><i class="ft-x"></i></a></li> -->
+						</ul>
+					</div>
+				</div>
+				<div class="card-content collapse show">
+					<div class="card-body">	
 
+						<p>
+							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->CompanyID], ['class' => 'btn btn-primary']) ?>
+							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->CompanyID], [
+									'class' => 'btn btn-danger',
+									'data' => [
+										'confirm' => 'Are you sure you want to delete this item?',
+										'method' => 'post',
+									],
+							]) ?>
+						</p>
+
+						<?= DetailView::widget([
+							'model' => $model,
+							'attributes' => [
+								'CompanyID',
+								'CompanyName',
+								// 'CompanyLogo',
+								'PostalAddress',
+								'PostalCode',
+								'Town',
+								'country.CountryName',
+								'VATRate',
+								'VATNo',
+								'PIN',
+								'Telephone',
+								'Mobile',
+								'Fax',
+								'Email:email',
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],									
+								],
+								[
+									'label' => 'Created By',
+									'attribute' => 'users.fullName',									
+								],
+							],
+						]) ?>	
+
+					</div>
+				</div>
+			</div>																			
+		</div>
 	</div>
 </section>

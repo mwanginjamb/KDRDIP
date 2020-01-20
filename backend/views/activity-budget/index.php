@@ -27,10 +27,14 @@ $Total = number_format($Total, 2);
 		'class' => 'custom-table table-striped table-bordered',
 	],
 	'columns' => [
-		[
+		/* [
 			'attribute' => 'ActivityBudgetID',
 			'label' => 'ID',
 			'headerOptions' => ['style' => 'width:5% !important'],
+		], */
+		[
+			'class' => 'yii\grid\SerialColumn',
+			'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 		],
 		[
 			'attribute' => 'accounts.AccountName',
