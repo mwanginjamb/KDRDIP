@@ -93,7 +93,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'contentOptions' => ['style' => 'text-align:right'],
 								],
 								[
-									'label'=>'Email',
+									'label'=>'Reference',
 									'headerOptions' => ['width' => '25%', 'style'=>'text-align:left'],
 									'contentOptions' => ['style' => 'text-align:left'],
 									'format'=>'text',

@@ -9,8 +9,6 @@ $this->title = 'Update Purchase: ' . $model->PurchaseID;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">
-	
-	<p>Enter details below</p>
 
 	<?= $this->render('_form', [
 		'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 

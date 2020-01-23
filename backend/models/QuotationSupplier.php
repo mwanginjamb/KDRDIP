@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\QuotationResponseLines;
 
 /**
  * This is the model class for table "QuotationSupplier".
@@ -46,5 +47,21 @@ class QuotationSupplier extends \yii\db\ActiveRecord
 	public function getSuppliers()
 	{
 		return $this->hasOne(Suppliers::className(), ['SupplierID' => 'SupplierID'])->from(Suppliers::tableName());
-	}	
+	}
+
+	public function getQuotation()
+	{
+		return $this->hasOne(Quotation::className(), ['QuotationID' => 'QuotationID'])->from(quotation::tableName());
+	}
+
+	public function getTotalValue()
+	{
+		$id = $this->QuotationSupplierID;
+		$sql = "SELECT sum(UnitPrice * Quantity) as Total FROM quotationresponselines line
+		LEFT JOIN quotationproducts ON quotationproducts.QuotationProductID = line.QuotationProductID
+		LEFT JOIN quotationsupplier ON quotationsupplier.QuotationID = quotationproducts.QuotationID
+		WHERE QuotationSupplierID = $id";
+		// echo $sql; exit;
+		return QuotationResponseLines::findBySql($sql)->asArray()->sum('Total');
+	}
 }

@@ -131,7 +131,7 @@ class PaymentsController extends Controller
 		}
 
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
-		$invoices = ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
+		$invoices = []; //ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
 		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
 
@@ -159,9 +159,13 @@ class PaymentsController extends Controller
 			return $this->redirect(['view', 'id' => $model->PaymentID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
-		$invoices = ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
+		// $invoices = ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
 		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
+		$supplierID = $model->SupplierID;
+		$sql = "SELECT InvoiceID, CONCAT('InvID: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName FROM mande.invoices
+					WHERE SupplierID = $supplierID";
+		$invoices = ArrayHelper::map(Invoices::findBySql($sql)->asArray()->all(), 'InvoiceID', 'InvoiceName');
 
 		return $this->render('update', [
 			'model' => $model,
@@ -206,9 +210,27 @@ class PaymentsController extends Controller
 	{
 		$model = $this->findModel($id);
 		$model->ApprovalStatusID = 1;
-		if ($model->save()) {
+		if ($model->save() && $model) {
 			$result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->PaymentID]);
+		} else {
+			// print_r($model->getErrors()); exit;
+		}
+	}
+
+	public function actionInvoices($id)
+	{
+		$sql = "SELECT InvoiceID, CONCAT('Inv No.: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName 
+					FROM invoices
+					WHERE SupplierID = $id"; 
+		$model = Invoices::findBySql($sql)->asArray()->all();
+		echo '<option></option>';	
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item['InvoiceID'] . "'>" . $item['InvoiceName'] . "</option>";
+			}
+		} else {
+			echo '<option>-</option>';
 		}
 	}
 }

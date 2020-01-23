@@ -65,8 +65,7 @@ function calculateValue(row)
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" id="base-tab9" data-toggle="tab" aria-controls="tab9" href="#tab9" aria-expanded="false">Notes</a>
-				</li>
-				
+				</li>				
 			</ul>
 			<div class="tab-content px-1 pt-1">
 				<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">

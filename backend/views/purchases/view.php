@@ -45,7 +45,7 @@ $Total = number_format($Total,2);
 						<p></p>
 						<?php if ($model->ApprovalStatusID == 0 || $model->ApprovalStatusID == 5)
 						{ ?>
-							<?= Html::a('<i class="ft-edit"></i> Edit', ['update', 'id' => $model->PurchaseID], ['class' => 'btn btn-primary']); ?>
+							<!-- <?= Html::a('<i class="ft-edit"></i> Edit', ['update', 'id' => $model->PurchaseID], ['class' => 'btn btn-primary']); ?> -->
 							
 							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PurchaseID], [
 								'class' => 'btn btn-danger',

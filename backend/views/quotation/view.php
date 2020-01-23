@@ -60,7 +60,7 @@ $FormID = 25;
 								<?= Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->QuotationID], [
 									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 									'data' => [
-												'confirm' => 'Are you sure you want to submit this item?',
+												'confirm' => 'Are you sure you want to send this item for approval?',
 												'method' => 'post',
 											]
 									]) ?>
@@ -184,6 +184,13 @@ $FormID = 25;
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
+									'label' => 'Total',
+									'value' => 'TotalValue',
+									'format' => ['decimal', 2],
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
+									'contentOptions' => ['style' => 'text-align:right'],
+								],								
+								[
 									'class' => 'yii\grid\ActionColumn',
 									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
 									'template' => '{response} {view}',
@@ -239,7 +246,7 @@ $FormID = 25;
 								],
 								[
 									'label'=>'Date',
-									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'headerOptions' => ['width' => '17%', 'style'=>'color:black; text-align:left'],
 									'contentOptions' => ['style' => 'text-align:center'],
 									'format' => ['date', 'php:d/m/Y h:i a'],
 									'value' => 'CreatedDate',

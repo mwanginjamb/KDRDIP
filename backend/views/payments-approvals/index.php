@@ -130,7 +130,7 @@ $FormID = 12;
 										//update button
 										'update' => function ($url, $model) use ($Rights, $FormID, $option) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/payments-approvals/view?id=' . $model->InvoiceID.'&option=' . $option, [
+											return Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/payments-approvals/view?id=' . $model->PaymentID.'&option=' . $option, [
 														'title' => Yii::t('app', 'Select'),
 														'class'=>'btn-sm btn-primary btn-xs',
 														]);

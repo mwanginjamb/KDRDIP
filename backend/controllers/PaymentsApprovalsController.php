@@ -79,10 +79,10 @@ class PaymentsApprovalsController extends Controller
 	 */
 	public function actionView($id, $option)
 	{
-		$identity = Yii::$app->user->identity;
-		$UserID = $identity->UserID;
+		
+		$UserID = Yii::$app->user->identity->UserID;		
 		$model = $this->findModel($id);
-		$invoice = Invoices::findOne($model->InvoiceID);
+		$invoice = Invoices::findOne($model->InvoiceID);		
 		
 		$params = Yii::$app->request->post();
 		$PurchaseID = $invoice->PurchaseID;
@@ -139,6 +139,7 @@ class PaymentsApprovalsController extends Controller
 
 		$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where('ApprovalStatusID > 1')->all(), 'ApprovalStatusID', 'ApprovalStatusName');
 		$detailmodel = Payments::find()->where(['PaymentID'=> $id])->joinWith('approvalstatus')->one();
+
 		return $this->render('view', [
 			'model' => $model,
 			'detailmodel' => $detailmodel,

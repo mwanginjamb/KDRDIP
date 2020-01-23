@@ -143,7 +143,11 @@ class InvoicesController extends Controller
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
-		$sql = "SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate) ) AS `PurchaseName` FROM `purchases` WHERE `SupplierID`= ".$model->SupplierID; 
+		$supplierID = $model->SupplierID;
+		$sql = "Select PurchaseID, concat(PurchaseName, ' ( Ksh: ', COALESCE(format(`Amount`,2), format(0,2)), ')') as PurchaseName FROM (
+			SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate)) AS `PurchaseName`, (Select sum(Quantity * UnitPrice) as Amount FROM purchaselines
+				WHERE PurchaseID = purchases.PurchaseID) as Amount FROM `purchases` WHERE `SupplierID`= $supplierID
+			) temp"; 
 		$purchases = ArrayHelper::map(Purchases::findBySql($sql)->asArray()->all(), 'PurchaseID', 'PurchaseName');
 		return $this->render('update', [
 			'model' => $model,
@@ -185,7 +189,10 @@ class InvoicesController extends Controller
 	public function actionPurchases($id)
 	{
 		// $model = Purchases::find()->where(['SupplierID' => $id])->all();
-		$sql = "SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate)) AS `PurchaseName` FROM `purchases` WHERE `SupplierID`= ".$id; 
+		$sql = "Select PurchaseID, concat(PurchaseName, ' ( Ksh: ', COALESCE(format(`Amount`,2), format(0,2)), ')') as PurchaseName FROM (
+					SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate)) AS `PurchaseName`, (Select sum(Quantity * UnitPrice) as Amount FROM purchaselines
+						WHERE PurchaseID = purchases.PurchaseID) as Amount FROM `purchases` WHERE `SupplierID`= $id
+					) temp"; 
 		$model = Purchases::findBySql($sql)->asArray()->all();
 			
 		if (!empty($model)) {

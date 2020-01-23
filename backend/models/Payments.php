@@ -43,7 +43,7 @@ class Payments extends \yii\db\ActiveRecord
 			[['Amount'], 'number'],
 			[['RefNumber'], 'string', 'max' => 45],
 			[['Description'], 'string', 'max' => 500],
-			[['SupplierID', 'InvoiceID', 'PaymentMethodID', 'Amount', 'Date' ], 'required'],
+			[['SupplierID', 'InvoiceID', 'PaymentMethodID', 'Amount', 'Date', 'BankAccountID'], 'required'],
 			[['Amount'], 'validateAmount']
 		];
 	}
@@ -71,12 +71,14 @@ class Payments extends \yii\db\ActiveRecord
 
 	public function validateAmount($attribute, $params)
 	{
-		// print_r($attribute); exit;
-		// no real check at the moment to be sure that the error is triggered
-		$invoiceAmount = Invoices::find()->where(['InvoiceID' => $this->InvoiceID])->sum('Amount');
-		$totalPayments = Payments::find()->where(['InvoiceID' => $this->InvoiceID])->sum('Amount');
-		if (($invoiceAmount - $totalPayments) < $this->Amount) {
-			$this->addError($attribute, 'The Amount is more than the invoice amount');
+		// print_r($this->ApprovalStatusID); exit;
+		if ($this->ApprovalStatusID < 1) {
+			// no real check at the moment to be sure that the error is triggered
+			$invoiceAmount = Invoices::find()->where(['InvoiceID' => $this->InvoiceID])->sum('Amount');
+			$totalPayments = Payments::find()->where(['InvoiceID' => $this->InvoiceID])->sum('Amount');
+			if (($invoiceAmount - $totalPayments) < $this->Amount) {
+				$this->addError($attribute, 'The Amount is more than the invoice amount');
+			}
 		}
 	}
 

@@ -339,11 +339,17 @@ class QuotationController extends Controller
 
 	public function actionSubmit($id)
 	{
-		$model = $this->findModel($id);
-		$model->ApprovalStatusID = 1;
-		if ($model->save()) {
-			$result = UsersController::sendEmailNotification(29);
-			return $this->redirect(['view', 'id' => $model->QuotationID]);
+		$suppliers = QuotationSupplier::find()->where(['QuotationID' => $id])->all();
+		if (count($suppliers) > 0) {
+			$model = $this->findModel($id);
+			$model->ApprovalStatusID = 1;
+			if ($model->save()) {
+				$result = UsersController::sendEmailNotification(29);
+				return $this->redirect(['view', 'id' => $model->QuotationID]);
+			}
+		} else {
+			Yii::$app->session->setFlash('error', "You have not selected suppliers for the quotation");
+			return $this->redirect(['view', 'id' => $id]);
 		}
 	}
 

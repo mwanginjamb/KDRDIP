@@ -94,17 +94,7 @@ $FormID = 15;
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
-				<?php
-				if (!$model->isNewRecord) { ?>
-					<?= Html::a('<i class="ft-check"></i> Post', ['post', 'id' => $model->DeliveryID], [
-						'class' => 'btn btn-success place-right',
-						'data' => [
-							'confirm' => 'Are you sure you want to post this item?',
-							'method' => 'post',
-						],
-					]);?>
-					<?php
-				} ?>
+				
 			</div>
 
 			<?php ActiveForm::end(); ?>

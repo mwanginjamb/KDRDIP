@@ -14,6 +14,9 @@ use app\models\SupplierCategory;
 use app\models\ApprovalNotes;
 use app\models\Product;
 use app\models\UsageUnit;
+use app\models\QuotationResponseLines;
+use app\models\QuotationProducts;
+use app\models\QuotationSupplier;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -156,8 +159,28 @@ class PurchasesController extends Controller
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$PurchaseID = $model->PurchaseID;
+
+			$quotationLines = QuotationResponseLines::find()->joinWith('quotationResponse')
+										->joinWith('quotationProducts')
+										->where(['quotationresponse.SupplierID' => $model->SupplierID,
+													'quotationresponse.QuotationID' => $model->QuotationID])
+										->all();
+			// print_r($quotationLines); exit;
+			foreach ($quotationLines as $line) {
+				$purchaseLines = new PurchaseLines();
+
+				$purchaseLines->PurchaseID = $model->PurchaseID;
+				$purchaseLines->ProductID = $line->quotationProducts->ProductID;
+				$purchaseLines->Quantity = $line->quotationProducts->Quantity; 
+				$purchaseLines->UnitPrice = $line->UnitPrice;
+				$purchaseLines->UsageUnitID = $line->quotationProducts->product->UsageUnitID;
+				if (!$purchaseLines->save()) {
+					// print_r($purchaseLines->getErrors()); exit;
+				}
+				// SupplierCode = '';
+			}
 			
-			$params = Yii::$app->request->post();
+		/* 	$params = Yii::$app->request->post();
 			$lines = isset($params['PurchaseLines']) ? $params['PurchaseLines'] : [];
 			
 			foreach ($lines as $key => $line)
@@ -174,14 +197,14 @@ class PurchasesController extends Controller
 					//print_r($_line->getErrors());
 				}
 			}
-			//exit;
-			return $this->redirect(['update', 'id' => $model->PurchaseID]);
+			//exit; */
+			return $this->redirect(['view', 'id' => $model->PurchaseID]);
 		} else {
 			$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 			$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
 			$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
-			$quotations = ArrayHelper::map(Quotation::find()->orderBy('QuotationID DESC')->all(), 'QuotationID', 'Description');
+			$quotations = []; //ArrayHelper::map(Quotation::find()->orderBy('QuotationID DESC')->all(), 'QuotationID', 'Description');
 			for ($x = 0; $x <= 19; $x++) {
 				$lines[$x] = new PurchaseLines();
 			}
@@ -259,16 +282,19 @@ class PurchasesController extends Controller
 			// }
 		}
 
-		$products = ArrayHelper::map(Product::find()->where("ProductCategoryID IN (".implode(",",$suppliercategory).")
+		$quotationProducts = ArrayHelper::getColumn(QuotationProducts::find()->where(['QuotationID' => $model->QuotationID])->all(),'ProductID');
+
+		$products = ArrayHelper::map(Product::find()->where("(ProductCategoryID IN (".implode(",",$suppliercategory).")
 																OR ProductCategory2ID IN (".implode(",",$suppliercategory).")
-																OR ProductCategory3ID IN (".implode(",",$suppliercategory).")")
+																OR ProductCategory3ID IN (".implode(",",$suppliercategory)."))
+																AND ProductID IN (" . implode(",",$quotationProducts) . ")")
 													->all(), 'ProductID', 'ProductName');
 		$pricelist = ArrayHelper::map(PriceList::find()->where(['SupplierID' => $model->SupplierID])->all(), 'SupplierCode', 'ProductName');
-		$modelcount = count($lines);
+	/* 	$modelcount = count($lines);
 		for ($x = $modelcount; $x <= 19; $x++) 
 		{ 
 			$lines[$x] = new PurchaseLines();
-		}
+		} */
 		return $this->render('update', [
 			'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
 			'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
@@ -486,16 +512,29 @@ public function actionGetfields($id, $SupplierID)
 		}
 	}
 
+	// public function actionQuotations($id)
+	// {
+	// 	$model = Quotation::find()->where(['SupplierID' => $id])->all();
+			
+	// 	if (!empty($model)) {
+	// 		foreach ($model as $item) {
+	// 			echo "<option value='" . $item->QuotationID . "'>" . $item->Description . "</option>";
+	// 		}
+	// 	} else {
+	// 		echo '<option>-</option>';
+	// 	}
+	// }
+
+	
 	public function actionQuotations($id)
 	{
-		$model = Quotation::find()->where(['SupplierID' => $id])->all();
-			
+		$model = QuotationSupplier::find()->joinWith('quotation')->where(['SupplierID' => $id, 'quotation.ApprovalStatusID' => 3])->orderBy('quotation.QuotationID DESC')->all();
+
+		echo '<option>Select...</option>';
 		if (!empty($model)) {
 			foreach ($model as $item) {
-				echo "<option value='" . $item->QuotationID . "'>" . $item->Description . "</option>";
+				echo "<option value='" . $item->QuotationID . "'>" . $item->quotation->Description . "</option>";
 			}
-		} else {
-			echo '<option>-</option>';
 		}
 	}
 }

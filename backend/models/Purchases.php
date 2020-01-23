@@ -40,7 +40,7 @@ class Purchases extends \yii\db\ActiveRecord
 			[['CreatedDate', 'PostingDate', 'ApprovalDate'], 'safe'],
 			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed', 'QuotationID'], 'integer'],
 			[['Notes'], 'string'],
-		['SupplierID','required'],
+			[['SupplierID', 'QuotationID'],'required'],
 		];
 	}
 

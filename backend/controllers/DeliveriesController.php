@@ -74,7 +74,7 @@ class DeliveriesController extends Controller
 		]); */
 		$dataProvider = new ActiveDataProvider([
 			'query' => Deliveries::find(),
-		'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
+			'sort'=> ['defaultOrder' => ['CreatedDate'=>SORT_DESC]],
 		]);
 
 		return $this->render('index', [
@@ -211,28 +211,34 @@ class DeliveriesController extends Controller
 
 	public function actionPost($id)
 	{
-		$model = $this->findModel($id);
-	
-		$model->Posted = 1;
-		$model->PostingDate = date('Y-m-d h:i:s');
-		if ($model->save()) {
-			// Make adjustment to the stock
-			$lines = DeliveryLines::find()->joinWith('purchaseLines')->where(['DeliveryID'=> $id])->all();
-			foreach ($lines as $key => $line)
-			{
-				$stock = new StockAdjustment();
-				$stock->AdjustmentTypeID = 2;
-				$stock->AdjustmentID = $id;
-				$stock->Quantity = $line->DeliveredQuantity;
-				$stock->ProductID = $line->purchaseLines->ProductID;
-				if ($stock->save()) {
+		// check for missing products
+		$lines = DeliveryLines::find()->where(['DeliveredQuantity'=> 0])->orWhere('DeliveredQuantity is null')->count();
+		// echo $lines; exit;
+		if ($lines > 0) {
+			$model = $this->findModel($id);
+		
+			$model->Posted = 1;
+			$model->PostingDate = date('Y-m-d h:i:s');
+			if ($model->save()) {
+				// Make adjustment to the stock
+				$lines = DeliveryLines::find()->joinWith('purchaseLines')->where(['DeliveryID'=> $id])->all();
+				foreach ($lines as $key => $line)
+				{
+					$stock = new StockAdjustment();
+					$stock->AdjustmentTypeID = 2;
+					$stock->AdjustmentID = $id;
+					$stock->Quantity = $line->DeliveredQuantity;
+					$stock->ProductID = $line->purchaseLines->ProductID;
+					if ($stock->save()) {
 
-				} else {
-					
+					} else {
+						
+					}
 				}
-			}
+			} 
+		} else {
+			Yii::$app->session->setFlash('error', "Items delivered is zero");
 		}
-
 		return $this->redirect(['view', 'id' => $id]);
 	}
 

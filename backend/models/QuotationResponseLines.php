@@ -66,4 +66,14 @@ class QuotationResponseLines extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(product::tableName());
 	}
+
+	public function getQuotationProducts()
+	{
+		return $this->hasOne(QuotationProducts::className(), ['QuotationProductID' => 'QuotationProductID'])->from(quotationproducts::tableName());
+	}
+
+	public function getQuotationResponse()
+	{
+		return $this->hasOne(QuotationResponse::className(), ['QuotationResponseID' => 'QuotationResponseID'])->from(quotationresponse::tableName());
+	}
 }

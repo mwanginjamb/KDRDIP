@@ -82,8 +82,12 @@ class IndicatorsController extends Controller
 		$componentID = !empty($project) ? $project->ComponentID : 0;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
-			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
+			if (isset(Yii::$app->request->post()['IndicatorTargets'])) {
+				$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
+			}
+			if (isset(Yii::$app->request->post()['Activities'])) {
+				$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
+			}
 			
 			return $this->redirect(['projects/view', 'id' => $pid]);
 		}
@@ -91,7 +95,7 @@ class IndicatorsController extends Controller
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->where(['componentID' => $componentID])->all(), 'SubComponentID', 'SubComponentName');
-		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
+		$projectTeams = ArrayHelper::map(ProjectTeams::find()->where(['ProjectID' => $pid])->all(), 'ProjectTeamID', 'ProjectTeamName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 
 		$sql = "SELECT Temp.*, reportingperiods.ReportingPeriodID as RPID, ReportingPeriodName FROM (
@@ -166,7 +170,7 @@ class IndicatorsController extends Controller
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$unitsOfMeasure = ArrayHelper::map(UnitsOfMeasure::find()->all(), 'UnitOfMeasureID', 'UnitOfMeasureName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->where(['ComponentID' => $ComponentID])->all(), 'SubComponentID', 'SubComponentName');
-		$projectTeams = ArrayHelper::map(ProjectTeams::find()->all(), 'ProjectTeamID', 'ProjectTeamName');
+		$projectTeams = ArrayHelper::map(ProjectTeams::find()->where(['ProjectID' => $pid])->all(), 'ProjectTeamID', 'ProjectTeamName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
 
 		for ($x = count($activities); $x <= 10; $x++) {

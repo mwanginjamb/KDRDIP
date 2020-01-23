@@ -149,7 +149,13 @@ function myDeleteFunction() {
 	<table width="100%">
 	<tr> 
 		<td width="50%">
-			<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...', 'disabled' => $disabled]) ?>
+			<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...', 'disabled' => $disabled,
+				'onchange' => '
+				$.post( "' . Yii::$app->urlManager->createUrl('purchases/quotations?id=') . '"+$(this).val(), function( data ) {
+
+					$( "select#purchases-quotationid" ).html( data );
+				});
+			']) ?>
 		</td>
 		<td>
 			<?= $form->field($model, 'QuotationID')->dropDownList($quotations, ['prompt'=>'Select...', 'disabled' => $disabled]) ?>

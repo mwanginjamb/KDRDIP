@@ -98,28 +98,39 @@ $this->params['breadcrumbs'][] = $this->title;
 						<tbody>
 						<?php
 							$DID = 0;
+							$total = 0;
 							foreach ($purchases as $key => $purchase) {
 								if ($DID != $purchase['PurchaseID']) { ?>
 									<tr role="row">
-										<td colspan="3"><?= 'PO. No. ' . $purchase['PurchaseID'] ;?>  <?= 'PO. Date:' . date('d/m/Y', strtotime($purchase['CreatedDate'])); ?></td>
+										<td colspan="5"><?= 'PO. No. ' . $purchase['PurchaseID'] ;?>  <?= 'PO. Date:' . date('d/m/Y', strtotime($purchase['CreatedDate'])); ?></td>
 									</tr>
 									<!-- <thead> -->
 										<tr role="row">
 											<td width="5%">ID</td>
 											<td>Product</td>
 											<td width="15%" style="text-align: right">Quantity Ordered</td>
+											<td width="15%" style="text-align: right">Unit Price</td>
+											<td width="15%" style="text-align: right">Amount</td>
 										</tr>
 									<!-- </thead> -->
 									<?php
+									$DID = $purchase['PurchaseID'];
 								}
 								?>
 								<tr role="row">
 									<td width="5%"><?= $key+1; ?></td>
 									<td><?= $purchase['ProductName']; ?></td>
 									<td width="15%" style="text-align: right"><?= $purchase['Quantity']; ?></td>
+									<td width="15%" style="text-align: right"><?= number_format($purchase['UnitPrice'],2); ?></td>
+									<td width="15%" style="text-align: right"><?= number_format($purchase['UnitPrice'] * $purchase['Quantity'], 2); ?></td>
 								</tr>
 							<?php
+							$total = $total + ($purchase['UnitPrice'] * $purchase['Quantity']);
 						}?>
+						<tr role="row">
+							<td colspan="4">Total</td>
+							<td width="15%" style="text-align: right"><?= number_format($total, 2); ?></td>
+						</tr>
 						</tbody>
 						</table>
 
@@ -141,6 +152,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										</tr>
 									<!-- </thead> -->
 									<?php
+									$DID = $delivery['DeliveryID'];
 								}
 								?>
 								<tr role="row">

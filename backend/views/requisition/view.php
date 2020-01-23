@@ -92,6 +92,10 @@ $FormID = 6;
 
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
 							'showFooter' =>false,
 							'columns' => [
 								/* [
