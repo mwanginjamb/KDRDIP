@@ -67,6 +67,7 @@ $FormID = 11;
 						],
 						'attributes' => [
 							'StockTakeID',
+							'stores.StoreName',
 							'Reason',
 							'Notes:ntext',
 							'CreatedDate',

@@ -28,13 +28,12 @@
 					} elseif (isset($SupplierFilter) && $SupplierFilter == true) {
 						echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
 					} elseif (count($productcategories) > 0) {
-						echo $form->field($model, 'ProductCategoryID')
-										->dropDownList($productcategories, ['prompt'=>'All...']);
-					} elseif (count($bankAccounts) > 0) {
+						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
+					} elseif (isset($bankAccounts) && count($bankAccounts) > 0) {
 						echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
-					} elseif (count($projects) > 0) {
+					} elseif (isset($projects) && count($projects) > 0) {
 						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...']);
-					} elseif (count($projectStatus) > 0) {
+					} elseif (isset($projectStatus) && count($projectStatus) > 0) {
 						echo $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']);
 					}
 					?>

@@ -38,6 +38,8 @@ $FormID = 11;
 			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'Reason')->textInput() ?>
+					<p></p>
+					<?= $form->field($model, 'StoreID')->dropDownList($stores, ['prompt'=>'Select...']) ?>
 				</div>
 				<div class="col-md-6">
 					<?= $form->field($model, 'Notes')->textarea(['rows' => 3]) ?>
@@ -77,7 +79,7 @@ $FormID = 11;
 				</table>
 				<?php
 			} ?>
-
+			<p></p>
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>

@@ -11,6 +11,7 @@ use Yii;
  * @property string $CreatedDate
  * @property integer $CreatedBy
  * @property string $Notes
+ * @property integer $StoreID
  */
 class StockTake extends \yii\db\ActiveRecord
 {
@@ -29,7 +30,7 @@ class StockTake extends \yii\db\ActiveRecord
 	{
 		return [
 			[['CreatedDate', 'PostingDate'], 'safe'],
-			[['CreatedBy', 'CompanyID', 'Posted', 'ApprovalStatusID'], 'integer'],
+			[['CreatedBy', 'CompanyID', 'Posted', 'ApprovalStatusID', 'StoreID'], 'integer'],
 			[['Notes', 'Reason'], 'string'],
 		];
 	}
@@ -48,6 +49,7 @@ class StockTake extends \yii\db\ActiveRecord
 			'CompanyID' => 'CompanyID',
 			'Posted' => 'Posted',
 			'PostingDate' => 'Posting Date',
+			'StoreID' => 'Store',
 			'ApprovalStatusID' => 'Approval Status ID',
 		];
 	}
@@ -60,5 +62,10 @@ class StockTake extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getStores()
+	{
+		return $this->hasOne(Stores::className(), ['StoreID' => 'StoreID'])->from(stores::tableName());
 	}
 }

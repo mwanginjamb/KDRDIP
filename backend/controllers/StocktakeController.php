@@ -9,6 +9,7 @@ use app\models\ApprovalNotes;
 use app\models\ApprovalStatus;
 use app\models\StockTakeLines;
 use app\models\StockAdjustment;
+use app\models\Stores;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -118,11 +119,13 @@ class StocktakeController extends Controller
 			}
 			
 			return $this->redirect(['view', 'id' => $model->StockTakeID]);
-		} else {
-			return $this->render('create', [
-					'model' => $model,
-			]);
-		}
+		} 
+
+		$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName') ;
+		return $this->render('create', [
+				'model' => $model,
+				'stores' => $stores
+		]);
 	}
 
 	/**
@@ -149,15 +152,17 @@ class StocktakeController extends Controller
 			}
 		
 			return $this->redirect(['view', 'id' => $model->StockTakeID]);
-		} else {
-			$lines = StockTakeLines::find()->joinWith('product')
-									->joinWith('product.productcategory')
-									->joinWith('product.usageunit')
-									->where(['StockTakeID' => $id])->all();
-			return $this->render('update', [
-					'model' => $model, 'lines' => $lines
-			]);
-		}
+		} 
+		$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName') ;
+		$lines = StockTakeLines::find()->joinWith('product')
+								->joinWith('product.productcategory')
+								->joinWith('product.usageunit')
+								->where(['StockTakeID' => $id])->all();
+		return $this->render('update', [
+			'model' => $model, 
+			'lines' => $lines,
+			'stores' => $stores
+		]);
 	}
 
 	/**

@@ -11,7 +11,7 @@ use app\models\FilterData;
 use app\models\ProductCategory;
 use app\models\StockTakeLines;
 use app\models\StockTake;
-use app\models\purchaselines;
+use app\models\PurchaseLines;
 use app\models\Suppliers;
 use app\models\FixedAssets;
 use app\models\Payments;
@@ -173,13 +173,13 @@ class ReportsController extends Controller
 		$Title = 'Purchase Report';
 		$sql = "SELECT * FROM (
 				SELECT ProductID, Sum(Quantity) as Quantity, sum(Quantity * UnitPrice) as LineAmount FROM purchaselines
-				JOIN Purchases ON Purchases.PurchaseID = purchaselines.PurchaseID
+				JOIN purchases ON purchases.PurchaseID = purchaselines.PurchaseID
 				$FilterString
 				GROUP BY ProductID
 				) temp 
-				JOIN Product ON Product.ProductID = temp.ProductID
-				JOIN ProductCategory ON ProductCategory.ProductCategoryID = Product.ProductCategoryID
-				JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
+				JOIN product ON product.ProductID = temp.ProductID
+				JOIN productcategory ON productcategory.ProductCategoryID = product.ProductCategoryID
+				JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
 				$FilterString2
 				";
 
@@ -273,13 +273,13 @@ class ReportsController extends Controller
 				SELECT ProductID, sum(Quantity) as Quantity FROM 
 					(
 
-					SELECT ProductID, sum(Quantity) as Quantity FROM StockAdjustment
+					SELECT ProductID, sum(Quantity) as Quantity FROM stockadjustment
 					GROUP BY ProductID
 					) as temp0 group by ProductID
 				) as temp 
-				JOIN Product ON Product.ProductID = temp.ProductID
-				JOIN ProductCategory ON ProductCategory.ProductCategoryID = Product.ProductCategoryID
-				JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
+				JOIN product ON product.ProductID = temp.ProductID
+				JOIN productcategory ON productcategory.ProductCategoryID = product.ProductCategoryID
+				JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
 				$FilterString2
 				";
 		//print_r($sql); exit;
@@ -367,9 +367,9 @@ class ReportsController extends Controller
 			}
 		}
 		$Title = 'Stock Taking Sheets';
-		$sql = "SELECT *, '' AS Qty FROM Product 
-				JOIN ProductCategory ON ProductCategory.ProductCategoryID = Product.ProductCategoryID
-				JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
+		$sql = "SELECT *, '' AS Qty FROM product 
+				JOIN productcategory ON productcategory.ProductCategoryID = product.ProductCategoryID
+				JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
 				$FilterString2
 				ORDER BY ProductCategoryName, ProductName
 				";
@@ -440,11 +440,11 @@ class ReportsController extends Controller
 			$StockTakeID = $params['FilterData']['StockTakeID'];			
 		}
 		$Title = 'Stock Variance Report';
-		$sql = "SELECT * , PhysicalStock-CurrentStock as Variance FROM StockTakeLines
-				LEFT JOIN Product ON Product.ProductID = StockTakeLines.ProductID
-				LEFT JOIN ProductCategory ON ProductCategory.ProductCategoryID = Product.ProductCategoryID
-				LEFT JOIN UsageUnit ON UsageUnit.UsageUnitID = Product.UsageUnitID
-				WHERE StockTakeLines.StockTakeID = '$StockTakeID'
+		$sql = "SELECT * , physicalstock-CurrentStock as Variance FROM stocktakelines
+				LEFT JOIN product ON product.ProductID = stocktakelines.ProductID
+				LEFT JOIN productcategory ON productcategory.ProductCategoryID = product.ProductCategoryID
+				LEFT JOIN usageunit ON usageunit.UsageUnitID = product.UsageUnitID
+				WHERE stocktakelines.StockTakeID = '$StockTakeID'
 				";
 
 		$dataProvider = new ArrayDataProvider([
@@ -516,21 +516,21 @@ class ReportsController extends Controller
 			if (isset($params['FilterData']['SupplierID']) && $params['FilterData']['SupplierID'] != '')
 			{
 				$SupplierID = $params['FilterData']['SupplierID'];
-				$wherestr = " AND Purchases.SupplierID = '$SupplierID' AND ProductName is not Null";
+				$wherestr = " AND purchases.SupplierID = '$SupplierID' AND ProductName is not Null";
 			} 
 		} 
 		
 		$Title = 'Stock Variance Report';
 		$sql = "SELECT *, purchaselines.UnitPrice * Quantity as Total  FROM purchaselines
-				LEFT JOIN Purchases ON Purchases.PurchaseID = purchaselines.PurchaseID
-				LEFT JOIN Product ON Product.ProductID = purchaselines.ProductID
-				LEFT JOIN ProductCategory ON ProductCategory.ProductCategoryID = Product.ProductCategoryID
+				LEFT JOIN purchases ON purchases.PurchaseID = purchaselines.PurchaseID
+				LEFT JOIN product ON product.ProductID = purchaselines.ProductID
+				LEFT JOIN productcategory ON productcategory.ProductCategoryID = product.ProductCategoryID
 				$wherestr
 				ORDER BY ProductCategoryName
 				";
 
 		$dataProvider = new ArrayDataProvider([
-				'allModels' => purchaselines::findBySql($sql)->asArray()->all(), 'pagination' => false,
+				'allModels' => PurchaseLines::findBySql($sql)->asArray()->all(), 'pagination' => false,
 			]);
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 
@@ -813,7 +813,7 @@ class ReportsController extends Controller
 			
 			if ((isset($params['FilterData']['ProductCategoryID'])) && ($params['FilterData']['ProductCategoryID']!=0))
 			{
-				$FilterString2 .= ' WHERE Product.ProductCategoryID = ' . $params['FilterData']['ProductCategoryID'];
+				$FilterString2 .= ' WHERE product.ProductCategoryID = ' . $params['FilterData']['ProductCategoryID'];
 			}
 			
 			if ((isset($params['FilterData']['Month'])) && ($params['FilterData']['Month']!=0))
@@ -829,13 +829,13 @@ class ReportsController extends Controller
 						GROUP BY ProductID
 						UNION
 						(
-						SELECT ProductID, 0 as Ordered, sum(Quantity) as Issued FROM RequisitionLine
+						SELECT ProductID, 0 as Ordered, sum(Quantity) as Issued FROM requisitionline
 						WHERE ProductID is not Null
 						GROUP BY ProductID
 						)
 					) as Temp
-					JOIN Product ON Product.ProductID = Temp.ProductID
-					JOIN ProductCategory ON ProductCategory.ProductCategoryID = Product.ProductCategoryID
+					JOIN product ON product.ProductID = Temp.ProductID
+					JOIN productcategory ON productcategory.ProductCategoryID = product.ProductCategoryID
 					$FilterString2
 					GROUP BY ProductCategoryName, ProductName,Temp.ProductID
 				";
