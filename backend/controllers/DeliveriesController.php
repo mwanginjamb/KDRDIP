@@ -26,37 +26,57 @@ use backend\controllers\RightsController;
  */
 class DeliveriesController extends Controller
 {
+	public $rights;
 	/**
 	 * @inheritdoc
 	 */
 	public function behaviors()
 	{
+		$this->rights = RightsController::Permissions(18);
+
+		$rightsArray = []; 
+		if (isset($this->rights->View)) {
+			array_push($rightsArray, 'index', 'view');
+		}
+		if (isset($this->rights->Create)) {
+			array_push($rightsArray, 'view', 'create');
+		}
+		if (isset($this->rights->Edit)) {
+			array_push($rightsArray, 'index', 'view', 'update');
+		}
+		if (isset($this->rights->Delete)) {
+			array_push($rightsArray, 'delete');
+		}
+		$rightsArray = array_unique($rightsArray);
+		
+		if (count($rightsArray) <= 0) { 
+			$rightsArray = ['none'];
+		}
+		
 		return [
 		'access' => [
-					'class' => AccessControl::className(),
-					'only' => ['index', 'view', 'create', 'update', 'delete', 'post'],
-					'rules' => [
-				/*
-				// Guest Users
-						[
-							'allow' => true,
-							'actions' => ['login', 'signup'],
-							'roles' => ['?'],
-						], */
-				// Authenticated Users
-						[
-							'allow' => true,
-							'actions' => ['index', 'view', 'create', 'update', 'delete', 'post'],
-							'roles' => ['@'],
-						],
+			'class' => AccessControl::className(),
+			'only' => ['index', 'view', 'create', 'update', 'delete'],
+			'rules' => [				
+					// Guest Users
+					[
+						'allow' => true,
+						'actions' => ['none'],
+						'roles' => ['?'],
 					],
+					// Authenticated Users
+					[
+						'allow' => true,
+						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'roles' => ['@'],
+					],
+				],
 			],
 			'verbs' => [
-					'class' => VerbFilter::className(),
-					'actions' => [
-						'delete' => ['POST'],
-				'post' => ['POST'],
-					],
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
+				],
 			],
 		];
 	}

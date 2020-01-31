@@ -28,37 +28,57 @@ use backend\controllers\UsersController;
  */
 class RequisitionController extends Controller
 {
+	public $rights;
 	/**
 	 * @inheritdoc
 	 */
 	public function behaviors()
 	{
+		$this->rights = RightsController::Permissions(45);
+
+		$rightsArray = []; 
+		if (isset($this->rights->View)) {
+			array_push($rightsArray, 'index', 'view', 'submit');
+		}
+		if (isset($this->rights->Create)) {
+			array_push($rightsArray, 'view', 'create', 'submit');
+		}
+		if (isset($this->rights->Edit)) {
+			array_push($rightsArray, 'index', 'view', 'update', 'submit');
+		}
+		if (isset($this->rights->Delete)) {
+			array_push($rightsArray, 'delete');
+		}
+		$rightsArray = array_unique($rightsArray);
+		
+		if (count($rightsArray) <= 0) { 
+			$rightsArray = ['none'];
+		}
+		
 		return [
 		'access' => [
-					'class' => AccessControl::className(),
-					'only' => ['index', 'view', 'create', 'update', 'delete', 'submit'],
-					'rules' => [
-				/*
-				// Guest Users
-						[
-							'allow' => true,
-							'actions' => ['login', 'signup'],
-							'roles' => ['?'],
-						], */
-				// Authenticated Users
-						[
-							'allow' => true,
-							'actions' => ['index', 'view', 'create', 'update', 'delete', 'submit'],
-							'roles' => ['@'],
-						],
+			'class' => AccessControl::className(),
+			'only' => ['index', 'view', 'create', 'update', 'delete', 'submit'],
+			'rules' => [				
+					// Guest Users
+					[
+						'allow' => true,
+						'actions' => ['none'],
+						'roles' => ['?'],
 					],
+					// Authenticated Users
+					[
+						'allow' => true,
+						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'roles' => ['@'],
+					],
+				],
 			],
 			'verbs' => [
-					'class' => VerbFilter::className(),
-					'actions' => [
-						'delete' => ['POST'],
-				'submit' => ['POST'],
-					],
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
+				],
 			],
 		];
 	}
