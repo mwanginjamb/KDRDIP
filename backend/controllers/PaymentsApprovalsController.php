@@ -90,7 +90,9 @@ class PaymentsApprovalsController extends Controller
 		]);
 
 		return $this->render('index', [
-			'dataProvider' => $dataProvider, 'option' => $option,
+			'dataProvider' => $dataProvider,
+			'option' => $option,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -170,7 +172,8 @@ class PaymentsApprovalsController extends Controller
 			'notes' => $notes,
 			'option' => $option,
 			'purchases' => $purchases,
-			'invoice' => $invoice
+			'invoice' => $invoice,
+			'rights' => $this->rights,
 		]);
 	}
 

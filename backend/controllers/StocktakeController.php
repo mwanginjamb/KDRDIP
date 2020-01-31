@@ -93,6 +93,7 @@ class StocktakeController extends Controller
 		]);
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -112,6 +113,7 @@ class StocktakeController extends Controller
 	
 		return $this->render('view', [
 			'model' => $this->findModel($id), 'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -145,7 +147,8 @@ class StocktakeController extends Controller
 		$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName') ;
 		return $this->render('create', [
 				'model' => $model,
-				'stores' => $stores
+				'stores' => $stores,
+				'rights' => $this->rights,
 		]);
 	}
 
@@ -182,7 +185,8 @@ class StocktakeController extends Controller
 		return $this->render('update', [
 			'model' => $model, 
 			'lines' => $lines,
-			'stores' => $stores
+			'stores' => $stores,
+			'rights' => $this->rights,
 		]);
 	}
 

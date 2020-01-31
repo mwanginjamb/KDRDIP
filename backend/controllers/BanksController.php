@@ -84,6 +84,7 @@ class BanksController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -101,7 +102,8 @@ class BanksController extends Controller
 
 		return $this->render('view', [
 			'model' => $this->findModel($id),
-			'bankBranches' => $bankBranches
+			'bankBranches' => $bankBranches,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -127,7 +129,8 @@ class BanksController extends Controller
 
 		return $this->render('create', [
 			'model' => $model,
-			'bankBranches' => $bankBranches
+			'bankBranches' => $bankBranches,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -154,7 +157,8 @@ class BanksController extends Controller
 
 		return $this->render('update', [
 			'model' => $model,
-			'bankBranches' => $bankBranches
+			'bankBranches' => $bankBranches,
+			'rights' => $this->rights,
 		]);
 	}
 

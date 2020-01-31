@@ -80,6 +80,7 @@ class ProfileController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel(Yii::$app->user->identity->UserID),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -99,7 +100,8 @@ class ProfileController extends Controller
 		}
 
 		return $this->render('update', [
-			'model' => $model
+			'model' => $model,
+			'rights' => $this->rights,
 		]);
 	}
 

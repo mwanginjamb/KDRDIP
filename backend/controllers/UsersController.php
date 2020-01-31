@@ -92,6 +92,7 @@ class UsersController extends Controller
 		
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -105,6 +106,7 @@ class UsersController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -143,7 +145,8 @@ class UsersController extends Controller
 			'userstatus' => $userstatus,
 			'counties' => $counties,
 			'communities' => $communities,
-			'userTypes' => $userTypes
+			'userTypes' => $userTypes,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -175,7 +178,8 @@ class UsersController extends Controller
 			'userstatus' => $userstatus,
 			'counties' => $counties,
 			'communities' => $communities,
-			'userTypes' => $userTypes
+			'userTypes' => $userTypes,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -261,7 +265,7 @@ class UsersController extends Controller
 		}
 		if (count($EmailArray)!=0)
 		{
-			$sent = SendMail($EmailArray,$subject ,$message);			
+			$sent = SendMail($EmailArray, $subject ,$message, null);			
 			if ($sent==1)
 			{
 				return "Saved Details Successfully";
@@ -277,7 +281,7 @@ class UsersController extends Controller
 	
 	public function actionTestemail()
 	{
-		$sent = SendMail('ngugi.joseph@gmail.com','Test Email' ,'Test Email');			
+		$sent = SendMail('ngugi.joseph@gmail.com','Test Email' ,'Test Email', null);			
 		if ($sent==1)
 		{
 			return "Saved Details Successfully";

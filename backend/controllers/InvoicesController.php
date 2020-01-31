@@ -111,7 +111,10 @@ class InvoicesController extends Controller
 		}
 		
 		return $this->render('index', [
-			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
+			'dataProvider' => $dataProvider,
+			'search' => $search,
+			'searchfor' => $searchfor,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -144,6 +147,7 @@ class InvoicesController extends Controller
 			'model' => $model,
 			'deliveries' => $deliveries,
 			'purchases' => $purchases,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -167,6 +171,7 @@ class InvoicesController extends Controller
 			'model' => $model,
 			'suppliers' => $suppliers,
 			'purchases' => $purchases,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -194,7 +199,8 @@ class InvoicesController extends Controller
 		return $this->render('update', [
 			'model' => $model,
 			'suppliers' => $suppliers,
-			'purchases' => $purchases
+			'purchases' => $purchases,
+			'rights' => $this->rights,
 		]);
 	}
 

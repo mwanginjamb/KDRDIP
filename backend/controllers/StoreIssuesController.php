@@ -89,6 +89,7 @@ class StoreIssuesController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -121,6 +122,7 @@ class StoreIssuesController extends Controller
 
 		return $this->render('view', [
 			'model' => $model, 'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -166,7 +168,8 @@ class StoreIssuesController extends Controller
 		}
 
 		return $this->render('create', [
-				'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores, 'users' => $users,
+			'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores, 'users' => $users,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -225,7 +228,8 @@ class StoreIssuesController extends Controller
 		}
 	
 		return $this->render('update', [
-				'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores,  'users' => $users,
+			'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores,  'users' => $users,
+			'rights' => $this->rights,
 		]);
 	}
 

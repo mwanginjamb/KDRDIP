@@ -85,6 +85,7 @@ class ProductcategoryController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -118,7 +119,8 @@ class ProductcategoryController extends Controller
 		} else {
 			$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName');
 			return $this->render('create', [
-					'model' => $model, 'stores' => $stores,
+				'model' => $model, 'stores' => $stores,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -138,7 +140,8 @@ class ProductcategoryController extends Controller
 		} else {
 			$stores = ArrayHelper::map(Stores::find()->all(), 'StoreID', 'StoreName');
 			return $this->render('update', [
-					'model' => $model, 'stores' => $stores,
+				'model' => $model, 'stores' => $stores,
+				'rights' => $this->rights,
 			]);
 		}
 	}

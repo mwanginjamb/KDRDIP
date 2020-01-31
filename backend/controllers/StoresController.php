@@ -83,6 +83,7 @@ class StoresController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -95,6 +96,7 @@ class StoresController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -115,7 +117,8 @@ class StoresController extends Controller
 			return $this->redirect(['view', 'id' => $model->StoreID]);
 		} else {
 			return $this->render('create', [
-					'model' => $model,
+				'model' => $model,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -134,7 +137,8 @@ class StoresController extends Controller
 			return $this->redirect(['view', 'id' => $model->StoreID]);
 		} else {
 			return $this->render('update', [
-					'model' => $model,
+				'model' => $model,
+				'rights' => $this->rights,
 			]);
 		}
 	}

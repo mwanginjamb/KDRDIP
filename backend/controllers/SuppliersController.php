@@ -124,6 +124,7 @@ class SuppliersController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -150,7 +151,8 @@ class SuppliersController extends Controller
 			'model' => $this->findModel($id),
 			'priceListProvider' => $priceListProvider,
 			'ordersProvider' => $ordersProvider,
-			'categoriesProvider' => $categoriesProvider
+			'categoriesProvider' => $categoriesProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -197,7 +199,8 @@ class SuppliersController extends Controller
 				$contacts[$x] = new SupplierContact();
 			}
 			return $this->render('create', [
-					'model' => $model, 'country' => $country, 'contacts' => $contacts
+				'model' => $model, 'country' => $country, 'contacts' => $contacts,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -295,6 +298,7 @@ class SuppliersController extends Controller
 				'priceList' => $priceList,
 				'ordersProvider' => $ordersProvider,
 				'categories' => $categories,
+				'rights' => $this->rights,
 			]);
 		}
 	}

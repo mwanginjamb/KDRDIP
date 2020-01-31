@@ -91,6 +91,7 @@ class InvoiceApprovalsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'option' => $option,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -167,7 +168,8 @@ class InvoiceApprovalsController extends Controller
 			'approvalstatus' => $approvalstatus,
 			'notes' => $notes,
 			'option' => $option,
-			'purchases' => $purchases
+			'purchases' => $purchases,
+			'rights' => $this->rights,
 		]);
 	}
 

@@ -108,7 +108,10 @@ class EmployeesController extends Controller
 		]);
 
 		return $this->render('index', [
-			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
+			'dataProvider' => $dataProvider,
+			'search' => $search,
+			'searchfor' => $searchfor,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -122,6 +125,7 @@ class EmployeesController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -146,6 +150,7 @@ class EmployeesController extends Controller
 			'model' => $model,
 			'countries' => $countries,
 			'departments' => $departments,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -171,6 +176,7 @@ class EmployeesController extends Controller
 			'model' => $model,
 			'countries' => $countries,
 			'departments' => $departments,
+			'rights' => $this->rights,
 		]);
 	}
 

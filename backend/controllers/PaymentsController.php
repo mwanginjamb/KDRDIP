@@ -113,6 +113,7 @@ class PaymentsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
+			'rights' => $this->rights,
 		]);
 /* 		$dataProvider = new ActiveDataProvider([
 			'query' => Payments::find(),
@@ -154,7 +155,8 @@ class PaymentsController extends Controller
 			'model' => $this->findModel($id),
 			'purchases' => $purchases,
 			'deliveries' => $deliveries,
-			'invoice' => $invoice
+			'invoice' => $invoice,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -182,7 +184,8 @@ class PaymentsController extends Controller
 			'suppliers' => $suppliers,
 			'invoices' => $invoices,
 			'paymentMethods' => $paymentMethods,
-			'bankAccounts' => $bankAccounts
+			'bankAccounts' => $bankAccounts,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -214,7 +217,8 @@ class PaymentsController extends Controller
 			'suppliers' => $suppliers,
 			'invoices' => $invoices,
 			'paymentMethods' => $paymentMethods,
-			'bankAccounts' => $bankAccounts
+			'bankAccounts' => $bankAccounts,
+			'rights' => $this->rights,
 		]);
 	}
 

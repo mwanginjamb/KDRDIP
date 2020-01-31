@@ -86,6 +86,7 @@ class QuotationResponseController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -99,6 +100,7 @@ class QuotationResponseController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -162,7 +164,8 @@ class QuotationResponseController extends Controller
 			'model' => $model,
 			'lines' => $lines,
 			'quotation' => $quotation,
-			'supplier' => $supplier
+			'supplier' => $supplier,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -228,7 +231,8 @@ class QuotationResponseController extends Controller
 			'model' => $model,
 			'lines' => $lines,
 			'quotation' => $quotation,
-			'supplier' => $supplier
+			'supplier' => $supplier,
+			'rights' => $this->rights,
 		]);
 	}
 

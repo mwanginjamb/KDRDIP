@@ -107,6 +107,7 @@ class ReportsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -119,6 +120,7 @@ class ReportsController extends Controller
 	{
 		return $this->render('view', [
 			'model' => Product::find()->where(['ProductID'=>$id])->joinWith('productcategory')->joinWith('usageunit')->one(),
+			'rights' => $this->rights,
 		]);
 	}
 

@@ -85,6 +85,7 @@ class AccountsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -98,6 +99,7 @@ class AccountsController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -118,7 +120,8 @@ class AccountsController extends Controller
 
 		return $this->render('create', [
 			'model' => $model,
-			'accountTypes' => $accountTypes
+			'accountTypes' => $accountTypes,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -141,6 +144,7 @@ class AccountsController extends Controller
 		return $this->render('update', [
 			'model' => $model,
 			'accountTypes' => $accountTypes,
+			'rights' => $this->rights,
 		]);
 	}
 

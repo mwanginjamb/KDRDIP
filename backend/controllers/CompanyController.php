@@ -85,6 +85,7 @@ class CompanyController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -119,7 +120,8 @@ class CompanyController extends Controller
 		} else {
 		$country = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
 			return $this->render('create', [
-					'model' => $model, 'country' => $country
+				'model' => $model, 'country' => $country,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -139,7 +141,8 @@ class CompanyController extends Controller
 		} else {
 		$country = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
 			return $this->render('update', [
-					'model' => $model, 'country' => $country
+				'model' => $model, 'country' => $country,
+				'rights' => $this->rights,
 			]);
 		}
 	}

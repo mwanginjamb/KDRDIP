@@ -90,6 +90,7 @@ class BankAccountsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -107,7 +108,8 @@ class BankAccountsController extends Controller
 
 		return $this->render('view', [
 			'model' => $this->findModel($id),
-			'cashBook' => $cashBook
+			'cashBook' => $cashBook,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -136,7 +138,8 @@ class BankAccountsController extends Controller
 			'bankBranches' => $bankBranches,
 			'counties' => $counties,
 			'communities' => $communities,
-			'bankTypes' => $bankTypes
+			'bankTypes' => $bankTypes,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -166,7 +169,8 @@ class BankAccountsController extends Controller
 			'bankBranches' => $bankBranches,
 			'counties' => $counties,
 			'communities' => $communities,
-			'bankTypes' => $bankTypes
+			'bankTypes' => $bankTypes,
+			'rights' => $this->rights,
 		]);
 	}
 

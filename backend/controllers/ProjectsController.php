@@ -116,7 +116,8 @@ class ProjectsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
-			'cid' => $cid
+			'cid' => $cid,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -224,7 +225,8 @@ class ProjectsController extends Controller
 			'reportingPeriods' => $reportingPeriods,
 			'activities' => $activities,
 			'targets' => $targets,
-			'actuals' => $actuals
+			'actuals' => $actuals,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -323,7 +325,8 @@ class ProjectsController extends Controller
 			'reportingPeriods' => $reportingPeriods,
 			'currencies' => $currencies,
 			'communities' => $communities,
-			'counties' => $counties
+			'counties' => $counties,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -429,7 +432,8 @@ class ProjectsController extends Controller
 			'reportingPeriods' => $reportingPeriods,
 			'currencies' => $currencies,
 			'communities' => $communities,
-			'counties' => $counties
+			'counties' => $counties,
+			'rights' => $this->rights,
 		]);
 	}
 

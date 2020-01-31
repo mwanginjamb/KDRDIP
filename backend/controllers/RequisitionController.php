@@ -102,6 +102,7 @@ class RequisitionController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -118,6 +119,7 @@ class RequisitionController extends Controller
 		$model = Requisition::find()->where(['RequisitionID'=> $id])->joinWith('approvalstatus')->one();
 		return $this->render('view', [
 			'model' => $model, 'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -201,7 +203,8 @@ class RequisitionController extends Controller
 			'stores' => $stores,
 			'users' => $users,
 			'quotationTypes' => $quotationTypes,
-			'projects' => $projects
+			'projects' => $projects,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -301,7 +304,8 @@ class RequisitionController extends Controller
 			'stores' => $stores,
 			'users' => $users,
 			'quotationTypes' => $quotationTypes,
-			'projects' => $projects
+			'projects' => $projects,
+			'rights' => $this->rights,
 		]);
 
 	}

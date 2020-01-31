@@ -98,6 +98,7 @@ class QuotationController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -129,7 +130,8 @@ class QuotationController extends Controller
 							
 		return $this->render('view', [
 			'model' => $model, 'dataProvider' => $dataProvider, 'supplierProvider' => $supplierProvider,
-			'approvalNotesProvider' => $approvalNotesProvider
+			'approvalNotesProvider' => $approvalNotesProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -228,7 +230,8 @@ class QuotationController extends Controller
 			'quotationsuppliers' => $quotationsuppliers,
 			'quotationTypes' => $quotationTypes,
 			'accounts' => $accounts,
-			'requisitions' => $requisitions
+			'requisitions' => $requisitions,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -345,7 +348,8 @@ class QuotationController extends Controller
 			'products' => $products, 'quotationsuppliers' => $quotationsuppliers,
 			'quotationTypes' => $quotationTypes,
 			'accounts' => $accounts,
-			'requisitions' => $requisitions
+			'requisitions' => $requisitions,
+			'rights' => $this->rights,
 		]);
 	}
 

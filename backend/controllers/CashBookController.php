@@ -85,6 +85,7 @@ class CashBookController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -98,6 +99,7 @@ class CashBookController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -144,7 +146,8 @@ class CashBookController extends Controller
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
 		return $this->render('create', [
 			'model' => $model,
-			'bankAccounts' => $bankAccounts
+			'bankAccounts' => $bankAccounts,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -165,7 +168,8 @@ class CashBookController extends Controller
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
 		return $this->render('update', [
 			'model' => $model,
-			'bankAccounts' => $bankAccounts
+			'bankAccounts' => $bankAccounts,
+			'rights' => $this->rights,
 		]);
 	}
 

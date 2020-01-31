@@ -104,6 +104,7 @@ class PurchasesController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -118,6 +119,7 @@ class PurchasesController extends Controller
 
 		return $this->render('Approved', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -143,6 +145,7 @@ class PurchasesController extends Controller
 
 		return $this->render('view', [
 			'model' => $model, 'dataProvider' => $dataProvider, 'notes' => $notes,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -162,6 +165,7 @@ class PurchasesController extends Controller
 								->one();
 		return $this->render('viewapproved', [
 			'model' => $model, 'dataProvider' => $dataProvider, 'notes' => $notes,
+			'rights' => $this->rights,
 		]);
 	}	
 
@@ -232,7 +236,8 @@ class PurchasesController extends Controller
 			return $this->render('create', [
 				'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines,
 				'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
-				'quotations' => $quotations
+				'quotations' => $quotations,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -319,7 +324,8 @@ class PurchasesController extends Controller
 		return $this->render('update', [
 			'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines, 
 			'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
-			'quotations' => $quotations
+			'quotations' => $quotations,
+			'rights' => $this->rights,
 		]);		
 	}
 

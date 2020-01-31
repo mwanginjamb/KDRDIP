@@ -42,7 +42,7 @@ class DeliveriesController extends Controller
 			array_push($rightsArray, 'view', 'create');
 		}
 		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
+			array_push($rightsArray, 'index', 'view', 'update', 'post');
 		}
 		if (isset($this->rights->Delete)) {
 			array_push($rightsArray, 'delete');
@@ -56,7 +56,7 @@ class DeliveriesController extends Controller
 		return [
 		'access' => [
 			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
+			'only' => ['index', 'view', 'create', 'update', 'delete', 'post'],
 			'rules' => [				
 					// Guest Users
 					[
@@ -100,6 +100,7 @@ class DeliveriesController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -142,7 +143,8 @@ class DeliveriesController extends Controller
 	
 		return $this->render('view', [
 			'model' => $model, 'purchases' => $purchases, 
-		'lines' => $lines, 'data' => $data, 'delivered' => $delivered
+			'lines' => $lines, 'data' => $data, 'delivered' => $delivered,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -160,7 +162,8 @@ class DeliveriesController extends Controller
 		} else {
 			$purchases = ArrayHelper::map(Purchases::find()->joinWith('suppliers')->where(['Closed'=>0])->orderBy('PurchaseID DESC')->all(), 'PurchaseID', 'PurchaseName');
 			return $this->render('create', [
-					'model' => $model, 'purchases' => $purchases,
+				'model' => $model, 'purchases' => $purchases,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -225,7 +228,8 @@ class DeliveriesController extends Controller
 				'purchases' => $purchases,
 				'lines' => $lines,
 				'data' => $data,
-				'delivered' => $delivered
+				'delivered' => $delivered,
+				'rights' => $this->rights,
 			]);
 		}
 	}

@@ -88,6 +88,7 @@ class StoreRequisitionController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -107,6 +108,7 @@ class StoreRequisitionController extends Controller
 
 		return $this->render('view', [
 			'model' => $model, 'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -153,7 +155,8 @@ class StoreRequisitionController extends Controller
 		}
 
 		return $this->render('create', [
-				'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores, 'users' => $users,
+			'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores, 'users' => $users,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -184,7 +187,7 @@ class StoreRequisitionController extends Controller
 						$_line->ProductID = $line['ProductID'];
 						$_line->Quantity = $line['Quantity'];
 						$_line->Description = $line['Description'];
-						$_line->CreatedBy = $UserID;
+						$_line->CreatedBy = Yii::$app->user->identity->UserID;
 						$_line->save();
 						//print_r($_line->getErrors());
 					}
@@ -213,7 +216,8 @@ class StoreRequisitionController extends Controller
 		}
 	
 		return $this->render('update', [
-				'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores,  'users' => $users,
+			'model' => $model, 'lines' => $lines, 'products' => $products, 'stores' => $stores,  'users' => $users,
+			'rights' => $this->rights,
 		]);
 	}
 

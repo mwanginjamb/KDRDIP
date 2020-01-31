@@ -119,6 +119,7 @@ class ProductController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -131,6 +132,7 @@ class ProductController extends Controller
 	{
 		return $this->render('view', [
 			'model' => Product::find()->where(['ProductID'=>$id])->joinWith('productcategory')->joinWith('usageunit')->one(),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -141,21 +143,22 @@ class ProductController extends Controller
 	 */
 	public function actionCreate()
 	{
-	$identity = Yii::$app->user->identity;
-	$UserID = $identity->UserID;
+		$identity = Yii::$app->user->identity;
+		$UserID = $identity->UserID;
 	
 		$model = new Product();
-	$model->CreatedBy = $UserID;
+		$model->CreatedBy = $UserID;
 	
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->ProductID]);
 		} else 
-	{
-		$usageunit = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
-		
-		$productcategory = ArrayHelper::map(ProductCategory::find()->all(), 'ProductCategoryID', 'ProductCategoryName');
+		{
+			$usageunit = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
+			
+			$productcategory = ArrayHelper::map(ProductCategory::find()->all(), 'ProductCategoryID', 'ProductCategoryName');
 			return $this->render('create', [
-					'model' => $model, 'usageunit' => $usageunit, 'productcategory' => $productcategory,
+				'model' => $model, 'usageunit' => $usageunit, 'productcategory' => $productcategory,
+				'rights' => $this->rights,
 			]);
 		}
 	}
@@ -177,9 +180,10 @@ class ProductController extends Controller
 		$usageunit = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
 		$productcategory = ArrayHelper::map(ProductCategory::find()->all(), 'ProductCategoryID', 'ProductCategoryName');
 
-			return $this->render('update', [
-					'model' => $model, 'usageunit' => $usageunit, 'productcategory' => $productcategory,
-			]);
+		return $this->render('update', [
+			'model' => $model, 'usageunit' => $usageunit, 'productcategory' => $productcategory,
+			'rights' => $this->rights,
+		]);
 	}
 
 	/**

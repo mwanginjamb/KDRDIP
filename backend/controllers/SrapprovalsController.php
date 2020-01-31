@@ -91,6 +91,7 @@ class SrapprovalsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'option' => $option,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -159,6 +160,7 @@ class SrapprovalsController extends Controller
 		return $this->render('view', [
 			'model' => $model,'detailmodel' => $detailmodel, 'dataProvider' => $dataProvider,
 			'approvalstatus' => $approvalstatus, 'notes' => $notes, 'option' => $option,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -208,7 +210,8 @@ class SrapprovalsController extends Controller
 		}
 		
 		return $this->render('update', [
-				'model' => $model, 'lines' => $lines, 'products' => $products
+			'model' => $model, 'lines' => $lines, 'products' => $products,
+			'rights' => $this->rights,
 		]);
 	}
 

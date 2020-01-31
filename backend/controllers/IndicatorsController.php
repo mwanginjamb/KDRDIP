@@ -94,6 +94,7 @@ class IndicatorsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -107,6 +108,7 @@ class IndicatorsController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -171,7 +173,8 @@ class IndicatorsController extends Controller
 			'projectTeams' => $projectTeams,
 			'indicatorTargets' => $indicatorTargets,
 			'activities' => $activities,
-			'employees' => $employees
+			'employees' => $employees,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -237,7 +240,8 @@ class IndicatorsController extends Controller
 			'projectTeams' => $projectTeams,
 			'indicatorTargets' => $indicatorTargets,
 			'activities' => $activities,
-			'employees' => $employees
+			'employees' => $employees,
+			'rights' => $this->rights,
 		]);
 	}
 

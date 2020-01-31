@@ -83,6 +83,7 @@ class ProcurementMethodsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -96,6 +97,7 @@ class ProcurementMethodsController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -115,6 +117,7 @@ class ProcurementMethodsController extends Controller
 
 		return $this->render('create', [
 			'model' => $model,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -135,6 +138,7 @@ class ProcurementMethodsController extends Controller
 
 		return $this->render('update', [
 			'model' => $model,
+			'rights' => $this->rights,
 		]);
 	}
 

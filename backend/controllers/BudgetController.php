@@ -84,6 +84,7 @@ class BudgetController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -97,6 +98,7 @@ class BudgetController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -157,6 +159,7 @@ class BudgetController extends Controller
 		return $this->render('create', [
 			'model' => $model,
 			'budgetLines' => $budgetLines,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -219,6 +222,7 @@ class BudgetController extends Controller
 		return $this->render('update', [
 			'model' => $model,
 			'budgetLines' => $budgetLines,
+			'rights' => $this->rights,
 		]);
 	}
 

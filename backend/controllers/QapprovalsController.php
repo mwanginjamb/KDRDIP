@@ -91,6 +91,7 @@ class QapprovalsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'option' => $option,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -171,7 +172,8 @@ class QapprovalsController extends Controller
 			'model' => $model,'detailmodel' => $detailmodel, 
 			'dataProvider' => $dataProvider, 'approvalstatus' => $approvalstatus, 
 			'supplierProvider' => $supplierProvider, 'notes' => $notes, 'option' => $option,
-			'approvalNotesProvider' => $approvalNotesProvider
+			'approvalNotesProvider' => $approvalNotesProvider,
+			'rights' => $this->rights,
 		]);
 	}
 	}
@@ -184,42 +186,42 @@ class QapprovalsController extends Controller
 	 */
 	public function actionUpdate($id)
 	{	
-	$model = $this->findModel($id);
-	$lines = QuotationProducts::find()->where(['QuotationID' => $id])->all();
-	
-		if ($model->load(Yii::$app->request->post()) && $model->save()) 
-	{
-		$params = Yii::$app->request->post();
-		$lines = $params['QuotationProducts'];
+		$model = $this->findModel($id);
+		$lines = QuotationProducts::find()->where(['QuotationID' => $id])->all();
 		
-		foreach ($lines as $key => $line)
+		if ($model->load(Yii::$app->request->post()) && $model->save()) 
 		{
-			//print_r($lines);exit;
-				
-			if ($line['RequisitionLineID'] == '')
-			{				
-				if ($line['ProductID'] != '')
+			$params = Yii::$app->request->post();
+			$lines = $params['QuotationProducts'];
+			
+			foreach ($lines as $key => $line)
+			{
+				//print_r($lines);exit;
+					
+				if ($line['RequisitionLineID'] == '')
+				{				
+					if ($line['ProductID'] != '')
+					{
+						$_line = new QuotationProducts();
+						$_line->QuotationID = $id;
+						$_line->ProductID = $line['ProductID'];
+						$_line->Quantity = $line['Quantity'];
+						$_line->Description = $line['Description'];
+						$_line->save();
+						//print_r($_line->getErrors());
+					}
+				} else
 				{
-					$_line = new QuotationProducts();
+					$_line = QuotationProducts::findOne($line['RequisitionLineID']);
 					$_line->QuotationID = $id;
 					$_line->ProductID = $line['ProductID'];
 					$_line->Quantity = $line['Quantity'];
 					$_line->Description = $line['Description'];
 					$_line->save();
-					//print_r($_line->getErrors());
 				}
-			} else
-			{
-				$_line = QuotationProducts::findOne($line['RequisitionLineID']);
-				$_line->QuotationID = $id;
-				$_line->ProductID = $line['ProductID'];
-				$_line->Quantity = $line['Quantity'];
-				$_line->Description = $line['Description'];
-				$_line->save();
+				
+				//print_r($_line->getErrors());
 			}
-			
-			//print_r($_line->getErrors());
-		}
 		
 			return $this->redirect(['view', 'id' => $model->QuotationID]);
 		} else {
@@ -231,7 +233,8 @@ class QapprovalsController extends Controller
 		}
 		
 			return $this->render('update', [
-					'model' => $model, 'lines' => $lines, 'products' => $products
+				'model' => $model, 'lines' => $lines, 'products' => $products,
+				'rights' => $this->rights,
 			]);
 		}
 	}

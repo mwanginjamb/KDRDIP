@@ -85,6 +85,7 @@ class CommunitiesController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -98,6 +99,7 @@ class CommunitiesController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -118,7 +120,8 @@ class CommunitiesController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		return $this->render('create', [
 			'model' => $model,
-			'counties' => $counties
+			'counties' => $counties,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -140,7 +143,8 @@ class CommunitiesController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		return $this->render('update', [
 			'model' => $model,
-			'counties' => $counties
+			'counties' => $counties,
+			'rights' => $this->rights,
 		]);
 	}
 

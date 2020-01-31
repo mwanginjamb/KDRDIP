@@ -86,6 +86,7 @@ class FixedAssetsController extends Controller
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -99,6 +100,7 @@ class FixedAssetsController extends Controller
 	{
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -123,6 +125,7 @@ class FixedAssetsController extends Controller
 			'model' => $model,
 			'projects' => $projects,
 			'employees' => $employees,
+			'rights' => $this->rights,
 		]);
 	}
 
@@ -148,6 +151,7 @@ class FixedAssetsController extends Controller
 			'model' => $model,
 			'projects' => $projects,
 			'employees' => $employees,
+			'rights' => $this->rights,
 		]);
 	}
 
