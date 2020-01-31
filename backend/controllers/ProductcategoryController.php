@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
+use backend\controllers\RightsController;
 
 /**
  * ProductcategoryController implements the CRUD actions for Productcategory model.

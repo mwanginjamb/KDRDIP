@@ -16,6 +16,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * UsersController implements the CRUD actions for Users model.

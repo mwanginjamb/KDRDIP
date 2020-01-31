@@ -8,6 +8,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * SafeguardingPoliciesController implements the CRUD actions for SafeguardingPolicies model.

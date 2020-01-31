@@ -8,6 +8,8 @@ use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * ActivityBudgetController implements the CRUD actions for ActivityBudget model.

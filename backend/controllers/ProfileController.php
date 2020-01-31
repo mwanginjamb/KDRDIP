@@ -7,6 +7,8 @@ use app\models\Users;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * ProfilesController implements the CRUD actions for Profiles model.

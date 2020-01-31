@@ -23,6 +23,7 @@ use app\models\ApprovalNotes;
 
 use kartik\mpdf\Pdf;
 use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * QuotationController implements the CRUD actions for Quotation model.

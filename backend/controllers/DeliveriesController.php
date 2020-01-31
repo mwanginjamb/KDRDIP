@@ -19,6 +19,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use kartik\mpdf\Pdf;
+use backend\controllers\RightsController;
 
 /**
  * DeliveriesController implements the CRUD actions for Deliveries model.

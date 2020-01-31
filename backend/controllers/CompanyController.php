@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * CompanyController implements the CRUD actions for Company model.

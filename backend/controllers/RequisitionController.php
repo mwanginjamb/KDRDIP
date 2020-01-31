@@ -20,6 +20,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 
 use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 use backend\controllers\UsersController;
 
 /**

@@ -16,6 +16,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\UsersController;
+use backend\controllers\RightsController;
 
 /**
  * RequisitionController implements the CRUD actions for Requisition model.

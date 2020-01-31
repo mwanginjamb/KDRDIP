@@ -26,6 +26,7 @@ use backend\controllers\UsersController;
 
 use kartik\mpdf\Pdf;
 use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * PurchasesController implements the CRUD actions for Purchases model.

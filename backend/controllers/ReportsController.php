@@ -33,6 +33,7 @@ use yii\data\ArrayDataProvider;
 
 use kartik\mpdf\Pdf;
 use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * RequisitionController implements the CRUD actions for Requisition model.
