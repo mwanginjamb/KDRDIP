@@ -98,17 +98,17 @@ $FormID = 7;
 									'template' => '{view} {delete}',
 									'buttons' => [
 
-										'view' => function ($url, $model) {
-											return (Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->SupplierID], ['class' => 'btn-sm btn-primary']));
+										'view' => function ($url, $model) use ($rights) {
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->SupplierID], ['class' => 'btn-sm btn-primary']) : '';
 										},
-										'delete' => function ($url, $model) {
-											return (Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->SupplierID], [
+										'delete' => function ($url, $model) use ($rights) {
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->SupplierID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
 													'method' => 'post',
 												],
-											]));
+											]) : '';
 										},
 									],
 								],

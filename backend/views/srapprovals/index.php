@@ -101,13 +101,13 @@ $FormID = 12;
 									'buttons' => [
 
 										//update button
-										'update' => function ($url, $model) use ($Rights, $FormID, $option) {
+										'update' => function ($url, $model) use ($rights, $FormID, $option) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/srapprovals/view?id=' . $model->StoreRequisitionID.'&option=' . $option, [
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/srapprovals/view?id=' . $model->StoreRequisitionID.'&option=' . $option, [
 														'title' => Yii::t('app', 'Select'),
 														'class'=>'btn-sm btn-primary btn-xs',
-														]);
-										},						
+														]) : '';
+										},				
 									],
 								],
 							],

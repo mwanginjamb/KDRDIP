@@ -30,7 +30,7 @@ $FormID = 5;
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
 						<div class="form-actions" style="margin-top:0px">
-							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>	
+						<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>		
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
@@ -94,23 +94,23 @@ $FormID = 5;
 									'template' => '{view} {delete}',
 									'buttons' => [
 
-										'view' => function ($url, $model) use ($FormID) {
+										'view' => function ($url, $model) use ($FormID, $rights) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return Html::a('<i class="ft-eye"></i> View', $baseUrl.'/purchases/view?id=' . $model->PurchaseID, [
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-eye"></i> View', $baseUrl.'/purchases/view?id=' . $model->PurchaseID, [
 														'title' => Yii::t('app', 'View'),
 														'class'=>'btn-sm btn-primary btn-xs',                                  
-														]);
+														]) : '';
 										},
-										'delete' => function($url, $model) use ($FormID){
+										'delete' => function($url, $model) use ($FormID, $rights){
 											$baseUrl = Yii::$app->request->baseUrl;
 											if (!in_array($model->ApprovalStatusID, [1,2,3,4])) {
-												return Html::a('<i class="ft-trash"></i> Delete', ['/purchases/delete', 'id' => $model->PurchaseID], [
+												return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['/purchases/delete', 'id' => $model->PurchaseID], [
 													'class' => 'btn-sm btn-danger btn-xs',
 													'data' => [
 														'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
 														'method' => 'post',
 													],
-												]);
+												]) : '';
 											}
 										},							
 									],

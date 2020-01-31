@@ -26,8 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">-->
-						<!-- <div class="form-actions1" style="margin-top:0px"> 
-							<?= Html::a('<i class="ft-plus"></i> New', ['/budget/create', 'pid' => $pid], ['class' => 'btn btn-primary mr-1']) ?>	
+						<!-- <div class="form-actions1" style="margin-top:0px">
+							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['/budget/create', 'pid' => $pid], ['class' => 'btn btn-primary mr-1']) : '' ?>
 						</div> -->
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
@@ -69,17 +69,17 @@ $this->params['breadcrumbs'][] = $this->title;
 									'template' => '{update} {delete}',
 									'buttons' => [
 				
-										'update' => function ($url, $model) {
-											return (Html::a('<i class="ft-edit"></i> update', ['/budget/update', 'id' => $model->BudgetID, 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary']));
+										'update' => function ($url, $model) use ($rights) {
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-edit"></i> update', ['/budget/update', 'id' => $model->BudgetID, 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary']) : '';
 										},
-										'delete' => function ($url, $model) {
-											return (Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->BudgetID, 'pid' => $model->ProjectID], [
+										'delete' => function ($url, $model) use ($rights) {
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->BudgetID, 'pid' => $model->ProjectID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
 													'method' => 'post',
 												],
-											]));
+											]) : '';
 										},
 									],
 								],

@@ -62,31 +62,19 @@ $FormID = 41;
 				'contentOptions' => ['style' => 'text-align:center'],
 				'template' => '{view} {delete}',
 				'buttons' => [
-
-					'view' => function ($url, $model) use ($Rights, $FormID){
-						$baseUrl = Yii::$app->request->baseUrl;
-						return ($Rights[$FormID]['View']) ? Html::a('<span class="fa fa-eye"></span> View', $baseUrl.'/messagetemplates/view?id='.$model->MessageTemplateID, [
-									'title' => Yii::t('app', 'View'),
-									'class'=>'gridbtn btn-primary btn-xs',                                  
-									]) : '';
+						
+					'view' => function ($url, $model) use ($rights) {
+						return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->MessageTemplateID], ['class' => 'btn-sm btn-primary']) : '';
 					},
-					'update' => function ($url, $model) use ($Rights, $FormID){
-						$baseUrl = Yii::$app->request->baseUrl;
-						return ($Rights[$FormID]['Edit']) ? Html::a('<span class="fa fa-edit"></span> Edit', $baseUrl.'/messagetemplates/update?id='.$model->MessageTemplateID, [
-									'title' => Yii::t('app', 'Edit'),
-									'class'=>'gridbtn btn-primary btn-xs',                                  
-									]) : '';
-					},
-					'delete' => function($url, $model) use ($Rights, $FormID){
-						$baseUrl = Yii::$app->request->baseUrl;
-							return ($Rights[$FormID]['Delete']) ? Html::a('<span class="fa fa-trash"></span> Delete', ['/messagetemplates/delete', 'id' => $model->MessageTemplateID], [
-								'class' => 'gridbtn btn-danger btn-xs',
-								'data' => [
-									'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
-									'method' => 'post',
-								],
-							]) : '';
-					},							
+					'delete' => function ($url, $model) use ($rights) {
+						return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->MessageTemplateID], [
+							'class' => 'btn-sm btn-danger btn-xs',
+							'data' => [
+								'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
+								'method' => 'post',
+							],
+						]) : '';
+					},						
 				],
 			],
         ],

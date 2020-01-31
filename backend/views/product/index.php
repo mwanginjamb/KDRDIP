@@ -49,7 +49,7 @@ $FormID = 1;
 						</div>
 						
 	 					<div class="form-actions" style="margin-top:0px">
-							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>	
+						 	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>	
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
@@ -110,18 +110,18 @@ $FormID = 1;
 									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
 									'template' => '{view} {delete}',
 									'buttons' => [
-				
-										'view' => function ($url, $model) {
-											return (Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->ProductID], ['class' => 'btn-sm btn-primary']));
+
+										'view' => function ($url, $model) use ($rights) {
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->ProductID], ['class' => 'btn-sm btn-primary']) : '';
 										},
-										'delete' => function ($url, $model) {
-											return (Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProductID], [
+										'delete' => function ($url, $model) use ($rights) {
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProductID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
 													'method' => 'post',
 												],
-											]));
+											]) : '';
 										},
 									],
 								],

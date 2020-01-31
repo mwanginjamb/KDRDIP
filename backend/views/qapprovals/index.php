@@ -98,12 +98,12 @@ $FormID = 13;
 									'buttons' => [
 
 										//update button
-										'update' => function ($url, $model) use ($Rights, $FormID, $option) {
+										'update' => function ($url, $model) use ($Rights, $FormID, $option, $rights) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return Html::a('<i class="ft-eye"></i> Select', $baseUrl . '/qapprovals/view?id=' . $model->QuotationID.'&option=' . $option, [
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-eye"></i> Select', $baseUrl . '/qapprovals/view?id=' . $model->QuotationID.'&option=' . $option, [
 														'title' => Yii::t('app', 'Select'),
 														'class'=>'btn-sm btn-primary btn-xs',
-														]);
+														]) : '';
 										},						
 									],
 								],

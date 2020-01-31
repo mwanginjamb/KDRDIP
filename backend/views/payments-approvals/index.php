@@ -128,12 +128,12 @@ $FormID = 12;
 									'buttons' => [
 
 										//update button
-										'update' => function ($url, $model) use ($Rights, $FormID, $option) {
+										'update' => function ($url, $model) use ($Rights, $FormID, $option, $rights) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/payments-approvals/view?id=' . $model->PaymentID.'&option=' . $option, [
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-eye"></i> Select', $baseUrl.'/payments-approvals/view?id=' . $model->PaymentID.'&option=' . $option, [
 														'title' => Yii::t('app', 'Select'),
 														'class'=>'btn-sm btn-primary btn-xs',
-														]);
+														]) : '';
 										},						
 									],
 								],
