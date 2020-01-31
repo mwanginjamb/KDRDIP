@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'model' => $model,
 		'countries' => $countries,
 		'departments' => $departments,
+		'rights' => $rights,
 	]) ?>
 
 </section>

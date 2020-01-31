@@ -50,7 +50,8 @@ $FormID = 6;
 				<?= $this->render('_form', [
 					'model' => $model,
 					'country' => $country,
-					'contacts' => $contacts
+					'contacts' => $contacts,
+					'rights' => $rights,
 				]) ?>
 			</div>
 
@@ -58,13 +59,15 @@ $FormID = 6;
 				<h4 class="form-section" style="margin-bottom: 0px">Price List</h4>
 				<?= $this->render('pricelist', [
 					'products' => $priceList, 'supplier' => $model,
+					'rights' => $rights,
 				]); ?>
 			</div>
 
 			<div class="tab-pane" id="tab3" aria-labelledby="base-tab3">
 				<h4 class="form-section" style="margin-bottom: 0px">Orders</h4>
 				<?= $this->render('orders', [
-					'ordersProvider' => $ordersProvider
+					'ordersProvider' => $ordersProvider,
+					'rights' => $rights,
 				]); ?>
 			</div>
 
@@ -72,6 +75,7 @@ $FormID = 6;
 				<h4 class="form-section" style="margin-bottom: 0px">Product Categories</h4>
 				<?= $this->render('categories', [
 					'categories' => $categories,
+					'rights' => $rights,
 				]); ?>
 			</div>
 		</div>

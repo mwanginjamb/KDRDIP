@@ -11,7 +11,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <section class="flexbox-container">
 
 	<?= $this->render('_form', [
-		'model' => $model, 'country' => $country
+		'model' => $model, 'country' => $country,
+		'rights' => $rights,
 	]) ?>
 
 </section>

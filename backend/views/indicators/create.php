@@ -19,7 +19,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'projectTeams' => $projectTeams,
 		'indicatorTargets' => $indicatorTargets,
 		'activities' => $activities,
-		'employees' => $employees
+		'employees' => $employees,
+		'rights' => $rights,
 	]) ?>
 
 </section>

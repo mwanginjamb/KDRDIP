@@ -16,7 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'suppliers' => $suppliers,
 		'invoices' => $invoices,
 		'paymentMethods' => $paymentMethods,
-		'bankAccounts' => $bankAccounts
+		'bankAccounts' => $bankAccounts,
+		'rights' => $rights,
 	]) ?>
 
 </section>

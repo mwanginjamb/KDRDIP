@@ -14,7 +14,8 @@ $this->params['breadcrumbs'][] = 'Update';
 
 	<?= $this->render('_form', [
 		'model' => $model,
-		'subComponents' => $subComponents
+		'subComponents' => $subComponents,
+		'rights' => $rights,
 	]) ?>
 
 </section>

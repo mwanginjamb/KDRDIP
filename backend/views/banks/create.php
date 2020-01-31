@@ -13,7 +13,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 	<?= $this->render('_form', [
 		'model' => $model,
-		'bankBranches' => $bankBranches
+		'bankBranches' => $bankBranches,
+		'rights' => $rights,
 	]) ?>
 
 </section>

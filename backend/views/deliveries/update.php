@@ -13,8 +13,8 @@ $this->params['breadcrumbs'][] = 'Update';
 <section class="flexbox-container">
 
 	<?= $this->render('_form', [
-		'model' => $model, 'purchases' => $purchases, 'lines' => $lines, 'data' => $data, 'delivered' => $delivered
-			
+		'model' => $model, 'purchases' => $purchases, 'lines' => $lines, 'data' => $data, 'delivered' => $delivered,
+		'rights' => $rights,	
 	]) ?>
 
 </section>

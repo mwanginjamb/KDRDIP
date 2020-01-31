@@ -35,7 +35,8 @@ $this->params['breadcrumbs'][] = 'Update';
 		'reportingPeriods' => $reportingPeriods,
 		'currencies' => $currencies,
 		'communities' => $communities,
-		'counties' => $counties
+		'counties' => $counties,
+		'rights' => $rights,
 	]) ?>
 
 </section>

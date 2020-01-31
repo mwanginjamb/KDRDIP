@@ -18,7 +18,8 @@ $this->params['breadcrumbs'][] = 'Update';
 		'userstatus' => $userstatus,
 		'counties' => $counties,
 		'communities' => $communities,
-		'userTypes' => $userTypes
+		'userTypes' => $userTypes,
+		'rights' => $rights,
 	]) ?>
 
 </section>
