@@ -37,14 +37,14 @@ $FormID = 6;
 						<?php if ($model->ApprovalStatusID == 0)
 						{ ?>
 							
-							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->RequisitionID], ['class' => 'btn btn-primary']) ?>
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->RequisitionID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->RequisitionID], ['class' => 'btn btn-primary']) : ''?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->RequisitionID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
 										'method' => 'post',
 									],
-							]) ?>							
+							]) : '' ?>							
 							<?php
 						}
 						?>
@@ -52,24 +52,24 @@ $FormID = 6;
 						<?php 
 						if ($model->ApprovalStatusID == 0)
 						{ ?>
-							<?= Html::a('Send for Approval', ['submit', 'id' => $model->RequisitionID], [
+							<?= (isset($rights->Edit)) ? Html::a('Send for Approval', ['submit', 'id' => $model->RequisitionID], [
 								'class' => 'btn btn-danger', 'style' => 'width: 140px !important;margin-right: 5px;',
 								'data' => [
 											'confirm' => 'Are you sure you want to submit this item?',
 											'method' => 'post',
 										]
-								]); ?>
+								]) : ''; ?>
 							<?php
 						}
 						if ($model->ApprovalStatusID == 3)
 						{ ?>
-							<?= Html::a('<i class="ft-edit"></i> Create Quotation', ['create-quotation', 'id' => $model->RequisitionID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Create Quotation', ['create-quotation', 'id' => $model->RequisitionID], [
 								'class' => 'btn btn-primary', 'style' => 'width: 140px !important;margin-right: 5px;',
 								'data' => [
 											'confirm' => 'Are you sure you want to Create a Quotation?',
 											'method' => 'post',
 										]
-								]); ?>
+								]) :''; ?>
 							<?php
 						}
 						?>

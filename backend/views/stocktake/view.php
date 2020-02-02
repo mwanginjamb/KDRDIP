@@ -36,27 +36,27 @@ $FormID = 11;
 						<?php if ($model->ApprovalStatusID == 0)
 						{ ?>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->StockTakeID], ['class' => 'btn btn-primary']) ?>
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->StockTakeID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->StockTakeID], ['class' => 'btn btn-primary']) :''; ?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->StockTakeID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
 										'method' => 'post',
 									],
-							]) ?>	
+							]) :''; ?>	
 							<?php
 						}
 						?>
 
 						<?php if ($model->ApprovalStatusID == 0)
 						{ ?>
-							<?= Html::a('Send for Approval', ['submit', 'id' => $model->StockTakeID], [
+							<?= (isset($rights->Edit)) ? Html::a('Send for Approval', ['submit', 'id' => $model->StockTakeID], [
 								'class' => 'btn btn-danger', 'style' => 'width: 140px !important;margin-right: 5px;',
 								'data' => [
 											'confirm' => 'Are you sure you want to submit this item?',
 											'method' => 'post',
 										]
-								]); ?>
+								]) : ''; ?>
 							<?php
 						}
 						?>

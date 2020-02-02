@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 							<p>
 								<?= Html::a('<i class="ft-x"></i> Cancel', ['/site/index'], ['class' => 'btn btn-warning mr-1']) ?>
-								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->UserID], ['class' => 'btn btn-primary']) ?>
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->UserID], ['class' => 'btn btn-primary']) : ''?>
 							</p>
 
 							<?= DetailView::widget([

@@ -36,14 +36,14 @@ $this->params['breadcrumbs'][] = $this->title;
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 							<?php	
 							if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->PaymentID], ['class' => 'btn btn-primary']) ?>
-								<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentID], [
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->PaymentID], ['class' => 'btn btn-primary']) : ''?>
+								<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentID], [
 										'class' => 'btn btn-danger',
 										'data' => [
 											'confirm' => 'Are you sure you want to delete this item?',
 											'method' => 'post',
 										],
-								]) ?>
+								]) : ''?>
 								<?php
 							} ?>
 

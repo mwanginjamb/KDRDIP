@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 								<div class="form-group">
 									<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-									<?= Html::submitButton('<i class="ft-check"></i> Save', ['class' => 'btn btn-success']);?>
+									<?= (isset($rights->Edit)) ? Html::submitButton('<i class="ft-check"></i> Save', ['class' => 'btn btn-success']) : '';?>
 								</div>
 								
 								<?php ActiveForm::end(); ?>	

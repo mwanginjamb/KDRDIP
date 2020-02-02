@@ -35,13 +35,13 @@ class rights implements BootstrapInterface {
 		}
 		
 		
-		$sql = "SELECT forms.FormID, COALESCE(`View`, 0) as `View`,
+		$sql = "SELECT pages.PageID as FormID, COALESCE(`View`, 0) as `View`,
 					COALESCE(`Edit`, 0) as `Edit`,
-					COALESCE(`Insert`, 0) as `Insert`,
+					COALESCE(`Create`, 0) as `Insert`,
 					COALESCE(`Delete`, 0) as `Delete`,
 					COALESCE(`Post`, 0) as `Post`
-					FROM forms
-					LEFT JOIN usergrouprights ON usergrouprights.FormID = forms.FormID
+					FROM pages
+					LEFT JOIN usergrouprights ON usergrouprights.PageID = pages.PageID
 					AND UserGroupID = (SELECT UserGroupID FROM users WHERE UserID = '$id')
 				";
 		$model = UserGroupRights::findBySql($sql)->asArray()->all();

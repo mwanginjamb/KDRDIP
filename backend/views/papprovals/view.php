@@ -70,9 +70,9 @@ $Total = number_format($Total,2);
 
 								<div class="form-group">
 									<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-									<?= Html::submitButton('Approve', ['class' => 'btn btn-success', 'name'=>'Approve']);?>
-									<?= Html::submitButton('Adjustment', ['class' => 'btn btn-primary', 'name'=>'Adjustment']); ?>
-									<?= Html::submitButton('Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']); ?>
+									<?= (isset($rights->Edit)) ? Html::submitButton('Approve', ['class' => 'btn btn-success', 'name'=>'Approve']) : '';?>
+									<?= (isset($rights->Edit)) ? Html::submitButton('Adjustment', ['class' => 'btn btn-primary', 'name'=>'Adjustment']) : ''; ?>
+									<?= (isset($rights->Edit)) ? Html::submitButton('Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']) : ''; ?>
 								</div>
 								
 								<?php ActiveForm::end(); ?>	

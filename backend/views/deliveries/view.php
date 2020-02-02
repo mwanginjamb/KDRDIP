@@ -40,14 +40,14 @@ $FormID = 15;
 						$form = ActiveForm::begin(['id' => 'contact-form']); 				
 							if (!$model->Posted)
 							{ ?>
-								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->DeliveryID], ['class' => 'btn btn-primary']); ?>
-								<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->DeliveryID], [
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->DeliveryID], ['class' => 'btn btn-primary']) :''; ?>
+								<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->DeliveryID], [
 														'class' => 'btn btn-danger',
 														'data' => [
 															'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
 															'method' => 'post',
 														],
-													]); ?>
+													]) : ''; ?>
 								<?= Html::a('<i class="ft-check"></i> Post', ['post', 'id' => $model->DeliveryID], [
 											'class' => 'btn btn-success',
 											'data' => [
@@ -57,7 +57,7 @@ $FormID = 15;
 										]); ?>
 								<?php
 							} ?>
-							<?= Html::a('GRN', ['grn', 'id' => $model->DeliveryID], ['class' => 'btn btn-primary place-right', 'style' => 'margin-right:10px']) ?>
+							<?= (isset($rights->View)) ? Html::a('GRN', ['grn', 'id' => $model->DeliveryID], ['class' => 'btn btn-primary place-right', 'style' => 'margin-right:10px']) : '' ?>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 						<?php ActiveForm::end(); ?>
 					</p>

@@ -60,8 +60,8 @@ $FormID = 12;
 
 							<div class="form-group">
 								<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-								<?= Html::submitButton('<i class="ft-check"></i> Approve', ['class' => 'btn btn-success', 'name'=>'Approve']);?>
-								<?= Html::submitButton('<i class="ft-x"></i> Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']); ?>
+								<?= (isset($rights->Edit)) ? Html::submitButton('<i class="ft-check"></i> Approve', ['class' => 'btn btn-success', 'name'=>'Approve']) : '';?>
+								<?= (isset($rights->Edit)) ? Html::submitButton('<i class="ft-x"></i> Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']) : ''; ?>
 							</div>
 							
 							<?php ActiveForm::end(); ?>	

@@ -47,21 +47,21 @@ $Total = number_format($Total,2);
 						{ ?>
 							<!-- <?= Html::a('<i class="ft-edit"></i> Edit', ['update', 'id' => $model->PurchaseID], ['class' => 'btn btn-primary']); ?> -->
 							
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PurchaseID], [
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PurchaseID], [
 								'class' => 'btn btn-danger',
 								'data' => [
 									'confirm' => 'Are you sure you want to delete this item?',
 									'method' => 'post',
 								],
-							]); ?>
+							]) : '';?>
 							
 							
 							<?php
 						} else if ($model->ApprovalStatusID == 3 ) // if the PO has been approved
 						{ ?>
 						
-							<?= Html::a('Pur. Order', ['purchaseorder', 'id' => $model->PurchaseID, 'returnlink' => 'view'], ['class' => 'btn btn-primary']) ?>
-							<?= ($model->Closed == 0) ? Html::a('<i class="ft-edit"></i> Close Pur.', ['close', 'id' => $model->PurchaseID], [
+							<?= (isset($rights->Edit)) ? Html::a('Pur. Order', ['purchaseorder', 'id' => $model->PurchaseID, 'returnlink' => 'view'], ['class' => 'btn btn-primary']) : ''?>
+							<?= ($model->Closed == 0 && (isset($rights->Edit))) ? Html::a('<i class="ft-edit"></i> Close Pur.', ['close', 'id' => $model->PurchaseID], [
 								'class' => 'btn btn-danger',
 								'data' => [
 									'confirm' => 'Are you sure you want to close this item?',
@@ -75,13 +75,13 @@ $Total = number_format($Total,2);
 						
 						<?php if ($model->ApprovalStatusID == 0 || $model->ApprovalStatusID == 5)
 						{ ?>
-							<?= Html::a('Send for Approval', ['submit', 'id' => $model->PurchaseID], [
+							<?= (isset($rights->Edit)) ? Html::a('Send for Approval', ['submit', 'id' => $model->PurchaseID], [
 								'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 								'data' => [
 											'confirm' => 'Are you sure you want to submit this item?',
 											'method' => 'post',
 										]
-								]); ?>
+								]) : ''; ?>
 							<?php
 						}
 						?>	

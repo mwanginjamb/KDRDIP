@@ -1,6 +1,9 @@
 <?php
 $baseUrl = Yii::$app->request->baseUrl;
 $user = Yii::$app->user->identity;
+use yii\helpers\ArrayHelper;
+
+use backend\controllers\RightsController;
 
 $currentPage = Yii::$app->controller->id;
 $currentRoute = trim(Yii::$app->controller->module->requestedRoute);
@@ -11,9 +14,16 @@ use app\models\Components;
 
 $components = Components::find()->all();
 
-// echo $currentRoute; exit;
-/* print '<pre>';
-print_r(Yii::$app->controller); exit; */
+$rights = (array) RightsController::Permissions(0);
+
+if (!empty($rights)) {
+	foreach($rights as $key => $right) {
+		if ($right['View'] != 1) {
+			unset($rights[$key]);
+		}
+	}
+}
+$rights = ArrayHelper::getColumn($rights, 'PageID');
 ?>
 
 <!-- BEGIN: Main Menu-->

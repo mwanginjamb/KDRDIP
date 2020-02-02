@@ -40,30 +40,30 @@ $FormID = 25;
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 							<?php	
 							if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->QuotationID], ['class' => 'btn btn-primary']) ?>
-								<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->QuotationID], [
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->QuotationID], ['class' => 'btn btn-primary']) : ''?>
+								<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->QuotationID], [
 										'class' => 'btn btn-danger',
 										'data' => [
 											'confirm' => 'Are you sure you want to delete this item?',
 											'method' => 'post',
 										],
-								]) ?>
+								]) : '' ?>
 							<?php
 							} elseif ($model->ApprovalStatusID == 3) // if the PO has been approved
 							{ ?>
-								<?= Html::a('<i class="ft-file"></i> RFQ', ['rfq', 'id' => $model->QuotationID, 'returnlink' => 'view'], ['class' => 'btn btn-primary']) ?>
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-file"></i> RFQ', ['rfq', 'id' => $model->QuotationID, 'returnlink' => 'view'], ['class' => 'btn btn-primary']) :'' ?>
 								<?php
 							}
 							?>
 							
 							<?php if ($model->ApprovalStatusID == 0) { ?>
-								<?= Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->QuotationID], [
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->QuotationID], [
 									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 									'data' => [
 												'confirm' => 'Are you sure you want to send this item for approval?',
 												'method' => 'post',
 											]
-									]) ?>
+									]) :'' ?>
 								<?php
 							}
 							?>	

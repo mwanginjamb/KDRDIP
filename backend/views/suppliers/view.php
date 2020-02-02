@@ -37,14 +37,14 @@ $FormID = 6;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->SupplierID], ['class' => 'btn btn-primary']) ?>
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->SupplierID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->SupplierID], ['class' => 'btn btn-primary']) : '';?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->SupplierID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
 										'method' => 'post',
 									],
-							]) ?>
+							]) : '';?>
 						</p>
 
 						<ul class="nav nav-tabs nav-top-border no-hover-bg">

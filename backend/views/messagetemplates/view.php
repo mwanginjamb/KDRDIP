@@ -9,14 +9,12 @@ use yii\widgets\DetailView;
 $this->title = $model->Description;
 $this->params['breadcrumbs'][] = ['label' => 'Message Templates', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
-$Rights = Yii::$app->params['rights'];
-$FormID = 41;
 ?>
 <section class="page-default">
 	<div class="container">
 
-	<?= ($Rights[$FormID]['Edit']) ? Html::a('Update', ['update', 'id' => $model->MessageTemplateID], ['class' => 'bigbtn btn-primary']) : '' ?>
-	<?= ($Rights[$FormID]['Delete']) ? Html::a('Delete', ['delete', 'id' => $model->MessageTemplateID], [
+	<?= (isset($rights->Edit)) ? Html::a('Update', ['update', 'id' => $model->MessageTemplateID], ['class' => 'bigbtn btn-primary']) : '' ?>
+	<?= (isset($rights->Delete)) ? Html::a('Delete', ['delete', 'id' => $model->MessageTemplateID], [
 		'class' => 'bigbtn btn-danger',
 		'data' => [
 			'confirm' => 'Are you sure you want to delete this item?',

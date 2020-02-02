@@ -16,14 +16,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->SupplierCategoryID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->SupplierCategoryID], [
+        <?= (isset($rights->Edit)) ? Html::a('Update', ['update', 'id' => $model->SupplierCategoryID], ['class' => 'btn btn-primary']) : '';?>
+        <?= (isset($rights->Delete)) ? Html::a('Delete', ['delete', 'id' => $model->SupplierCategoryID], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
                 'method' => 'post',
             ],
-        ]) ?>
+        ]) : '';?>
     </p>
 
     <?= DetailView::widget([

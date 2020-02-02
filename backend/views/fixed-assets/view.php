@@ -34,14 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->FixedAssetID], ['class' => 'btn btn-primary']) ?>
-							<?= Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->FixedAssetID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->FixedAssetID], ['class' => 'btn btn-primary']) : ''?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->FixedAssetID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
 										'method' => 'post',
 									],
-							]) ?>
+							]) : ''?>
 						</p>
 
 						<?= DetailView::widget([
