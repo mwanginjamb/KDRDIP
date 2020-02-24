@@ -11,6 +11,9 @@ use app\models\Communities;
 use app\models\Counties;
 use app\models\MessageTemplates;
 use app\models\UserGroupRights;
+use app\models\PermissionForm;
+use app\models\UserGroupMembers;
+use app\models\ChangePassword;
 use yii\web\Controller;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -18,6 +21,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+include_once 'includes/mailsender.php';
 
 /**
  * UsersController implements the CRUD actions for Users model.
@@ -104,8 +108,41 @@ class UsersController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$permissionForm = new PermissionForm();
+		$permissionForm->UserID = $id;
+		$activeTab = 1;
+
+		if (Yii::$app->request->post()) {
+			$activeTab = 2;
+		}
+
+		if ($permissionForm->load(Yii::$app->request->post()) && $permissionForm->validate()) {
+			$params = Yii::$app->request->post();
+			$userGroupID = $params['PermissionForm']['UserGroupID'];
+			$permission = UserGroupMembers::findOne(['UserGroupID' => $userGroupID, 'UserID' => $id]);
+
+			if (!$permission) {
+				$perm = new UserGroupMembers();
+				$perm->UserGroupID = $userGroupID;
+				$perm->UserID = $id;
+				$perm->CreatedBy = Yii::$app->user->identity->UserID;
+				$perm->save();
+			}
+			$activeTab = 2;
+		}
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => $dataProvider = UserGroupMembers::find()->where(['UserID' => $id]), 
+		]);
+		
+		$userGroups = ArrayHelper::map(UserGroups::find()->all(), 'UserGroupID', 'UserGroupName');
+
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'dataProvider' => $dataProvider,
+			'permissionForm' => $permissionForm,
+			'userGroups' => $userGroups,
+			'activeTab' => $activeTab,
 			'rights' => $this->rights,
 		]);
 	}
@@ -183,6 +220,35 @@ class UsersController extends Controller
 		]);
 	}
 
+	
+	public function actionChangePassword($id)
+	{
+		$user = Users::findOne($id);
+		$model = new ChangePassword();
+		$model->UserID = $id;
+		$model->FullName = $user->FirstName . ' ' . $user->LastName;
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			$profile = Users::findOne($id);
+			$profile->PasswordHash = Yii::$app->security->generatePasswordHash($model->Password);
+			$profile->AuthKey = Yii::$app->security->generateRandomString();
+			$profile->Password = '0';
+			$profile->Password = $model->Password;
+			$profile->ConfirmPassword = $model->ConfirmPassword;
+			if ($profile->save()) {
+				Yii::$app->session->setFlash('success', "Password changed successfully.");
+				return $this->redirect(['index']);
+			} else {
+				// print_r($profile->getErrors()); exit;
+				Yii::$app->session->setFlash('error', "Failed to change password.");
+			}
+		}
+
+		return $this->render('change-password', [
+			'model' => $model,
+		]);
+	}
+
 	/**
 	 * Deletes an existing Users model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
@@ -248,7 +314,7 @@ class UsersController extends Controller
 		
 		$sql = "SELECT users.UserID, users.FirstName, users.LastName, users.Email FROM usergrouprights 
 				JOIN users ON users.UserGroupID = usergrouprights.UserGroupID
-				WHERE FormID = $FormID AND Edit=1";
+				WHERE PageID = $FormID AND Edit=1";
 		
 		$users = UserGroupRights::findBySql($sql)->asArray()->all();
 		$EmailArray = [];

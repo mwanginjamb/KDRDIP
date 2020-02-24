@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\UserGroups;
+use app\models\UserGroupRights;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -95,8 +96,14 @@ class UsergroupsController extends Controller
 	 */
 	public function actionView($id)
 	{
+		$dataProvider = new ActiveDataProvider([
+			'query' => UserGroupRights::find()->where(['UserGroupID'=> $id]),
+			'pagination' => false,
+	  	]);
+
 		return $this->render('view', [
 			'model' => $this->findModel($id),
+			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
 		]);
 	}
@@ -111,13 +118,45 @@ class UsergroupsController extends Controller
 		$model = new UserGroups();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// return $this->redirect(['view', 'id' => $model->UserGroupID]);
-			return $this->redirect(['index']);
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {			
+			$params = Yii::$app->request->post();
+			$lines = $params['UserGroupRights'];
+			
+			foreach ($lines as $key => $line)
+			{
+				$_line = new UserGroupRights();
+				$_line->UserGroupID = $model->UserGroupID;
+				$_line->PageID = $line['PageID'];
+				$_line->View = $line['View'];
+				$_line->Edit = $line['Edit'];
+				$_line->Create = $line['Create'];
+				$_line->Delete = $line['Delete'];
+				$_line->save();
+			}
+			return $this->redirect(['view', 'id' => $model->UserGroupID]);
+		}
+
+		$sql = 'SELECT usergrouprights.*, PageName, pages.PageID FROM usergrouprights 
+					RIGHT JOIN pages ON pages.PageID = usergrouprights.PageID
+					AND UserGroupID = 0';
+		$data = UserGroupRights::findBySql($sql)->asArray()->all();
+
+		for ($x = 0; $x < count($data); $x++)
+		{ 
+			$_line = new UserGroupRights();
+			$_line->PageID = $data[$x]['PageID'];
+			$_line->PageName = $data[$x]['PageName'];
+			$_line->View = $data[$x]['View'];
+			$_line->Create = $data[$x]['Create'];
+			$_line->Edit = $data[$x]['Edit'];
+			$_line->Delete = $data[$x]['Delete'];
+			$_line->UserGroupRightID = $data[$x]['UserGroupRightID'];
+			$lines[$x] = $_line;
 		}
 
 		return $this->render('create', [
-			'model' => $model,
+			'model' => $model, 
+			'lines' => $lines,
 			'rights' => $this->rights,
 		]);
 	}
@@ -134,12 +173,62 @@ class UsergroupsController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// return $this->redirect(['view', 'id' => $model->UserGroupID]);
-			return $this->redirect(['index']);
+			$params = Yii::$app->request->post();
+			$lines = $params['UserGroupRights'];
+			
+			foreach ($lines as $key => $line)
+			{
+				//print_r($lines);exit;
+				 
+				if ($line['UserGroupRightID'] == '')
+				{				
+					$_line = new UserGroupRights();
+					$_line->UserGroupID = $id;
+					$_line->PageID = $line['PageID'];
+					$_line->View = $line['View'];
+					$_line->Edit = $line['Edit'];
+					$_line->Create = $line['Create'];
+					$_line->Delete = $line['Delete'];
+					$_line->save();
+				} else
+				{
+					$_line = UserGroupRights::findOne($line['UserGroupRightID']);
+					$_line->View = $line['View'];
+					$_line->Edit = $line['Edit'];
+					$_line->Create = $line['Create'];
+					$_line->Delete = $line['Delete'];
+					if (!$_line->save()) {
+						// print_r($_line->getErrors()); exit;
+					}
+				}
+			}
+			return $this->redirect(['view', 'id' => $model->UserGroupID]);
 		}
+		$sql = "SELECT usergrouprights.*, PageName, pages.PageID FROM usergrouprights 
+					RIGHT JOIN pages ON pages.PageID = usergrouprights.PageID
+					AND UserGroupID = $id";
+		// echo $sql; exit;
+
+		$data = UserGroupRights::findBySql($sql)->asArray()->all();
+		/* print('<pre>');
+		print_r($data); exit; */
+		for ($x = 0; $x < count($data); $x++)
+		{ 
+			$_line = new UserGroupRights();
+			$_line->PageID = $data[$x]['PageID'];
+			$_line->PageName = $data[$x]['PageName'];
+			$_line->View = $data[$x]['View'];
+			$_line->Create = $data[$x]['Create'];
+			$_line->Edit = $data[$x]['Edit'];
+			$_line->Delete = $data[$x]['Delete'];
+			$_line->UserGroupRightID = $data[$x]['UserGroupRightID'];
+			$lines[$x] = $_line;
+		}
+		// print_r($lines); exit;
 
 		return $this->render('update', [
 			'model' => $model,
+			'lines' => $lines,
 			'rights' => $this->rights,
 		]);
 	}

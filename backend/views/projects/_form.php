@@ -7,6 +7,13 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\projects */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+<style>
+#ParameterTable .form-group {
+	margin-bottom: 0px !important;
+	margin-top: 0px !important;
+	/* padding: 4px !important; */
+}
+</style>
 
 <script>
 function calculateValue(row)
@@ -51,9 +58,9 @@ function calculateValue(row)
 				<li class="nav-item">
 					<a class="nav-link" id="base-tab4" data-toggle="tab" aria-controls="tab4" href="#tab4" aria-expanded="false">Disbursement</a>
 				</li>
-				<li class="nav-item">
+<!-- 				<li class="nav-item">
 					<a class="nav-link" id="base-tab5" data-toggle="tab" aria-controls="tab5" href="#tab5" aria-expanded="false">Safeguarding Policies</a>
-				</li>
+				</li> -->
 				<li class="nav-item">
 					<a class="nav-link" id="base-tab6" data-toggle="tab" aria-controls="tab16" href="#tab6" aria-expanded="false">Beneficiaries</a>
 				</li>															
@@ -130,6 +137,46 @@ function calculateValue(row)
 						</div>
 						<div class="col-md-6">
 							<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
+						</div>			
+					</div>
+					<h4 class="form-section">Safeguarding Policies</h4>												
+					<table width="100%" class="custom-table table-striped table-bordered" id="ParameterTable" >
+					<thead>
+					<tr>
+						<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
+						<td style="padding: 4px 4px 4px 4px !important">Parameter</td>
+						<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="15%">Option</td>
+					</tr>	
+					</thead>
+					<tbody>
+					<?php
+					foreach ($safeguardParameters as $key => $parameters) { ?>
+						<tr>
+							<td style="padding: 4px 4px 4px 4px !important; text-align: left; font-weight: 900; color: black" colspan="3"><?= $key; ?></td>
+						</tr>	
+						<?php
+						foreach ($parameters as $x => $parameter) { 
+							$x = $parameter['SGPID']; 
+							$safeguard = $projectSafeguards[$x];
+							?>
+							<tr>
+								<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%"><?= $x + 1; ?>
+									<?= $form->field($safeguard, '[' . $x . ']ProjectSafeguardID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+									<?= $form->field($safeguard, '[' . $x . ']SGPID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+								</td>
+								<td style="padding: 4px 4px 4px 4px !important"><?= $parameter['SafeguardParamaterName']; ?></td>
+								<td style="padding: 4px 4px 4px 4px !important; text-align: center"><?= $form->field($safeguard, '['.$x.']SelectedOption')->radioList( [1 => 'Yes', 2 => 'No'], ['unselect' => null], ['item' => 'style="margin-bottom: 0px"'] ); ?></td>
+							</tr>	
+							<?php
+						}
+					} ?>
+					</tbody>
+					</table>
+					<div class="row">
+						<div class="col-md-6">
+							<?= $form->field($model, 'SafeguardsRecommendedAction')->textarea(['rows' => 4]) ?>
+						</div>
+						<div class="col-md-6">	
 						</div>			
 					</div>
 				</div>

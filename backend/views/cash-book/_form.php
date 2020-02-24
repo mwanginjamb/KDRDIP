@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'Date')->textInput(['maxlength' => true, 'type' => 'date']) ?>
 				</div>
 				<div class="col-md-6">
-
+					<?= $form->field($model, 'DocumentReference')->textInput(['maxlength' => true]) ?>
 				</div>			
 			</div>
 			<div class="row">

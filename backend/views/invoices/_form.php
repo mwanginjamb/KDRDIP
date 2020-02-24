@@ -58,6 +58,16 @@ use yii\widgets\ActiveForm;
 				</div>			
 			</div>
 
+			<h4 class="form-section">Supporting Document</h4>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'imageFile')->fileInput(['style' => 'margin-top: 25px']) ?>
+				</div>			
+			</div>			
+
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>

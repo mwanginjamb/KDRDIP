@@ -45,6 +45,14 @@ use yii\widgets\ActiveForm;
 
 			<div class="row">
 				<div class="col-md-6">
+					<?= $form->field($model, 'AssetAllocationID')->dropDownList($assetAllocation, ['prompt' => 'Select...']) ?>
+				</div>
+				<div class="col-md-6">	
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
 					<?= $form->field($model, 'Location')->textInput() ?>
 				</div>
 				<div class="col-md-6">

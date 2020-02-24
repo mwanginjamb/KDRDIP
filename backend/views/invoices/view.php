@@ -164,6 +164,21 @@ $this->params['breadcrumbs'][] = $this->title;
 						}?>
 						</tbody>
 						</table>
+						<h4 class="form-section" style="margin-bottom: 0px">Supporting Documents</h4>
+						<table class="custom-table table-striped table-bordered zero-configuration dataTable no-footer">
+						<tbody>
+						<?php
+							$DID = 0;
+							foreach ($documents as $key => $document) { ?>
+								<tr role="row">
+									<td width="5%"><?= $key+1; ?></td>
+									<td><a href="" target="_blank"><?= $document->Description ?></a></td>
+									<td width="15%" style="text-align: right"></td>
+								</tr>
+							<?php
+						}?>
+						</tbody>
+						</table>
 					</div>
 				</div>
 			</div>

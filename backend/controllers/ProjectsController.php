@@ -28,6 +28,7 @@ use app\models\IndicatorActuals;
 use app\models\Components;
 use app\models\Activities;
 use app\models\Budget;
+use app\models\ProjectSafeguards;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -197,6 +198,17 @@ class ProjectsController extends Controller
 			'query' => ReportingPeriods::find()->where(['ProjectID'=> $id]),
 		]);
 
+		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
+					SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
+					RIGHT JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
+					AND `ProjectID`= $id
+					) as temp 
+					JOIN safeguards ON safeguards.SafeguardID = temp.SafeguardID
+					ORDER BY SafeguardName, SafeguardParamaterID";
+
+		$projectSafeguards = ProjectSafeguards::findBySql($sql)->asArray()->all();
+		$projectSafeguards = ArrayHelper::index($projectSafeguards, null, 'SafeguardName');
+
 		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();
 		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');
 		$indicatorTargets = IndicatorTargets::find()->joinWith('indicators')
@@ -223,6 +235,7 @@ class ProjectsController extends Controller
 			'indicators' => $indicators,
 			'budgetProvider' => $budgetProvider,
 			'reportingPeriods' => $reportingPeriods,
+			'projectSafeguards' => $projectSafeguards,
 			'activities' => $activities,
 			'targets' => $targets,
 			'actuals' => $actuals,
@@ -244,6 +257,7 @@ class ProjectsController extends Controller
 		}
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$this->saveProjectSafeguards(Yii::$app->request->post()['ProjectSafeguards'], $model);
 			$this->saveProjectFunding(Yii::$app->request->post()['ProjectFunding'], $model);
 			$this->saveProjectRisk(Yii::$app->request->post()['ProjectRisk'], $model);
 			$this->saveprojectDisbursement(Yii::$app->request->post()['ProjectDisbursement'], $model);
@@ -302,6 +316,35 @@ class ProjectsController extends Controller
 			$reportingPeriods[$x] = new ReportingPeriods();
 		}
 
+		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
+			SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
+			RIGHT JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
+			AND `ProjectID`= 0
+			) as temp 
+			JOIN safeguards ON safeguards.SafeguardID = temp.SafeguardID
+			ORDER BY SafeguardName, SafeguardParamaterID";
+
+		$safeguardParameters = ProjectSafeguards::findBySql($sql)->asArray()->all();
+		$projectSafeguards = [];
+		foreach ($safeguardParameters as $parameters) {
+			$SGID = $parameters['SGPID'];
+			$projectSafeguards[$SGID] = new ProjectSafeguards();
+			$projectSafeguards[$SGID]->ProjectSafeguardID = $parameters['ProjectSafeguardID'];
+			$projectSafeguards[$SGID]->ProjectID = $parameters['ProjectID'];
+			$projectSafeguards[$SGID]->Yes = $parameters['Yes'];
+			$projectSafeguards[$SGID]->No = $parameters['No'];
+			if ($parameters['Yes'] == 1) {
+				$projectSafeguards[$SGID]->SelectedOption = 1;
+			} elseif ($parameters['No'] == 1) {
+				$projectSafeguards[$SGID]->SelectedOption = 2;
+			} else {
+				$projectSafeguards[$SGID]->SelectedOption = null;
+			}
+			$projectSafeguards[$SGID]->SGPID	= 	$SGID;
+		}
+
+		$safeguardParameters = ArrayHelper::index($safeguardParameters, null, 'SafeguardName');
+
 		return $this->render('create', [
 			'model' => $model,
 			'projects' => $projects,
@@ -326,6 +369,8 @@ class ProjectsController extends Controller
 			'currencies' => $currencies,
 			'communities' => $communities,
 			'counties' => $counties,
+			'projectSafeguards' => $projectSafeguards,
+			'safeguardParameters' => $safeguardParameters,
 			'rights' => $this->rights,
 		]);
 	}
@@ -350,6 +395,9 @@ class ProjectsController extends Controller
 		$reportingPeriods = ReportingPeriods::find()->where(['ProjectID' => $id])->all();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			// print('<pre>');
+			// print_r(Yii::$app->request->post()); exit;
+			$this->saveProjectSafeguards(Yii::$app->request->post()['ProjectSafeguards'], $model);
 			$this->saveProjectFunding(Yii::$app->request->post()['ProjectFunding'], $model);
 			$this->saveProjectRisk(Yii::$app->request->post()['ProjectRisk'], $model);
 			$this->saveprojectDisbursement(Yii::$app->request->post()['ProjectDisbursement'], $model);
@@ -409,6 +457,34 @@ class ProjectsController extends Controller
 			$reportingPeriods[$x] = new ReportingPeriods();
 		}
 
+		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
+			SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
+			RIGHT JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
+			AND `ProjectID`= $id
+			) as temp 
+			JOIN safeguards ON safeguards.SafeguardID = temp.SafeguardID
+			ORDER BY SafeguardName, SafeguardParamaterID";
+
+		$safeguardParameters = ProjectSafeguards::findBySql($sql)->asArray()->all();
+		$projectSafeguards = [];
+		foreach ($safeguardParameters as $parameters) {
+			$SGID = $parameters['SGPID'];
+			$projectSafeguards[$SGID] = new ProjectSafeguards();
+			$projectSafeguards[$SGID]->ProjectSafeguardID = $parameters['ProjectSafeguardID'];
+			$projectSafeguards[$SGID]->ProjectID = $parameters['ProjectID'];
+			$projectSafeguards[$SGID]->Yes = $parameters['Yes'];
+			$projectSafeguards[$SGID]->No = $parameters['No'];
+			if ($parameters['Yes'] == 1) {
+				$projectSafeguards[$SGID]->SelectedOption = 1;
+			} elseif ($parameters['No'] == 1) {
+				$projectSafeguards[$SGID]->SelectedOption = 2;
+			} else {
+				$projectSafeguards[$SGID]->SelectedOption = null;
+			}
+			$projectSafeguards[$SGID]->SGPID	= 	$SGID;
+		}
+		$safeguardParameters = ArrayHelper::index($safeguardParameters, null, 'SafeguardName');
+
 		return $this->render('update', [
 			'model' => $model,
 			'projects' => $projects,
@@ -433,6 +509,8 @@ class ProjectsController extends Controller
 			'currencies' => $currencies,
 			'communities' => $communities,
 			'counties' => $counties,
+			'projectSafeguards' => $projectSafeguards,
+			'safeguardParameters' => $safeguardParameters,
 			'rights' => $this->rights,
 		]);
 	}
@@ -659,6 +737,26 @@ class ProjectsController extends Controller
 			}
 		} else {
 			echo '<option>-</option>';
+		}
+	}
+
+	public function saveProjectSafeguards($columns, $model)
+	{
+		foreach ($columns as $key => $column) {
+			if ($column['ProjectSafeguardID'] == '') {
+				$_column = new ProjectSafeguards();
+				$_column->ProjectID = $model->ProjectID;
+				$_column->SafeguardParamaterID = $column['SGPID'];
+				$_column->Yes = isset($column['SelectedOption']) && $column['SelectedOption'] == 1 ? 1 : 0;
+				$_column->No = isset($column['SelectedOption']) && $column['SelectedOption'] == 2 ? 1 : 0;
+				$_column->CreatedBy = Yii::$app->user->identity->UserID;
+				$_column->save();
+			} else {
+				$_column = ProjectSafeguards::findOne($column['ProjectSafeguardID']);
+				$_column->Yes = isset($column['SelectedOption']) && $column['SelectedOption'] == 1 ? 1 : 0;
+				$_column->No = isset($column['SelectedOption']) && $column['SelectedOption'] == 2 ? 1 : 0;
+				$_column->save();
+			}
 		}
 	}
 

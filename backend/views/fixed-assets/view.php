@@ -53,6 +53,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'projects.ProjectName',
 									'Location',
 									'SerialNumber',
+									'assetAllocation.AssetAllocationName',
 									'employees.EmployeeName',
 									[
 										'attribute' => 'AcquisitionDate',

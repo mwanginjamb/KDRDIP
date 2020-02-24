@@ -12,6 +12,7 @@ use Yii;
  * @property int $TypeID
  * @property int $BankAccountID
  * @property int $AccountID
+ * @property string $DocumentReference
  * @property string $Description
  * @property string $Debit
  * @property string $Credit
@@ -21,7 +22,7 @@ use Yii;
  */
 class CashBook extends \yii\db\ActiveRecord
 {
-	public $Amount; 
+	public $Amount;
 	/**
 	 * {@inheritdoc}
 	 */
@@ -39,8 +40,9 @@ class CashBook extends \yii\db\ActiveRecord
 			[['Date', 'CreatedDate'], 'safe'],
 			[['TypeID', 'BankAccountID', 'AccountID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['Description'], 'string'],
-			[['Debit', 'Credit'], 'number'],
-			[['Date', 'AccountID', 'Amount'], 'required']
+			[['Debit', 'Credit', 'Amount'], 'number'],
+			[['DocumentReference'], 'string', 'max' => 45],
+			[['Amount', 'Date', 'DocumentReference', 'AccountID'], 'required']
 		];
 	}
 
@@ -54,17 +56,17 @@ class CashBook extends \yii\db\ActiveRecord
 			'Date' => 'Date',
 			'TypeID' => 'Type ID',
 			'BankAccountID' => 'Bank Account ID',
-			'AccountID' => 'Account',
+			'AccountID' => 'Account ID',
+			'DocumentReference' => 'S/No.',
 			'Description' => 'Description',
 			'Debit' => 'Debit',
 			'Credit' => 'Credit',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
-			'Amount' => 'Amount'
 		];
 	}
-	
+
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());

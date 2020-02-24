@@ -1,6 +1,8 @@
 <?php
 
 namespace app\models;
+use yii\web\UploadedFile;
+use app\models\Documents;
 
 use Yii;
 
@@ -19,6 +21,9 @@ use Yii;
  */
 class Invoices extends \yii\db\ActiveRecord
 {
+	public $imageFile;
+	public $Description;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -36,8 +41,9 @@ class Invoices extends \yii\db\ActiveRecord
 			[['SupplierID', 'PurchaseID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['InvoiceDate', 'CreatedDate'], 'safe'],
 			[['Amount'], 'number'],
-			[['InvoiceNumber'], 'string', 'max' => 45],
-			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate'], 'required']
+			[['InvoiceNumber', 'Description'], 'string', 'max' => 45],
+			[['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate', 'Description'], 'required']
 		];
 	}
 
@@ -56,6 +62,8 @@ class Invoices extends \yii\db\ActiveRecord
 			'CreatedBy' => 'Created By',
 			'CreatedDate' => 'Created Date',
 			'Deleted' => 'Deleted',
+			'imageFile' => 'Document (pdf)',
+			'Description' => 'Description',
 		];
 	}
 
@@ -82,5 +90,23 @@ class Invoices extends \yii\db\ActiveRecord
 	public function getApprovalstatus()
 	{
 		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
+	}
+
+	public function upload($id, $type)
+	{
+		if ($this->validate()) {
+			$filename = (string) time() . '_' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+			$this->imageFile->saveAs('uploads/' . $filename);
+			$document = new Documents();
+			$document->Description = $this->Description;
+			$document->FileName = $filename;
+			$document->DocumentTypeID = $type;
+			$document->RefNumber = $id;
+			$document->CreatedBy = Yii::$app->user->identity->UserID;
+			$document->save();
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

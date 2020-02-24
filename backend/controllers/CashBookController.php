@@ -124,7 +124,7 @@ class CashBookController extends Controller
 			$model->BankAccountID = $baid;
 			$model->AccountID = $params['AccountID'];
 			$model->Description = $params['Description'];
-			// $model->Debit = 0;
+			$model->DocumentReference = $params['DocumentReference'];
 			$model->Credit = $params['Amount'];
 			$model->Amount = $params['Amount'];
 			$model->save();
@@ -136,6 +136,7 @@ class CashBookController extends Controller
 			$model->BankAccountID = $params['AccountID'];
 			$model->AccountID = $baid;
 			$model->Description = $params['Description'];
+			$model->DocumentReference = $params['DocumentReference'];
 			$model->Debit = $params['Amount'];
 			$model->Amount = $params['Amount'];
 			$model->save();

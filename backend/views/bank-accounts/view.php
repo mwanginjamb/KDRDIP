@@ -114,6 +114,7 @@ $this->params['breadcrumbs'][] = $this->title;
 												'attribute' => 'account.AccountName',
 												'contentOptions' => ['style' => 'text-align:left'],
 											],
+											'DocumentReference',
 											[
 												'label'=>'Description',
 												'headerOptions' => ['style'=>'color:black; text-align:left'],

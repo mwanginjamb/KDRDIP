@@ -10,6 +10,7 @@ use app\models\Counties;
 use app\models\Communities;
 use app\models\BankTypes;
 use app\models\CashBook;
+use app\models\BankAccountFilter;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -84,13 +85,29 @@ class BankAccountsController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$model = new BankAccountFilter();
+		$where = 'Deleted = 0';
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			if ($model->CountyID) {
+				$where .= ' AND CountyID = ' . $model->CountyID;
+			}
+			if ($model->CommunityID) {
+				$where .= ' AND CommunityID = ' . $model->CommunityID;
+			}
+		}
 		$dataProvider = new ActiveDataProvider([
-			'query' => BankAccounts::find(),
-		]);
+			'query' => BankAccounts::find()->where($where),
+		]);	
+
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$communities = ArrayHelper::map(Communities::find()->orderBy('CommunityName')->all(), 'CommunityID', 'CommunityName');
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
+			'model' => $model,
+			'counties' => $counties,
+			'communities' => $communities
 		]);
 	}
 

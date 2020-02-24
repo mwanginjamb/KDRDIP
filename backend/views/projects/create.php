@@ -35,6 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
 		'currencies' => $currencies,
 		'communities' => $communities,
 		'counties' => $counties,
+		'projectSafeguards' => $projectSafeguards,
+		'safeguardParameters' => $safeguardParameters,
 		'rights' => $rights,
 	]) ?>
 

@@ -6,9 +6,10 @@ use Yii;
 use app\models\Invoices;
 use app\models\Suppliers;
 use app\models\Purchases;
-use app\models\Deliveries;
+use app\models\Documents;
 use app\models\DeliveryLines;
 use app\models\Search;
+use app\models\UploadForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -16,6 +17,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use yii\web\UploadedFile;
 
 /**
  * InvoicesController implements the CRUD actions for Invoices model.
@@ -142,12 +144,14 @@ class InvoicesController extends Controller
 				WHERE purchases.PurchaseID = $PurchaseID";
 		
 		$purchases = Purchases::findBySql($sql)->asArray()->all();
+		$documents = Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1])->all();
 
 		return $this->render('view', [
 			'model' => $model,
 			'deliveries' => $deliveries,
 			'purchases' => $purchases,
 			'rights' => $this->rights,
+			'documents' => $documents,
 		]);
 	}
 
@@ -161,7 +165,14 @@ class InvoicesController extends Controller
 		$model = new Invoices();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
+		// $upload = new UploadForm();
+
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			if ($model->upload($model->InvoiceID, 1)) {
+				 // file is uploaded successfully
+				//  return;
+			}
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');

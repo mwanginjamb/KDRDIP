@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+
 
 /* @var $this yii\web\View */
 /* @var $model app\models\UserGroups */
@@ -61,6 +63,61 @@ $this->params['breadcrumbs'][] = $this->title;
 									],
 							],
 						]) ?>
+
+						
+						<h4 class="form-section">Permissions</h4>
+						<?= GridView::widget([
+							'dataProvider' => $dataProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration1',
+							],
+							'columns' => [
+								[
+									'label'=>'ID',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format'=>'text',
+									'value' => 'UserGroupRightID',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],		
+								[
+									'label'=>'Function',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'pages.PageName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],				
+								[
+									'label'=>'View',
+									'headerOptions' => ['width' => '10%', 'style'=>'color:black; text-align:center'],
+									'format'=>'text',
+									'value' => 'View_Name',
+									'contentOptions' => ['style' => 'text-align:center'],
+								],
+								[
+									'label'=>'Create',
+									'headerOptions' => ['width' => '10%','style'=>'color:black; text-align:center'],
+									'format'=>'text',
+									'value' => 'Create_Name',
+									'contentOptions' => ['style' => 'text-align:center'],
+								],		
+								[
+									'label'=>'Edit',
+									'headerOptions' => ['width' => '10%','style'=>'color:black; text-align:center'],
+									'format'=>'text',
+									'value' => 'Edit_Name',
+									'contentOptions' => ['style' => 'text-align:center'],
+								],	
+								[
+									'label'=>'Delete',
+									'headerOptions' => ['width' => '10%','style'=>'color:black; text-align:center'],
+									'format'=>'text',
+									'value' => 'Delete_Name',
+									'contentOptions' => ['style' => 'text-align:center'],
+								],		
+							],
+						]); ?>
 					</div>
 				</div>
 			</div>																			

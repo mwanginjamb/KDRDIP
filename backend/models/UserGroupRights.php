@@ -18,6 +18,7 @@ use Yii;
  */
 class UserGroupRights extends \yii\db\ActiveRecord
 {
+	public $PageName;
 	/**
 	 * @inheritdoc
 	 */
@@ -32,7 +33,8 @@ class UserGroupRights extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['UserGroupID', 'FormID', 'View', 'Edit', 'Insert', 'Delete', 'Post'], 'integer'],
+			[['UserGroupID', 'PageID', 'View', 'Edit', 'Create', 'Delete'], 'integer'],
+			[['PageName'], 'string'],
 		];
 	}
 
@@ -44,18 +46,18 @@ class UserGroupRights extends \yii\db\ActiveRecord
 		return [
 			'UserGroupRightID' => 'User Group Right ID',
 			'UserGroupID' => 'User Group ID',
-			'FormID' => 'Form ID',
+			'PageID' => 'Page ID',
 			'View' => '',
 			'Edit' => '',
-			'Insert' => '',
+			'Create' => '',
 			'Delete' => '',
-		'Post' => '',
+			'PageName' => 'Page'
 		];
 	}
 
-	public function getForms()
+	public function getPages()
 	{
-		return $this->hasOne(Forms::className(), ['FormID' => 'FormID'])->from(Forms::tableName());
+		return $this->hasOne(Pages::className(), ['PageID' => 'PageID'])->from(pages::tableName());
 	}
 
 	public function getUsers() 
@@ -68,9 +70,9 @@ class UserGroupRights extends \yii\db\ActiveRecord
 		return $this->View == 1 ? 'True' : '';
 	}
 
-	public function getInsert_Name()
+	public function getCreate_Name()
 	{
-		return $this->Insert == 1 ? 'True' : '';
+		return $this->Create == 1 ? 'True' : '';
 	}
 
 	public function getEdit_Name()
@@ -81,10 +83,5 @@ class UserGroupRights extends \yii\db\ActiveRecord
 	public function getDelete_Name()
 	{
 		return $this->Delete == 1 ? 'True' : '';
-	}
-
-	public function getPost_Name()
-	{
-		return $this->Post == 1 ? 'True' : '';
 	}
 }

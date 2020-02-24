@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'model' => $model,
 		'projects' => $projects,
 		'employees' => $employees,
+		'assetAllocation' => $assetAllocation,
 		'rights' => $rights,
 	]) ?>
 

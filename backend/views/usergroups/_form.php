@@ -36,12 +36,45 @@ use yii\widgets\ActiveForm;
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?>
+					<?= $form->field($model, 'Notes')->textarea(['rows' => 2]) ?>
 				</div>
 				<div class="col-md-6">
 						
 				</div>			
 			</div>
+
+			
+			<h4 class="form-section">Permissions</h4>
+			<table width="100%" class="custom-table table-striped table-bordered zero-configuration1">
+			<thead>
+			<tr>
+				<td style="padding: 4px 4px 4px 4px !important; text-align: center; font-weight: bold" width="5%">#</td>
+				<td style="padding: 4px 4px 4px 4px !important; font-weight: bold">Form</td>
+				<td style="padding: 4px 4px 4px 4px !important; text-align:center; font-weight: bold" width="15%">View</td>
+				<td style="padding: 4px 4px 4px 4px !important; text-align:center; font-weight: bold" width="15%">Insert</td>
+				<td style="padding: 4px 4px 4px 4px !important; text-align:center; font-weight: bold" width="15%">Edit</td>
+				<td style="padding: 4px 4px 4px 4px !important; text-align:center; font-weight: bold" width="15%">Delete</td>
+			</tr>	
+			</thead>
+			<?php
+			foreach ($lines as $x => $line) 
+			{
+				?>
+				<?= $form->field($line, '['.$x.']UserGroupRightID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+				<?= $form->field($line, '['.$x.']PageID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+				<tr>
+					<td style="padding: 4px 4px 4px 4px !important; text-align: center;">
+						<?= $x+1; ?>
+					</td>						
+					<td style="padding: 4px 4px 4px 4px !important;"><?= $line['PageName']; ?></td>
+					<td style="text-align:center;"><?= $form->field($line, '['.$x.']View', ['template' => '{label}{input}', 'options' => ['style'=>'margin-bottom: 0 !important;']])->checkBox()->label(false) ?></td>
+					<td style="text-align:center;"><?= $form->field($line, '['.$x.']Create', ['template' => '{label}{input}', 'options' => ['style'=>'margin-bottom: 0 !important;']])->checkBox()->label(false) ?></td>
+					<td style="text-align:center;"><?= $form->field($line, '['.$x.']Edit', ['template' => '{label}{input}', 'options' => ['style'=>'margin-bottom: 0 !important;']])->checkBox()->label(false) ?></td>
+					<td style="text-align:center;"><?= $form->field($line, '['.$x.']Delete', ['template' => '{label}{input}', 'options' => ['style'=>'margin-bottom: 0 !important;']])->checkBox()->label(false) ?></td>
+				</tr>
+				<?php
+			} ?>
+			</table>
 
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>

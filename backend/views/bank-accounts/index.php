@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -9,7 +10,6 @@ use yii\grid\GridView;
 $this->title = 'Bank Accounts';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 
 <section id="configuration">
 	<div class="row">
@@ -32,6 +32,19 @@ $this->params['breadcrumbs'][] = $this->title;
 						<div class="form-actions" style="margin-top:0px">
 							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>	
 						</div>
+						<?php $form = ActiveForm::begin(); ?>
+							<div class="row">
+								<div class="col-md-4">
+									<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'All...']) ?>
+								</div>
+								<div class="col-md-4">
+									<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'All...']) ?>
+								</div>	
+								<div class="col-md-4">
+								<?= Html::submitButton('<i class="ft-search"></i> Search', ['class' => 'btn btn-primary', 'style' => 'margin-top: 25px']) ?>
+								</div>		
+							</div>							
+						<?php ActiveForm::end(); ?>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'layout' => '{items}',
@@ -39,11 +52,6 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-								/* [
-									'attribute' => 'BankAccountID',
-									'label' => 'ID',
-									'headerOptions' => ['width' => '5%'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -52,7 +60,9 @@ $this->params['breadcrumbs'][] = $this->title;
 								'bankBranches.BankBranchName',
 								'AccountName',
 								'AccountNumber',
-								[
+								'counties.CountyName',
+								'communities.CommunityName',
+		/* 						[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
 									'headerOptions' => ['width' => '15%'],
@@ -61,7 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'label' => 'Created By',
 									'attribute' => 'users.fullName',
 									'headerOptions' => ['width' => '15%'],
-								],
+								], */
 								[
 									'class' => 'yii\grid\ActionColumn',
 									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],

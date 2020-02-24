@@ -6,6 +6,7 @@ use Yii;
 use app\models\FixedAssets;
 use app\models\Projects;
 use app\models\Employees;
+use app\models\AssetAllocation;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -120,11 +121,13 @@ class FixedAssetsController extends Controller
 
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
+		$assetAllocation = ArrayHelper::map(AssetAllocation::find()->all(), 'AssetAllocationID', 'AssetAllocationName');		
 
 		return $this->render('create', [
 			'model' => $model,
 			'projects' => $projects,
 			'employees' => $employees,
+			'assetAllocation' => $assetAllocation,
 			'rights' => $this->rights,
 		]);
 	}
@@ -146,11 +149,13 @@ class FixedAssetsController extends Controller
 
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
+		$assetAllocation = ArrayHelper::map(AssetAllocation::find()->all(), 'AssetAllocationID', 'AssetAllocationName');
 		
 		return $this->render('update', [
 			'model' => $model,
 			'projects' => $projects,
 			'employees' => $employees,
+			'assetAllocation' => $assetAllocation,
 			'rights' => $this->rights,
 		]);
 	}

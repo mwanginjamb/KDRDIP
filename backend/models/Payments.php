@@ -54,7 +54,7 @@ class Payments extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'PaymentID' => 'Payment ID',
+			'PaymentID' => 'Payment Voucher Number',
 			'Date' => 'Date',
 			'SupplierID' => 'Supplier',
 			'InvoiceID' => 'Invoice Number',

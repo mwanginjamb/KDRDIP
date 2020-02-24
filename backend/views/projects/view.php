@@ -362,33 +362,36 @@ Modal::end();
 										</div>
 										<div class="tab-pane" id="tab5" aria-labelledby="base-tab5">
 											<h4 class="form-section">Safeguarding Policies</h4>												
-											<?= GridView::widget([
-												'dataProvider' => $projectSafeguardingPolicies,
-												'showFooter' =>false,
-												'layout' => '{items}',
-												'tableOptions' => [
-													'class' => 'custom-table table-striped table-bordered',
-												],
-												'columns' => [
-													/* [
-														'attribute' => 'ProjectSafeguardingPolicyID',
-														'label' => 'ID',
-														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
-														'contentOptions' => ['style' => 'text-align:center'],
-													], */
-													[
-														'class' => 'yii\grid\SerialColumn',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-													],
-													[
-														'label'=>'Safeguarding Policy',
-														'headerOptions' => ['style'=>'color:black; text-align:left'],
-														'format'=>'text',
-														'value' => 'safeguardingPolicies.SafeguardingPolicyName',
-														'contentOptions' => ['style' => 'text-align:left'],
-													],													
-												],
-											]); ?>
+											<table width="100%" class="custom-table table-striped table-bordered" id="ParameterTable">
+											<thead>
+											<tr>
+												<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
+												<td style="padding: 4px 4px 4px 4px !important">Parameter</td>
+												<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">Yes</td>
+												<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">No</td>
+											</tr>	
+											</thead>
+											<tbody>
+											<?php
+											foreach ($projectSafeguards as $key => $parameters) { ?>
+												<tr>
+													<td style="padding: 4px 4px 4px 4px !important; text-align: left; font-weight: 900; color: black" colspan="4"><?= $key; ?></td>
+												</tr>	
+												<?php
+												foreach ($parameters as $x => $parameter) { ?>
+													<tr>
+														<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%"><?= $x + 1; ?></td>
+														<td style="padding: 4px 4px 4px 4px !important"><?= $parameter['SafeguardParamaterName']; ?></td>
+														<td style="padding: 4px 4px 4px 4px !important; text-align: center"><?= $parameter['Yes'] == 1 ? '<i class="la la-check success"></i>' : '' ?></td>
+														<td style="padding: 4px 4px 4px 4px !important; text-align: center"><?= $parameter['No'] == 1 ? '<i class="la la-close danger"></i>' : '' ?></td>
+													</tr>	
+													<?php
+												}
+											} ?>
+											</tbody>
+											</table>
+											<h4 class="form-section">Recomended Action</h4>
+											<?= $model->SafeguardsRecommendedAction; ?>
 										</div>
 										<div class="tab-pane" id="tab6" aria-labelledby="base-tab6">
 											<h4 class="form-section">Beneficiaries</h4>	 

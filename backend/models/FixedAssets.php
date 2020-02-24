@@ -14,6 +14,7 @@ use Yii;
  * @property string $Location
  * @property string $SerialNumber
  * @property int $EmployeeID
+ * @property int $AssetAllocationID
  * @property string $AcquisitionDate
  * @property string $Value
  * @property string $CreatedDate
@@ -36,13 +37,13 @@ class FixedAssets extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectID', 'EmployeeID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['ProjectID', 'EmployeeID', 'CreatedBy', 'Deleted', 'AssetAllocationID'], 'integer'],
 			[['AcquisitionDate', 'CreatedDate'], 'safe'],
 			[['Value'], 'number'],
 			[['AssetNo', 'SerialNumber'], 'string', 'max' => 45],
 			[['Description'], 'string', 'max' => 500],
 			[['Location'], 'string', 'max' => 300],
-			[['AssetNo', 'SerialNumber', 'Description', 'AcquisitionDate', 'Value'], 'required']
+			[['AssetNo', 'SerialNumber', 'Description', 'AcquisitionDate', 'Value', 'AssetAllocationID'], 'required']
 		];
 	}
 
@@ -58,8 +59,9 @@ class FixedAssets extends \yii\db\ActiveRecord
 			'ProjectID' => 'Project',
 			'Location' => 'Location',
 			'SerialNumber' => 'Serial Number',
-			'EmployeeID' => 'Employee',
+			'EmployeeID' => 'Custodian',
 			'AcquisitionDate' => 'Acquisition Date',
+			'AssetAllocationID' => 'Asset Allocation',
 			'Value' => 'Value',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
@@ -80,5 +82,10 @@ class FixedAssets extends \yii\db\ActiveRecord
 	public function getProjects()
 	{
 		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
+	}
+
+	public function getAssetAllocation()
+	{
+		return $this->hasOne(AssetAllocation::className(), ['AssetAllocationID' => 'AssetAllocationID'])->from(assetallocation::tableName());
 	}
 }

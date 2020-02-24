@@ -218,7 +218,11 @@ $user = Yii::$app->user->identity;
 									</ul>
 							</li> -->
 							<li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown"><span class="mr-1 user-name text-bold-700"><?= $user->FirstName .' '. $user->LastName; ?></span><span class="avatar avatar-online"><img src="<?= $baseUrl; ?>/app-assets/images/portrait/small/avatar-s-19.png" alt="avatar"><i></i></span></a>
-									<div class="dropdown-menu dropdown-menu-right"><a class="dropdown-item" href="<?= $baseUrl; ?>/profile/view"><i class="material-icons">person_outline</i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="material-icons">mail_outline</i> My Inbox</a><a class="dropdown-item" href="user-cards.html"><i class="material-icons">content_paste</i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="material-icons">chat_bubble_outline</i> Chats</a>
+									<div class="dropdown-menu dropdown-menu-right">
+										<a class="dropdown-item" href="<?= $baseUrl; ?>/profile/view"><i class="material-icons">person_outline</i> Edit Profile</a>
+<!-- 										<a class="dropdown-item" href="app-email.html"><i class="material-icons">mail_outline</i> My Inbox</a>
+										<a class="dropdown-item" href="user-cards.html"><i class="material-icons">content_paste</i> Task</a>
+										<a class="dropdown-item" href="app-chat.html"><i class="material-icons">chat_bubble_outline</i> Chats</a> -->
 										<div class="dropdown-divider"></div><a class="dropdown-item" href="<?= $baseUrl; ?>/site/logout"><i class="material-icons">power_settings_new</i> Logout</a>
 									</div>
 							</li>

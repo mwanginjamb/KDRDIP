@@ -27,6 +27,7 @@ use Yii;
  * @property string $Latitude
  * @property int $CommunityID
  * @property int $CountyID
+ * @property string $SafeguardsRecommendedAction
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -46,7 +47,7 @@ class Projects extends \yii\db\ActiveRecord
 		return [
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID'], 'integer'],
-			[['Objective', 'Justification'], 'string'],
+			[['Objective', 'Justification', 'SafeguardsRecommendedAction'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
@@ -80,7 +81,8 @@ class Projects extends \yii\db\ActiveRecord
 			'Longitude' => 'Longitude',
 			'Latitude' => 'Latitude',
 			'CommunityID' => 'Community',
-			'CountyID' => 'County'
+			'CountyID' => 'County',
+			'SafeguardsRecommendedAction' => 'If there is at least one ‘Yes’, which course of action do you recommend?'
 		];
 	}
 
