@@ -14,11 +14,47 @@ $(window).on("load", function(){
 		colors: ['#40C7CA', '#FF7588', '#2DCEE3', '#FFA87D', '#16D39A']
 	});
 
+	Morris.Bar({
+		element: 'sessions-browser-bar1',
+		data: <?= $bar1; ?>,
+		xkey: 'y',
+		ykeys: ['a'],
+		labels: ['No. '],
+		barGap: 6,
+		barSizeRatio: 0.35,
+		xLabelAngle: 90,
+		smooth: true,
+		gridLineColor: '#e3e3e3',
+		numLines: 5,
+		gridtextSize: 14,
+		fillOpacity: 0.4,
+		resize: true,
+		barColors: ['#00A5A8']
+	});
+
 	Morris.Donut({
 		element: 'payment-status-chart',
 		data: <?= $graph2; ?>,
 		resize: true,
 		colors: ['#40C7CA', '#FF7588', '#2DCEE3', '#FFA87D', '#16D39A']
+	});
+
+	Morris.Bar({
+		element: 'payment-status-bar',
+		data: <?= $bar2; ?>,
+		xkey: 'y',
+		ykeys: ['a'],
+		labels: ['No. '],
+		barGap: 6,
+		barSizeRatio: 0.35,
+		xLabelAngle: 90,
+		smooth: true,
+		gridLineColor: '#e3e3e3',
+		numLines: 5,
+		gridtextSize: 14,
+		fillOpacity: 0.4,
+		resize: true,
+		barColors: ['#00A5A8']
 	});
 
 	Morris.Donut({
@@ -28,6 +64,24 @@ $(window).on("load", function(){
 		colors: ['#40C7CA', '#FF7588', '#2DCEE3', '#FFA87D', '#16D39A']
 	});
 
+	Morris.Bar({
+		element: 'invoices-status-bar',
+		data: <?= $bar3; ?>,
+		xkey: 'y',
+		ykeys: ['a'],
+		labels: ['No. '],
+		barGap: 6,
+		barSizeRatio: 0.35,
+		xLabelAngle: 90,
+		smooth: true,
+		gridLineColor: '#e3e3e3',
+		numLines: 5,
+		gridtextSize: 14,
+		fillOpacity: 0.4,
+		resize: true,
+		barColors: ['#00A5A8']
+	});
+
 	Morris.Donut({
 		element: 'quotations-status-chart',
 		data: <?= $graph4; ?>,
@@ -35,11 +89,47 @@ $(window).on("load", function(){
 		colors: ['#40C7CA', '#FF7588', '#2DCEE3', '#FFA87D', '#16D39A']
 	});
 
+	Morris.Bar({
+		element: 'quotations-status-bar',
+		data: <?= $bar4; ?>,
+		xkey: 'y',
+		ykeys: ['a'],
+		labels: ['No. '],
+		barGap: 6,
+		barSizeRatio: 0.35,
+		xLabelAngle: 90,
+		smooth: true,
+		gridLineColor: '#e3e3e3',
+		numLines: 5,
+		gridtextSize: 14,
+		fillOpacity: 0.4,
+		resize: true,
+		barColors: ['#00A5A8']
+	});
+
 	Morris.Donut({
 		element: 'purchases-status-chart',
 		data: <?= $graph5; ?>,
 		resize: true,
 		colors: ['#40C7CA', '#FF7588', '#2DCEE3', '#FFA87D', '#16D39A']
+	});
+
+	Morris.Bar({
+		element: 'purchases-status-bar',
+		data: <?= $bar5; ?>,
+		xkey: 'y',
+		ykeys: ['a'],
+		labels: ['No. '],
+		barGap: 6,
+		barSizeRatio: 0.35,
+		xLabelAngle: 90,
+		smooth: true,
+		gridLineColor: '#e3e3e3',
+		numLines: 5,
+		gridtextSize: 14,
+		fillOpacity: 0.4,
+		resize: true,
+		barColors: ['#00A5A8']
 	});
 		
 	Morris.Bar({
@@ -134,8 +224,11 @@ $(window).on("load", function(){
 			<div class="card-content collapse show">
 				<div class="card-body p-0">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-6">
 							<div id="sessions-browser-donut-chart1" class="height-200"></div>
+						</div>
+						<div class="col-6">
+							<div id="sessions-browser-bar1" class="height-250"></div>
 						</div>
 					</div>
 					<div class="table-responsive">
@@ -173,9 +266,12 @@ $(window).on("load", function(){
 			<div class="card-content collapse show">
 				<div class="card-body p-0">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-6">
 							<div id="payment-status-chart" class="height-200"></div>
 						</div>
+						<div class="col-6">
+							<div id="payment-status-bar" class="height-250"></div>
+						</div>						
 					</div>
 					<div class="table-responsive">
 						<table class="custom-table mb-0 table-bordered">
@@ -209,8 +305,11 @@ $(window).on("load", function(){
 			<div class="card-content collapse show">
 				<div class="card-body p-0">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-6">
 							<div id="invoices-status-chart" class="height-200"></div>
+						</div>
+						<div class="col-6">
+							<div id="invoices-status-bar" class="height-250"></div>
 						</div>
 					</div>
 					<div class="table-responsive">
@@ -247,8 +346,11 @@ $(window).on("load", function(){
 			<div class="card-content collapse show">
 				<div class="card-body p-0">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-6">
 							<div id="quotations-status-chart" class="height-200"></div>
+						</div>
+						<div class="col-6">
+							<div id="quotations-status-bar" class="height-250"></div>
 						</div>
 					</div>
 					<div class="table-responsive">
@@ -283,8 +385,11 @@ $(window).on("load", function(){
 			<div class="card-content collapse show">
 				<div class="card-body p-0">
 					<div class="row">
-						<div class="col-12">
+						<div class="col-6">
 							<div id="purchases-status-chart" class="height-200"></div>
+						</div>
+						<div class="col-6">
+							<div id="purchases-status-bar" class="height-250"></div>
 						</div>
 					</div>
 					<div class="table-responsive">

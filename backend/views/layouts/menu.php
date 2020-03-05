@@ -126,7 +126,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											</li>
 										<?php } ?>	
 										<?php if (in_array(68, $rights)) { ?>
-											<li <?= ($currentRoute == 'reports/bank-transactions') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/bank-transactions"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Bank Transactions</span></a>
+											<li <?= ($currentRoute == 'reports/bank-transactions') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/bank-transactions"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Sub Project Transaction</span></a>
 											</li>
 										<?php } ?>
 									</ul>
@@ -354,7 +354,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								foreach ($components as $component) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $component->ComponentName; ?>"><?= $component->ShortName; ?></span></a>
 									<ul class="menu-content">									
-										<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Projects</span></a>
+										<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
 										</li>
 										<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
 										</li>
@@ -362,7 +362,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 										</li>
 										<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
 										</li>
-										<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Projects Report</span></a>
+										<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
 										</li>
 									</ul>
 								</li>
@@ -440,6 +440,14 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<?php } ?>
 								<?php if (in_array(54, $rights)) { ?>
 									<li <?= ($currentPage == 'sub-counties') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-counties"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Sub Counties</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(78, $rights)) { ?>
+									<li <?= ($currentPage == 'locations') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/locations"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Locations</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(79, $rights)) { ?>
+									<li <?= ($currentPage == 'sub-locations') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-locations"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Sub Locations</span></a>
 									</li>
 								<?php } ?>
 								<?php if (in_array(63, $rights)) { ?>

@@ -28,6 +28,9 @@ use Yii;
  * @property int $CommunityID
  * @property int $CountyID
  * @property string $SafeguardsRecommendedAction
+ * @property int $SubCountyID
+ * @property int $LocationID 
+ * @property int $SubLocationID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -46,7 +49,7 @@ class Projects extends \yii\db\ActiveRecord
 	{
 		return [
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 
-				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID'], 'integer'],
+				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID'], 'integer'],
 			[['Objective', 'Justification', 'SafeguardsRecommendedAction'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
@@ -82,7 +85,10 @@ class Projects extends \yii\db\ActiveRecord
 			'Latitude' => 'Latitude',
 			'CommunityID' => 'Community',
 			'CountyID' => 'County',
-			'SafeguardsRecommendedAction' => 'If there is at least one ‘Yes’, which course of action do you recommend?'
+			'SafeguardsRecommendedAction' => 'If there is at least one ‘Yes’, which course of action do you recommend?',
+			'SubCountyID'  => 'Sub County', 
+			'LocationID'  => 'Location', 
+			'SubLocationID'  => 'Sub Location',
 		];
 	}
 
@@ -119,5 +125,20 @@ class Projects extends \yii\db\ActiveRecord
 	public function getCounties()
 	{
 		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
+	}
+
+	public function getSubCounties()
+	{
+		return $this->hasOne(SubCounties::className(), ['SubCountyID' => 'SubCountyID'])->from(subcounties::tableName());
+	}
+
+	public function getLocations()
+	{
+		return $this->hasOne(Locations::className(), ['LocationID' => 'LocationID'])->from(locations::tableName());
+	}
+
+	public function getSubLocations()
+	{
+		return $this->hasOne(SubLocations::className(), ['SubLocationID' => 'SubLocationID'])->from(sublocations::tableName());
 	}
 }

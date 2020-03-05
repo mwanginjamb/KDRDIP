@@ -23,6 +23,8 @@ class Invoices extends \yii\db\ActiveRecord
 {
 	public $imageFile;
 	public $Description;
+	public $imageFile2;
+	public $Description2;
 
 	/**
 	 * {@inheritdoc}
@@ -41,9 +43,9 @@ class Invoices extends \yii\db\ActiveRecord
 			[['SupplierID', 'PurchaseID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['InvoiceDate', 'CreatedDate'], 'safe'],
 			[['Amount'], 'number'],
-			[['InvoiceNumber', 'Description'], 'string', 'max' => 45],
-			[['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
-			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate', 'Description'], 'required']
+			[['InvoiceNumber', 'Description', 'Description2'], 'string', 'max' => 45],
+			[['imageFile', 'imageFile2'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate', 'Description', 'Description2'], 'required']
 		];
 	}
 
@@ -64,6 +66,8 @@ class Invoices extends \yii\db\ActiveRecord
 			'Deleted' => 'Deleted',
 			'imageFile' => 'Document (pdf)',
 			'Description' => 'Description',
+			'Description2' => 'Description',
+			'imageFile2' => 'Document (pdf)',
 		];
 	}
 
@@ -95,10 +99,21 @@ class Invoices extends \yii\db\ActiveRecord
 	public function upload($id, $type)
 	{
 		if ($this->validate()) {
+			// exit;
 			$filename = (string) time() . '_' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
 			$this->imageFile->saveAs('uploads/' . $filename);
 			$document = new Documents();
 			$document->Description = $this->Description;
+			$document->FileName = $filename;
+			$document->DocumentTypeID = $type;
+			$document->RefNumber = $id;
+			$document->CreatedBy = Yii::$app->user->identity->UserID;
+			$document->save();
+
+			$filename = (string) time() . '_' . $this->imageFile2->baseName . '.' . $this->imageFile2->extension;
+			$this->imageFile->saveAs('uploads/' . $filename);
+			$document = new Documents();
+			$document->Description = $this->Description2;
 			$document->FileName = $filename;
 			$document->DocumentTypeID = $type;
 			$document->RefNumber = $id;

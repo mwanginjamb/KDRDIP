@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\grid\GridView;
+
+$baseModel = $model;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Invoices */
@@ -59,6 +62,62 @@ use yii\widgets\ActiveForm;
 			</div>
 
 			<h4 class="form-section">Supporting Document</h4>
+			<?= GridView::widget([
+				'dataProvider' => $documentProvider,
+				'summary' => '',
+				'layout' => '{summary}{items}',
+				'tableOptions' => [
+					'class' => 'custom-table table-striped table-bordered zero-configuration1',
+				],
+				'columns' => [
+					[
+						'class' => 'yii\grid\SerialColumn',
+						'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+					],
+					[
+						'label'=>'Description',
+						'headerOptions' => ['style'=>'color:black; text-align:left'],
+						'format'=>'text',
+						'value' => 'Description',
+						'contentOptions' => ['style' => 'text-align:left'],
+					],
+					[
+						'label'=>'Created Date',
+						'headerOptions' => [ 'width' => '17%', 'style'=>'color:black; text-align:left'],
+						'format'=>'datetime',
+						'value' => 'CreatedDate',
+						'contentOptions' => ['style' => 'text-align:left'],
+					],
+					[
+						'label'=>'Created By',
+						'headerOptions' => [ 'width' => '15%', 'style'=>'color:black; text-align:left'],
+						'format'=>'text',
+						'value' => 'users.fullName',
+						'contentOptions' => ['style' => 'text-align:left'],
+					],
+					[
+						'class' => 'yii\grid\ActionColumn',
+						'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
+						'template' => '{view} {delete}',
+						'buttons' => [
+	
+							'view' => function ($url, $model) use ($rights, $baseModel) {
+								return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view-document', 'id' => $model->DocumentID, 'InvoiceID' => $baseModel->InvoiceID], ['class' => 'btn-sm btn-primary']) : '';
+							},
+							'delete' => function ($url, $model) use ($rights, $baseModel) {
+								return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Remove', ['delete-document', 'id' => $model->DocumentID, 'InvoiceID' => $baseModel->InvoiceID], [
+									'class' => 'btn-sm btn-danger btn-xs',
+									'data' => [
+										'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
+										'method' => 'post',
+									],
+								]) : '';
+							},
+						],
+					],
+				],
+			]); ?>
+			<h4 class="form-section">Attach Supporting Document</h4>
 			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?>
@@ -66,7 +125,15 @@ use yii\widgets\ActiveForm;
 				<div class="col-md-6">
 					<?= $form->field($model, 'imageFile')->fileInput(['style' => 'margin-top: 25px']) ?>
 				</div>			
-			</div>			
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Description2')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'imageFile2')->fileInput(['style' => 'margin-top: 25px']) ?>
+				</div>			
+			</div>		
 
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>

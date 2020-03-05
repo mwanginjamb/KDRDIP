@@ -18,40 +18,46 @@ use Yii;
  */
 class Documents extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'documents';
-    }
+	public $imageFile;
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'documents';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['DocumentTypeID', 'RefNumber', 'CreatedBy', 'Deleted'], 'integer'],
-            [['CreatedDate'], 'safe'],
-            [['Description', 'FileName'], 'string', 'max' => 45],
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['DocumentTypeID', 'RefNumber', 'CreatedBy', 'Deleted'], 'integer'],
+			[['CreatedDate'], 'safe'],
+			[['Description', 'FileName'], 'string', 'max' => 45],
+		];
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'DocumentID' => 'Document ID',
-            'Description' => 'Description',
-            'FileName' => 'File Name',
-            'DocumentTypeID' => 'Document Type ID',
-            'RefNumber' => 'Ref Number',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'DocumentID' => 'Document ID',
+			'Description' => 'Description',
+			'FileName' => 'File Name',
+			'DocumentTypeID' => 'Document Type ID',
+			'RefNumber' => 'Ref Number',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
+
+	public function getUsers()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
 }

@@ -6,10 +6,9 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sub-Projects';
+$this->title = 'Sub Locations';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -28,47 +27,41 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
-						<div class="form-actions" style="margin-top:0px">	
-							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create', 'cid' => $cid], ['class' => 'btn btn-primary mr-1']) : '' ?>
+						<div class="form-actions" style="margin-top:0px">
+							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>		
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
-							'layout' => '{items}',							
+							'layout' => '{items}',
 							'tableOptions' => [
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
 								[
-									'attribute' => 'ProjectID',
-									'label' => 'ID',
-									'headerOptions' => ['width' => '5%'],
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
-								'ProjectName',
+								'SubLocationName',
 								[
-									'label' => 'Parent Project',
-									'attribute' => 'parentProject.ProjectName',
-									'headerOptions' => ['width' => '25%'],
-								],
-								[
-									'attribute' => 'StartDate',
-									'headerOptions' => ['width' => '10%'],
-									'format' => ['date', 'php:d/m/Y'],
+									'attribute' => 'locations.LocationName',
+									'headerOptions' => ['width' => '15%'],
+									'label' => 'Location',
 								],
 								[
-									'attribute' => 'projectStatus.ProjectStatusName',
-									'label' => 'Status',
-									'headerOptions' => ['width' => '10%'],
+									'attribute' => 'locations.subCounties.SubCountyName',
+									'headerOptions' => ['width' => '15%'],
+									'label' => 'Sub County',
 								],
-								/* [
+								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
 									'headerOptions' => ['width' => '15%'],
-								], */
-							/* 	[
+								],
+								[
 									'label' => 'Created By',
 									'attribute' => 'users.fullName',
 									'headerOptions' => ['width' => '15%'],
-								], */
+								],
 								[
 									'class' => 'yii\grid\ActionColumn',
 									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
@@ -76,10 +69,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									'buttons' => [
 
 										'view' => function ($url, $model) use ($rights) {
-											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->ProjectID], ['class' => 'btn-sm btn-primary']) : '';
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->SubLocationID], ['class' => 'btn-sm btn-primary']) : '';
 										},
 										'delete' => function ($url, $model) use ($rights) {
-											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProjectID], [
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->SubLocationID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',

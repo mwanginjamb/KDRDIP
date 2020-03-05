@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Product */
 
-$this->title = 'Bank Transactions';
+$this->title = 'Sub Project Transaction';
 $Total = 0;
 if (!empty($dataProvider->getModels())) 
 {

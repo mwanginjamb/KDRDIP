@@ -27,8 +27,12 @@ use app\models\IndicatorTargets;
 use app\models\IndicatorActuals;
 use app\models\Components;
 use app\models\Activities;
+use app\models\Locations;
+use app\models\SubLocations;
 use app\models\Budget;
+use app\models\Documents;
 use app\models\ProjectSafeguards;
+use app\models\ProjectGallery;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -37,6 +41,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use yii\web\UploadedFile;
 
 /**
  * ProjectsController implements the CRUD actions for projects model.
@@ -198,6 +203,14 @@ class ProjectsController extends Controller
 			'query' => ReportingPeriods::find()->where(['ProjectID'=> $id]),
 		]);
 
+		$projectGallery = new ActiveDataProvider([
+			'query' => ProjectGallery::find()->where(['ProjectID'=> $id]),
+		]);
+
+		$projectDocuments = new ActiveDataProvider([
+			'query' => Documents::find()->where(['RefNumber'=> $id, 'DocumentTypeID' => 2]),
+		]);
+
 		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
 					SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
 					RIGHT JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
@@ -240,6 +253,8 @@ class ProjectsController extends Controller
 			'targets' => $targets,
 			'actuals' => $actuals,
 			'rights' => $this->rights,
+			'projectGallery' => $projectGallery,
+			'projectDocuments' => $projectDocuments,
 		]);
 	}
 
@@ -283,6 +298,10 @@ class ProjectsController extends Controller
 		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
 		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		$subLocations = [];
 	
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -372,6 +391,9 @@ class ProjectsController extends Controller
 			'projectSafeguards' => $projectSafeguards,
 			'safeguardParameters' => $safeguardParameters,
 			'rights' => $this->rights,
+			'subLocations' => $subLocations,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
 		]);
 	}
 
@@ -418,12 +440,18 @@ class ProjectsController extends Controller
 		$projectUnits = ArrayHelper::map(projectUnits::find()->all(), 'ProjectUnitID', 'ProjectUnitName');
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
+		// $subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
+
+
 		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
 		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -512,6 +540,9 @@ class ProjectsController extends Controller
 			'projectSafeguards' => $projectSafeguards,
 			'safeguardParameters' => $safeguardParameters,
 			'rights' => $this->rights,
+			'subLocations' => $subLocations,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
 		]);
 	}
 
@@ -732,11 +763,40 @@ class ProjectsController extends Controller
 		$model = SubCounties::find()->where(['CountyID' => $id])->all();
 			
 		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
 			foreach ($model as $item) {
 				echo "<option value='" . $item->SubCountyID . "'>" . $item->SubCountyName . "</option>";
 			}
 		} else {
-			echo '<option>-</option>';
+			echo '<option value="0">Select...</option>';
+		}
+	}
+
+	public function actionLocations($id)
+	{
+		$model = Locations::find()->where(['SubCountyID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->LocationID . "'>" . $item->LocationName . "</option>";
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
+	}
+
+	public function actionSubLocations($id)
+	{
+		$model = SubLocations::find()->where(['LocationID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->SubLocationID . "'>" . $item->SubLocationName . "</option>";
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
 		}
 	}
 
@@ -763,5 +823,44 @@ class ProjectsController extends Controller
 	public function actionModalContent()
 	{
 		return '2122323';
+	}
+
+	public function actionDocuments($pid)
+	{
+		$model = new Documents();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		$model->DocumentTypeID = 2;
+		$model->RefNumber = $pid;
+
+		if (Yii::$app->request->isPost) {
+			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			$filename = (string) time() . '_' . $model->imageFile->baseName . '.' . $model->imageFile->extension;
+			$model->imageFile->saveAs('uploads/' . $filename);
+			$model->FileName = $filename;
+		}
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['projects/view', 'id' => $pid]);
+		}
+
+		return $this->render('documents', [
+			'model' => $model,
+			'ProjectID' => $pid,
+		]);
+	}
+
+	public function actionViewDocument($id)
+	{
+		ini_set('max_execution_time', 5*60); // 5 minutes
+		$model = Documents::findOne($id);
+		ob_clean();
+
+		$file = 'uploads/' . $model->FileName;
+
+		if (file_exists($file)) {
+			Yii::$app->response->sendFile($file)->send();
+			return;
+		}
+		return $this->redirect(['projects/view', 'id' => $model->RefNumber]);		
 	}
 }

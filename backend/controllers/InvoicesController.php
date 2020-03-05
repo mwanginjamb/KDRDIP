@@ -146,12 +146,19 @@ class InvoicesController extends Controller
 		$purchases = Purchases::findBySql($sql)->asArray()->all();
 		$documents = Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1])->all();
 
+		// Display Documents 
+		$documentProvider = new ActiveDataProvider([
+			'query' => Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1]),
+			'pagination' => false,
+		]);
+
 		return $this->render('view', [
 			'model' => $model,
 			'deliveries' => $deliveries,
 			'purchases' => $purchases,
 			'rights' => $this->rights,
 			'documents' => $documents,
+			'documentProvider' => $documentProvider,
 		]);
 	}
 
@@ -169,20 +176,28 @@ class InvoicesController extends Controller
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			$model->imageFile2 = UploadedFile::getInstance($model, 'imageFile2');
 			if ($model->upload($model->InvoiceID, 1)) {
-				 // file is uploaded successfully
-				//  return;
+				/*  echo 'file is uploaded successfully';
+				 return; */
 			}
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$purchases = []; // ArrayHelper::map(Purchases::find()->all(), 'PurchaseID', 'PurchaseID');
 
+		// Display Documents 
+		$documentProvider = new ActiveDataProvider([
+			'query' => Documents::find()->where(['RefNumber' => 0, 'DocumentTypeID' => 1]),
+			'pagination' => false,
+		]);
+
 		return $this->render('create', [
 			'model' => $model,
 			'suppliers' => $suppliers,
 			'purchases' => $purchases,
 			'rights' => $this->rights,
+			'documentProvider' => $documentProvider,
 		]);
 	}
 
@@ -198,6 +213,12 @@ class InvoicesController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			$model->imageFile2 = UploadedFile::getInstance($model, 'imageFile2');
+			if ($model->upload($model->InvoiceID, 1)) {
+				/*  echo 'file is uploaded successfully';
+				 return; */
+			}
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
@@ -207,11 +228,19 @@ class InvoicesController extends Controller
 				WHERE PurchaseID = purchases.PurchaseID) as Amount FROM `purchases` WHERE `SupplierID`= $supplierID
 			) temp"; 
 		$purchases = ArrayHelper::map(Purchases::findBySql($sql)->asArray()->all(), 'PurchaseID', 'PurchaseName');
+
+		// Display Documents 
+		$documentProvider = new ActiveDataProvider([
+			'query' => Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1]),
+			'pagination' => false,
+		]);
+
 		return $this->render('update', [
 			'model' => $model,
 			'suppliers' => $suppliers,
 			'purchases' => $purchases,
 			'rights' => $this->rights,
+			'documentProvider' => $documentProvider,
 		]);
 	}
 
@@ -271,5 +300,30 @@ class InvoicesController extends Controller
 			$result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
 		}
+	}
+
+	public function actionDeleteDocument($id, $InvoiceID)
+	{
+		Documents::findOne($id)->delete();
+		return $this->redirect(['update', 'id' => $InvoiceID]);
+	}
+
+	public function actionViewDocument($id, $InvoiceID, $source='view')
+	{
+		ini_set('max_execution_time', 5*60); // 5 minutes
+		$model = Documents::findOne($id);
+		ob_clean();
+
+		$file = 'uploads/' . $model->FileName;
+
+		if (file_exists($file)) {
+			Yii::$app->response->sendFile($file)->send();
+			return;
+		}
+		if ($source == 'view') {
+			return $this->redirect(['view', 'id' => $InvoiceID]);
+		} else {
+			return $this->redirect(['update', 'id' => $InvoiceID]);
+		}		
 	}
 }

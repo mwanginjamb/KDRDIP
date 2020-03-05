@@ -138,7 +138,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'buttons' => [
 				
 										'view' => function ($url, $model) use ($rights) {
-											return (isset($rights->Delete)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->InvoiceID], ['class' => 'btn-sm btn-primary']) : '';
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->InvoiceID], ['class' => 'btn-sm btn-primary']) : '';
 										},
 										'delete' => function ($url, $model) use ($rights) {
 											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->InvoiceID], [

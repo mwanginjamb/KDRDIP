@@ -86,6 +86,18 @@ class SiteController extends Controller
 		}
 		$graph1 .= ']';
 
+		$bar1 = '[';
+		foreach ($projectStatus as $key => $status) {
+			if ($key+1 != count($projectStatus)) {
+				$bar1 .= '{ y: "' . $status['ProjectStatusName'] . '",';
+				$bar1 .=	' a: ' . (integer) $status['Total'] . ' },';
+			} else {
+				$bar1 .= '{ y: "' . $status['ProjectStatusName'] . '",';
+				$bar1 .=	' a: ' . (integer) $status['Total'] . ' }';
+			}			
+		}
+		$bar1 .= ']';
+
 		// Project Budget
 		$sql = 'select projects.ProjectID, ProjectName, TotalBudget from (
 					select ProjectID, Sum(activitybudget.Amount) as TotalBudget from activitybudget
@@ -111,6 +123,18 @@ class SiteController extends Controller
 		}
 		$graph2 .= ']';
 
+		$bar2 = '[';
+		foreach ($paymentStatus as $key => $status) {
+			if ($key+1 != count($paymentStatus)) {
+				$bar2 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar2 .=	' a: ' . (integer) $status['Total'] . ' },';
+			} else {
+				$bar2 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar2 .=	' a: ' . (integer) $status['Total'] . ' }';
+			}			
+		}
+		$bar2 .= ']';
+
 		// Invoice Approval by Status
 		$sql = 'select approvalstatus.ApprovalStatusID, ApprovalStatusName, Total from(
 			select ApprovalStatusID, count(*) as Total from invoices 
@@ -125,7 +149,19 @@ class SiteController extends Controller
 		}
 		$graph3 .= ']';
 
+		$bar3 = '[';
+		foreach ($invoicesStatus as $key => $status) {
+			if ($key+1 != count($invoicesStatus)) {
+				$bar3 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar3 .=	' a: ' . (integer) $status['Total'] . ' },';
+			} else {
+				$bar3 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar3 .=	' a: ' . (integer) $status['Total'] . ' }';
+			}			
+		}
+		$bar3 .= ']';
 
+		// echo $bar3; exit;
 		// Quotations Approval by Status
 		$sql = 'select approvalstatus.ApprovalStatusID, ApprovalStatusName, Total from(
 			select ApprovalStatusID, count(*) as Total from quotation 
@@ -139,6 +175,18 @@ class SiteController extends Controller
 			$graph4 .=	' value: ' . (integer) $status['Total'] . ' },';
 		}
 		$graph4 .= ']';
+
+		$bar4 = '[';
+		foreach ($quotationStatus as $key => $status) {
+			if ($key+1 != count($quotationStatus)) {
+				$bar4 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar4 .=	' a: ' . (integer) $status['Total'] . ' },';
+			} else {
+				$bar4 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar4 .=	' a: ' . (integer) $status['Total'] . ' }';
+			}			
+		}
+		$bar4 .= ']';
 
 		// Purchaes Approval by Status
 		$sql = 'select approvalstatus.ApprovalStatusID, ApprovalStatusName, Total from(
@@ -154,18 +202,35 @@ class SiteController extends Controller
 		}
 		$graph5 .= ']';
 
+		$bar5 = '[';
+		foreach ($purchasesStatus as $key => $status) {
+			if ($key+1 != count($purchasesStatus)) {
+				$bar5 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar5 .=	' a: ' . (integer) $status['Total'] . ' },';
+			} else {
+				$bar5 .= '{ y: "' . $status['ApprovalStatusName'] . '",';
+				$bar5 .=	' a: ' . (integer) $status['Total'] . ' },';
+			}			
+		}
+		$bar5 .= ']';
 
+		// echo $bar1; exit;
 		return $this->render('index', [
 													'graph1' => $graph1, 
+													'bar1' => $bar1,
 													'projectStatus' => $projectStatus,
 													'budget' => $budget,
 													'graph2' => $graph2,
+													'bar2' => $bar2,
 													'paymentStatus' => $paymentStatus,
 													'graph3' => $graph3,
+													'bar3' => $bar3,
 													'invoicesStatus' => $invoicesStatus,
 													'graph4' => $graph4,
+													'bar4' => $bar4,
 													'quotationStatus' => $quotationStatus,
 													'graph5' => $graph5,
+													'bar5' => $bar5,
 													'purchasesStatus' => $purchasesStatus
 												]);
 	}

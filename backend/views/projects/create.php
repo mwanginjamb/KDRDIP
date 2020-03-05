@@ -5,8 +5,8 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\projects */
 
-$this->title = 'Create Projects';
-$this->params['breadcrumbs'][] = ['label' => 'Projects', 'url' => ['index']];
+$this->title = 'Create Sub-Project';
+$this->params['breadcrumbs'][] = ['label' => 'Sub-Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">
@@ -38,6 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		'projectSafeguards' => $projectSafeguards,
 		'safeguardParameters' => $safeguardParameters,
 		'rights' => $rights,
+		'subLocations' => $subLocations,
+		'subCounties' => $subCounties,
+		'locations' => $locations,
 	]) ?>
 
 </section>

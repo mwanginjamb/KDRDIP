@@ -2,6 +2,9 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+
+$baseModel = $model;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Invoices */
@@ -165,20 +168,52 @@ $this->params['breadcrumbs'][] = $this->title;
 						</tbody>
 						</table>
 						<h4 class="form-section" style="margin-bottom: 0px">Supporting Documents</h4>
-						<table class="custom-table table-striped table-bordered zero-configuration dataTable no-footer">
-						<tbody>
-						<?php
-							$DID = 0;
-							foreach ($documents as $key => $document) { ?>
-								<tr role="row">
-									<td width="5%"><?= $key+1; ?></td>
-									<td><a href="" target="_blank"><?= $document->Description ?></a></td>
-									<td width="15%" style="text-align: right"></td>
-								</tr>
-							<?php
-						}?>
-						</tbody>
-						</table>
+						<?= GridView::widget([
+							'dataProvider' => $documentProvider,
+							'summary' => '',
+							'layout' => '{summary}{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration1',
+							],
+							'columns' => [
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],
+								[
+									'label'=>'Description',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'Description',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Created Date',
+									'headerOptions' => [ 'width' => '17%', 'style'=>'color:black; text-align:left'],
+									'format'=>'datetime',
+									'value' => 'CreatedDate',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Created By',
+									'headerOptions' => [ 'width' => '15%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'users.fullName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'class' => 'yii\grid\ActionColumn',
+									'headerOptions' => ['width' => '8%', 'style'=>'color:black; text-align:center'],
+									'template' => '{view}',
+									'buttons' => [
+				
+										'view' => function ($url, $model) use ($rights, $baseModel) {
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view-document', 'id' => $model->DocumentID, 'InvoiceID' => $baseModel->InvoiceID], ['class' => 'btn-sm btn-primary', 'target' => '_blank']) : '';
+										},										
+									],
+								],
+							],
+						]); ?>
 					</div>
 				</div>
 			</div>

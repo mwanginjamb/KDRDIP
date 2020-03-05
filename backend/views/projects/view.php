@@ -162,7 +162,7 @@ Modal::end();
 											<a class="nav-link" id="base-tab4" data-toggle="tab" aria-controls="tab4" href="#tab4" aria-expanded="false">Disbursement</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab5" data-toggle="tab" aria-controls="tab5" href="#tab5" aria-expanded="false">Safeguarding Policies</a>
+											<a class="nav-link" id="base-tab5" data-toggle="tab" aria-controls="tab5" href="#tab5" aria-expanded="false">Safeguards</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab6" data-toggle="tab" aria-controls="tab16" href="#tab6" aria-expanded="false">Beneficiaries</a>
@@ -187,7 +187,13 @@ Modal::end();
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab13" data-toggle="tab" aria-controls="tab13" href="#tab13" aria-expanded="false">Notes</a>
-										</li>										
+										</li>	
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab14" data-toggle="tab" aria-controls="tab14" href="#tab14" aria-expanded="false">Gallery</a>
+										</li>		
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab15" data-toggle="tab" aria-controls="tab15" href="#tab15" aria-expanded="false">Documents</a>
+										</li>								
 									</ul>
 									<div class="tab-content px-1 pt-1">
 										<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -222,7 +228,12 @@ Modal::end();
 													],
 													'currencies.CurrencyName',
 													'counties.CountyName',
+													'subCounties.SubCountyName',
+													'locations.LocationName',
+													'subLocations.SubLocationName',
 													'communities.CommunityName',
+													'Longitude',
+													'Latitude',
 													[
 														'attribute' => 'projectStatus.ProjectStatusName',
 														'label' => 'Status',
@@ -361,7 +372,7 @@ Modal::end();
 											]); ?>
 										</div>
 										<div class="tab-pane" id="tab5" aria-labelledby="base-tab5">
-											<h4 class="form-section">Safeguarding Policies</h4>												
+											<h4 class="form-section">Safeguards</h4>												
 											<table width="100%" class="custom-table table-striped table-bordered" id="ParameterTable">
 											<thead>
 											<tr>
@@ -778,6 +789,107 @@ Modal::end();
 														'label' => 'Created By',
 														'attribute' => 'users.fullName',
 														'headerOptions' => ['width' => '15%'],
+													],
+												],
+											]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab14" aria-labelledby="base-tab14">
+											<h4 class="form-section">Gallery</h4>	
+											<div class="form-actions" style="margin-top:0px">
+												<?= Html::a('<i class="ft-plus"></i> New Image', ['/project-gallery/create', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
+											</div> 
+											<?= GridView::widget([
+												'dataProvider' => $projectGallery,
+												'showFooter' =>false,
+												'layout' => '{items}',
+												'tableOptions' => [
+													'class' => 'custom-table table-striped table-bordered',
+												],
+												'columns' => [
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+													],
+													[
+
+														'attribute' => 'Image',										
+														'format' => ['image',['height'=>'50']],										
+														'label' => 'Image',							
+																							
+												  	],
+													[
+														'label'=>'Caption',
+														'headerOptions' => ['style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'Caption',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'attribute' => 'CreatedDate',
+														'format' => ['date', 'php:d/m/Y h:i a'],
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'label' => 'Created By',
+														'attribute' => 'users.fullName',
+														'headerOptions' => ['width' => '15%'],
+													],
+												],
+											]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab15" aria-labelledby="base-tab15">
+											<h4 class="form-section">Documents</h4>	
+											<div class="form-actions" style="margin-top:0px">
+												<?= Html::a('<i class="ft-plus"></i> New Document', ['/projects/documents', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
+											</div> 
+											<?= GridView::widget([
+												'dataProvider' => $projectDocuments,
+												'showFooter' =>false,
+												'layout' => '{items}',
+												'tableOptions' => [
+													'class' => 'custom-table table-striped table-bordered',
+												],
+												'columns' => [
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+													],
+													/* [
+
+														'attribute' => 'Image',										
+														'format' => ['image',['height'=>'50']],										
+														'label' => 'Image',							
+																							
+												  	], */
+													[
+														'label'=>'Description',
+														'headerOptions' => ['style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'Description',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'attribute' => 'CreatedDate',
+														'format' => ['date', 'php:d/m/Y h:i a'],
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'label' => 'Created By',
+														'attribute' => 'users.fullName',
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'class' => 'yii\grid\ActionColumn',
+														'headerOptions' => ['width' => '8%', 'style'=>'color:black; text-align:center'],
+														'template' => '{view}',
+														'buttons' => [
+					
+															'view' => function ($url, $model) use ($rights) {
+																return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view-document', 'id' => $model->DocumentID], ['class' => 'btn-sm btn-primary']) : '';
+															},
+														],
 													],
 												],
 											]); ?>
