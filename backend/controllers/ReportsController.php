@@ -712,6 +712,7 @@ class ReportsController extends Controller
 	public function actionSupplierstatement() 
 	{
 		$params = Yii::$app->request->post();
+		
 		$FilterString = '';
 		$Year = date('Y');
 		$Month = date('m');
@@ -725,7 +726,8 @@ class ReportsController extends Controller
 			
 			$ProductCategoryID = isset($params['FilterData']['ProductCategoryID']) ? $params['FilterData']['ProductCategoryID'] : 0;
 			
-			$SupplierID = isset($params['FilterData']['SupplierID']) ? $params['FilterData']['SupplierID'] : 0;
+			$SupplierID = (isset($params['FilterData']['SupplierID']) && $params['FilterData']['SupplierID'] != '') ? $params['FilterData']['SupplierID'] : 0;
+			$ProjectID = (isset($params['FilterData']['ProjectID']) && $params['FilterData']['ProjectID'] != '') ? $params['FilterData']['ProjectID'] : 0;
 			
 			$FilterString = "WHERE YEAR(PostingDate) = '$Year'";
 				
@@ -737,6 +739,15 @@ class ReportsController extends Controller
 			if ((isset($params['FilterData']['Month'])) && ($params['FilterData']['Month']!=0))
 			{
 				$FilterString .= ' AND MONTH(PostingDate) = ' . $params['FilterData']['Month'];
+			}
+
+			$where = 'WHERE 1 = 1 ';
+			if ($SupplierID != 0) {
+				$where .= " AND SupplierID = $SupplierID"; 
+			}
+
+			if ($ProjectID != 0) {
+				// $where .= " AND ProjectID = $ProjectID"; 
 			}
 		}
 		$Title = 'Supplier Statement';
@@ -756,7 +767,7 @@ class ReportsController extends Controller
 					JOIN creditnotes ON creditnotes.CreditNoteID = creditnotelines.CreditNoteID
 				)
 				) as Temp
-				WHERE SupplierID = $SupplierID
+				$where
 				ORDER BY CreatedDate Desc
 				";
 
@@ -765,6 +776,7 @@ class ReportsController extends Controller
 			]);
 		$productcategories = ArrayHelper::map(ProductCategory::find()->all(), 'ProductCategoryID', 'ProductCategoryName');		
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		
 		$supplier = Suppliers::findOne($SupplierID);
 		
@@ -817,7 +829,7 @@ class ReportsController extends Controller
 		return $this->render('viewreport', [
 				'content' => $content, 'months' => $months, 'years' => $years, 'suppliers' => $suppliers,
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true, 'CategoryFilterOnly' => true,
-			'SupplierFilter' => true,
+			'SupplierFilter' => true, 'projects' => $projects
 			]);
 	}	
 

@@ -10,6 +10,7 @@ use Yii;
  * @property int $ProjectDisbursementID
  * @property int $Year
  * @property int $ProjectID
+ * @property string $Date
  * @property string $Amount
  * @property string $CreatedDate
  * @property int $CreatedBy
@@ -33,7 +34,7 @@ class ProjectDisbursement extends \yii\db\ActiveRecord
 		return [
 			[['Year', 'ProjectID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['Amount'], 'number'],
-			[['CreatedDate'], 'safe'],
+			[['CreatedDate', 'Date'], 'safe'],
 		];
 	}
 
@@ -50,6 +51,7 @@ class ProjectDisbursement extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'Date' => 'Date',
 		];
 	}
 }

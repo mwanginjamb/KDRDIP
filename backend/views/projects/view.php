@@ -344,12 +344,6 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													/* [
-														'attribute' => 'ProjectDisbursementID',
-														'label' => 'ID',
-														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
-														'contentOptions' => ['style' => 'text-align:center'],
-													], */
 													[
 														'class' => 'yii\grid\SerialColumn',
 														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -359,6 +353,13 @@ Modal::end();
 														'headerOptions' => ['style'=>'color:black; text-align:left'],
 														'format'=>'text',
 														'value' => 'Year',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'label'=>'Date',
+														'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+														'format' => ['date', 'php:d/m/Y'],
+														'value' => 'Date',
 														'contentOptions' => ['style' => 'text-align:left'],
 													],
 													[
@@ -372,37 +373,10 @@ Modal::end();
 											]); ?>
 										</div>
 										<div class="tab-pane" id="tab5" aria-labelledby="base-tab5">
-											<h4 class="form-section">Safeguards</h4>												
-											<table width="100%" class="custom-table table-striped table-bordered" id="ParameterTable">
-											<thead>
-											<tr>
-												<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
-												<td style="padding: 4px 4px 4px 4px !important">Parameter</td>
-												<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">Yes</td>
-												<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">No</td>
-											</tr>	
-											</thead>
-											<tbody>
-											<?php
-											foreach ($projectSafeguards as $key => $parameters) { ?>
-												<tr>
-													<td style="padding: 4px 4px 4px 4px !important; text-align: left; font-weight: 900; color: black" colspan="4"><?= $key; ?></td>
-												</tr>	
-												<?php
-												foreach ($parameters as $x => $parameter) { ?>
-													<tr>
-														<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%"><?= $x + 1; ?></td>
-														<td style="padding: 4px 4px 4px 4px !important"><?= $parameter['SafeguardParamaterName']; ?></td>
-														<td style="padding: 4px 4px 4px 4px !important; text-align: center"><?= $parameter['Yes'] == 1 ? '<i class="la la-check success"></i>' : '' ?></td>
-														<td style="padding: 4px 4px 4px 4px !important; text-align: center"><?= $parameter['No'] == 1 ? '<i class="la la-close danger"></i>' : '' ?></td>
-													</tr>	
-													<?php
-												}
-											} ?>
-											</tbody>
-											</table>
-											<h4 class="form-section">Recomended Action</h4>
-											<?= $model->SafeguardsRecommendedAction; ?>
+											<h4 class="form-section">Safeguards</h4>
+											<div id="safeguards">											
+												<?= $this->render('safeguards', ['projectSafeguards' => $projectSafeguards, 'model' => $model]); ?>
+											</div>
 										</div>
 										<div class="tab-pane" id="tab6" aria-labelledby="base-tab6">
 											<h4 class="form-section">Beneficiaries</h4>	 
@@ -544,7 +518,8 @@ Modal::end();
 												<tr data-key="2">
 													<td colspan="7">
 														<h5>Activities</h5>
-														<table class="custom-table table-striped table-bordered"><thead>
+														<table class="custom-table table-striped table-bordered">
+														<thead>
 														<tr>
 															<th width="5%" style="color:black; text-align:center">ID</th>
 															<th style="color:black; text-align:left">Activity</th>
@@ -553,28 +528,42 @@ Modal::end();
 															<th width="10%">Responsibility</th>
 															<td width="10%">Actual Start Date</td>
 															<td width="10%">Actual End Date</td>
+															<td width="10%" style="text-align:right">Total</td>
 															<th width="5%" style="color:black; text-align:center">&nbsp;</th>
 														</tr>
 														</thead>
 														<tbody>
 															<?php
 															$activitiesList = isset($activities[$indicator->IndicatorID]) ? $activities[$indicator->IndicatorID] : [];
-															foreach ($activitiesList as $akey => $activity) { ?>
-															<tr data-key="2">
-																<td style="text-align:center"><?= $akey + 1?></td>
-																<td style="text-align:left"><?= $activity->ActivityName; ?></td>
-																<td><?= isset($activity->StartDate)? date('d/m/Y', strtotime($activity->StartDate)) : ''; ?></td>
-																<td><?= isset($activity->EndDate)? date('d/m/Y', strtotime($activity->EndDate))  : ''; ?></td>
-																<td><?= isset($activity->employees) ? $activity->employees->EmployeeName : ''; ?></td>
-																<td><?= isset($activity->ActualStartDate)? date('d/m/Y', strtotime($activity->ActualStartDate))  : ''; ?></td>
-																<td><?= isset($activity->ActualEndDate)? date('d/m/Y', strtotime($activity->ActualEndDate)) : ''; ?></td>																
-																<td><a href="#activity-budget" class = "btn-sm btn-danger pull-right" data-toggle="modal" data-activity-id="<?= $activity->ActivityID; ?>"><i class="ft-more-horizontal"></i></a>
-																	<!-- <a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a> -->
-																</td>
-															</tr>	
-															<?php
+															$grandTotal = 0;
+															foreach ($activitiesList as $akey => $activity) { 
+																$total = isset($activityTotals[$activity->ActivityID]) ? $activityTotals[$activity->ActivityID]['Total'] : 0;
+																$grandTotal += $total;
+																?>
+																<tr data-key="2">
+																	<td style="text-align:center"><?= $akey + 1?></td>
+																	<td style="text-align:left"><?= $activity->ActivityName; ?></td>
+																	<td><?= isset($activity->StartDate)? date('d/m/Y', strtotime($activity->StartDate)) : ''; ?></td>
+																	<td><?= isset($activity->EndDate)? date('d/m/Y', strtotime($activity->EndDate))  : ''; ?></td>
+																	<td><?= isset($activity->employees) ? $activity->employees->EmployeeName : ''; ?></td>
+																	<td><?= isset($activity->ActualStartDate)? date('d/m/Y', strtotime($activity->ActualStartDate))  : ''; ?></td>
+																	<td><?= isset($activity->ActualEndDate)? date('d/m/Y', strtotime($activity->ActualEndDate)) : ''; ?></td>	
+																	<td style="text-align:right"><?= number_format($total, 2); ?></td>															
+																	<td><a href="#activity-budget" class = "btn-sm btn-danger pull-right" data-toggle="modal" data-activity-id="<?= $activity->ActivityID; ?>"><i class="ft-more-horizontal"></i></a>
+																		<!-- <a class="btn-sm btn-secondary" href="/mande/backend/web/indicators/update?id=2&amp;pid=1"><i class="ft-more-horizontal"></i></a> -->
+																	</td>
+																</tr>	
+																<?php
 															} ?>
 															</tbody>
+															<tfoot>
+															<tr>
+																<th width="5%" style="color:black; text-align:center">&nbsp;</th>
+																<th colspan="6">Total</th>
+																<td width="10%" style="text-align:right"><?= number_format($grandTotal,2); ?></td>
+																<th width="5%">&nbsp;</th>
+															</tr>
+															</tfoot>
 														</table>
 													</td>
 												</tr>

@@ -150,7 +150,7 @@ a.desc:after {
 	font-size: 1rem;
 	font-weight: 400;
 	height: 2.5rem;
-	padding-top: 10px 15px !important;
+	padding-top: 10px !important;
 	padding-bottom: 10px !important;
 	padding-left: 15px !important;
 	padding-right: 15px !important;
@@ -250,4 +250,19 @@ input[type='checkbox'].form-control:focus {
 
 .custom-group {
 	margin-bottom: 0 !important
+}
+
+.slim-table {
+	background-color: #FFFFFF;
+	border: 0;
+	margin-bottom: 1rem;
+	max-width: 100%;
+	width: 100%;
+}
+
+.slim-field {
+	padding: 0 !important; 
+	width: 100% !important;
+	border: none;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }

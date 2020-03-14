@@ -66,7 +66,7 @@ class Projects extends \yii\db\ActiveRecord
 	{
 		return [
 			'ProjectID' => 'Project ID',
-			'ProjectName' => 'Project Name',
+			'ProjectName' => 'Sub-Project Name',
 			'ProjectParentID' => 'Parent Project',
 			'Objective' => 'Objective',
 			'StartDate' => 'Start Date',

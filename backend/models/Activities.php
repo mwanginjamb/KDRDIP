@@ -1,6 +1,8 @@
 <?php
 
 namespace app\models;
+use app\models\ActivityBudget;
+use yii\helpers\ArrayHelper;
 
 use Yii;
 
@@ -21,6 +23,8 @@ use Yii;
  */
 class Activities extends \yii\db\ActiveRecord
 {
+	// public $Total = $this->getCalculateTotal();
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -74,5 +78,21 @@ class Activities extends \yii\db\ActiveRecord
 	public function getIndicators()
 	{
 		return $this->hasOne(Indicators::className(), ['IndicatorID' => 'IndicatorID'])->from(indicators::tableName());
+	}
+
+	public static function totals($projectID)
+	{
+		$sql = "SELECT sum(Amount) as Total, activitybudget.ActivityID FROM mande.activitybudget
+					JOIN activities on activities.ActivityID = activitybudget.AccountID
+					JOIN indicators on indicators.IndicatorID = activities.IndicatorID
+					WHERE indicators.ProjectID = $projectID
+					Group By activitybudget.ActivityID";
+		// return ActivityBudget::findBySql($sql)->asArray()->all();
+		return ArrayHelper::index(ActivityBudget::findBySql($sql)->asArray()->all(), 'ActivityID');
+	}
+
+	public static function getCalculateTotal()
+	{
+		return 0;
 	}
 }

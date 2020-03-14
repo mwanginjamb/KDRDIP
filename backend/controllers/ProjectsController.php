@@ -223,7 +223,12 @@ class ProjectsController extends Controller
 		$projectSafeguards = ArrayHelper::index($projectSafeguards, null, 'SafeguardName');
 
 		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();
+	/* 	print('<pre>');
+		print_r($activitiesArray); exit; */
 		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');
+		
+		$activityTotals = Activities::totals($id);
+
 		$indicatorTargets = IndicatorTargets::find()->joinWith('indicators')
 									->where(['indicators.ProjectID' => $id])->asArray()->all();
 		$targets = ArrayHelper::index($indicatorTargets, 'ReportingPeriodID', [function ($element) {
@@ -250,6 +255,7 @@ class ProjectsController extends Controller
 			'reportingPeriods' => $reportingPeriods,
 			'projectSafeguards' => $projectSafeguards,
 			'activities' => $activities,
+			'activityTotals' => $activityTotals,
 			'targets' => $targets,
 			'actuals' => $actuals,
 			'rights' => $this->rights,
@@ -575,6 +581,32 @@ class ProjectsController extends Controller
 
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
+	
+	public function actionSafeguards($id, $op)
+	{
+		$model = $this->findModel($id);
+
+		$where = '';
+		if ($op==1) {
+			$where = ' AND Yes = 1';
+		} elseif ($op == 2) {
+			$where = ' AND No = 1';
+		}
+		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
+					SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
+					JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
+					AND `ProjectID`= $id $where
+					) as temp 
+					JOIN safeguards ON safeguards.SafeguardID = temp.SafeguardID
+					ORDER BY SafeguardName, SafeguardParamaterID";
+
+		$projectSafeguards = ProjectSafeguards::findBySql($sql)->asArray()->all();
+		$projectSafeguards = ArrayHelper::index($projectSafeguards, null, 'SafeguardName');
+		return $this->renderPartial('safeguards', [
+			'model' => $model,
+			'projectSafeguards' => $projectSafeguards,
+		]);
+	}
 
 	private static function saveProjectFunding($columns, $model)
 	{
@@ -655,6 +687,7 @@ class ProjectsController extends Controller
 					$_column = new ProjectDisbursement();
 					$_column->ProjectID = $model->ProjectID;
 					$_column->Year = $column['Year'];
+					$_column->Date = $column['Date'];
 					$_column->Amount = $column['Amount'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
@@ -662,6 +695,7 @@ class ProjectsController extends Controller
 			} else {
 				$_column = ProjectDisbursement::findOne($column['ProjectDisbursementID']);
 				$_column->Year = $column['Year'];
+				$_column->Date = $column['Date'];
 				$_column->Amount = $column['Amount'];
 				$_column->save();
 			}

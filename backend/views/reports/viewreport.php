@@ -31,13 +31,18 @@
 						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
 					} elseif (isset($bankAccounts) && count($bankAccounts) > 0) {
 						echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
-					} elseif (isset($projects) && count($projects) > 0) {
-						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...']);
 					} elseif (isset($projectStatus) && count($projectStatus) > 0) {
 						echo $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']);
+					} elseif (isset($projects) && count($projects) > 0) {
+						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...']);
 					}
 					?>
 				</div>
+				<?php if (isset($projects) && count($projects) > 0 && $SupplierFilter) { ?>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project'); ?>
+					</div>
+				<?php } ?>
 				<?php
 				if (!$CategoryFilterOnly) { ?>
 					<div class="col-lg-3">

@@ -89,16 +89,16 @@ use yii\widgets\ActiveForm;
 			</table>	
 			
 			<h4 class="form-section">Activities</h4>
-			<table width="100%" class="custom-table1" id="ActivitiesTable">
+			<table width="100%" class="slim-table1" id="ActivitiesTable">
 			<thead>
 			<tr>
-				<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
+				<td style="padding: 4px !important; text-align: center;">#</td>
 				<td style="padding: 4px !important">Description</td>
-				<td style="padding: 4px !important; width: 8%" width="8%">Start Date</td>
-				<td style="padding: 4px !important; width: 8%" width="8%">End Date</td>
-				<td style="padding: 4px !important; width: 8%" width="8%">Actual Start Date</td>
-				<td style="padding: 4px !important; width: 8%" width="8%">Actual End Date</td>
-				<td style="padding: 4px !important; width: 15%" width="15%">Responsibility</td>
+				<td style="padding: 4px !important; width: 5% !important">Start Date</td>
+				<td style="padding: 4px !important; width: 5% !important">End Date</td>
+				<td style="padding: 4px !important; width: 5% !important">Actual Start Date</td>
+				<td style="padding: 4px !important; width: 5% !important">Actual End Date</td>
+				<td style="padding: 4px !important; width: 10% !important">Responsibility</td>
 			</tr>	
 			</thead>
 			<?php
@@ -109,16 +109,16 @@ use yii\widgets\ActiveForm;
 						<?= $x+1; ?>
 						<?= $form->field($column, '[' . $x . ']ActivityID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 					</td>
-					<td><?= $form->field($column, '[' . $x . ']ActivityName')->textInput(['class' => 'form-control'])->label(false) ?></td>
-					<td><?= $form->field($column, '[' . $x . ']StartDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
-					<td><?= $form->field($column, '[' . $x . ']EndDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
-					<td><?= $form->field($column, '[' . $x . ']ActualStartDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
-					<td><?= $form->field($column, '[' . $x . ']ActualEndDate')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
-					<td><?= $form->field($column, '[' . $x . ']ResponsibilityID', ['template' => '{label}{input}'])->dropDownList($employees, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ActivityName')->textInput(['class' => 'form-control1 slim-field '])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']StartDate')->textInput(['class' => 'form-control1 slim-field ', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']EndDate')->textInput(['class' => 'form-control1 slim-field ', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ActualStartDate')->textInput(['class' => 'form-control1 slim-field ', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ActualEndDate')->textInput(['class' => 'form-control1 slim-field ', 'type' => 'date'])->label(false) ?></td>
+					<td><?= $form->field($column, '[' . $x . ']ResponsibilityID', ['template' => '{label}{input}'])->dropDownList($employees, ['prompt'=>'','class'=>'form-control1 slim-field '])->label(false) ?></td>
 				</tr>
 				<?php
 			} ?>
-			</table>	 
+			</table>
 
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Cancel', ['projects/view', 'id' => $model->ProjectID], ['class' => 'btn btn-warning mr-1']) ?>

@@ -431,6 +431,44 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							</ul>
 						</li>
 					<?php } ?>
+
+					<?php if (count(array_intersect($rights, [80])) > 0) { ?>
+						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Complaints</span></a>
+							<ul class="menu-content">
+								<?php if (in_array(20, $rights)) { ?>
+									<li <?= ($currentPage == 'complaints') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Complaints</span></a>
+									</li>
+								<?php } ?>
+								<?php if (count(array_intersect($rights, [81, 82, 83, 84, 85])) > 0) { ?>
+									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
+										<ul class="menu-content">	
+											<?php if (in_array(81, $rights)) { ?>								
+												<li <?= ($currentPage == 'complaint-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Types</span></a>
+												</li>
+											<?php } ?>
+											<?php if (in_array(82, $rights)) { ?>
+												<li <?= ($currentPage == 'complaint-tiers') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-tiers"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Tiers</span></a>
+												</li>
+											<?php } ?>
+											<?php if (in_array(83, $rights)) { ?>
+												<li <?= ($currentPage == 'complaint-status') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-status"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Status</span></a>
+												</li>
+											<?php } ?>
+											<?php if (in_array(84, $rights)) { ?>
+												<li <?= ($currentPage == 'complaint-priorities') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-priorities"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Priorities</span></a>
+												</li>
+											<?php } ?>
+											<?php if (in_array(85, $rights)) { ?>
+												<li <?= ($currentPage == 'complaint-channels') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-channels"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Channels</span></a>
+												</li>
+											<?php } ?>															
+										</ul>
+									</li>
+								<?php } ?>
+							</ul>
+						</li>
+					<?php } ?>
+
 					<?php if (count(array_intersect($rights, [15, 54, 63, 19, 13])) > 0) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
 							<ul class="menu-content">

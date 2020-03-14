@@ -286,6 +286,7 @@ function calculateValue(row)
 					<tr>
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">Year</td>
+						<td style="padding: 4px !important" width="15%">Date</td>
 						<td style="padding: 4px !important" width="20%">Amount</td>
 					</tr>	
 					</thead>
@@ -298,6 +299,7 @@ function calculateValue(row)
 								<?= $form->field($column, '[' . $x . ']ProjectDisbursementID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 							</td>							
 							<td><?= $form->field($column, '[' . $x . ']Year')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']Date')->textInput(['class' => 'form-control', 'type' => 'date'])->label(false) ?></td>
 							<td><?= $form->field($column, '[' . $x . ']Amount')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
 						</tr>
 						<?php
