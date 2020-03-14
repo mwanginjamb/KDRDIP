@@ -42,6 +42,14 @@ Modal::end();
 }
 
 </style>
+
+<style>
+#ParameterTable .form-group {
+	margin-bottom: 0px !important;
+	margin-top: 0px !important;
+	/* padding: 4px !important; */
+}
+</style>
 <script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
 <script>
 	$(document).ready(function(){
@@ -193,7 +201,13 @@ Modal::end();
 										</li>		
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab15" data-toggle="tab" aria-controls="tab15" href="#tab15" aria-expanded="false">Documents</a>
-										</li>								
+										</li>		
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab16" data-toggle="tab" aria-controls="tab16" href="#tab16" aria-expanded="false">Complaints</a>
+										</li>		
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab17" data-toggle="tab" aria-controls="tab17" href="#tab17" aria-expanded="false">GBV/SEA</a>
+										</li>					
 									</ul>
 									<div class="tab-content px-1 pt-1">
 										<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -883,6 +897,103 @@ Modal::end();
 												],
 											]); ?>
 										</div>
+
+										<div class="tab-pane" id="tab16" aria-labelledby="base-tab16">
+											<h4 class="form-section">Complaints</h4>	
+											 
+											<?= GridView::widget([
+												'dataProvider' => $complaints,
+												'showFooter' =>false,
+												'layout' => '{items}',
+												'tableOptions' => [
+													'class' => 'custom-table table-striped table-bordered',
+												],
+												'columns' => [
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+													],
+													[
+														'label'=>'Complainant',
+														'headerOptions' => ['style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'ComplainantName',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'attribute' => 'complaintTypes.ComplaintTypeName',
+														'format' => 'text',
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'attribute' => 'CreatedDate',
+														'format' => ['date', 'php:d/m/Y h:i a'],
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'label' => 'Created By',
+														'attribute' => 'users.fullName',
+														'headerOptions' => ['width' => '15%'],
+													],
+													[
+														'attribute' => 'complaintStatus.ComplaintStatusName',
+														'format' => 'text',
+														'headerOptions' => ['width' => '15%'],
+														'label' => 'Status'
+													],
+												],
+											]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab17" aria-labelledby="base-tab17">
+											<?php $form = ActiveForm::begin(); ?>		
+												<h4 class="form-section">GBV/SEA</h4>
+												<table class="custom-table table-striped table-bordered" id="ParameterTable" >
+												<thead>
+												<tr>
+													<th width="5%" style="color:black; text-align:center">ID</th>
+													<th style="color:black; text-align:left">Question</th>
+													<th width="20%" >Option</th>
+												</tr>
+												</thead>
+													<tbody>
+													<?php
+													$catID = 0;
+													$subCatID = 0;
+													foreach ($projectQuestionnaire as $x => $question) {
+														if ($catID != $question['QuestionnaireCategoryID']) { ?>
+															<tr>
+																<td style="padding: 4px 4px 4px 4px !important" colspan="3"><?= $question['QuestionnaireCategoryName']; ?></td>
+															</tr>
+															<?php
+															$catID = $question['QuestionnaireCategoryID'];
+															$subCatID = 0;
+														}
+														if ($subCatID != $question['QuestionnaireSubCategoryID']) { ?>
+															<tr>
+																<td style="padding: 4px 4px 4px 4px !important" colspan="3"><?= $question['QuestionnaireSubCategoryName']; ?></td>
+															</tr>
+															<?php
+															$subCatID = $question['QuestionnaireSubCategoryID'];
+														}
+														?>
+														<tr>
+															<td align="center" style="padding: 4px 4px 4px 4px !important">
+																<?= $x + 1; ?>
+																<?= $form->field($question, '[' . $x . ']ProjectQuestionnaireID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+																<?= $form->field($question, '[' . $x . ']QID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
+															</td>
+															<td style="padding: 4px 4px 4px 4px !important"><?= $question['Question']; ?></td>
+															<td align="center" style="padding: 4px 4px 4px 4px !important"><?= $form->field($question, '[' . $x . ']QuestionnaireStatusID', ['template' => '{label}{input}'])->dropDownList($questionnaireStatus, ['prompt'=>'','class'=>'form-control', 'style' => 'border-bottom: none'])->label(false) ?></td>
+														</tr>
+														<?php
+													} ?>
+													</tbody>
+												</table>
+												<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
+											<?php ActiveForm::end(); ?>
+										</div>
+
 									</div>
 								</div>
 							</div>

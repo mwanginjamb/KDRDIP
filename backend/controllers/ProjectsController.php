@@ -22,6 +22,7 @@ use app\models\ProjectRoles;
 use app\models\ReportingPeriods;
 use app\models\Counties;
 use app\models\SubCounties;
+use app\models\Wards;
 use app\models\Indicators;
 use app\models\IndicatorTargets;
 use app\models\IndicatorActuals;
@@ -29,10 +30,13 @@ use app\models\Components;
 use app\models\Activities;
 use app\models\Locations;
 use app\models\SubLocations;
+use app\models\QuestionnaireStatus;
 use app\models\Budget;
+use app\models\Complaints;
 use app\models\Documents;
 use app\models\ProjectSafeguards;
 use app\models\ProjectGallery;
+use app\models\ProjectQuestionnaire;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -136,7 +140,12 @@ class ProjectsController extends Controller
 	public function actionView($id)
 	{
 		if (Yii::$app->request->post()) {
+			$model = $this->findModel($id);
+			$this->saveProjectQuestionnaire(Yii::$app->request->post()['ProjectQuestionnaire'], $model);
+
 			$params = Yii::$app->request->post();
+			// print ('<pre>');
+			// print_r($params); exit;
 			foreach ($params as $key => $value) {
 				$keyArray = explode('_', $key);
 				if (count($keyArray) == 2) {
@@ -211,6 +220,10 @@ class ProjectsController extends Controller
 			'query' => Documents::find()->where(['RefNumber'=> $id, 'DocumentTypeID' => 2]),
 		]);
 
+		$complaints = new ActiveDataProvider([
+			'query' => Complaints::find()->where(['ProjectID'=> $id]),
+		]);
+
 		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
 					SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
 					RIGHT JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
@@ -222,11 +235,8 @@ class ProjectsController extends Controller
 		$projectSafeguards = ProjectSafeguards::findBySql($sql)->asArray()->all();
 		$projectSafeguards = ArrayHelper::index($projectSafeguards, null, 'SafeguardName');
 
-		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();
-	/* 	print('<pre>');
-		print_r($activitiesArray); exit; */
-		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');
-		
+		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();	
+		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');		
 		$activityTotals = Activities::totals($id);
 
 		$indicatorTargets = IndicatorTargets::find()->joinWith('indicators')
@@ -240,6 +250,33 @@ class ProjectsController extends Controller
 		$actuals = ArrayHelper::index($indicatorActuals, 'ReportingPeriodID', [function ($element) {
 																			return $element['IndicatorID'];
 																	}]);
+
+		$sql = "Select *, QuestionnaireCategoryName, QuestionnaireSubCategoryName, temp.QuestionnaireCategoryID, temp.QuestionnaireSubCategoryID from (
+					Select questionnaires.QuestionnaireID as QID, Question, QuestionnaireCategoryID, QuestionnaireSubCategoryID, projectquestionnaire.*					
+					from projectquestionnaire
+					RIGHT JOIN questionnaires ON questionnaires.QuestionnaireID = projectquestionnaire.QuestionnaireID
+					AND ProjectID = $id
+					) temp
+					LEFT JOIN questionnairecategories ON questionnairecategories.QuestionnaireCategoryID = temp.QuestionnaireCategoryID
+					LEFT JOIN questionnairesubcategories ON questionnairesubcategories.QuestionnaireSubCategoryID = temp.QuestionnaireSubCategoryID
+					ORDER BY temp.QuestionnaireCategoryID, temp.QuestionnaireSubCategoryID";
+		$questionnaire = ProjectQuestionnaire::findBySql($sql)->asArray()->all();
+
+		$projectQuestionnaire = [];
+		foreach ($questionnaire as $key => $questions) {
+			$projectQuestionnaire[$key] = new ProjectQuestionnaire();
+			$projectQuestionnaire[$key]->ProjectQuestionnaireID = $questions['ProjectQuestionnaireID'];
+			$projectQuestionnaire[$key]->QuestionnaireID = $questions['QuestionnaireID'];
+			$projectQuestionnaire[$key]->Question = $questions['Question'];
+			$projectQuestionnaire[$key]->QuestionnaireStatusID = $questions['QuestionnaireStatusID'];
+			$projectQuestionnaire[$key]->ProjectID = $questions['ProjectID'];
+			$projectQuestionnaire[$key]->QuestionnaireCategoryName = $questions['QuestionnaireCategoryName'];
+			$projectQuestionnaire[$key]->QuestionnaireSubCategoryName = $questions['QuestionnaireSubCategoryName'];
+			$projectQuestionnaire[$key]->QID = $questions['QID'];
+			$projectQuestionnaire[$key]->QuestionnaireCategoryID = $questions['QuestionnaireCategoryID'];
+			$projectQuestionnaire[$key]->QuestionnaireSubCategoryID = $questions['QuestionnaireSubCategoryID'];
+		}
+		$questionnaireStatus = ArrayHelper::map(QuestionnaireStatus::find()->orderBy('QuestionnaireStatusName')->all(), 'QuestionnaireStatusID', 'QuestionnaireStatusName');		
 
 		return $this->render('view', [
 			'model' => $this->findModel($id),
@@ -261,6 +298,9 @@ class ProjectsController extends Controller
 			'rights' => $this->rights,
 			'projectGallery' => $projectGallery,
 			'projectDocuments' => $projectDocuments,
+			'complaints' => $complaints,
+			'projectQuestionnaire' => $projectQuestionnaire,
+			'questionnaireStatus' => $questionnaireStatus,
 		]);
 	}
 
@@ -806,6 +846,20 @@ class ProjectsController extends Controller
 		}
 	}
 
+	public function actionWards($id)
+	{
+		$model = Wards::find()->where(['SubCountyID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->WardID . "'>" . $item->WardName . "</option>";
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
+	}
+
 	public function actionLocations($id)
 	{
 		$model = Locations::find()->where(['SubCountyID' => $id])->all();
@@ -849,6 +903,25 @@ class ProjectsController extends Controller
 				$_column = ProjectSafeguards::findOne($column['ProjectSafeguardID']);
 				$_column->Yes = isset($column['SelectedOption']) && $column['SelectedOption'] == 1 ? 1 : 0;
 				$_column->No = isset($column['SelectedOption']) && $column['SelectedOption'] == 2 ? 1 : 0;
+				$_column->save();
+			}
+		}
+	}
+
+	
+	public function saveProjectQuestionnaire($columns, $model)
+	{
+		foreach ($columns as $key => $column) {
+			if ($column['ProjectQuestionnaireID'] == '') {
+				$_column = new ProjectQuestionnaire();
+				$_column->ProjectID = $model->ProjectID;
+				$_column->QuestionnaireID = $column['QID'];
+				$_column->QuestionnaireStatusID = $column['QuestionnaireStatusID'];
+				$_column->CreatedBy = Yii::$app->user->identity->UserID;
+				$_column->save();
+			} else {
+				$_column = ProjectQuestionnaire::findOne($column['ProjectQuestionnaireID']);
+				$_column->QuestionnaireStatusID = $column['QuestionnaireStatusID'];
 				$_column->save();
 			}
 		}

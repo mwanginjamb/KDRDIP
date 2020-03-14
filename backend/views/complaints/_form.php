@@ -8,62 +8,158 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="complaints-form">
+<div class="card">
+	<div class="card-header">
+		<h4 class="form-section"><?= $this->title; ?></h4>
+		
+		<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
+		<div class="heading-elements">
+			<ul class="list-inline mb-0">
+				<li><a data-action="collapse"><i class="ft-minus"></i></a></li>
+				<li><a data-action="reload"><i class="ft-rotate-cw"></i></a></li>
+				<li><a data-action="expand"><i class="ft-maximize"></i></a></li>
+				<!-- <li><a data-action="close"><i class="ft-x"></i></a></li> -->
+			</ul>
+		</div>
+	</div>
+	<div class="card-content collapse show">
+		<div class="card-body">
+			<?php $form = ActiveForm::begin(); ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplainantName')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+						
+				</div>			
+			</div>
 
-    <?php $form = ActiveForm::begin(); ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'PostalAddress')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'PostalCode')->textInput() ?>	
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'ComplainantName')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Town')->textInput() ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'CountryID')->dropDownList($countries, ['prompt' => 'Select...']) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'PostalAddress')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Mobile')->textInput() ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'Telephone')->textInput() ?>	
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'PostalCode')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Email')->textInput() ?>
+				</div>
+				<div class="col-md-6">
+							
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'Town')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+				<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control',
+										'onchange' => '
+										$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-counties?id=') . '"+$(this).val(), function( data ) {
 
-    <?= $form->field($model, 'CountryID')->textInput() ?>
+											$( "select#complaints-subcountyid" ).html( data );
+										});
+									']) ?>	
+				</div>
+				<div class="col-md-6">
+				<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt' => 'Select...', 'class' => 'form-control',
+										'onchange' => '
+										$.post( "' . Yii::$app->urlManager->createUrl('projects/wards?id=') . '"+$(this).val(), function( data ) {
 
-    <?= $form->field($model, 'CountyID')->textInput() ?>
+											$( "select#complaints-wardid" ).html( data );
+										});
+									']) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'SubCountyID')->textInput() ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'WardID')->dropDownList($wards, ['prompt'=>'Select']); ?>	
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'Village')->textInput(['maxlength' => true]) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'WardID')->textInput() ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplaintTypeID')->dropDownList($complaintTypes, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'IncidentDate')->textInput(['type' => 'date']) ?>	
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'Village')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplaintSummary')->textarea(['rows' => 3]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ReliefSought')->textarea(['rows' => 3]) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'Telephone')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplaintTierID')->dropDownList($complaintTiers, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplaintChannelID')->dropDownList($complaintChannels, ['prompt'=>'Select']); ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'Mobile')->textInput(['maxlength' => true]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplaintPriorityID')->dropDownList($complaintPriorities, ['prompt'=>'Select']); ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'IncidentDate')->textInput() ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'OfficerJustification')->textarea(['rows' => 3]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'Resolution')->textarea(['rows' => 3]) ?>
+				</div>			
+			</div>
 
-    <?= $form->field($model, 'ComplaintSummary')->textarea(['rows' => 6]) ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'AssignedUserID')->dropDownList($users, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ComplaintStatusID')->dropDownList($complaintStatus, ['prompt'=>'Select']); ?>
+				</div>			
+			</div>			
 
-    <?= $form->field($model, 'ReliefSought')->textarea(['rows' => 6]) ?>
+			<div class="form-group">
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
+			</div>
 
-    <?= $form->field($model, 'ComplaintTypeID')->textInput() ?>
+			<?php ActiveForm::end(); ?>
 
-    <?= $form->field($model, 'OfficerJustification')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'ComplaintStatusID')->textInput() ?>
-
-    <?= $form->field($model, 'ComplaintTierID')->textInput() ?>
-
-    <?= $form->field($model, 'AssignedUserID')->textInput() ?>
-
-    <?= $form->field($model, 'ComplaintPriorityID')->textInput() ?>
-
-    <?= $form->field($model, 'Resolution')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'CreatedBy')->textInput() ?>
-
-    <?= $form->field($model, 'CreatedDate')->textInput() ?>
-
-    <?= $form->field($model, 'Deleted')->textInput() ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
-    </div>
-
-    <?php ActiveForm::end(); ?>
-
+	 </div>
 </div>

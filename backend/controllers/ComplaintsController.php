@@ -4,10 +4,22 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Complaints;
+use app\models\ComplaintTypes;
+use app\models\ComplaintTiers;
+use app\models\ComplaintChannels;
+use app\models\ComplaintPriorities;
+use app\models\ComplaintStatus;
+use app\models\Countries;
+use app\models\Counties;
+use app\models\Projects;
+use app\models\SubCounties;
+use app\models\Wards;
+use app\models\Users;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
@@ -115,9 +127,32 @@ class ComplaintsController extends Controller
 			return $this->redirect(['view', 'id' => $model->ComplaintID]);
 		}
 
+		$countries = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
+		$complaintTypes = ArrayHelper::map(ComplaintTypes::find()->all(), 'ComplaintTypeID', 'ComplaintTypeName');
+		$complaintTiers = ArrayHelper::map(ComplaintTiers::find()->all(), 'ComplaintTierID', 'ComplaintTierName');
+		$complaintChannels = ArrayHelper::map(ComplaintChannels::find()->all(), 'ComplaintChannelID', 'ComplaintChannelName');
+		$complaintPriorities = ArrayHelper::map(ComplaintPriorities::find()->all(), 'ComplaintPriorityID', 'ComplaintPriorityName');
+		$complaintStatus = ArrayHelper::map(ComplaintStatus::find()->all(), 'ComplaintStatusID', 'ComplaintStatusName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Wards::find()->all(), 'WardID', 'WardName');
+		$users = ArrayHelper::map(Users::find()->all(), 'UserID', 'FullName');
+
 		return $this->render('create', [
 			'model' => $model,
 			'rights' => $this->rights,
+			'countries' => $countries,
+			'complaintTypes' => $complaintTypes,
+			'complaintTiers' => $complaintTiers,
+			'complaintChannels' => $complaintChannels,
+			'complaintPriorities' => $complaintPriorities,
+			'complaintStatus' => $complaintStatus,
+			'counties' => $counties,
+			'projects' => $projects,
+			'subCounties' => $subCounties,
+			'wards' => $wards,
+			'users' => $users,
 		]);
 	}
 
@@ -136,9 +171,32 @@ class ComplaintsController extends Controller
 			return $this->redirect(['view', 'id' => $model->ComplaintID]);
 		}
 
+		$countries = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
+		$complaintTypes = ArrayHelper::map(ComplaintTypes::find()->all(), 'ComplaintTypeID', 'ComplaintTypeName');
+		$complaintTiers = ArrayHelper::map(ComplaintTiers::find()->all(), 'ComplaintTierID', 'ComplaintTierName');
+		$complaintChannels = ArrayHelper::map(ComplaintChannels::find()->all(), 'ComplaintChannelID', 'ComplaintChannelName');
+		$complaintPriorities = ArrayHelper::map(ComplaintPriorities::find()->all(), 'ComplaintPriorityID', 'ComplaintPriorityName');
+		$complaintStatus = ArrayHelper::map(ComplaintStatus::find()->all(), 'ComplaintStatusID', 'ComplaintStatusName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Wards::find()->all(), 'WardID', 'WardName');
+		$users = ArrayHelper::map(Users::find()->all(), 'UserID', 'FullName');
+
 		return $this->render('update', [
 			'model' => $model,
 			'rights' => $this->rights,
+			'countries' => $countries,
+			'complaintTypes' => $complaintTypes,
+			'complaintTiers' => $complaintTiers,
+			'complaintChannels' => $complaintChannels,
+			'complaintPriorities' => $complaintPriorities,
+			'complaintStatus' => $complaintStatus,
+			'counties' => $counties,
+			'projects' => $projects,
+			'subCounties' => $subCounties,
+			'wards' => $wards,
+			'users' => $users,
 		]);
 	}
 

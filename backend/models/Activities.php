@@ -82,7 +82,7 @@ class Activities extends \yii\db\ActiveRecord
 
 	public static function totals($projectID)
 	{
-		$sql = "SELECT sum(Amount) as Total, activitybudget.ActivityID FROM mande.activitybudget
+		$sql = "SELECT sum(Amount) as Total, activitybudget.ActivityID FROM activitybudget
 					JOIN activities on activities.ActivityID = activitybudget.AccountID
 					JOIN indicators on indicators.IndicatorID = activities.IndicatorID
 					WHERE indicators.ProjectID = $projectID

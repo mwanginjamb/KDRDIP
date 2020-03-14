@@ -9,12 +9,22 @@ $this->title = 'Create Complaints';
 $this->params['breadcrumbs'][] = ['label' => 'Complaints', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="complaints-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'countries' => $countries,
+		'complaintTypes' => $complaintTypes,
+		'complaintTiers' => $complaintTiers,
+		'complaintChannels' => $complaintChannels,
+		'complaintPriorities' => $complaintPriorities,
+		'complaintStatus' => $complaintStatus,
+		'counties' => $counties,
+		'projects' => $projects,
+		'subCounties' => $subCounties,
+		'wards' => $wards,
+		'users' => $users,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>
