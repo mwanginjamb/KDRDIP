@@ -176,7 +176,7 @@ class RequisitionController extends Controller
 				$lines[$x] = new RequisitionLine();
 				$lines[$x]->RequisitionLineID = $line['RequisitionLineID'];
             $lines[$x]->QuotationTypeID = $line['QuotationTypeID'];
-            $lines[$x]->ProductID = $line['ProductID'];
+            // $lines[$x]->ProductID = $line['ProductID'];
             $lines[$x]->ProjectID = $line['ProjectID'];
             $lines[$x]->Quantity = $line['Quantity'];
             $lines[$x]->Description = $line['Description'];
@@ -251,7 +251,7 @@ class RequisitionController extends Controller
 					$_line->RequisitionID = $id;
 					$_line->ProductID = ($line['QuotationTypeID'] == 1) ? $line['ProductID'] : 0;
 					$_line->AccountID = ($line['QuotationTypeID'] != 1) ? $line['ProductID'] : 0;
-					$_line->ProjectID = isset($line['ProjectID']) ? $line['ProjectID'] : 0;
+					// $_line->ProjectID = isset($line['ProjectID']) ? $line['ProjectID'] : 0;
 					$_line->Quantity = $line['Quantity'];
 					$_line->Description = $line['Description'];
 					$_line->QuotationTypeID = $line['QuotationTypeID'];
@@ -274,9 +274,6 @@ class RequisitionController extends Controller
 		$products[2] = $accounts;
 		$products[3] = $accounts;
 
-		// print '<pre>';
-		// print_r($lines); exit;
-		// print_r($products); exit;
 		if (Yii::$app->request->post()) {
 			$params = Yii::$app->request->post();
 			$requisitionLine = isset($params['RequisitionLine']) ? $params['RequisitionLine'] : [];
@@ -285,7 +282,7 @@ class RequisitionController extends Controller
 				$lines[$x]->RequisitionLineID = $line['RequisitionLineID'];
             $lines[$x]->QuotationTypeID = $line['QuotationTypeID'];
             $lines[$x]->ProductID = $line['ProductID'];
-            $lines[$x]->ProjectID = $line['ProjectID'];
+            // $lines[$x]->ProjectID = $line['ProjectID'];
             $lines[$x]->Quantity = $line['Quantity'];
             $lines[$x]->Description = $line['Description'];
 			}
@@ -294,8 +291,6 @@ class RequisitionController extends Controller
 		for ($x = count($lines); $x <= 9; $x++) { 
 			$lines[$x] = new RequisitionLine();
 		}
-		/* print '<pre>';
-		print_r($lines); exit; */
 		
 		return $this->render('update', [
 			'model' => $model,
@@ -307,7 +302,6 @@ class RequisitionController extends Controller
 			'projects' => $projects,
 			'rights' => $this->rights,
 		]);
-
 	}
 
 	public function actionSubmit($id)

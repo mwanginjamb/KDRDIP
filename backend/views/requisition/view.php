@@ -78,8 +78,9 @@ $FormID = 6;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'RequisitionID',
-									'CreatedDate',
+								'RequisitionID',
+								'projects.ProjectName',
+								'CreatedDate',
 								[
 									'label'=>'Requested By',
 									'attribute' => 'users.fullName',
@@ -89,23 +90,15 @@ $FormID = 6;
 									'approvalstatus.ApprovalStatusName',
 							],
 						]) ?>
-
+						<h4 class="form-section">Items</h4>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'layout' => '{items}',
 							'tableOptions' => [
-								'class' => 'custom-table table-striped table-bordered zero-configuration',
+								'class' => 'custom-table table-striped table-bordered zero-configuration1',
 							],
 							'showFooter' =>false,
 							'columns' => [
-								/* [
-									'label'=>'ID',
-									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-									'contentOptions' => ['style' => 'text-align:center'],
-									'format'=>'text',
-									'value' => 'RequisitionLineID',
-									'contentOptions' => ['style' => 'text-align:left'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -130,13 +123,13 @@ $FormID = 6;
 									},
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
-								[
+	/* 							[
 									'label'=>'Project',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
 									'format'=> 'text',
 									'value' => 'projects.ProjectName',
 									'contentOptions' => ['style' => 'text-align:left'],
-								],
+								], */
 								[
 									'label'=>'Quantity',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:right'],

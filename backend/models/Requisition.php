@@ -16,6 +16,7 @@ use Yii;
  * @property string $PostingDate
  * @property integer $ApprovalStatusID
  * @property integer $StoreID
+ * @property integer $ProjectID
  */
 class Requisition extends \yii\db\ActiveRecord
 {
@@ -34,9 +35,9 @@ class Requisition extends \yii\db\ActiveRecord
 	{
 		return [
 			[['CreatedDate', 'PostingDate'], 'safe'],
-			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'StoreID'], 'integer'],
+			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'StoreID', 'ProjectID'], 'integer'],
 			[['Notes', 'Description'], 'string'],
-			[['Description'], 'required'],
+			[['Description', 'ProjectID'], 'required'],
 		];
 	}
 
@@ -56,6 +57,7 @@ class Requisition extends \yii\db\ActiveRecord
 			'ApprovalStatusID' => 'Approval Status',
 			'StoreID' => 'Store',
 			'Description' => 'Description',
+			'ProjectID' => 'Sub Project',
 		];
 	}
 	
@@ -71,6 +73,11 @@ class Requisition extends \yii\db\ActiveRecord
 
 	public function getStores()
 	{
-		return $this->hasOne(Stores::className(), ['StoreID' => 'StoreID'])->from(Stores::tableName());
+		return $this->hasOne(Stores::className(), ['StoreID' => 'StoreID'])->from(stores::tableName());
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
 	}
 }

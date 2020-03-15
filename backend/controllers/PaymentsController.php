@@ -18,6 +18,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use kartik\mpdf\Pdf;
 
 /**
  * PaymentsController implements the CRUD actions for Payments model.
@@ -278,5 +279,54 @@ class PaymentsController extends Controller
 		} else {
 			echo '<option>-</option>';
 		}
+	}
+
+	public function actionPaymentVoucher($id)
+	{
+		$model = Payments::find()->where(['PaymentID' => $id])
+										->joinWith('suppliers')
+										->joinWith('bankAccounts')
+										->joinWith('paymentMethods')
+										->one();
+		$Title = 'Payment Voucher';
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('paymentvoucher', ['model' => $model]);
+
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE, 
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4, 
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING, 
+			// your html content input
+			'content' => $content,  
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting 
+			'cssFile' => 'css/pdf.css',
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			// 'cssInline' => '.kv-heading-1{font-size:18px}', 
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [ 
+				// 'SetHeader'=>[$Title], 
+				// 'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		// $pdf->SetTitle('My Title');
+		
+		// return the pdf output as per the destination setting
+		//return $pdf->render(); 
+		$content = $pdf->render('', 'S'); 
+		$content = chunk_split(base64_encode($content));
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', ['content' => $content, 'model' => $model]);
 	}
 }

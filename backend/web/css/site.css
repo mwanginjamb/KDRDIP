@@ -188,7 +188,7 @@ form div.required label.control-label:after {
 }
 
 select.form-control {
-	height: 42px;
+	height: 40px;
 }
  
 .select2-container--krajee .select2-selection {
@@ -266,3 +266,4 @@ input[type='checkbox'].form-control:focus {
 	border: none;
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
+

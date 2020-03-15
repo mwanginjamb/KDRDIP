@@ -1,0 +1,80 @@
+
+.pdf-table {
+	background-color: #FFFFFF;
+	border: 0;
+	margin-bottom: 1rem;
+	max-width: 100%;
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.pdf-table tbody td, .pdf-table tbody th {
+	font-size: 1rem;
+	font-weight: 400;
+	height: 2.5rem;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
+	border: 1px solid #E3EBF3;
+}
+
+.pdf-table thead td, .pdf-table thead th, .pdf-table tfoot td, .pdf-table tfoot th {
+	font-size: 1rem;
+	font-weight: 900;
+	/* height: 2.5rem; */
+	padding-top: 3px !important;
+	padding-bottom: 3px !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
+	border: 1px solid #E3EBF3;
+	background-color: darkgray;
+	text-align: left;
+}
+
+.company-name {
+	margin: 3px;
+	font-weight: 900
+}
+
+.pdf-table .number-column {
+	text-align : right !important;
+}
+
+.pdf-signoff-table .underline {
+	border-bottom: 1px solid black;
+}
+
+.pdf-signoff-table td, .pdf-signoff-table th {
+	font-size: 1rem;
+	font-weight: 900;
+	height: 4rem;
+	/* padding-top: 3px !important;
+	padding-bottom: 3px !important;
+	padding-left: 3px !important; */
+	padding-right: 5px !important;
+	vertical-align: bottom;
+}
+
+.title {
+	text-align:center; 
+	text-decoration: underline; 
+	font-weight: 900;
+	font-size: 2rem;
+}
+
+.company-name {
+	text-align:center; 
+	font-weight: 900;
+	font-size: 1rem;
+}
+
+.supplier-name {
+	text-align:left; 
+	font-weight: 900;
+	font-size: 1rem;
+}
+
+.space {
+	height: 10px;
+}

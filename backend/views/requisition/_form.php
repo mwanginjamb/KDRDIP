@@ -37,6 +37,14 @@ function addRow()
 }
 </script>
 
+<style>
+#RequisitionTable .form-group {
+	margin-bottom: 0px !important;
+	margin-top: 0px !important;
+	/* padding: 4px !important; */
+}
+</style>
+
 <div class="card">
 	<div class="card-header">
 		<h4 class="form-section"><?= $this->title; ?></h4>
@@ -54,35 +62,30 @@ function addRow()
 	<div class="card-content collapse show">
 		<div class="card-body">
 
-			<?php $form = ActiveForm::begin([
-			'id' => 'contact-form',
-				'fieldConfig' => [
-					'options' => ['tag' => false, ],
-					'enableClientValidation'=> false,
-					'enableAjaxValidation'=> false,
-				],
-			]); 
-			?>
+			<?php $form = ActiveForm::begin(); ?>
 			<table width="100%">
 			<tr> 
-				<td width="50%"><?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?></td>
+				<td width="50%">
+					<?= $form->field($model, 'Description')->textInput(['maxlength' => true]) ?>
+				</td>
 				<td>
-					
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'Select']); ?>
 				</td>
 			</tr>	
 			</table>
 			<?php
 			/* if (!$model->isNewRecord)
 			{ */?> 
+			<h4 class="form-section">Items</h4>
 				<table width="100%" class="custom-table table-striped table-bordered-min" id="RequisitionTable">
 				<thead>
 				<tr>
 					<td style="padding: 4px 4px 4px 4px !important; text-align: center;" width="5%">#</td>
 					<td style="padding: 4px 4px 4px 4px !important" width="15%">Type</td>
 					<td style="padding: 4px 4px 4px 4px !important">Product</td>
-					<td style="padding: 4px 4px 4px 4px !important" width="15%">Project</td>
+					<!-- <td style="padding: 4px 4px 4px 4px !important" width="15%">Project</td> -->
 					<td style="padding: 4px 4px 4px 4px !important" width="15%">Quantity</td>
-					<td style="padding: 4px 4px 4px 4px !important" width="30%">Description</td>
+					<td style="padding: 4px 4px 4px 4px !important" width="45%">Description</td>
 				</tr>	
 				</thead>
 				<?php 
@@ -99,7 +102,7 @@ function addRow()
 														'])->label(false) ?>
 						</td>					
 						<td><?= $form->field($line, '[' . $x . ']ProductID', ['template' => '{label}{input}'])->dropDownList(isset($products[$line->QuotationTypeID]) ? $products[$line->QuotationTypeID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
-						<td><?= $form->field($line, '[' . $x . ']ProjectID', ['template' => '{label}{input}'])->dropDownList($projects, ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
+						<!-- <td><?= $form->field($line, '[' . $x . ']ProjectID', ['template' => '{label}{input}'])->dropDownList($projects, ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td> -->
 						<td><?= $form->field($line, '[' . $x . ']Quantity', ['template' => '{label}{input}'])->textInput(['class'=>'form-control'])->label(false) ?></td>
 						<td><?= $form->field($line, '[' . $x . ']Description', ['template' => '{label}{input}'])->textInput(['class'=>'form-control'])->label(false) ?></td>			
 					</tr>
