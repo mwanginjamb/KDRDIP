@@ -209,7 +209,7 @@ class PaymentsController extends Controller
 		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
 		$supplierID = $model->SupplierID;
-		$sql = "SELECT InvoiceID, CONCAT('InvID: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName FROM mande.invoices
+		$sql = "SELECT InvoiceID, CONCAT('InvID: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName FROM invoices
 					WHERE SupplierID = $supplierID";
 		$invoices = ArrayHelper::map(Invoices::findBySql($sql)->asArray()->all(), 'InvoiceID', 'InvoiceName');
 

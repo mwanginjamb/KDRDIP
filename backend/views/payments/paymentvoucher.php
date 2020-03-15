@@ -29,7 +29,7 @@ $this->title = 'Payment Voucher';
 <table class="pdf-table">
 	<thead>
 		<tr>
-			<th width="10%">Ref. No.</th>
+			<th width="20%">Ref. No.</th>
 			<th >Description</th>
 			<th width="20%" class="number-column">Amount</th>
 		</tr>
