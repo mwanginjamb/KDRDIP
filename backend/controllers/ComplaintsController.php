@@ -135,8 +135,8 @@ class ComplaintsController extends Controller
 		$complaintStatus = ArrayHelper::map(ComplaintStatus::find()->all(), 'ComplaintStatusID', 'ComplaintStatusName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName');
-		$wards = ArrayHelper::map(Wards::find()->all(), 'WardID', 'WardName');
+		$subCounties = []; // ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName');
+		$wards = []; // ArrayHelper::map(Wards::find()->all(), 'WardID', 'WardName');
 		$users = ArrayHelper::map(Users::find()->all(), 'UserID', 'FullName');
 
 		return $this->render('create', [
@@ -179,8 +179,8 @@ class ComplaintsController extends Controller
 		$complaintStatus = ArrayHelper::map(ComplaintStatus::find()->all(), 'ComplaintStatusID', 'ComplaintStatusName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName');
-		$wards = ArrayHelper::map(Wards::find()->all(), 'WardID', 'WardName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
 		$users = ArrayHelper::map(Users::find()->all(), 'UserID', 'FullName');
 
 		return $this->render('update', [

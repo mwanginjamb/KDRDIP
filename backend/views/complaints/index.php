@@ -44,7 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								],
 								'ComplainantName',
 								[
-									'attribute' => 'complainttypes.ComplaintTypeName',
+									'attribute' => 'complaintTypes.ComplaintTypeName',
 									'format' => 'text',
 									'headerOptions' => ['width' => '15%'],
 									'label' => 'Complaint Type'
