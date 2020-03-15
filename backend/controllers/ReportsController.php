@@ -1385,4 +1385,108 @@ class ReportsController extends Controller
 			'bankAccounts' => $bankAccounts
 		]);
 	}
+
+	public function actionWriteExcel($model=[], $filename='Excel File')
+	{
+		return $this->WriteExcel($model, $filename, []);
+	}
+
+	public static function WriteExcel($model=[], $filename='Excel File', $diplayFields=[])
+	{
+		require_once 'PHPExcel/PHPExcel/IOFactory.php';
+		$objPHPExcel = new \PHPExcel(); // Create new PHPExcel object
+		$objPHPExcel->getProperties()->setCreator("M & E System")
+		->setLastModifiedBy("M & E System")
+		->setTitle("")
+		->setSubject("")
+		->setDescription("")
+		->setKeywords("")
+		->setCategory("");
+		// create style
+		$default_border = [
+									'style' => \PHPExcel_Style_Border::BORDER_THIN,
+									'color' => array('rgb'=>'1006A3')
+								];
+		$style_header = [
+								'borders' => [
+													'bottom' => $default_border,
+													'left' => $default_border,
+													'top' => $default_border,
+													'right' => $default_border,
+												],
+												'fill' => [
+													'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+													'color' => array('rgb'=>'E1E0F7'),
+												],
+												'font' => [
+													'bold' => true,
+													'size' => 12,
+												]
+								];
+		$style_content = [
+			'borders' => [
+				'bottom' => $default_border,
+				'left' => $default_border,
+				'top' => $default_border,
+				'right' => $default_border,
+			],
+			'fill' => [
+				'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+				'color' => array('rgb'=>'eeeeee'),
+			],
+			'font' => [
+				'size' => 12,
+			]
+			];
+		
+		// Create Header
+		$firstRow = $model[0];
+		$column = 'A';
+		foreach ($firstRow as $key => $value) {
+			if (in_array($key, $diplayFields)) {
+				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($column.'1', $key);
+				// set Column Width
+				$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setWidth(20);
+				$column ++;
+			}		
+		}
+		$objPHPExcel->getActiveSheet()->getStyle('A1:'.$column.'1')->applyFromArray( $style_header ); // give style to header
+		
+		// Create Data
+		$column = 'A';
+		$firststyle='A2';
+		$row = 2;
+		foreach ($model as $rows) {
+			$column = 'A';
+			foreach ($rows as $key => $value) {
+				if (in_array($key, $diplayFields)) {
+					$objPHPExcel->setActiveSheetIndex(0)->setCellValue($column.(string) $row, $value);
+					$column ++;		
+				}		
+			}
+			$row ++;
+		}
+		$laststyle = $column.$row;
+		$objPHPExcel->getActiveSheet()->getStyle($firststyle.':'.$laststyle)->applyFromArray( $style_content ); // give style to header
+		
+		// Rename worksheet
+		$objPHPExcel->getActiveSheet()->setTitle($filename);
+		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+		$objPHPExcel->setActiveSheetIndex(0);
+		// Redirect output to a client’s web browser (Excel5)
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename='.$filename.'.xls'); // file name of excel
+		header('Cache-Control: max-age=0');
+		// If you're serving to IE 9, then the following may be needed
+		header('Cache-Control: max-age=1');
+		// If you're serving to IE over SSL, then the following may be needed
+		header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+		header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+		header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+		header ('Pragma: public'); // HTTP/1.0
+		
+		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+		exit;
+	}
 }

@@ -94,7 +94,7 @@ class Projects extends \yii\db\ActiveRecord
 
 	public function getParentProject()
 	{
-		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectParentID'])->from(['origin' => projects::tableName()]);
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectParentID'])->from(['parentProject' => projects::tableName()]);
 	}
 
 	public function getProjectStatus()

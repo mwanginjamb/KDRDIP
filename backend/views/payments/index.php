@@ -38,13 +38,15 @@ $this->params['breadcrumbs'][] = $this->title;
 									<?= $form->field($search, 'searchstring')->textInput() ?>	
 								</div>
 								<div class="col-md-4">
-									<?= Html::submitButton('Search', ['class' => 'btn btn-primary', 'style' => 'margin-top: 27px;']); ?>
+									<?= Html::submitButton('<i class="ft-search"></i> Search', ['class' => 'btn btn-primary', 'style' => 'margin-top: 27px;']); ?>
+									<?= Html::submitButton('<i class="ft-download"></i> Export', ['name' => 'export', 'class' => 'btn btn-secondary', 'style' => 'margin-top: 27px;']); ?>
 								</div>		
 							</div>
 							<?php ActiveForm::end(); ?>
 						</div>
 						<div class="form-actions" style="margin-top:0px">
-							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>	
+							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>
+							<!-- <?= Html::a('<i class="ft-download"></i> Export', ['export'], ['class' => 'btn btn-primary mr-1']) ?>	 -->
 						</div>
 
 						<?= GridView::widget([

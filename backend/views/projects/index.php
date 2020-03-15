@@ -10,6 +10,18 @@ $this->title = 'Sub-Projects';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+<script>
+
+$(document).ready(function() {
+    $('#DataTables_Table_0_wrapper').DataTable( {
+        dexampleom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    } );
+} );
+</script>
+
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -30,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class="card-body card-dashboard">
 						<div class="form-actions" style="margin-top:0px">	
 							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create', 'cid' => $cid], ['class' => 'btn btn-primary mr-1']) : '' ?>
+							<?= Html::a('<i class="ft-download"></i> Export', ['export'], ['class' => 'btn btn-secondary mr-1']) ?>
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,

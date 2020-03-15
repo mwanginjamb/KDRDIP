@@ -131,6 +131,24 @@ class ProjectsController extends Controller
 		]);
 	}
 
+	public function actionExport() {
+		$model = Projects::find()->joinWith('parentProject')
+											->joinWith('projectStatus')
+											->select(
+												[	
+													'projects.ProjectName', 
+													'parentProject.ProjectName as ParentProject',
+													'projectStatus.ProjectStatusName',
+													'projects.StartDate', 
+													'parentProject.ProjectID as ProjectParentID',
+													'projects.ProjectStatusID',
+												])
+											->asArray()
+											->all();
+		$diplayFields = ['ProjectName', 'ParentProject', 'StartDate', 'ProjectStatusName'];
+		return ReportsController::WriteExcel($model, 'Project Report', $diplayFields);
+	}
+
 	/**
 	 * Displays a single projects model.
 	 * @param integer $id

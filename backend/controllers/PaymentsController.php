@@ -16,6 +16,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
+use backend\controllers\ReportsController;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 use kartik\mpdf\Pdf;
@@ -89,6 +90,8 @@ class PaymentsController extends Controller
 		$searchfor = [1 => 'ID', 2 => 'Supplier', 3 => 'RefNumber', 4 => 'Amount'];
 		$search = new Search();
 		$params = Yii::$app->request->post();
+		// print('<pre>');
+		// print_r($params); exit;
 		$where = '';
 		if (!empty($params)) {
 			if ($params['Search']['searchfor'] == 1) {
@@ -108,6 +111,10 @@ class PaymentsController extends Controller
 			$search->searchstring = $params['Search']['searchstring'];
 		}
 
+		if (isset($params['export'])) {
+			return $this->export($where);
+		}
+
 		$dataProvider = new ActiveDataProvider([
 			'query' => Payments::find()->where($where),
 		]);
@@ -116,13 +123,7 @@ class PaymentsController extends Controller
 			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
 			'rights' => $this->rights,
 		]);
-/* 		$dataProvider = new ActiveDataProvider([
-			'query' => Payments::find(),
-		]);
 
-		return $this->render('index', [
-			'dataProvider' => $dataProvider,
-		]); */
 	}
 
 	/**
@@ -279,6 +280,27 @@ class PaymentsController extends Controller
 		} else {
 			echo '<option>-</option>';
 		}
+	}
+
+	public static function export($where) {
+		$model = Payments::find()->joinWith('suppliers')
+											->joinWith('paymentMethods')
+											->joinWith('approvalstatus')
+											->select(
+												[	
+													'Date', 
+													'suppliers.SupplierID', 
+													'suppliers.SupplierName', 
+													'paymentMethods.PaymentMethodID',
+													'paymentMethods.PaymentMethodName',
+													'approvalstatus.ApprovalStatusID',
+													'approvalstatus.ApprovalStatusName',
+													'ApprovalDate'
+												])
+											->asArray()
+											->all();
+		$diplayFields = ['Date', 'SupplierName', 'PaymentMethodName', 'ApprovalStatusName', 'ApprovalDate'];
+		return ReportsController::WriteExcel($model, 'Payment Report', $diplayFields);
 	}
 
 	public function actionPaymentVoucher($id)
