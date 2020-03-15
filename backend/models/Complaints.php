@@ -55,7 +55,7 @@ class Complaints extends \yii\db\ActiveRecord
 			[['IncidentDate', 'CreatedDate'], 'safe'],
 			[['ComplaintSummary', 'ReliefSought', 'OfficerJustification', 'Resolution'], 'string'],
 			[['ComplainantName', 'PostalAddress', 'PostalCode', 'Town', 'Village', 'Telephone', 'Mobile'], 'string', 'max' => 45],
-			[['ProjectID', 'CountyID', 'SubCountyID', 'WardID', 'ComplaintTypeID', 'ComplaintSummary', 'ReliefSought', 'IncidentDate', 'ComplaintPriorityID', 'ComplaintChannelID', 'ComplaintTierID'], 'required']
+			[['ComplainantName', 'ProjectID', 'CountyID', 'SubCountyID', 'WardID', 'ComplaintTypeID', 'ComplaintSummary', 'ReliefSought', 'IncidentDate', 'ComplaintPriorityID', 'ComplaintChannelID', 'ComplaintTierID'], 'required']
 		];
 	}
 
