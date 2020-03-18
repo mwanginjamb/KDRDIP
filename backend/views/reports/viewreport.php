@@ -25,7 +25,7 @@
 					<?php
 					if (isset($StockFilter) && $StockFilter == true) {
 						echo $form->field($model, 'StockTakeID')->dropDownList($stocktake, ['prompt'=>'All...']);
-					} elseif (isset($SupplierFilter) && $SupplierFilter == true) {
+					} elseif (isset($SupplierFilter) && $SupplierFilter == true && isset($suppliers) && (count($suppliers) > 0)) {
 						echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
 					} elseif (count($productcategories) > 0) {
 						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
@@ -34,7 +34,7 @@
 					} elseif (isset($projectStatus) && count($projectStatus) > 0) {
 						echo $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']);
 					} elseif (isset($projects) && count($projects) > 0) {
-						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...']);
+						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project');
 					}
 					?>
 				</div>

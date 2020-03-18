@@ -105,6 +105,7 @@ class InvoiceApprovalsController extends Controller
 		$identity = Yii::$app->user->identity;
 		$UserID = $identity->UserID;
 		$model = $this->findModel($id);
+		$model->submit = 1;
 		
 		$params = Yii::$app->request->post();
 		$PurchaseID = $model->PurchaseID;

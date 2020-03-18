@@ -171,6 +171,7 @@ class InvoicesController extends Controller
 	{
 		$model = new Invoices();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		$model->submit = 0;
 
 		// $upload = new UploadForm();
 
@@ -296,9 +297,12 @@ class InvoicesController extends Controller
 	{
 		$model = $this->findModel($id);
 		$model->ApprovalStatusID = 1;
+		$model->submit = 1;
 		if ($model->save()) {
-			$result = UsersController::sendEmailNotification(29);
+			// $result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->InvoiceID]);
+		} else {
+			// print_r($model->getErrors()); exit;
 		}
 	}
 

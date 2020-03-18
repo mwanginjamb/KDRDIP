@@ -78,6 +78,11 @@ $this->params['breadcrumbs'][] = $this->title;
 										'format' => ['date', 'php:d/m/Y'],
 									],
 									'InvoiceNumber',
+									'suppliers.SupplierName',
+									'purchases.projects.counties.CountyName',
+									'purchases.projects.subCounties.SubCountyName',
+									'purchases.projects.wards.WardName',
+									'purchases.projects.ProjectName',
 									[
 										'attribute' => 'InvoiceDate',
 										'label' => ' Invoice Date',

@@ -129,6 +129,10 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<li <?= ($currentRoute == 'reports/bank-transactions') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/bank-transactions"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Sub Project Transaction</span></a>
 											</li>
 										<?php } ?>
+										<?php if (in_array(68, $rights)) { ?>
+											<li <?= ($currentRoute == 'reports/monthly-finance-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/monthly-finance-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Monthly Finance Report</span></a>
+											</li>
+										<?php } ?>										
 									</ul>
 								</li>
 							<?php } ?>
@@ -363,6 +367,8 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 										<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
 										</li>
 										<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
+										</li>
+										<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
 										</li>
 									</ul>
 								</li>

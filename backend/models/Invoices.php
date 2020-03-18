@@ -25,6 +25,7 @@ class Invoices extends \yii\db\ActiveRecord
 	public $Description;
 	public $imageFile2;
 	public $Description2;
+	public $submit;
 
 	/**
 	 * {@inheritdoc}
@@ -45,7 +46,10 @@ class Invoices extends \yii\db\ActiveRecord
 			[['Amount'], 'number'],
 			[['InvoiceNumber', 'Description', 'Description2'], 'string', 'max' => 45],
 			[['imageFile', 'imageFile2'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
-			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate', 'Description', 'Description2'], 'required']
+			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate'], 'required'],
+			[['Description', 'Description2'], 'required', 'when' => function($model) {	 
+				return $model->submit == 0;
+			}],
 		];
 	}
 

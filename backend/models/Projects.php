@@ -1,6 +1,9 @@
 <?php
 
 namespace app\models;
+use app\models\ActivityBudget;
+use app\models\FundsRequisition;
+use app\models\Payments;
 
 use Yii;
 
@@ -148,5 +151,22 @@ class Projects extends \yii\db\ActiveRecord
 	public function getWards()
 	{
 		return $this->hasOne(Wards::className(), ['WardID' => 'WardID'])->from(wards::tableName());
+	}
+
+	public function getBudgetedAmount()
+	{
+		return ActivityBudget::find()->joinWith('activities')
+												->joinWith('activities.indicators')
+												->where(['indicators.ProjectID' => $this->ProjectID])->sum('activitybudget.Amount');
+	}
+
+	public function getDisbursedAmount()
+	{
+		return FundsRequisition::find()->where(['ProjectID' => $this->ProjectID])->sum('Amount');
+	}
+
+	public function getAmountSpent()
+	{
+		return Payments::find()->joinWith('invoices')->joinWith('invoices.purchases')->where(['purchases.ProjectID' => $this->ProjectID])->sum('payments.Amount');
 	}
 }

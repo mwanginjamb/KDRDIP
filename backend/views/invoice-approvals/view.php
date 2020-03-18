@@ -82,6 +82,10 @@ $FormID = 12;
 										'format' => ['date', 'php:d/m/Y'],
 									],
 									'InvoiceNumber',
+									'purchases.projects.counties.CountyName',
+									'purchases.projects.subCounties.SubCountyName',
+									'purchases.projects.wards.WardName',
+									'purchases.projects.ProjectName',
 									[
 										'attribute' => 'InvoiceDate',
 										'label' => ' Invoice Date',

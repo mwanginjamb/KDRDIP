@@ -89,6 +89,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									'bankAccounts.AccountName',
 									'RefNumber',
 									'Description',
+									'invoices.purchases.projects.counties.CountyName',
+									'invoices.purchases.projects.subCounties.SubCountyName',
+									'invoices.purchases.projects.wards.WardName',
+									'invoices.purchases.projects.ProjectName',
 									[
 										'attribute' => 'Amount',
 										'format' => ['decimal', 2]

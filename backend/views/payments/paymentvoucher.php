@@ -29,27 +29,29 @@ $this->title = 'Payment Voucher';
 <table class="pdf-table">
 	<thead>
 		<tr>
-			<th width="20%">Ref. No.</th>
 			<th >Description</th>
-			<th width="20%" class="number-column">Amount</th>
+			<th width="15%">LSO/LPO No</th>
+			<th width="15%">Receipt No</th>
+			<th width="15%">Invoice No</th>
+			<th width="15%">Delivery Note No</th>			
+			<th width="15%" class="number-column">Amount</th>
 		</tr>
 	</thead>
 	<tbody>
-		<tr>
-			<td><?= $model->RefNumber; ?></td>
+		<tr>			
 			<td><?= $model->Description; ?></td>
+			<td><?= $model->invoices->PurchaseID; ?></td>
+			<td><?= $model->PaymentID; ?></td>
+			<td><?= $model->InvoiceID; ?></td>
+			<td></td>
 			<td class="number-column"><?= number_format($model->Amount, 2); ?></td>
 		</tr>
 	</tbody>
-	<tfoot>
-		<tr>
-			<th colspan="2">Total</th>
-			<th class="number-column">Amount</th>
-		</tr>
-	</tfoot>
 </table>
 
-<table width="100%">
+<p>Amount in Words (Kshs) <?= $amountWords; ?></p>
+
+<!-- <table width="100%">
 	<tr>
 		<td width="20%">Payment Method: </td>
 		<td><?= $model->paymentMethods->PaymentMethodName; ?></td>
@@ -62,11 +64,11 @@ $this->title = 'Payment Voucher';
 		<td width="13%">Cheque No.:</td>
 		<td width="15%" class="underline"></td>
 	</tr>
-</table>
+</table> -->
 
 <table width="100%" class="pdf-signoff-table">
 	<tr>
-		<td width="13%">Prepared By: </td>
+		<td width="14%">Prepared By: </td>
 		<td width="32%" class="underline"></td>
 		<td width="10%">Signature:</td>
 		<td width="25%" class="underline"></td>
@@ -74,7 +76,7 @@ $this->title = 'Payment Voucher';
 		<td width="15%" class="underline"></td>
 	</tr>
 	<tr>
-		<td width="13%">Prepared By: </td>
+		<td width="14%">Checked By: </td>
 		<td width="32%" class="underline"></td>
 		<td width="10%">Signature:</td>
 		<td width="25%" class="underline"></td>
@@ -82,7 +84,7 @@ $this->title = 'Payment Voucher';
 		<td width="15%" class="underline"></td>
 	</tr>
 	<tr>
-		<td width="13%">Prepared By: </td>
+		<td width="14%">Approved By: </td>
 		<td width="32%" class="underline"></td>
 		<td width="10%">Signature:</td>
 		<td width="25%" class="underline"></td>
