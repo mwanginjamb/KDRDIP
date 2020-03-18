@@ -137,31 +137,38 @@ function myDeleteFunction() {
 	<div class="card-content collapse show">
 		<div class="card-body">
 
-    <?php $form = ActiveForm::begin([
-    'id' => 'contact-form',
-		'fieldConfig' => [
-			'options' => ['tag' => false, ],
-			'enableClientValidation'=> false,
-			'enableAjaxValidation'=> false,
-		],
-	]); 
-	?>
-	<table width="100%">
-	<tr> 
-		<td width="50%">
-			<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...', 'disabled' => $disabled,
-				'onchange' => '
-				$.post( "' . Yii::$app->urlManager->createUrl('purchases/quotations?id=') . '"+$(this).val(), function( data ) {
+			<?php $form = ActiveForm::begin(); 
+			?>
 
-					$( "select#purchases-quotationid" ).html( data );
-				});
-			']) ?>
-		</td>
-		<td>
-			<?= $form->field($model, 'QuotationID')->dropDownList($quotations, ['prompt'=>'Select...', 'disabled' => $disabled]) ?>
-		</td>
-    </tr>
-	</table>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt' => 'Select...', 'class' => 'form-control',
+												'onchange' => '
+												$.post( "' . Yii::$app->urlManager->createUrl('purchases/quotations?id=') . '"+$(this).val(), function( data ) {
+
+													$( "select#purchases-quotationid" ).html( data );
+												});
+											']) ?>	
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'QuotationID')->dropDownList($quotations, ['prompt' => 'Select...', 'class' => 'form-control',
+												'onchange' => '
+												$.post( "' . Yii::$app->urlManager->createUrl('purchases/suppliers?id=') . '"+$(this).val(), function( data ) {
+
+													$( "select#purchases-supplierid" ).html( data );
+												});
+											']) ?>	
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...']) ?>
+				</div>
+				<div class="col-md-6">
+					
+				</div>			
+			</div>
 	<?php 
 	if (!$model->isNewRecord)
 	{ ?>

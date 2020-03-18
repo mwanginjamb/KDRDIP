@@ -403,6 +403,7 @@ class RequisitionController extends Controller
 		$model->Description = $requisition->Description;
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 		$model->RequisitionID = $id;
+		$model->ProjectID = $requisition->ProjectID;
 		if ($model->save()) {
 			foreach ($lines as $key => $line) {
 				$quotationLines = new QuotationProducts();

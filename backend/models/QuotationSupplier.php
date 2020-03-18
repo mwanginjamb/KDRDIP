@@ -56,11 +56,17 @@ class QuotationSupplier extends \yii\db\ActiveRecord
 
 	public function getTotalValue()
 	{
-		$id = $this->QuotationSupplierID;
-		$sql = "SELECT sum(UnitPrice * Quantity) as Total FROM quotationresponselines line
-		LEFT JOIN quotationproducts ON quotationproducts.QuotationProductID = line.QuotationProductID
-		LEFT JOIN quotationsupplier ON quotationsupplier.QuotationID = quotationproducts.QuotationID
-		WHERE QuotationSupplierID = $id";
+		// $id = $this->QuotationSupplierID;
+		$supplierID = $this->SupplierID;
+		$quotationID = $this->QuotationID;
+		// $sql = "SELECT sum(UnitPrice * Quantity) as Total FROM quotationresponselines line
+		// LEFT JOIN quotationproducts ON quotationproducts.QuotationProductID = line.QuotationProductID
+		// LEFT JOIN quotationsupplier ON quotationsupplier.QuotationID = quotationproducts.QuotationID
+		// WHERE QuotationSupplierID = $id";
+		$sql = "SELECT sum(UnitPrice * Quantity) as Total  from quotationresponselines line
+					JOIN quotationresponse response on response.QuotationResponseID = line.QuotationResponseID
+					LEFT JOIN quotationproducts ON quotationproducts.QuotationProductID = line.QuotationProductID
+					WHERE SupplierID = $supplierID AND response.QuotationID = $quotationID";
 		// echo $sql; exit;
 		return QuotationResponseLines::findBySql($sql)->asArray()->sum('Total');
 	}

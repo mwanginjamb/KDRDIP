@@ -79,6 +79,9 @@ $FormID = 6;
 							'model' => $model,
 							'attributes' => [
 								'RequisitionID',
+								'projects.counties.CountyName',
+								'projects.subCounties.SubCountyName',
+								'projects.wards.WardName',
 								'projects.ProjectName',
 								'CreatedDate',
 								[

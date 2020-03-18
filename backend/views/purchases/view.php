@@ -93,8 +93,20 @@ $Total = number_format($Total,2);
 									],
 									'attributes' => [
 										'PurchaseID',
-										'suppliers.SupplierName',				
-										'CreatedDate',
+										'suppliers.SupplierName',	
+										'projects.counties.CountyName',
+										'projects.subCounties.SubCountyName',
+										'projects.wards.WardName',
+										'projects.ProjectName',
+										'QuotationID',
+										[
+											'attribute' => 'quotation.Description',
+											'label' => 'Quotation Description',
+										],													
+										[
+											'attribute' => 'CreatedDate',
+											'format' => ['date', 'php:d/m/Y h:i a'],
+										],
 										[
 											'label'=>'Requested By',
 											'attribute' => 'users.fullName',

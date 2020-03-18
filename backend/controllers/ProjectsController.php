@@ -366,6 +366,7 @@ class ProjectsController extends Controller
 		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
 		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
 		$subLocations = [];
+		$wards = [];
 	
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -458,6 +459,7 @@ class ProjectsController extends Controller
 			'subLocations' => $subLocations,
 			'subCounties' => $subCounties,
 			'locations' => $locations,
+			'wards' => $wards,
 		]);
 	}
 
@@ -516,6 +518,7 @@ class ProjectsController extends Controller
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
 		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
 		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
+		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID ])->all(), 'WardID', 'WardName');
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -607,6 +610,7 @@ class ProjectsController extends Controller
 			'subLocations' => $subLocations,
 			'subCounties' => $subCounties,
 			'locations' => $locations,
+			'wards' => $wards,
 		]);
 	}
 

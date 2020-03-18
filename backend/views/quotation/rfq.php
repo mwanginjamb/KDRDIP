@@ -53,10 +53,8 @@ $totalsuppliers = count($suppliers);
 						<p><?= $company->Email; ?></p>
 					</td>
 					<td style="text-align:left; vertical-align: top;">
-						<p>RFQ Number:</p>
-						<p><?= $model->QuotationID; ?></p>
-						<p>Date:</p>
-						<p><?= date_format(date_create($model->ApprovalDate),'d/m/Y'); ?></p>
+						<p>RFQ No.: <?= $model->QuotationID; ?></p>
+						<p>Date: <?= date_format(date_create($model->ApprovalDate),'d/m/Y'); ?></p>
 					</td>
 				</tr>			
 			</table>

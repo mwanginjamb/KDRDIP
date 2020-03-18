@@ -46,7 +46,7 @@ class SubCounties extends \yii\db\ActiveRecord
 	{
 		return [
 			'SubCountyID' => 'Sub County ID',
-			'SubCountyName' => 'Sub County Name',
+			'SubCountyName' => 'Sub County',
 			'CountyID' => 'County',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',

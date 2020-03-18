@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $QuotationID
  * @property integer $RequisitionID
+ * @property integer $ProjectID
  * @property string $CreatedDate
  * @property integer $CreatedBy
  * @property string $Description
@@ -36,9 +37,9 @@ class Quotation extends \yii\db\ActiveRecord
 	{
 		return [
 			[['CreatedDate', 'ApprovalDate', 'StartDate', 'ExpiryDate'], 'safe'],
-			[['CreatedBy', 'ApprovalStatusID', 'ApprovedBy', 'RequisitionID'], 'integer'],
+			[['CreatedBy', 'ApprovalStatusID', 'ApprovedBy', 'RequisitionID', 'ProjectID'], 'integer'],
 			[['Description', 'Notes'], 'string'],
-			[['Description', 'RequisitionID'], 'required'],
+			[['Description', 'RequisitionID', 'ProjectID'], 'required'],
 		];
 	}
 
@@ -50,6 +51,7 @@ class Quotation extends \yii\db\ActiveRecord
 		return [
 			'QuotationID' => 'Quotation ID',
 			'RequisitionID' => 'Requisition',
+			'ProjectID' => 'Sub Project',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Description' => 'Description',
@@ -80,5 +82,10 @@ class Quotation extends \yii\db\ActiveRecord
 	public function getRequisition()
 	{
 		return $this->hasOne(Requisition::className(), ['RequisitionID' => 'RequisitionID'])->from(requisition::tableName());
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
 	}
 }

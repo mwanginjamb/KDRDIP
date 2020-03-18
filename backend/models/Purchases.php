@@ -20,6 +20,7 @@ use Yii;
  * @property string $ApprovalDate
  * @property integer $Closed
  * @property integer $QuotationID
+ * @property integer $ProjectID
  */
 class Purchases extends \yii\db\ActiveRecord
 {
@@ -38,9 +39,9 @@ class Purchases extends \yii\db\ActiveRecord
 	{
 		return [
 			[['CreatedDate', 'PostingDate', 'ApprovalDate'], 'safe'],
-			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed', 'QuotationID'], 'integer'],
+			[['CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'SupplierID', 'ApprovedBy', 'Closed', 'QuotationID', 'ProjectID'], 'integer'],
 			[['Notes'], 'string'],
-			[['SupplierID', 'QuotationID'],'required'],
+			[['SupplierID', 'QuotationID', 'ProjectID'],'required'],
 		];
 	}
 
@@ -64,7 +65,8 @@ class Purchases extends \yii\db\ActiveRecord
 			'ApprovalDate' => 'Approval Date',
 			'Closed' => 'Closed',
 			'ClosedString' => 'Closed',
-			'QuotationID' => 'Quotation'
+			'QuotationID' => 'Quotation',
+			'ProjectID' => 'Sub Project',
 		];
 	}
 	
@@ -81,6 +83,11 @@ class Purchases extends \yii\db\ActiveRecord
 	public function getSuppliers()
 	{
 		return $this->hasOne(Suppliers::className(), ['SupplierID' => 'SupplierID'])->from(suppliers::tableName());
+	}
+
+	public function getQuotation()
+	{
+		return $this->hasOne(Quotation::className(), ['QuotationID' => 'QuotationID'])->from(quotation::tableName());
 	}
 
 	public function getApprovalstatus()
@@ -101,5 +108,10 @@ class Purchases extends \yii\db\ActiveRecord
 	public function getPurchaseName()
 	{
 	   return isset($this->suppliers) ? $this->PurchaseID. ' - ' . ' - ' . date('d/m/Y', strtotime($this->CreatedDate)) .' - ' . $this->suppliers->SupplierName : $this->PurchaseID;
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
 	}
 }

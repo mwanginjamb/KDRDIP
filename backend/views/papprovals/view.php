@@ -85,6 +85,11 @@ $Total = number_format($Total,2);
 								'CreatedDate',
 								'users.fullName',
 								'suppliers.SupplierName',
+								'projects.counties.CountyName',
+								'projects.subCounties.SubCountyName',
+								'projects.wards.WardName',
+								'projects.ProjectName',
+								'QuotationID',
 								'Notes:ntext',
 								'PostingDate',
 								'approvalstatus.ApprovalStatusName',
@@ -94,15 +99,7 @@ $Total = number_format($Total,2);
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'showFooter' =>true,
-							'columns' => [
-								/* [
-									'label'=>'ID',
-									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-									'contentOptions' => ['style' => 'text-align:center'],
-									'format'=>'text',
-									'value' => 'PurchaseLineID',
-									'contentOptions' => ['style' => 'text-align:left'],
-								],	 */		
+							'columns' => [	
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],

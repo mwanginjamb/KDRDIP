@@ -19,6 +19,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'accounts' => $accounts,
 		'requisitions' => $requisitions,
 		'rights' => $rights,
+		'projects' => $projects,
 	]) ?>
 
 </section>

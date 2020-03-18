@@ -47,7 +47,7 @@ class Wards extends \yii\db\ActiveRecord
 	{
 		return [
 			'WardID' => 'Ward ID',
-			'WardName' => 'Ward Name',
+			'WardName' => 'Ward',
 			'SubCountyID' => 'Sub County',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',

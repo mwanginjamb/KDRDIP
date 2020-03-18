@@ -14,6 +14,7 @@ use app\models\SupplierCategory;
 use app\models\ApprovalNotes;
 use app\models\Product;
 use app\models\UsageUnit;
+use app\models\Projects;
 use app\models\QuotationResponseLines;
 use app\models\QuotationProducts;
 use app\models\QuotationSupplier;
@@ -224,22 +225,24 @@ class PurchasesController extends Controller
 			}
 			//exit; */
 			return $this->redirect(['view', 'id' => $model->PurchaseID]);
-		} else {
-			$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
-			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
-			$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
-			$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
-			$quotations = []; //ArrayHelper::map(Quotation::find()->orderBy('QuotationID DESC')->all(), 'QuotationID', 'Description');
-			for ($x = 0; $x <= 19; $x++) {
-				$lines[$x] = new PurchaseLines();
-			}
-			return $this->render('create', [
-				'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines,
-				'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
-				'quotations' => $quotations,
-				'rights' => $this->rights,
-			]);
+		} 
+
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$suppliers = []; // ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
+		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
+		$pricelist = ArrayHelper::map(PriceList::find()->all(), 'SupplierCode', 'ProductName');
+		$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
+		$quotations = []; //ArrayHelper::map(Quotation::find()->orderBy('QuotationID DESC')->all(), 'QuotationID', 'Description');
+		for ($x = 0; $x <= 19; $x++) {
+			$lines[$x] = new PurchaseLines();
 		}
+		return $this->render('create', [
+			'model' => $model, 'suppliers' => $suppliers, 'lines' => $lines,
+			'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
+			'quotations' => $quotations,
+			'rights' => $this->rights,
+			'projects' => $projects,
+		]);		
 	}
 
 	/**
@@ -295,12 +298,13 @@ class PurchasesController extends Controller
 		
 			return $this->redirect(['view', 'id' => $model->PurchaseID]);
 		}
-		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$suppliers = ArrayHelper::map(QuotationSupplier::find()->joinWith('suppliers')->where(['QuotationID' => $model->QuotationID])->asArray()->all(), 'suppliers.SupplierID', 'suppliers.SupplierName');
 		$usageunits = ArrayHelper::map(UsageUnit::find()->all(), 'UsageUnitID', 'UsageUnitName');
 		$usercategories = ArrayHelper::getColumn(UserCategory::find()->where(['UserID' => $UserID, 'Selected' => 1])->all(),'ProductCategoryID');
-		$quotations = ArrayHelper::map(Quotation::find()->all(), 'QuotationID', 'QuotationID');
+		$quotations = ArrayHelper::map(Quotation::find()->where(['ProjectID' => $model->ProjectID])->all(), 'QuotationID', 'Description');
 		$scategory = ArrayHelper::getColumn(SupplierCategory::find()->where(['SupplierID' => $model->SupplierID, 'Selected' => 1])->all(),'ProductCategoryID');
-		// print_r($scategory); exit;
+		// print_r($suppliers); exit;
 		$suppliercategory = array(0);
 		foreach ($scategory as $key => $value) {
 			// if (in_array($value, $usercategories)) {
@@ -326,6 +330,7 @@ class PurchasesController extends Controller
 			'products' => $products, 'pricelist' => $pricelist, 'usageunits' => $usageunits,
 			'quotations' => $quotations,
 			'rights' => $this->rights,
+			'projects' => $projects,
 		]);		
 	}
 
@@ -555,12 +560,24 @@ public function actionGetfields($id, $SupplierID)
 	
 	public function actionQuotations($id)
 	{
-		$model = QuotationSupplier::find()->joinWith('quotation')->where(['SupplierID' => $id, 'quotation.ApprovalStatusID' => 3])->orderBy('quotation.QuotationID DESC')->all();
-
+		$model = Quotation::find()->where(['ProjectID' => $id, 'ApprovalStatusID' => 3])->orderBy('QuotationID DESC')->all();
+		// print_r($model); exit;
 		echo '<option>Select...</option>';
 		if (!empty($model)) {
 			foreach ($model as $item) {
-				echo "<option value='" . $item->QuotationID . "'>" . $item->quotation->Description . "</option>";
+				echo "<option value='" . $item->QuotationID . "'>" . $item->Description . "</option>";
+			}
+		}
+	}
+
+	public function actionSuppliers($id)
+	{
+		$model = QuotationSupplier::find()->joinWith('suppliers')->where(['QuotationID' => $id])->all();
+		// print_r($model); exit;
+		echo '<option>Select...</option>';
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item->suppliers->SupplierID . "'>" . $item->suppliers->SupplierName . "</option>";
 			}
 		}
 	}

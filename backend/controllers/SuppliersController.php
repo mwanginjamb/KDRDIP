@@ -236,7 +236,11 @@ class SuppliersController extends Controller
 		}
 		$model = $this->findModel($id);
 		$contacts = SupplierContact::find()->where(['SupplierID' => $id])->all();
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		if ($model->load(Yii::$app->request->post()) ) {
+			if (!$model->save()) {
+				print_r($model->getErrors()); exit;
+			}
+
 			$params = Yii::$app->request->post();
 			$contacts = $params['SupplierContact'];
 			

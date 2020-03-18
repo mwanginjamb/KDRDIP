@@ -147,7 +147,7 @@ class QuotationResponseController extends Controller
 					WHERE QuotationResponseID = 0
 					) temp 
 					right JOIN (select * from quotationproducts Where QuotationID = $qid) Products 
-					ON Products.ProductID = temp.QuotationProductID";
+					ON Products.QuotationProductID = temp.QuotationProductID";
 
 		$quotationResponseLines = QuotationResponseLines::findBySql($sql)->asArray()->all();
 		foreach ($quotationResponseLines as $key => $product) {
@@ -213,7 +213,7 @@ class QuotationResponseController extends Controller
 			WHERE QuotationResponseID = $quotationResponseID
 			) temp 
 			right JOIN (select * from quotationproducts Where QuotationID = $qid) Products 
-			ON Products.ProductID = temp.QuotationProductID";
+			ON Products.QuotationProductID = temp.QuotationProductID";
 			
 		$quotationResponseLines = QuotationResponseLines::findBySql($sql)->asArray()->all();
 

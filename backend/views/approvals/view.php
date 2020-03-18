@@ -72,6 +72,10 @@ $FormID = 12;
 							'model' => $detailmodel,
 							'attributes' => [
 									'RequisitionID',
+									'projects.counties.CountyName',
+									'projects.subCounties.SubCountyName',
+									'projects.wards.WardName',
+									'projects.ProjectName',
 									[
 										'attribute' => 'CreatedDate',
 										'format' => ['date', 'php:d/m/Y h:i a'],
@@ -99,14 +103,6 @@ $FormID = 12;
 							'class' => 'custom-table table-striped table-bordered zero-configuration',
 						],
 						'columns' => [
-							/* [
-								'label'=>'ID',
-								'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-								'contentOptions' => ['style' => 'text-align:center'],
-								'format'=>'text',
-								'value' => 'RequisitionLineID',
-								'contentOptions' => ['style' => 'text-align:left'],
-							] */,
 							[
 								'class' => 'yii\grid\SerialColumn',
 								'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],

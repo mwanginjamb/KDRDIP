@@ -133,17 +133,24 @@ function calculateValue(row)
 											']) ?>	
 						</div>
 						<div class="col-md-6">
-						<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt' => 'Select...', 'class' => 'form-control',
+							<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt' => 'Select...', 'class' => 'form-control',
 												'onchange' => '
 												$.post( "' . Yii::$app->urlManager->createUrl('projects/locations?id=') . '"+$(this).val(), function( data ) {
 
 													$( "select#projects-locationid" ).html( data );
+												});
+												$.post( "' . Yii::$app->urlManager->createUrl('projects/wards?id=') . '"+$(this).val(), function( data ) {
+
+													$( "select#projects-wardid" ).html( data );
 												});
 											']) ?>
 						</div>			
 					</div>
 
 					<div class="row">
+						<div class="col-md-6">
+							<?= $form->field($model, 'WardID')->dropDownList($wards, ['prompt'=>'Select']); ?>
+						</div>
 						<div class="col-md-6">
 							<?= $form->field($model, 'LocationID')->dropDownList($locations, ['prompt' => 'Select...', 'class' => 'form-control',
 												'onchange' => '
@@ -152,21 +159,27 @@ function calculateValue(row)
 													$( "select#projects-sublocationid" ).html( data );
 												});
 											']) ?>	
-						</div>
-						<div class="col-md-6">
-							<?= $form->field($model, 'SubLocationID')->dropDownList($subLocations, ['prompt'=>'Select']); ?>
 						</div>			
 					</div>
 
 					<div class="row">
 						<div class="col-md-6">
-							<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'Select']); ?>
+							<?= $form->field($model, 'SubLocationID')->dropDownList($subLocations, ['prompt'=>'Select']); ?>
 						</div>
+						<div class="col-md-6">
+							<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'Select']); ?>
+						</div>			
+					</div>
+
+					<div class="row">						
 						<div class="col-md-3">
 							<?= $form->field($model, 'Latitude')->textInput(['type' => 'number', 'step' => '0.00001']) ?>
 						</div>	
 						<div class="col-md-3">
 							<?= $form->field($model, 'Longitude')->textInput(['type' => 'number', 'step' => '0.00001']) ?>
+						</div>
+						<div class="col-md-6">
+							
 						</div>		
 					</div>
 
@@ -178,6 +191,7 @@ function calculateValue(row)
 							<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
 						</div>			
 					</div>
+
 					<h4 class="form-section">Safeguards</h4>												
 					<table width="100%" class="custom-table table-striped table-bordered" id="ParameterTable" >
 					<thead>

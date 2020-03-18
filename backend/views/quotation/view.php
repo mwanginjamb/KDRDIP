@@ -81,6 +81,10 @@ $FormID = 25;
 									'attribute' => 'requisition.Description',
 									'label' => 'Requisition',
 								],
+								'projects.counties.CountyName',
+								'projects.subCounties.SubCountyName',
+								'projects.wards.WardName',
+								'projects.ProjectName',
 								[
 									'attribute' => 'StartDate',
 									'format' => ['date', 'php:d/m/Y'],
@@ -164,14 +168,6 @@ $FormID = 25;
 							],
 							'showFooter' =>false,
 							'columns' => [
-								/* [
-									'label'=>'ID',
-									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-									'contentOptions' => ['style' => 'text-align:center'],
-									'format'=>'text',
-									'value' => 'QuotationSupplierID',
-									'contentOptions' => ['style' => 'text-align:left'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],

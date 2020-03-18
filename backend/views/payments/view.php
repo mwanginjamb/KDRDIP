@@ -97,11 +97,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										'attribute' => 'CreatedDate',
 										'label' => 'Created Date',
 										'format' => ['date', 'php:d/m/Y h:i a'],
-									],	
-								/* 	[						
-										'attribute' => 'users.fullName',
-										'label' => 'Created By'
-									], */
+									],
 									[
 										'label'=>'Requested By',
 										'attribute' => 'users.fullName',

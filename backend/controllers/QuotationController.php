@@ -20,6 +20,7 @@ use app\models\FilterData;
 use app\models\QuotationTypes;
 use app\models\Accounts;
 use app\models\ApprovalNotes;
+use app\models\Projects;
 
 use kartik\mpdf\Pdf;
 use yii\filters\AccessControl;
@@ -174,11 +175,10 @@ class QuotationController extends Controller
 						$_line->QuotationID = $QuotationID;
 						$_line->SupplierID = $line['SupplierID'];
 						$_line->save();
-						//print_r($_line->getErrors());
 					}
 				} else {
 					$_line = QuotationSupplier::findOne($line['QuotationSupplierID']);
-					$_line->QuotationID = $id;
+					$_line->QuotationID = $model->QuotationID;
 					$_line->SupplierID = $line['SupplierID'];
 					$_line->save();
 				}
@@ -191,7 +191,8 @@ class QuotationController extends Controller
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
 		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
-		$requisitions = ArrayHelper::map(Requisition::find()->all(), 'RequisitionID', 'Description');
+		$requisitions = []; // ArrayHelper::map(Requisition::find()->all(), 'RequisitionID', 'Description');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		
 		$productmodelcount = 0;
 		$suppliermodelcount = 0;
@@ -232,6 +233,7 @@ class QuotationController extends Controller
 			'accounts' => $accounts,
 			'requisitions' => $requisitions,
 			'rights' => $this->rights,
+			'projects' => $projects,
 		]);
 	}
 
@@ -254,14 +256,8 @@ class QuotationController extends Controller
 			if ($line->QuotationTypeID != 1) {
 				$lines[$key]->ProductID = $line->AccountID;
 			}
-			// $lines[$key]->QuotationID 
-			// $lines[$key]->ProductID 
-			// $lines[$key]->Quantity 
-			// $lines[$key]->QuotationTypeID
-			// $lines[$key]->AccountID
 		}
 
-	
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$params = Yii::$app->request->post();
 			$lines = $params['QuotationProducts'];
@@ -310,7 +306,8 @@ class QuotationController extends Controller
 		$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
 		$quotationTypes = ArrayHelper::map(QuotationTypes::find()->all(), 'QuotationTypeID', 'QuotationTypeName');
-		$requisitions = ArrayHelper::map(Requisition::find()->all(), 'RequisitionID', 'Description');
+		$requisitions = ArrayHelper::map(Requisition::find()->where(['ProjectID' => $model->ProjectID])->all(), 'RequisitionID', 'Description');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 
 		$products[1] = $products;
 		$products[2] = $accounts;
@@ -350,6 +347,7 @@ class QuotationController extends Controller
 			'accounts' => $accounts,
 			'requisitions' => $requisitions,
 			'rights' => $this->rights,
+			'projects' => $projects,
 		]);
 	}
 
@@ -398,16 +396,20 @@ class QuotationController extends Controller
 		}
 	}
 
-	public function actionRfq($id)
+	public function actionRfq($id, $sid=0)
 	{
 		$Title = 'Request for Quotation';
-		$SupplierID = 0;
+		$SupplierID = $sid;
 		$params = Yii::$app->request->post();
 		if (!empty($params) && $params['FilterData']['SupplierID']!='') {
 			$SupplierID = $params['FilterData']['SupplierID'];
 			$suppliers = Suppliers::find()->where("SupplierID = $SupplierID")->all();
 		} else {
-			$suppliers = Suppliers::find()->where("SupplierID IN (SELECT DISTINCT SupplierID FROM quotationsupplier WHERE QuotationID = $id)")->all();
+			if ($SupplierID != 0) {
+				$suppliers = Suppliers::find()->where("SupplierID IN (SELECT DISTINCT SupplierID FROM quotationsupplier WHERE QuotationID = $id AND SupplierID = $SupplierID)")->all();
+			} else {
+				$suppliers = Suppliers::find()->where("SupplierID IN (SELECT DISTINCT SupplierID FROM quotationsupplier WHERE QuotationID = $id)")->all();
+			}			
 		}
 		
 		$dataProvider = new ActiveDataProvider([
@@ -448,8 +450,8 @@ class QuotationController extends Controller
 			'options' => ['title' => $Title],
 				// call mPDF methods on the fly
 			'methods' => [ 
-				'SetHeader'=>[$Title], 
-				'SetFooter'=>['{PAGENO}'],
+				// 'SetHeader'=>[$Title], 
+				// 'SetFooter'=>['{PAGENO}'],
 			]
 		]);
 		
@@ -527,6 +529,20 @@ class QuotationController extends Controller
 			}
 		} else {
 			echo '<option>-</option>';
+		}
+	}
+
+	public function actionRequisitions($id)
+	{
+		$model = Requisition::find()->where(['ProjectID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->RequisitionID . "'>" . $item->Description . "</option>";
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
 		}
 	}
 }

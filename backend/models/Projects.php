@@ -29,6 +29,7 @@ use Yii;
  * @property int $CountyID
  * @property string $SafeguardsRecommendedAction
  * @property int $SubCountyID
+ * @property int $WardID
  * @property int $LocationID 
  * @property int $SubLocationID
  */
@@ -48,14 +49,15 @@ class Projects extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 
+			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID'], 'integer'],
 			[['Objective', 'Justification', 'SafeguardsRecommendedAction'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
 			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
-				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID'], 'required']
+				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID', 
+				'LocationID', 'SubLocationID', 'WardID'], 'required']
 		];
 	}
 
@@ -66,7 +68,7 @@ class Projects extends \yii\db\ActiveRecord
 	{
 		return [
 			'ProjectID' => 'Project ID',
-			'ProjectName' => 'Sub-Project Name',
+			'ProjectName' => 'Sub-Project',
 			'ProjectParentID' => 'Parent Project',
 			'Objective' => 'Objective',
 			'StartDate' => 'Start Date',
@@ -89,6 +91,7 @@ class Projects extends \yii\db\ActiveRecord
 			'SubCountyID'  => 'Sub County', 
 			'LocationID'  => 'Location', 
 			'SubLocationID'  => 'Sub Location',
+			'WardID' => 'Ward',
 		];
 	}
 
@@ -140,5 +143,10 @@ class Projects extends \yii\db\ActiveRecord
 	public function getSubLocations()
 	{
 		return $this->hasOne(SubLocations::className(), ['SubLocationID' => 'SubLocationID'])->from(sublocations::tableName());
+	}
+
+	public function getWards()
+	{
+		return $this->hasOne(Wards::className(), ['WardID' => 'WardID'])->from(wards::tableName());
 	}
 }

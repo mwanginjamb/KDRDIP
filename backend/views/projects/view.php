@@ -243,6 +243,7 @@ Modal::end();
 													'currencies.CurrencyName',
 													'counties.CountyName',
 													'subCounties.SubCountyName',
+													'wards.WardName',
 													'locations.LocationName',
 													'subLocations.SubLocationName',
 													'communities.CommunityName',

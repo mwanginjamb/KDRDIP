@@ -110,12 +110,6 @@ function addSupplierRow()
 	<div class="card-content collapse show">
 		<div class="card-body">
 		<?php $form = ActiveForm::begin([
-/* 			'id' => 'contact-form',
-				'fieldConfig' => [
-					'options' => ['tag' => false, ],
-					'enableClientValidation'=> false,
-					'enableAjaxValidation'=> false,
-				], */
 			]); ?>
 	 
 	 		<div class="row">
@@ -123,9 +117,24 @@ function addSupplierRow()
 					<?= $form->field($model, 'Description')->textInput() ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'RequisitionID')->dropDownList($requisitions, ['prompt'=>'Select...']) ?>
+					
 				</div>			
 			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt' => 'Select...', 'class' => 'form-control',
+												'onchange' => '
+												$.post( "' . Yii::$app->urlManager->createUrl('quotation/requisitions?id=') . '"+$(this).val(), function( data ) {
+
+													$( "select#quotation-requisitionid" ).html( data );
+												});
+											']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'RequisitionID')->dropDownList($requisitions, ['prompt'=>'Select...']) ?>
+				</div>			
+			</div>			
 
 			<div class="row">
 				<div class="col-md-6">
