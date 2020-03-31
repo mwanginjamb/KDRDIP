@@ -4,10 +4,10 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EnterpriseTypes */
+/* @var $model app\models\Businesses */
 
-$this->title = $model->EnterpriseTypeName;
-$this->params['breadcrumbs'][] = ['label' => 'Enterprise Types', 'url' => ['index']];
+$this->title = $model->BusinessName;
+$this->params['breadcrumbs'][] = ['label' => 'Businesses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
@@ -34,8 +34,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->EnterpriseTypeID], ['class' => 'btn btn-primary']) : ''?>
-							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->EnterpriseTypeID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->BusinessID], ['class' => 'btn btn-primary']) : ''?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->BusinessID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
@@ -47,10 +47,20 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'EnterpriseTypeID',
-									'EnterpriseTypeName',
-									'ShortName',
-									'Notes:ntext',
+									'BusinessID',
+									'BusinessName',
+									'PostalAddress',
+									'PostalCode',
+									'Town',
+									'countries.CountryName',
+									'PhysicalLocation',
+									'Telephone',
+									'Mobile',
+									'Email:email',
+									'Url:url',
+									'counties.CountyName',
+									'subCounties.SubCountyName',
+									'wards.WardName',
 									[
 										'attribute' => 'CreatedDate',
 										'format' => ['date', 'php:d/m/Y h:i a'],
@@ -58,8 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									],
 									[
 										'label' => 'Created By',
-										'attribute' => 'users.fullName',
-										
+										'attribute' => 'users.fullName',										
 									],
 							],
 						]) ?>

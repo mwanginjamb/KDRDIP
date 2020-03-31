@@ -3,18 +3,23 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\EnterpriseTypes;
+use app\models\Businesses;
+use app\models\Countries;
+use app\models\Counties;
+use app\models\SubCounties;
+use app\models\Wards;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * EnterpriseTypesController implements the CRUD actions for EnterpriseTypes model.
+ * BusinessesController implements the CRUD actions for Businesses model.
  */
-class EnterpriseTypesController extends Controller
+class BusinessesController extends Controller
 {
 	public $rights;
 	/**
@@ -22,7 +27,7 @@ class EnterpriseTypesController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(86);
+		$this->rights = RightsController::Permissions(87);
 
 		$rightsArray = []; 
 		if (isset($this->rights->View)) {
@@ -72,13 +77,13 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Lists all EnterpriseTypes models.
+	 * Lists all Businesses models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => EnterpriseTypes::find(),
+			'query' => Businesses::find(),
 		]);
 
 		return $this->render('index', [
@@ -88,7 +93,7 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Displays a single EnterpriseTypes model.
+	 * Displays a single Businesses model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
@@ -102,27 +107,36 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Creates a new EnterpriseTypes model.
+	 * Creates a new Businesses model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$model = new EnterpriseTypes();
+		$model = new Businesses();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->EnterpriseTypeID]);
+			return $this->redirect(['view', 'id' => $model->BusinessID]);
 		}
+
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
+		$countries = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
 
 		return $this->render('create', [
 			'model' => $model,
 			'rights' => $this->rights,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'wards' => $wards,
+			'countries' => $countries,
 		]);
 	}
 
 	/**
-	 * Updates an existing EnterpriseTypes model.
+	 * Updates an existing Businesses model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -133,17 +147,26 @@ class EnterpriseTypesController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->EnterpriseTypeID]);
+			return $this->redirect(['view', 'id' => $model->BusinessID]);
 		}
+
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
+		$countries = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
 
 		return $this->render('update', [
 			'model' => $model,
 			'rights' => $this->rights,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'wards' => $wards,
+			'countries' => $countries,
 		]);
 	}
 
 	/**
-	 * Deletes an existing EnterpriseTypes model.
+	 * Deletes an existing Businesses model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -157,15 +180,15 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Finds the EnterpriseTypes model based on its primary key value.
+	 * Finds the Businesses model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return EnterpriseTypes the loaded model
+	 * @return Businesses the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = EnterpriseTypes::findOne($id)) !== null) {
+		if (($model = Businesses::findOne($id)) !== null) {
 			return $model;
 		}
 

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EnterpriseTypes */
+/* @var $model app\models\GroupMembers */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="card">
@@ -27,10 +27,37 @@ use yii\widgets\ActiveForm;
 	 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'EnterpriseTypeName')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'MemberName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'ShortName')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'DateOfBirth')->textInput(['type' => 'date']) ?>					
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'Gender')->dropDownList($gender, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">	
+					<?= $form->field($model, 'DifferentlyAbled')->checkbox([]) ?>
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'GroupRoleID')->dropDownList($groupRoles, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'HouseholdTypeID')->dropDownList($householdTypes, ['prompt'=>'Select']); ?>	
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					
+				</div>
+				<div class="col-md-6">
+						
 				</div>			
 			</div>
 
@@ -43,8 +70,10 @@ use yii\widgets\ActiveForm;
 				</div>			
 			</div>
 
+			
+
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['/community-groups/view', 'id' => $model->CommunityGroupID], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 

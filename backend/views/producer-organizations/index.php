@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Enterprise Types';
+$this->title = 'Producer Organizations';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section id="configuration">
@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
 							],
 							'columns' => [
 								/* [
-									'attribute' => 'EnterpriseTypeID',
+									'attribute' => 'ProducerOrganizationID',
 									'label' => 'ID',
 									'headerOptions' => ['width' => '5%'],
 								], */
@@ -46,7 +46,12 @@ $this->params['breadcrumbs'][] = $this->title;
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
-								'EnterpriseTypeName',
+								'ProducerOrganizationName',
+								[
+									'attribute' => 'FormationDate',
+									'format' => ['date', 'php:d/m/Y'],
+									'headerOptions' => ['width' => '15%'],
+								],
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
@@ -64,10 +69,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									'buttons' => [
 
 										'view' => function ($url, $model) use ($rights) {
-											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->EnterpriseTypeID], ['class' => 'btn-sm btn-primary']) : '';
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->ProducerOrganizationID], ['class' => 'btn-sm btn-primary']) : '';
 										},
 										'delete' => function ($url, $model) use ($rights) {
-											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->EnterpriseTypeID], [
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProducerOrganizationID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',

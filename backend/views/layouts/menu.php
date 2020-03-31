@@ -379,6 +379,24 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											foreach ($enterpriseTypes as $enterpriseType) { ?> 
 												<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $enterpriseType->EnterpriseTypeName; ?>"><?= $enterpriseType->ShortName; ?></span></a>
 													<ul class="menu-content">
+														<?php if ($enterpriseType->EnterpriseTypeID == 1) { ?>
+															<li <?= ($currentPage == 'community-groups' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/community-groups?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Community Groups</span></a>
+															</li>
+															<?php 
+														} elseif ($enterpriseType->EnterpriseTypeID == 2) { ?>
+															<li <?= ($currentPage == 'businesses' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/businesses?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Businesses</span></a>
+															</li>
+															<?php														
+														} elseif ($enterpriseType->EnterpriseTypeID == 3) { ?>
+															<li <?= ($currentPage == 'producer-organizations' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/producer-organizations?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Producer Organizations</span></a>
+															</li>
+															<?php 
+														} elseif ($enterpriseType->EnterpriseTypeID == 4) { ?>
+															<li <?= ($currentPage == 'youth-placement' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/youth-placement?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Youth Placement</span></a>
+															</li>
+															<?php 
+														} ?>
+														
 														<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
 														</li>
 														<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
@@ -446,7 +464,23 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<?php if (in_array(77, $rights)) { ?>
 												<li <?= ($currentPage == 'safeguards') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/safeguards"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Safeguards</span></a>
 												</li>	
-											<?php } ?>															
+											<?php } ?>	
+											<?php if (in_array(86, $rights)) { ?>
+												<li <?= ($currentPage == 'enterprise-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/enterprise-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Enterprise Types</span></a>
+												</li>	
+											<?php } ?>
+											<?php if (in_array(89, $rights)) { ?>
+												<li <?= ($currentPage == 'community-group-status') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/community-group-status"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Community Group Status</span></a>
+												</li>	
+											<?php } ?>	
+											<?php if (in_array(86, $rights)) { ?>
+												<li <?= ($currentPage == 'group-roles') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/group-roles"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Group Roles</span></a>
+												</li>	
+											<?php } ?>	
+											<?php if (in_array(86, $rights)) { ?>
+												<li <?= ($currentPage == 'household-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/household-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Household Types</span></a>
+												</li>	
+											<?php } ?>																							
 										</ul>
 									</li>
 								<?php } ?>

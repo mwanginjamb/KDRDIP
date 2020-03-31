@@ -4,13 +4,14 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EnterpriseTypes */
+/* @var $model app\models\GroupRoles */
 
-$this->title = $model->EnterpriseTypeName;
-$this->params['breadcrumbs'][] = ['label' => 'Enterprise Types', 'url' => ['index']];
+$this->title = $model->GroupRoleName;
+$this->params['breadcrumbs'][] = ['label' => 'Group Roles', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
+
 
 <section id="configuration">
 	<div class="row">
@@ -34,8 +35,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->EnterpriseTypeID], ['class' => 'btn btn-primary']) : ''?>
-							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->EnterpriseTypeID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->GroupRoleID], ['class' => 'btn btn-primary']) : ''?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->GroupRoleID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
@@ -47,9 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'EnterpriseTypeID',
-									'EnterpriseTypeName',
-									'ShortName',
+									'GroupRoleID',
+									'GroupRoleName',
 									'Notes:ntext',
 									[
 										'attribute' => 'CreatedDate',

@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EnterpriseTypes */
+/* @var $model app\models\HouseholdTypes */
 
-$this->title = 'Create Enterprise Types';
-$this->params['breadcrumbs'][] = ['label' => 'Enterprise Types', 'url' => ['index']];
+$this->title = 'Create Household Types';
+$this->params['breadcrumbs'][] = ['label' => 'Household Types', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">

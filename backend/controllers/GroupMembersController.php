@@ -3,18 +3,21 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\EnterpriseTypes;
+use app\models\GroupMembers;
+use app\models\GroupRoles;
+use app\models\HouseholdTypes;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * EnterpriseTypesController implements the CRUD actions for EnterpriseTypes model.
+ * GroupMembersController implements the CRUD actions for GroupMembers model.
  */
-class EnterpriseTypesController extends Controller
+class GroupMembersController extends Controller
 {
 	public $rights;
 	/**
@@ -22,7 +25,7 @@ class EnterpriseTypesController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(86);
+		$this->rights = RightsController::Permissions(88);
 
 		$rightsArray = []; 
 		if (isset($this->rights->View)) {
@@ -72,13 +75,13 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Lists all EnterpriseTypes models.
+	 * Lists all GroupMembers models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => EnterpriseTypes::find(),
+			'query' => GroupMembers::find(),
 		]);
 
 		return $this->render('index', [
@@ -88,7 +91,7 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Displays a single EnterpriseTypes model.
+	 * Displays a single GroupMembers model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
@@ -102,27 +105,35 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Creates a new EnterpriseTypes model.
+	 * Creates a new GroupMembers model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
-	public function actionCreate()
+	public function actionCreate($gid)
 	{
-		$model = new EnterpriseTypes();
+		$model = new GroupMembers();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		$model->CommunityGroupID = $gid;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->EnterpriseTypeID]);
+			return $this->redirect(['/community-groups/view', 'id' => $model->CommunityGroupID]);
 		}
+
+		$groupRoles = ArrayHelper::map(GroupRoles::find()->all(), 'GroupRoleID', 'GroupRoleName');
+		$householdTypes = ArrayHelper::map(HouseholdTypes::find()->all(), 'HouseholdTypeID', 'HouseholdTypeName'); 
+		$gender = ['M' => 'Male', 'F' => 'Female'];
 
 		return $this->render('create', [
 			'model' => $model,
+			'groupRoles' => $groupRoles,
+			'householdTypes' => $householdTypes,
+			'gender' => $gender,
 			'rights' => $this->rights,
 		]);
 	}
 
 	/**
-	 * Updates an existing EnterpriseTypes model.
+	 * Updates an existing GroupMembers model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -133,17 +144,24 @@ class EnterpriseTypesController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->EnterpriseTypeID]);
+			return $this->redirect(['/community-groups/view', 'id' => $model->CommunityGroupID]);
 		}
+
+		$groupRoles = ArrayHelper::map(GroupRoles::find()->all(), 'GroupRoleID', 'GroupRoleName');
+		$householdTypes = ArrayHelper::map(HouseholdTypes::find()->all(), 'HouseholdTypeID', 'HouseholdTypeName');
+		$gender = ['M' => 'Male', 'F' => 'Female'];
 
 		return $this->render('update', [
 			'model' => $model,
+			'groupRoles' => $groupRoles,
+			'householdTypes' => $householdTypes,
+			'gender' => $gender,
 			'rights' => $this->rights,
 		]);
 	}
 
 	/**
-	 * Deletes an existing EnterpriseTypes model.
+	 * Deletes an existing GroupMembers model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -157,15 +175,15 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Finds the EnterpriseTypes model based on its primary key value.
+	 * Finds the GroupMembers model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return EnterpriseTypes the loaded model
+	 * @return GroupMembers the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = EnterpriseTypes::findOne($id)) !== null) {
+		if (($model = GroupMembers::findOne($id)) !== null) {
 			return $model;
 		}
 

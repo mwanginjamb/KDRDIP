@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EnterpriseTypes */
+/* @var $model app\models\ProducerOrganizations */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="card">
@@ -27,10 +27,10 @@ use yii\widgets\ActiveForm;
 	 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'EnterpriseTypeName')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'ProducerOrganizationName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'ShortName')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'FormationDate')->textInput(['type' => 'date']) ?>
 				</div>			
 			</div>
 

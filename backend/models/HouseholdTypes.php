@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "enterprisetypes".
+ * This is the model class for table "householdtypes".
  *
- * @property int $EnterpriseTypeID
- * @property string $EnterpriseTypeName
- * @property string $ShortName
+ * @property int $HouseholdTypeID
+ * @property string $HouseholdTypeName
  * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
- * @property int $Deleed
+ * @property int $Deleted
  */
-class EnterpriseTypes extends \yii\db\ActiveRecord
+class HouseholdTypes extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'enterprisetypes';
+		return 'householdtypes';
 	}
 
 	/**
@@ -33,10 +32,9 @@ class EnterpriseTypes extends \yii\db\ActiveRecord
 		return [
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CreatedBy', 'Deleed'], 'integer'],
-			[['EnterpriseTypeName'], 'string', 'max' => 100],
-			[['ShortName'], 'string', 'max' => 45],
-			[['EnterpriseTypeName', 'ShortName'], 'required'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['HouseholdTypeName'], 'string', 'max' => 45],
+			[['HouseholdTypeName'], 'required'],
 		];
 	}
 
@@ -46,13 +44,12 @@ class EnterpriseTypes extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'EnterpriseTypeID' => 'Enterprise Type ID',
-			'EnterpriseTypeName' => 'Enterprise Type Name',
-			'ShortName' => 'Short Name',
+			'HouseholdTypeID' => 'Household Type ID',
+			'HouseholdTypeName' => 'Household Type Name',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
-			'Deleed' => 'Deleed',
+			'Deleted' => 'Deleted',
 		];
 	}
 

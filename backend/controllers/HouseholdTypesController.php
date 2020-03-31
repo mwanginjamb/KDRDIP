@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\EnterpriseTypes;
+use app\models\HouseholdTypes;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -12,9 +12,9 @@ use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * EnterpriseTypesController implements the CRUD actions for EnterpriseTypes model.
+ * HouseholdTypesController implements the CRUD actions for HouseholdTypes model.
  */
-class EnterpriseTypesController extends Controller
+class HouseholdTypesController extends Controller
 {
 	public $rights;
 	/**
@@ -22,7 +22,7 @@ class EnterpriseTypesController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(86);
+		$this->rights = RightsController::Permissions(90);
 
 		$rightsArray = []; 
 		if (isset($this->rights->View)) {
@@ -72,13 +72,13 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Lists all EnterpriseTypes models.
+	 * Lists all HouseholdTypes models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => EnterpriseTypes::find(),
+			'query' => HouseholdTypes::find(),
 		]);
 
 		return $this->render('index', [
@@ -88,7 +88,7 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Displays a single EnterpriseTypes model.
+	 * Displays a single HouseholdTypes model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
@@ -102,17 +102,17 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Creates a new EnterpriseTypes model.
+	 * Creates a new HouseholdTypes model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$model = new EnterpriseTypes();
+		$model = new HouseholdTypes();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->EnterpriseTypeID]);
+			return $this->redirect(['view', 'id' => $model->HouseholdTypeID]);
 		}
 
 		return $this->render('create', [
@@ -122,7 +122,7 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Updates an existing EnterpriseTypes model.
+	 * Updates an existing HouseholdTypes model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -133,7 +133,7 @@ class EnterpriseTypesController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->EnterpriseTypeID]);
+			return $this->redirect(['view', 'id' => $model->HouseholdTypeID]);
 		}
 
 		return $this->render('update', [
@@ -143,7 +143,7 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Deletes an existing EnterpriseTypes model.
+	 * Deletes an existing HouseholdTypes model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -157,15 +157,15 @@ class EnterpriseTypesController extends Controller
 	}
 
 	/**
-	 * Finds the EnterpriseTypes model based on its primary key value.
+	 * Finds the HouseholdTypes model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return EnterpriseTypes the loaded model
+	 * @return HouseholdTypes the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = EnterpriseTypes::findOne($id)) !== null) {
+		if (($model = HouseholdTypes::findOne($id)) !== null) {
 			return $model;
 		}
 

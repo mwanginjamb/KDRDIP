@@ -4,14 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\EnterpriseTypes */
+/* @var $model app\models\GroupMembers */
 
-$this->title = $model->EnterpriseTypeName;
-$this->params['breadcrumbs'][] = ['label' => 'Enterprise Types', 'url' => ['index']];
+$this->title = $model->MemberName;
+$this->params['breadcrumbs'][] = ['label' => 'Group Members', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -33,9 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class="card-body">	
 
 						<p>
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->EnterpriseTypeID], ['class' => 'btn btn-primary']) : ''?>
-							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->EnterpriseTypeID], [
+							<?= Html::a('<i class="ft-x"></i> Cancel', ['/community-groups/view', 'id' => $model->CommunityGroupID], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['/group-members/update', 'id' => $model->CommunityGroupMemberID], ['class' => 'btn btn-primary']) : ''?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['/group-members/delete', 'id' => $model->CommunityGroupMemberID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
@@ -47,14 +46,20 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'EnterpriseTypeID',
-									'EnterpriseTypeName',
-									'ShortName',
+									'CommunityGroupMemberID',
+									'MemberName',
+									'groupRoles.GroupRoleName',
+									'householdTypes.HouseholdTypeName',
+									'Gender',
+									[
+										'attribute' => 'DateOfBirth',
+										'format' => ['date', 'php:d/m/Y'],										
+									],
+									'DifferentlyAbled',
 									'Notes:ntext',
 									[
 										'attribute' => 'CreatedDate',
-										'format' => ['date', 'php:d/m/Y h:i a'],
-										
+										'format' => ['date', 'php:d/m/Y h:i a'],										
 									],
 									[
 										'label' => 'Created By',

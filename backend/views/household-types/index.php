@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Enterprise Types';
+$this->title = 'Household Types';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section id="configuration">
@@ -37,16 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-								/* [
-									'attribute' => 'EnterpriseTypeID',
-									'label' => 'ID',
-									'headerOptions' => ['width' => '5%'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
-								'EnterpriseTypeName',
+								'HouseholdTypeName',
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
@@ -64,10 +59,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									'buttons' => [
 
 										'view' => function ($url, $model) use ($rights) {
-											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->EnterpriseTypeID], ['class' => 'btn-sm btn-primary']) : '';
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->HouseholdTypeID], ['class' => 'btn-sm btn-primary']) : '';
 										},
 										'delete' => function ($url, $model) use ($rights) {
-											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->EnterpriseTypeID], [
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->HouseholdTypeID], [
 												'class' => 'btn-sm btn-danger btn-xs',
 												'data' => [
 													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
