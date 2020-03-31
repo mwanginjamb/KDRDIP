@@ -7,19 +7,21 @@ use yii\grid\GridView;
 /* @var $model app\models\Product */
 
 $this->title = !empty($project) ? $project->ProjectName : '';
-/* $Total = 0;
-if (!empty($dataProvider->getModels()))
-{
-	foreach ($dataProvider->getModels() as $key => $val) {
-		//print_r($val);
-		$Total += $val['Amount'];
-	}
-}
-$Total = number_format($Total, 2); */
 ?>
-<p>Sub-Project Title - <?= isset($projectData) ? $projectData->ProjectName : ''; ?></p>
-<p>Component - <?= isset($projectData) ? $projectData->components->ComponentName : ''; ?></p>
-<p>Reporting Period - <?= " $Month $Year"; ?></p>
+<div class="space"></div>
+<table width="100%" class="pdf-signoff-table1">
+	<tr>
+		<td>Sub-Project Title - <?= isset($projectData) ? $projectData->ProjectName : ''; ?></td>
+	</tr>
+	<tr>
+		<td>Component - <?= isset($projectData) ? $projectData->components->ComponentName : ''; ?></td>
+	</tr>
+	<tr>
+		<td>Reporting Period - <?= " $Month $Year"; ?></td>
+	</tr>
+</table>
+<div class="space"></div>
+<div class="space"></div>
 
 <div class="space"></div>
 <div class="company-name">RECEIPTS AND PAYMENT SCHEDULE</div>
@@ -40,16 +42,42 @@ $Total = number_format($Total, 2); */
 		</tr>
 	</thead>
 	<tbody>
-		<tr>			
-			<td></td>
-			<td></td>
-			<td class="number-column"><?= number_format(0, 2); ?></td>
-			<td></td>
-			<td></td>
-			<td class="number-column"><?= number_format(0, 2); ?></td>
-		</tr>
+		<?php
+			$count = (count($fundsRequisition) > count($payments)) ? count($fundsRequisition) : count($payments);
+			for ($i = 0; $i < $count; $i++) {
+				?>
+				<tr>			
+					<td><?= isset($fundsRequisition[$i]) ? $fundsRequisition[$i]->FundRequisitionID : ''; ?></td>
+					<td><?= isset($fundsRequisition[$i]) ? $fundsRequisition[$i]->Description : ''; ?></td>
+					<td class="number-column"><?= isset($fundsRequisition[$i]) ? number_format($fundsRequisition[$i]->FundRequisitionID, 2) : ''; ?></td>
+					<td><?= isset($payments[$i]) ? $payments[$i]->PaymentID : ''; ?></td>
+					<td><?= isset($payments[$i]) ? $payments[$i]->Description : ''; ?></td>
+					<td class="number-column"><?= isset($payments[$i]) ? number_format($payments[$i]->Amount, 2) : ''; ?></td>
+				</tr>
+				<?php
+			} ?>
 	</tbody>
 </table>
+<div class="space"></div>
+<table width="100%" class="pdf-signoff-table1">
+	<tr>
+		<td width="25%">Total Receipts (Kshs)</td>
+		<td width="15%" align="right"><?= number_format($totalReceipts, 2); ?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td width="25%">Total Payments (Kshs)</td>
+		<td width="15%" align="right"><?= number_format($totalPayments, 2); ?></td>
+		<td></td>
+	</tr>
+	<tr>
+		<td width="25%">Closing Balance (Kshs)</td>
+		<td width="15%" align="right"><?= number_format($totalReceipts - $totalPayments, 2); ?></td>
+		<td></td>
+	</tr>
+</table>
+<div class="space"></div>
+<div class="space"></div>
 
 <table width="100%" class="pdf-signoff-table">
 	<tr>

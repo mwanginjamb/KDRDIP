@@ -24,6 +24,7 @@ use app\models\Projects;
 use app\models\Activities;
 use app\models\ActivityBudget;
 use app\models\ProjectStatus;
+use app\models\FundsRequisition;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -1339,9 +1340,25 @@ class ReportsController extends Controller
 
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 
-		$projectData = Projects::find()->joinWith('components')->where(['ProjectID' => $ProjectID])->one();
-
-		// print('<pre>'); print_r($projectData); exit;
+		$projectData = Projects::find()->joinWith('components')
+												->where(['ProjectID' => $ProjectID])												
+												->one();
+		$fundsRequisition = FundsRequisition::find()->where(['ProjectID' => $ProjectID])
+												->andWhere("MONTH(Date) = $Month AND YEAR(Date) = $Year")
+												->all();
+		$payments = Payments::find()->joinWith('invoices')
+												->joinWith('invoices.purchases')
+												->where(['purchases.ProjectID' => $ProjectID])
+												->andWhere("MONTH(Date) = $Month AND YEAR(Date) = $Year")
+												->all();
+		$totalReceipts = FundsRequisition::find()->where(['ProjectID' => $ProjectID])
+												->andWhere("MONTH(Date) = $Month AND YEAR(Date) = $Year")
+												->sum('Amount');
+		$totalPayments = Payments::find()->joinWith('invoices')
+													->joinWith('invoices.purchases')
+													->where(['purchases.ProjectID' => $ProjectID])
+													->andWhere("MONTH(Date) = $Month AND YEAR(Date) = $Year")
+													->sum('payments.Amount');
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('monthly-finance-report', [
@@ -1349,6 +1366,10 @@ class ReportsController extends Controller
 																				'projects' => $projects,
 																				'Month' => $months[(string) $Month],
 																				'Year' => $Year,
+																				'fundsRequisition' => $fundsRequisition,
+																				'payments' => $payments,
+																				'totalReceipts' => $totalReceipts,
+																				'totalPayments' => $totalPayments,
 																			]);
 		
 		// setup kartik\mpdf\Pdf component
@@ -1358,7 +1379,7 @@ class ReportsController extends Controller
 			// A4 paper format
 			'format' => Pdf::FORMAT_A4,
 			// portrait orientation
-			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			'orientation' => Pdf::ORIENT_PORTRAIT,
 			// stream to browser inline
 			'destination' => Pdf::DEST_STRING,
 			// your html content input

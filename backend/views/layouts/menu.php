@@ -11,8 +11,10 @@ $option = isset($_GET['option']) ? $_GET['option'] : '';
 $cid = isset($_GET['cid']) ? $_GET['cid'] : '';
 
 use app\models\Components;
+use app\models\EnterpriseTypes;
 
 $components = Components::find()->all();
+$enterpriseTypes = EnterpriseTypes::find()->all();
 
 $rights = (array) RightsController::Permissions(0);
 
@@ -357,19 +359,43 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<?php
 								foreach ($components as $component) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $component->ComponentName; ?>"><?= $component->ShortName; ?></span></a>
-									<ul class="menu-content">									
-										<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
-										</li>
-										<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
-										</li>
-										<li <?= ($currentRoute == 'reports/work-plan' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/work-plan?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
-										</li>
-										<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
-										</li>
-										<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
-										</li>
-										<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
-										</li>
+									<ul class="menu-content">
+										<?php 
+										if ($component->ComponentID != 4) { ?> 									
+											<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
+											</li>
+											<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
+											</li>
+											<li <?= ($currentRoute == 'reports/work-plan' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/work-plan?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
+											</li>
+											<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
+											</li>
+											<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
+											</li>
+											<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+											</li>
+											<?php 
+										} else {
+											foreach ($enterpriseTypes as $enterpriseType) { ?> 
+												<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $enterpriseType->EnterpriseTypeName; ?>"><?= $enterpriseType->ShortName; ?></span></a>
+													<ul class="menu-content">
+														<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
+														</li>
+														<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
+														</li>
+														<li <?= ($currentRoute == 'reports/work-plan' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/work-plan?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
+														</li>
+														<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
+														</li>
+														<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
+														</li>
+														<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+														</li>
+													</ul>
+												</li>
+												<?php 
+											}
+										}?>
 									</ul>
 								</li>
 									<?php
