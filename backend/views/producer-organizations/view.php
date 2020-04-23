@@ -113,7 +113,7 @@ $this->params['breadcrumbs'][] = $this->title;
 														<?= $form->field($column, '[' . $x . ']ProducerOrgMemberID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 													</td>
 													<td><?= $form->field($column, '[' . $x . ']CommunityGroupID', ['template' => '{label}{input}'])->dropDownList($communityGroups, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>							
-													<td><?= Html::a('<i class="ft-trash"></i> Remove', ['remove', 'id' => $column->ProducerOrgMemberID, 'pid' => $column->ProducerOrganizationID], ['class' => 'btn btn-danger']) ?></td>
+													<td><?= ($column->ProducerOrgMemberID) ? Html::a('<i class="ft-trash"></i> Remove', ['remove', 'id' => $column->ProducerOrgMemberID, 'pid' => $column->ProducerOrganizationID], ['class' => 'btn btn-danger']) : '' ?></td>
 												</tr>
 												<?php
 											} ?>

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\UserStatus */
+/* @var $model app\models\ReportingFrequency */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="card">
@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
 	 
 	 		<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'UserStatusName')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'ReportingFrequencyName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
 						

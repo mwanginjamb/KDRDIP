@@ -5,24 +5,24 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "projectstatus".
+ * This is the model class for table "mastertargets".
  *
- * @property int $ProjectStatusID
- * @property string $ProjectStatusName
- * @property string $Notes
- * @property string $ColorCode
+ * @property int $MasterTargetID
+ * @property string $Period
+ * @property string $Value
+ * @property int $MasterIndicatorID
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
  */
-class ProjectStatus extends \yii\db\ActiveRecord
+class MasterTargets extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'projectstatus';
+		return 'mastertargets';
 	}
 
 	/**
@@ -31,11 +31,10 @@ class ProjectStatus extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['Notes'], 'string'],
+			[['Value'], 'number'],
+			[['MasterIndicatorID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['CreatedDate'], 'safe'],
-			[['CreatedBy', 'Deleted'], 'integer'],
-			[['ProjectStatusName', 'ColorCode'], 'string', 'max' => 45],
-			[['ProjectStatusName', 'ColorCode'], 'required']
+			[['Period'], 'string', 'max' => 45],
 		];
 	}
 
@@ -45,13 +44,13 @@ class ProjectStatus extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'ProjectStatusID' => 'Project Status ID',
-			'ProjectStatusName' => 'Project Status',
-			'Notes' => 'Notes',
+			'MasterTargetID' => 'Master Target ID',
+			'Period' => 'Period',
+			'Value' => 'Value',
+			'MasterIndicatorID' => 'Master Indicator ID',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
-			'ColorCode' => 'Color Code',
 		];
 	}
 

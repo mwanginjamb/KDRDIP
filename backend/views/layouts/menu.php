@@ -9,6 +9,7 @@ $currentPage = Yii::$app->controller->id;
 $currentRoute = trim(Yii::$app->controller->module->requestedRoute);
 $option = isset($_GET['option']) ? $_GET['option'] : '';
 $cid = isset($_GET['cid']) ? $_GET['cid'] : '';
+$etid = isset($_GET['etid']) ? $_GET['etid'] : '';
 
 use app\models\Components;
 use app\models\EnterpriseTypes;
@@ -361,7 +362,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $component->ComponentName; ?>"><?= $component->ShortName; ?></span></a>
 									<ul class="menu-content">
 										<?php 
-										if ($component->ComponentID != 4) { ?> 									
+										if ($component->ComponentID != 3) { ?> 									
 											<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
 											</li>
 											<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
@@ -370,7 +371,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											</li>
 											<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
 											</li>
-											<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
+											<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects Report</span></a>
 											</li>
 											<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
 											</li>
@@ -397,17 +398,17 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 															<?php 
 														} ?>
 														
-														<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
+														<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
 														</li>
-														<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
+														<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
 														</li>
-														<li <?= ($currentRoute == 'reports/work-plan' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/work-plan?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
+														<li <?= ($currentRoute == 'reports/work-plan' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/work-plan?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
 														</li>
-														<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
+														<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
 														</li>
-														<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
+														<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
 														</li>
-														<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+														<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
 														</li>
 													</ul>
 												</li>
@@ -480,7 +481,19 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<?php if (in_array(86, $rights)) { ?>
 												<li <?= ($currentPage == 'household-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/household-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Household Types</span></a>
 												</li>	
-											<?php } ?>																							
+											<?php } ?>
+											<?php if (in_array(93, $rights)) { ?>
+												<li <?= ($currentPage == 'master-indicators') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/master-indicators"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Master Indicators</span></a>
+												</li>	
+											<?php } ?>
+											<?php if (in_array(94, $rights)) { ?>
+												<li <?= ($currentPage == 'indicator-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/indicator-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Indicator Types</span></a>
+												</li>	
+											<?php } ?>	
+											<?php if (in_array(95, $rights)) { ?>
+												<li <?= ($currentPage == 'reporting-frequency') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reporting-frequency"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Reporting Frequency</span></a>
+												</li>	
+											<?php } ?>																					
 										</ul>
 									</li>
 								<?php } ?>

@@ -35,6 +35,8 @@ use Yii;
  * @property int $WardID
  * @property int $LocationID 
  * @property int $SubLocationID
+ * @property int $OrganizationID
+ * @property int $EnterpriseTypeID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -53,7 +55,8 @@ class Projects extends \yii\db\ActiveRecord
 	{
 		return [
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
-				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID'], 'integer'],
+				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID',
+				'OrganizationID', 'EnterpriseTypeID'], 'integer'],
 			[['Objective', 'Justification', 'SafeguardsRecommendedAction'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
@@ -95,6 +98,8 @@ class Projects extends \yii\db\ActiveRecord
 			'LocationID'  => 'Location', 
 			'SubLocationID'  => 'Sub Location',
 			'WardID' => 'Ward',
+			'OrganizationID' => 'Organization',
+			'EnterpriseTypeID' => 'Enterprise Type',
 		];
 	}
 
@@ -168,5 +173,27 @@ class Projects extends \yii\db\ActiveRecord
 	public function getAmountSpent()
 	{
 		return Payments::find()->joinWith('invoices')->joinWith('invoices.purchases')->where(['purchases.ProjectID' => $this->ProjectID])->sum('payments.Amount');
+	}
+
+	public function getEnterpriseTypes()
+	{
+		return $this->hasOne(EnterpriseTypes::className(), ['EnterpriseTypeID' => 'EnterpriseTypeID'])->from(enterprisetypes::tableName());
+	}
+
+	public function getOrganizationName()
+	{
+		$etid = $this->EnterpriseTypeID;
+		if ($etid == 1) {
+			$organization = CommunityGroups::find()->where(['CommunityGroupID' => $this->OrganizationID])->select('CommunityGroupID as OrganizationID, CommunityGroupName as OrganizationName')->asArray()->one();
+		} elseif ($etid == 2) {
+			$organization = Businesses::find()->where(['BusinessID' => $this->OrganizationID])->select('BusinessID as OrganizationID, BusinessName as OrganizationName')->asArray()->one();
+		} elseif ($etid == 3) {
+			$organization = ProducerOrganizations::find()->where(['ProducerOrganizationID' => $this->OrganizationID])->select('ProducerOrganizationID as OrganizationID, ProducerOrganizationName as OrganizationName')->asArray()->one();
+		} elseif ($etid == 4) {
+			$organization = YouthPlacement::find()->where(['YouthPlacementID' => $this->OrganizationID])->select('YouthPlacementID as OrganizationID, YouthPlacementName as OrganizationName')->asArray()->one();
+		} else {
+			$organization = [];
+		}	
+		return (!empty($organization)) ? $organization['OrganizationName'] : '';
 	}
 }

@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "projectstatus".
+ * This is the model class for table "reportingfrequency".
  *
- * @property int $ProjectStatusID
- * @property string $ProjectStatusName
+ * @property int $ReportingFrequencyID
+ * @property string $ReportingFrequencyName
  * @property string $Notes
- * @property string $ColorCode
- * @property string $CreatedDate
  * @property int $CreatedBy
+ * @property string $CreatedDate
  * @property int $Deleted
  */
-class ProjectStatus extends \yii\db\ActiveRecord
+class ReportingFrequency extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'projectstatus';
+		return 'reportingfrequency';
 	}
 
 	/**
@@ -32,10 +31,9 @@ class ProjectStatus extends \yii\db\ActiveRecord
 	{
 		return [
 			[['Notes'], 'string'],
-			[['CreatedDate'], 'safe'],
 			[['CreatedBy', 'Deleted'], 'integer'],
-			[['ProjectStatusName', 'ColorCode'], 'string', 'max' => 45],
-			[['ProjectStatusName', 'ColorCode'], 'required']
+			[['CreatedDate'], 'safe'],
+			[['ReportingFrequencyName'], 'string', 'max' => 45],
 		];
 	}
 
@@ -45,13 +43,12 @@ class ProjectStatus extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'ProjectStatusID' => 'Project Status ID',
-			'ProjectStatusName' => 'Project Status',
+			'ReportingFrequencyID' => 'Reporting Frequency ID',
+			'ReportingFrequencyName' => 'Reporting Frequency Name',
 			'Notes' => 'Notes',
-			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
+			'CreatedDate' => 'Created Date',
 			'Deleted' => 'Deleted',
-			'ColorCode' => 'Color Code',
 		];
 	}
 

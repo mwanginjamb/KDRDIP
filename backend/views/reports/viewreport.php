@@ -38,11 +38,19 @@
 					}
 					?>
 				</div>
-				<?php if (isset($projects) && count($projects) > 0 && $SupplierFilter) { ?>
+				<?php if (isset($projects) && count($projects) > 0 && isset($SupplierFilter) && $SupplierFilter) { ?>
 					<div class="col-lg-3">
 						<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project'); ?>
 					</div>
 				<?php } ?>
+				<?php
+				if (isset($components) && count($components) > 0) { ?>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...']); ?>
+					</div>
+					<?php 
+				}
+				?>
 				<?php
 				if (!$CategoryFilterOnly) { ?>
 					<div class="col-lg-3">

@@ -249,6 +249,8 @@ Modal::end();
 													'communities.CommunityName',
 													'Longitude',
 													'Latitude',
+													'enterpriseTypes.EnterpriseTypeName',
+													'organizationName',
 													[
 														'attribute' => 'projectStatus.ProjectStatusName',
 														'label' => 'Status',
@@ -580,12 +582,22 @@ Modal::end();
 															</tr>
 															</tfoot>
 														</table>
+														<h5>Comments</h5>
+														<table class="custom-table table-striped table-bordered">
+														<tbody>
+															<tr>
+																</td><?= $indicator->Comments; ?></tr>
+															</tr>
+														</tbody>
+														</table>
 													</td>
 												</tr>
 												
 												<?php
 											} ?>
-											</tbody></table>
+											</tbody>
+											</table>
+											
 											<?php /*  GridView::widget([
 												'dataProvider' => $indicators,
 												'showFooter' =>false,

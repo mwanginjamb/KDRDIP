@@ -13,12 +13,13 @@ class FilterData extends Model
 	public $BankAccountID;
 	public $ProjectID;
 	public $ProjectStatusID;
+	public $ComponentID;
 
 	public function rules()
 	{
 		return [
 			[['Month', 'Year', 'ProductCategoryID'], 'required'],
-			[['Month', 'Year', 'ProductCategoryID', 'StockTakeID', 'SupplierID', 'ProjectStatusID'], 'integer'],
+			[['Month', 'Year', 'ProductCategoryID', 'StockTakeID', 'SupplierID', 'ProjectStatusID', 'ComponentID'], 'integer'],
 		];
 	}
 
@@ -32,6 +33,7 @@ class FilterData extends Model
 			'SupplierID' => 'Supplier',
 			'ProjectID' => 'Project',
 			'ProjectStatusID' => 'Project Status',
+			'ComponentID' => 'Component',
 		];
 	}
 }

@@ -91,7 +91,7 @@ function calculateValue(row)
 							<?= $form->field($model, 'ProjectParentID')->dropDownList($projects, ['prompt'=>'Select']); ?>
 						</div>
 						<div class="col-md-6">
-							
+							<?= ($model->ComponentID == 3) ? $form->field($model, 'OrganizationID')->dropDownList($organizations, ['prompt'=>'Select']) : ''; ?>
 						</div>			
 					</div>
 

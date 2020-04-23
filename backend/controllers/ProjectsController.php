@@ -37,6 +37,10 @@ use app\models\Documents;
 use app\models\ProjectSafeguards;
 use app\models\ProjectGallery;
 use app\models\ProjectQuestionnaire;
+use app\models\CommunityGroups;
+use app\models\YouthPlacement;
+use app\models\ProducerOrganizations;
+use app\models\Businesses;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -113,6 +117,7 @@ class ProjectsController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$etid = '';
 		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') { 
 			$projects = Projects::find()->where(['ComponentID' => Yii::$app->request->get()['cid']]);
 			$cid = Yii::$app->request->get()['cid'];
@@ -120,6 +125,11 @@ class ProjectsController extends Controller
 			$projects = Projects::find();
 			$cid = '';
 		}
+		if (isset(Yii::$app->request->get()['etid']) && Yii::$app->request->get()['etid'] != '') { 
+			$projects->andWhere(['EnterpriseTypeID' => Yii::$app->request->get()['etid']]);
+			$etid = Yii::$app->request->get()['etid'];
+		} 
+
 		$dataProvider = new ActiveDataProvider([
 			'query' => $projects,
 		]);
@@ -127,11 +137,13 @@ class ProjectsController extends Controller
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
 			'cid' => $cid,
+			'etid' => $etid,
 			'rights' => $this->rights,
 		]);
 	}
 
 	public function actionExport() {
+		$etid = '';
 		$model = Projects::find()->joinWith('parentProject')
 											->joinWith('projectStatus')
 											->select(
@@ -142,9 +154,16 @@ class ProjectsController extends Controller
 													'projects.StartDate', 
 													'parentProject.ProjectID as ProjectParentID',
 													'projects.ProjectStatusID',
-												])
-											->asArray()
-											->all();
+												]);
+											
+		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') { 
+			$model->andWhere(['projects.ComponentID' => Yii::$app->request->get()['cid']]);
+		} 
+		if (isset(Yii::$app->request->get()['etid']) && Yii::$app->request->get()['etid'] != '') { 
+			$model->andWhere(['projects.EnterpriseTypeID' => Yii::$app->request->get()['etid']]);
+		}
+		$model = $model->asArray()->all();
+		
 		$diplayFields = ['ProjectName', 'ParentProject', 'StartDate', 'ProjectStatusName'];
 		return ReportsController::WriteExcel($model, 'Project Report', $diplayFields);
 	}
@@ -334,6 +353,22 @@ class ProjectsController extends Controller
 		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') {
 			$model->ComponentID = Yii::$app->request->get()['cid'];
 		}
+		
+		$organizations = [];
+
+		if (isset(Yii::$app->request->get()['etid']) && Yii::$app->request->get()['etid'] != '') {
+			$model->EnterpriseTypeID = Yii::$app->request->get()['etid'];
+			$etid = Yii::$app->request->get()['etid'];
+			if ($etid == 1) {
+				$organizations = ArrayHelper::map(CommunityGroups::find()->all(), 'CommunityGroupID', 'CommunityGroupName');
+			} elseif ($etid == 2) {
+				$organizations = ArrayHelper::map(Businesses::find()->all(), 'BusinessID', 'BusinessName');
+			} elseif ($etid == 3) {
+				$organizations = ArrayHelper::map(ProducerOrganizations::find()->all(), 'ProducerOrganizationID', 'ProducerOrganizationName');
+			} elseif ($etid == 4) {
+				$organizations = ArrayHelper::map(YouthPlacement::find()->all(), 'YouthPlacementID', 'YouthPlacementName');
+			}
+		}
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$this->saveProjectSafeguards(Yii::$app->request->post()['ProjectSafeguards'], $model);
@@ -460,6 +495,7 @@ class ProjectsController extends Controller
 			'subCounties' => $subCounties,
 			'locations' => $locations,
 			'wards' => $wards,
+			'organizations' => $organizations,
 		]);
 	}
 
@@ -519,6 +555,20 @@ class ProjectsController extends Controller
 		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
 		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID ])->all(), 'WardID', 'WardName');
+
+
+		$etid = $model->EnterpriseTypeID;
+		if ($etid == 1) {
+			$organizations = ArrayHelper::map(CommunityGroups::find()->all(), 'CommunityGroupID', 'CommunityGroupName');
+		} elseif ($etid == 2) {
+			$organizations = ArrayHelper::map(Businesses::find()->all(), 'BusinessID', 'BusinessName');
+		} elseif ($etid == 3) {
+			$organizations = ArrayHelper::map(ProducerOrganizations::find()->all(), 'ProducerOrganizationID', 'ProducerOrganizationName');
+		} elseif ($etid == 4) {
+			$organizations = ArrayHelper::map(YouthPlacement::find()->all(), 'YouthPlacementID', 'YouthPlacementName');
+		} else {
+			$organizations = [];
+		}
 
 		for ($x = count($projectFunding); $x <= 4; $x++) {
 			$projectFunding[$x] = new ProjectFunding();
@@ -611,6 +661,7 @@ class ProjectsController extends Controller
 			'subCounties' => $subCounties,
 			'locations' => $locations,
 			'wards' => $wards,
+			'organizations' => $organizations,
 		]);
 	}
 

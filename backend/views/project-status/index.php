@@ -37,16 +37,16 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-								/* [
-									'attribute' => 'ProjectStatusID',
-									'label' => 'ID',
-									'headerOptions' => ['width' => '5%'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								'ProjectStatusName',
+								[
+									'attribute' => 'ColorCode',
+									'format' => 'text',
+									'headerOptions' => ['width' => '15%'],
+								],
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],

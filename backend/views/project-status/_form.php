@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'ProjectStatusName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
-						
+					<?= $form->field($model, 'ColorCode')->textInput(['maxlength' => true]) ?>
 				</div>			
 			</div>
 

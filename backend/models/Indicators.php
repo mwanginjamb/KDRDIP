@@ -16,6 +16,7 @@ use Yii;
  * @property int $SubComponentID
  * @property string $MeansOfVerification
  * @property int $ResponsibilityID
+ * @property string $Comments
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -37,7 +38,7 @@ class Indicators extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['IndicatorName', 'MeansOfVerification'], 'string'],
+			[['IndicatorName', 'MeansOfVerification', 'Comments'], 'string'],
 			[['UnitOfMeasureID', 'ProjectID', 'SubComponentID', 'ResponsibilityID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['BaseLine', 'EndTarget'], 'number'],
 			[['CreatedDate'], 'safe'],
@@ -64,6 +65,7 @@ class Indicators extends \yii\db\ActiveRecord
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
 			'ComponentID' => 'Component',
+			'Comments' => 'Comments',
 		];
 	}
 

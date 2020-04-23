@@ -25,6 +25,7 @@ use app\models\Activities;
 use app\models\ActivityBudget;
 use app\models\ProjectStatus;
 use app\models\FundsRequisition;
+use app\models\Components;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -1175,28 +1176,49 @@ class ReportsController extends Controller
 
 	public function actionProjectsReport($cid)
 	{
-		$params = Yii::$app->request->post();
 		$Title = 'Projects Report';
 
 		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 
 		$ProjectStatusID = 0;
-		if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
-			$ProjectStatusID = $params['FilterData']['ProjectStatusID'];
-			$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all(); 
-		} else {
-			$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid])->all();
+		$ComponentID = $cid;
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post()['FilterData'];
+			$ProjectStatusID = isset($params['ProjectStatusID']) && $params['ProjectStatusID'] != '' ? $params['ProjectStatusID'] : 0;
+			$ComponentID = isset($params['ComponentID']) && $params['ComponentID'] != '' ? $params['ComponentID'] : 0;
 		}
 
-		$pStatus = ProjectStatus::findOne($ProjectStatusID);
+		$projects = Projects::find()->joinWith('components')->joinWith('projectStatus');
 
-		$projectStatusName = !empty($pStatus) ? $pStatus->ProjectStatusName : '';
+		if ($ProjectStatusID != 0) {			
+			$projects->andWhere(['projects.ProjectStatusID' => $ProjectStatusID])->all(); 
+		} 
+		if ($ComponentID != 0) {			
+			$projects->andWhere(['projects.ComponentID' => $ComponentID])->all(); 
+		} 
+		$projects = $projects->OrderBy('componentID')->all();
+
+		$sql = "select temp.Total, projectstatus.ProjectStatusID, ProjectStatusName, ColorCode FROM (
+					select ProjectStatusID, count(*) as Total from projects
+					GROUP BY ProjectStatusID
+					) temp
+					right JOIN projectstatus on projectstatus.ProjectStatusID = temp.ProjectStatusID";
+
+		$statuses = ProjectStatus::findBySql($sql)->asArray()->all();
+
+		// print('<pre>');
+		// print_r($projects); exit;
+
+		$pStatus = ProjectStatus::findOne($ProjectStatusID);
+		$projectStatusName = !empty($pStatus) ? $pStatus->ProjectStatusName : 'All';
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('projects-report', [
 																				'projectStatus' => $projectStatus,
 																				'projects' => $projects,
-																				'projectStatusName' => $projectStatusName,
+																				'projectStatusName' => $projectStatusName,	
+																				'statuses' => $statuses,																			
 																			]);
 		
 		// setup kartik\mpdf\Pdf component
@@ -1206,7 +1228,7 @@ class ReportsController extends Controller
 			// A4 paper format
 			'format' => Pdf::FORMAT_A4,
 			// portrait orientation
-			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			'orientation' => Pdf::ORIENT_PORTRAIT,
 			// stream to browser inline
 			'destination' => Pdf::DEST_STRING,
 			// your html content input
@@ -1220,10 +1242,11 @@ class ReportsController extends Controller
 			'options' => ['title' => $Title],
 				// call mPDF methods on the fly
 			'methods' => [
-				'SetHeader'=>[$Title],
-				'SetFooter'=>['{PAGENO}'],
+				'SetHeader' => [$Title . '||Generated On: ' . date("d M Y h:m a")],
+				'SetFooter'=>['Page {PAGENO} ||Generate By: '. Yii::$app->user->identity->FirstName . ' ' . Yii::$app->user->identity->LastName],				
 			]
 		]);
+
 		
 		// return the pdf output as per the destination setting
 		// return $pdf->render();
@@ -1236,13 +1259,15 @@ class ReportsController extends Controller
 		$model = new FilterData();
 		$model->ProjectID = 0;
 		$model->ProjectStatusID = $ProjectStatusID;
+		$model->ComponentID = $ComponentID;
 		//$pdf->Output('test.pdf', 'F');
 		return $this->render('viewreport', [
 			'content' => $content, 'months' => $months, 'years' => $years,
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
 			'CategoryFilterOnly' => true, 'projectStatus' => $projectStatus,
 			'projects' => [],
-			'bankAccounts' => $bankAccounts
+			'bankAccounts' => $bankAccounts,
+			'components' => $components,
 		]);
 	}
 
@@ -1612,7 +1637,7 @@ class ReportsController extends Controller
 				'size' => 12,
 			]
 			];
-		
+
 		// Create Header
 		$firstRow = $model[0];
 		$column = 'A';

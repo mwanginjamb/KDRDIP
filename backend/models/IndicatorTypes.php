@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "projectstatus".
+ * This is the model class for table "indicatortypes".
  *
- * @property int $ProjectStatusID
- * @property string $ProjectStatusName
+ * @property int $IndicatorTypeID
+ * @property string $IndicatorTypeName
  * @property string $Notes
- * @property string $ColorCode
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
  */
-class ProjectStatus extends \yii\db\ActiveRecord
+class IndicatorTypes extends \yii\db\ActiveRecord
 {
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'projectstatus';
+		return 'indicatortypes';
 	}
 
 	/**
@@ -34,8 +33,7 @@ class ProjectStatus extends \yii\db\ActiveRecord
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['CreatedBy', 'Deleted'], 'integer'],
-			[['ProjectStatusName', 'ColorCode'], 'string', 'max' => 45],
-			[['ProjectStatusName', 'ColorCode'], 'required']
+			[['IndicatorTypeName'], 'string', 'max' => 45],
 		];
 	}
 
@@ -45,13 +43,12 @@ class ProjectStatus extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'ProjectStatusID' => 'Project Status ID',
-			'ProjectStatusName' => 'Project Status',
+			'IndicatorTypeID' => 'Indicator Type ID',
+			'IndicatorTypeName' => 'Indicator Type Name',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
-			'ColorCode' => 'Color Code',
 		];
 	}
 

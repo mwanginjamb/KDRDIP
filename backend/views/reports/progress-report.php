@@ -37,6 +37,7 @@ $Total = number_format($Total, 2); */
 	<tbody>
 	<?php
 	foreach ($indicators as $key => $indicator) {
+		$colNum = 7 + count($indicators);
 		?>
 		<tr>
 			<td style="text-align:center"><?= $key + 1; ?></td>
@@ -56,6 +57,9 @@ $Total = number_format($Total, 2); */
 			<td align="right"><?= number_format($indicator['EndTarget'], 2); ?></td>
 			<td align="right"><?= number_format($totalActual, 2); ?></td>
 			<td align="right"><?= number_format($targetPer, 2); ?>%</td>
+		</tr>
+		<tr>
+			<td colspan="<?= $colNum; ?>">Comments: <?= $indicator['Comments']; ?></td>
 		</tr>
 		<?php
 	} ?>

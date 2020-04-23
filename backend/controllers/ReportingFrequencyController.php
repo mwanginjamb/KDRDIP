@@ -3,7 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\UserStatus;
+use app\models\ReportingFrequency;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -12,9 +12,9 @@ use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * UserstatusController implements the CRUD actions for UserStatus model.
+ * ReportingFrequencyController implements the CRUD actions for ReportingFrequency model.
  */
-class UserstatusController extends Controller
+class ReportingFrequencyController extends Controller
 {
 	public $rights;
 	/**
@@ -22,7 +22,7 @@ class UserstatusController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(61);
+		$this->rights = RightsController::Permissions(95);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -72,13 +72,13 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Lists all UserStatus models.
+	 * Lists all ReportingFrequency models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => UserStatus::find(),
+			'query' => ReportingFrequency::find(),
 		]);
 
 		return $this->render('index', [
@@ -88,7 +88,7 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Displays a single UserStatus model.
+	 * Displays a single ReportingFrequency model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
@@ -102,18 +102,17 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Creates a new UserStatus model.
+	 * Creates a new ReportingFrequency model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$model = new UserStatus();
+		$model = new ReportingFrequency();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// return $this->redirect(['view', 'id' => $model->UserStatusID]);
-			return $this->redirect(['index']);
+			return $this->redirect(['view', 'id' => $model->ReportingFrequencyID]);
 		}
 
 		return $this->render('create', [
@@ -123,7 +122,7 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Updates an existing UserStatus model.
+	 * Updates an existing ReportingFrequency model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -134,8 +133,7 @@ class UserstatusController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// return $this->redirect(['view', 'id' => $model->UserStatusID]);
-			return $this->redirect(['index']);
+			return $this->redirect(['view', 'id' => $model->ReportingFrequencyID]);
 		}
 
 		return $this->render('update', [
@@ -145,7 +143,7 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Deletes an existing UserStatus model.
+	 * Deletes an existing ReportingFrequency model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -159,15 +157,15 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Finds the UserStatus model based on its primary key value.
+	 * Finds the ReportingFrequency model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return UserStatus the loaded model
+	 * @return ReportingFrequency the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = UserStatus::findOne($id)) !== null) {
+		if (($model = ReportingFrequency::findOne($id)) !== null) {
 			return $model;
 		}
 

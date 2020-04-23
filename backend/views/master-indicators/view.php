@@ -4,14 +4,13 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\ProjectStatus */
+/* @var $model app\models\MasterIndicators */
 
-$this->title = $model->ProjectStatusName;
-$this->params['breadcrumbs'][] = ['label' => 'Project Statuses', 'url' => ['index']];
+$this->title = $model->MasterIndicatorName;
+$this->params['breadcrumbs'][] = ['label' => 'Master Indicators', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -34,23 +33,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->ProjectStatusID], ['class' => 'btn btn-primary']) : ''?>
-							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProjectStatusID], [
+							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->MasterIndicatorID], ['class' => 'btn btn-primary']) : '';?>
+							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->MasterIndicatorID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
 										'method' => 'post',
 									],
-							]) : ''?>
+							]) : '';?>
 						</p>
 
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'ProjectStatusID',
-									'ProjectStatusName',
-									'ColorCode',
-									'Notes:ntext',
+									'MasterIndicatorID',
+									'MasterIndicatorName',
+									'indicatorTypes.IndicatorTypeName',
+									'components.ComponentName',
+									'reportingFrequency.ReportingFrequencyName',
+									'BaseLineYear',
+									'DataSource:ntext',
+									'ContributingTo:ntext',
+									'Responsibility:ntext',
+									'Definition:ntext',
+									'CalculationMethodology:ntext',
+									'DataCollectionMethod:ntext',
 									[
 										'attribute' => 'CreatedDate',
 										'format' => ['date', 'php:d/m/Y h:i a'],

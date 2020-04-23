@@ -3,18 +3,23 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\UserStatus;
+use app\models\MasterIndicators;
+use app\models\ReportingFrequency;
+use app\models\MasterTargets;
+use app\models\IndicatorTypes;
+use app\models\Components;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use yii\helpers\ArrayHelper;
 
 /**
- * UserstatusController implements the CRUD actions for UserStatus model.
+ * MasterIndicatorsController implements the CRUD actions for MasterIndicators model.
  */
-class UserstatusController extends Controller
+class MasterIndicatorsController extends Controller
 {
 	public $rights;
 	/**
@@ -22,7 +27,7 @@ class UserstatusController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(61);
+		$this->rights = RightsController::Permissions(93);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -72,13 +77,13 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Lists all UserStatus models.
+	 * Lists all MasterIndicators models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
 		$dataProvider = new ActiveDataProvider([
-			'query' => UserStatus::find(),
+			'query' => MasterIndicators::find(),
 		]);
 
 		return $this->render('index', [
@@ -88,7 +93,7 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Displays a single UserStatus model.
+	 * Displays a single MasterIndicators model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
@@ -102,28 +107,33 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Creates a new UserStatus model.
+	 * Creates a new MasterIndicators model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$model = new UserStatus();
+		$model = new MasterIndicators();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// return $this->redirect(['view', 'id' => $model->UserStatusID]);
-			return $this->redirect(['index']);
+			return $this->redirect(['view', 'id' => $model->MasterIndicatorID]);
 		}
+		$reportingFrequency = ArrayHelper::map(ReportingFrequency::find()->all(), 'ReportingFrequencyID', 'ReportingFrequencyName');
+		$indicatorTypes = ArrayHelper::map(IndicatorTypes::find()->all(), 'IndicatorTypeID', 'IndicatorTypeName');
+		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 
 		return $this->render('create', [
 			'model' => $model,
+			'reportingFrequency' => $reportingFrequency,
+			'indicatorTypes' => $indicatorTypes,
+			'components' => $components,
 			'rights' => $this->rights,
 		]);
 	}
 
 	/**
-	 * Updates an existing UserStatus model.
+	 * Updates an existing MasterIndicators model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -134,18 +144,24 @@ class UserstatusController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			// return $this->redirect(['view', 'id' => $model->UserStatusID]);
-			return $this->redirect(['index']);
+			return $this->redirect(['view', 'id' => $model->MasterIndicatorID]);
 		}
+
+		$reportingFrequency = ArrayHelper::map(ReportingFrequency::find()->all(), 'ReportingFrequencyID', 'ReportingFrequencyName');
+		$indicatorTypes = ArrayHelper::map(IndicatorTypes::find()->all(), 'IndicatorTypeID', 'IndicatorTypeName');
+		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 
 		return $this->render('update', [
 			'model' => $model,
+			'reportingFrequency' => $reportingFrequency,
+			'indicatorTypes' => $indicatorTypes,
+			'components' => $components,
 			'rights' => $this->rights,
 		]);
 	}
 
 	/**
-	 * Deletes an existing UserStatus model.
+	 * Deletes an existing MasterIndicators model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -159,15 +175,15 @@ class UserstatusController extends Controller
 	}
 
 	/**
-	 * Finds the UserStatus model based on its primary key value.
+	 * Finds the MasterIndicators model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return UserStatus the loaded model
+	 * @return MasterIndicators the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = UserStatus::findOne($id)) !== null) {
+		if (($model = MasterIndicators::findOne($id)) !== null) {
 			return $model;
 		}
 

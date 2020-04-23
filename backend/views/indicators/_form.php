@@ -54,10 +54,19 @@ use yii\widgets\ActiveForm;
 
 			<div class="row">
 				<div class="col-md-6">
+					<?= $form->field($model, 'ResponsibilityID')->dropDownList($projectTeams, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">
+					
+				</div>			
+			</div>		
+
+			<div class="row">
+				<div class="col-md-6">
 					<?= $form->field($model, 'MeansOfVerification')->textarea(['rows' => 3]) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'ResponsibilityID')->dropDownList($projectTeams, ['prompt'=>'Select']); ?>
+					<?= $form->field($model, 'Comments')->textarea(['rows' => 3]) ?>
 				</div>			
 			</div>
 
