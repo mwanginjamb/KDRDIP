@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								<div class="card border-grey border-lighten-3 m-0">
 									<div class="card-header border-0">
 										<div class="card-title text-center">
-												<div class="p-1"><img src="<?= $baseUrl; ?>/assets/images/kenya.png" alt="branding logo" width="80%"></div>
+												<div class="p-1"><img src="<?= $baseUrl; ?>/assets/images/kenya.png" alt="branding logo" width="60%"></div>
 										</div>
 										<h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2"><span><?= Html::encode($this->title) ?></span></h6>
 									</div>

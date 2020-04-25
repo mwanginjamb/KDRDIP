@@ -43,6 +43,7 @@ $(document).ready(function() {
 						<div class="form-actions" style="margin-top:0px">	
 							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-primary mr-1']) : '' ?>
 							<?= Html::a('<i class="ft-download"></i> Export', ['export', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-secondary mr-1']) ?>
+							<?= Html::a('<i class="ft-upload"></i> Import Projects', ['import', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-secondary mr-1']) ?>
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,

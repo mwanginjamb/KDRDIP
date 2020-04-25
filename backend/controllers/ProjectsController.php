@@ -36,6 +36,7 @@ use app\models\Complaints;
 use app\models\Documents;
 use app\models\ProjectSafeguards;
 use app\models\ProjectGallery;
+use app\models\ProjectImages;
 use app\models\ProjectQuestionnaire;
 use app\models\CommunityGroups;
 use app\models\YouthPlacement;
@@ -56,7 +57,9 @@ use yii\web\UploadedFile;
  */
 class ProjectsController extends Controller
 {
+	// public const MAIN_URL = '';
 	public $rights;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -1042,5 +1045,303 @@ class ProjectsController extends Controller
 			return;
 		}
 		return $this->redirect(['projects/view', 'id' => $model->RefNumber]);		
+	}
+
+	public function actionImport()
+	{
+		// echo strtotime('2020-04-05T14:45:41.953+03:00');
+		// exit;
+		$url = 'https://kc.kobotoolbox.org/api/v1/data/425000?format=json';
+		$token = 'd3387997e65bd2d4e75ee73ccd86e6b5439407ff';
+
+		$data = self::fetchData($url, $token);
+		$projectData = [];
+		foreach ($data as $res) {
+			$projectData['IntegrationID'] = self::extractData($res, 'projectsite_info/site_id');
+			if (!self::projectExists($projectData['IntegrationID'])) {
+				$projectData['ProjectName'] = self::extractData($res, 'projectsite_info/site_name');
+				$projectData['Objective'] = self::extractData($res, 'projectsite_info/Site_Description');
+				$projectData['StartDate'] = date('Y-m-d', strtotime(self::extractData($res, 'start')));
+				$projectData['EndDate'] = date('Y-m-d', strtotime(self::extractData($res, 'end')));
+				$projectData['ComponentID'] = self::getComponentId(self::extractData($res, 'projectsite_info/component'));
+				$projectData['CountyID'] = self::extractData($res, 'Geography/county');
+				$projectData['WardID'] = self::extractData($res, 'Geography/ward');
+				$projectData['Village'] = self::extractData($res, 'Geography/Village_community');
+				$projectData['SubCountyID'] = self::extractData($res, 'Geography/Subcounty');
+				$projectData['ContactPerson'] = self::extractData($res, 'Primary_Informant_Name');
+				$projectData['Beneficiaries'] = self::extractData($res, 'projectsite_info/beneficiaries');
+				$projectData['Enumerator'] = self::extractData($res, 'enumerator_name');
+				$projectData['ProjectStatusID'] = self::getProjectStatusId(self::extractData($res, 'projectsite_info/implementation_status'));
+				$projectData['Location'] = self::extractData($res, 'Geography/Location');
+				$geolocation = self::extractData($res, '_geolocation');
+				$projectData['Latitude'] = isset($geolocation[0]) ? $geolocation[0] : '';
+				$projectData['Longitude'] = isset($geolocation[1]) ? $geolocation[1] : '';
+				$projectData['CurrencyID'] = 1;
+				$projectData['CommunityID'] = 0;
+				$projectData['LocationID'] = 0;
+				$projectData['SubLocationID'] = 0;
+				$projectData['Justification'] = $projectData['Objective'];
+				$projectData['ApprovalDate'] = date('Y-m-d', strtotime(self::extractData($res, '_submission_time')));
+
+				$projectId = self::saveProject($projectData);
+				if ($projectId) {
+					$attachements = self::extractData($res, '_attachments');
+					foreach ($attachements as $attachement) {
+						$id = self::extractData($attachement, 'id');
+						$imageData = [];
+						if (!self::imageExists($id)) {
+							$smallImage = self::extractData($attachement, 'download_small_url');
+							$mediumImage = self::extractData($attachement, 'download_medium_url');
+							$largeImage = self::extractData($attachement, 'download_large_url');
+							$image = self::extractData($attachement, 'download_url');
+							$mimeType = self::extractData($attachement, 'mimetype');
+							$filename = self::getFilenme(self::extractData($attachement, 'filename'));
+							
+							// echo $filename . '</br>';
+							// self::downloadFile($smallImage, $token, 'small/' . $filename); // Download Small Image
+							// self::downloadFile($mediumImage, $token, 'medium/' . $filename); // Download Medium Image
+							// self::downloadFile($largeImage, $token, 'large/' . $filename); // Download Large Image
+
+							// self::downloadFile($image, $token, $filename); // Download Image
+							$base64 = self::downloadFileBase64($image, $token, $filename, $mimeType);
+
+							$imageData['ProjectID'] = $projectId;
+							$imageData['Caption'] = $filename;
+							// $imageData['Image'] = $filename;
+							$imageData['Image'] = $base64;
+							$imageData['IntegrationID'] = $id;
+							if (self::saveImage($imageData)) {
+							}
+						}
+					}
+				}
+			}
+			// exit;
+		}
+		\Yii::$app->session->setFlash('success', 'Import Completed');
+		return $this->redirect(['index']);
+	}
+
+	public static function saveProject($params)
+	{
+		$data['Projects'] = $params;
+		$model = new Projects();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		if ($model->load($data) && $model->save()) {
+			return $model->ProjectID;
+		} else {
+			// print('<pre>');
+			// print_r($model->getErrors());
+		}
+		return null;
+	}
+
+	public static function saveImage($params)
+	{
+		$data['ProjectImages'] = $params;
+		$model = new ProjectImages();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		if ($model->load($data) && $model->save()) {
+			return true;
+		} else {
+			print('<pre>');
+			print_r($model->getErrors());
+		}
+		return false;
+	}
+
+	public static function projectExists($integrationId)
+	{
+		if (empty(Projects::findOne(['IntegrationID' => $integrationId]))) {
+			return false;
+		}
+		return true;
+	}
+
+	public static function imageExists($integrationId)
+	{
+		if (empty(ProjectGallery::findOne(['IntegrationID' => $integrationId]))) {
+			return false;
+		}
+		return true;
+	}
+
+	public static function getComponentId($component)
+	{
+		return str_replace('component', '', $component);
+	}
+
+	public static function getProjectStatusId($status)
+	{
+		$model = ProjectStatus::findOne(['ProjectStatusName' => $status]);
+		if (!empty($model)) {
+			return $model->ProjectStatusID;
+		}
+		return 1;
+	}
+
+	public static function extractData($array, $key)
+	{
+		return isset($array[$key]) ? $array[$key] : null;
+	}
+
+	public static function getFilenme($longFilename) {
+		$nameArray = explode('/', $longFilename);
+		if (!empty($nameArray)) {
+			return end($nameArray);
+		}
+		return null;
+	}
+
+	public static function fetchData($url, $token)
+	{
+			
+		$ch = curl_init($url);
+		// curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'get');
+		// curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+															'Content-Type: application/json',
+															'Authorization: Token ' . $token
+															]);
+		$result = curl_exec($ch);
+
+		if (curl_errno($ch)) {
+			return ['error' => 'Failed to submit data'];
+		} else {
+			if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200) {
+				// $res = json_decode($result);
+				$res = json_decode($result);
+				$res = ArrayHelper::toArray($res);
+				// print('<pre>');
+				// print_r($res); exit;
+				if ($res == null) {
+					return  ['error' => 'Failed to Process Request1'];
+				} else {
+					return $res;
+				}
+			} elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '401') {
+				return ['error' => 'Failed to Process Request2'];
+			} else {
+				$res = json_decode($result);
+				if ($res == null) {
+					return ['error' => 'Failed to Process Request1'];
+				} else {
+					return ['error' => 'Failed to Process Request4'];
+				}
+			}
+		}
+	}
+
+	public static function sendData($url, $data, $token = '')
+	{
+		$data_string = json_encode($data);
+		// print_r($data_string); exit;
+			
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+															'Content-Type: application/json',
+															'Authorization: Bearer ' . $token
+															]);
+		$result = curl_exec($ch);
+
+		$info =  curl_getinfo($ch);
+		$info['data'] = $data;
+		$info = json_encode($info);
+
+		// self::log('Request: ', $info);
+		// self::log('Response: ', $result);
+
+		if (curl_errno($ch)) {
+			return (object) ['error' => 'Failed to submit data'];
+		} else {
+			// echo curl_getinfo($ch, CURLINFO_HTTP_CODE); exit;
+			if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200) {
+				$res = json_decode($result);
+				if ($res == null) {
+					return (object) ['error' => 'Failed to Process Request1'];
+				} else {
+					return $res;
+				}
+			} elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '401') {
+				return (object) ['error' => 'Failed to Process Request2'];
+			} else {
+				$res = json_decode($result);
+				if ($res == null) {
+					return (object) ['error' => 'Failed to Process Request1'];
+				} else {
+					return $res;
+				}
+			}
+		}
+	}
+
+	public static function downloadFile($url, $token, $output_filename)
+	{
+		$ch = curl_init($url);
+		// curl_setopt($ch, CURLOPT_URL, $host);
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+		curl_setopt($ch, CURLOPT_REFERER, 'https://kc.kobotoolbox.org');
+		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Content-Type: application/json',
+			'Authorization: Token ' . $token
+		]);
+		$result = curl_exec($ch);
+		curl_close($ch);
+  
+		// print_r($result); // prints the contents of the collected file before writing..
+  
+  
+		// the following lines write the contents to a file in the same directory (provided permissions etc)
+		$fp = fopen('images/' . $output_filename, 'w');
+		fwrite($fp, $result);
+		fclose($fp);
+	}
+
+	public static function downloadFileBase64($url, $token, $output_filename, $mimetype)
+	{
+		$ch = curl_init($url);
+		// curl_setopt($ch, CURLOPT_URL, $host);
+		curl_setopt($ch, CURLOPT_VERBOSE, 1);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+		curl_setopt($ch, CURLOPT_REFERER, 'https://kc.kobotoolbox.org');
+		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, [
+			'Content-Type: application/json',
+			'Authorization: Token ' . $token
+		]);
+		$result = curl_exec($ch);
+		curl_close($ch);
+		return 'data:image/' . $mimetype . ';base64,' . base64_encode($result);
+	}
+
+	public static function log($label, $data)
+	{
+		$ip = Yii::$app->getRequest()->getUserIP();
+		$filename = 'log/' . date('YmdH') . '_requests.log';
+		$req_dump = print_r($_REQUEST, true);
+		$fp = fopen($filename, 'a');
+		
+		fwrite($fp, $label . ' ');
+		fwrite($fp, date('Y-m-d h:i a') . ' ' . $ip . ' ');
+		fwrite($fp, $data . "\n");
+		fclose($fp);
 	}
 }

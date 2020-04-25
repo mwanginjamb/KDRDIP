@@ -33,6 +33,15 @@ Modal::begin([
 	]);
 
 Modal::end();
+
+Modal::begin([
+	'header' => '<h4 class="modal-title">Image</h4>',
+	// 'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	'id' => 'image-gallery',
+	'size' => 'modal-lg',
+	]);
+
+Modal::end();
 ?>
 <style>
 
@@ -49,10 +58,14 @@ Modal::end();
 	margin-top: 0px !important;
 	/* padding: 4px !important; */
 }
+.modal-header {
+	display: block !important;
+}
 </style>
 <script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
 <script>
-	$(document).ready(function(){
+	$(document).ready(function() {
+
 		$("#activity-budget").on("show.bs.modal", function(e) {
 			var id = $(e.relatedTarget).data('activity-id')
 			$.get( "<?= $baseUrl; ?>/indicators/activity-budget?id=" + id, function( data ) {
@@ -86,7 +99,12 @@ Modal::end();
 				return false;
 		});
 
-		
+		$("#image-gallery").on("show.bs.modal", function(e) {
+			var image = $(e.relatedTarget).data('image');
+			var title = $(e.relatedTarget).data('title');
+			$(".modal-body").html('<img src="'+ image +'" width=100%" height="auto">');
+			$(".modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">' + title + '</h4>');
+		});
 	});
 
 	function submitForm(id) {
@@ -829,11 +847,17 @@ Modal::end();
 													],
 													[
 
-														'attribute' => 'Image',										
-														'format' => ['image',['height'=>'50']],										
-														'label' => 'Image',							
-																							
-												  	],
+														/* 'attribute' => 'Image',
+														'format' => ['image', ['height' => '60', 'width' => 'auto']],
+														'label' => 'Image', */
+
+														'attribute' => 'Image',
+														'label' => 'Image',
+														'format' => 'raw', //['image', ['height' => '60', 'width' => 'auto']],
+														'value' => function ($data) {
+															return '<a href="#image-gallery" data-toggle="modal" data-image="' . $data['Image'] . '" data-title="' . $data['Caption'] . '"><img src="' . $data['Image'] . '" height="60" width="auto"></a>';
+														},
+													],
 													[
 														'label'=>'Caption',
 														'headerOptions' => ['style'=>'color:black; text-align:left'],

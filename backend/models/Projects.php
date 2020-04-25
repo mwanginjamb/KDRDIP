@@ -33,10 +33,11 @@ use Yii;
  * @property string $SafeguardsRecommendedAction
  * @property int $SubCountyID
  * @property int $WardID
- * @property int $LocationID 
+ * @property int $LocationID
  * @property int $SubLocationID
  * @property int $OrganizationID
  * @property int $EnterpriseTypeID
+ * @property string $IntegrationID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -57,7 +58,7 @@ class Projects extends \yii\db\ActiveRecord
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID',
 				'OrganizationID', 'EnterpriseTypeID'], 'integer'],
-			[['Objective', 'Justification', 'SafeguardsRecommendedAction'], 'string'],
+			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
@@ -100,6 +101,7 @@ class Projects extends \yii\db\ActiveRecord
 			'WardID' => 'Ward',
 			'OrganizationID' => 'Organization',
 			'EnterpriseTypeID' => 'Enterprise Type',
+			'IntegrationID' => 'Integration ID',
 		];
 	}
 

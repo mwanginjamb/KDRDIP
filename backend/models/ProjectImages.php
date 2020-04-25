@@ -16,7 +16,7 @@ use Yii;
  * @property int $CreatedBy
  * @property int $Deleted
  */
-class ProjectGallery extends \yii\db\ActiveRecord
+class ProjectImages extends \yii\db\ActiveRecord
 {
 	public $imageFile;
 	public $type;
@@ -40,14 +40,6 @@ class ProjectGallery extends \yii\db\ActiveRecord
 			[['Image', 'type', 'extension'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['Caption'], 'string', 'max' => 45],
-			[['extension'],'required', 'message' => 'Select an image file'],
-			['extension', 'fileValidation'],
-/* 			['extension', function ($attribute, $params) {
-				print_r($this->extension); exit;
-            if ($this->extension == '') {
-	            $this->addError('imageFile', 'Select a valid image file');
-	    		}
-			}], */
 			[['Caption'], 'required']
 		];
 	}
@@ -80,10 +72,5 @@ class ProjectGallery extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
-	}
-
-	public function getImageurl()
-	{
-		return $this->Image;
 	}
 }
