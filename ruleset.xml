@@ -13,7 +13,7 @@
         <exclude name="PEAR.Functions.FunctionCallSignature"/>
 
         <!-- We don't have line length (line width) limits. -->
-        <!--<exclude name="Generic.Files.LineLength"/>-->
+        <exclude name="Generic.Files.LineLength"/>
 
         <!-- CASE keyword must be indented 4 spaces from SWITCH keyword. -->
         <exclude name="PSR2.ControlStructures.SwitchDeclaration"/>

@@ -1277,18 +1277,39 @@ class ReportsController extends Controller
 		$Title = 'Project Finance Report';
 
 		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
-
 		$ProjectStatusID = 0;
-		if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
-			$ProjectStatusID = $params['FilterData']['ProjectStatusID'];
-			$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all(); 
+		$componentId = 0;
+		
+		if ($cid == 0) {
+			$ProjectStatusID = isset($params['FilterData']['ProjectStatusID']) ? $params['FilterData']['ProjectStatusID'] : 0;
+			$componentId = isset($params['FilterData']['ComponentID']) ? $params['FilterData']['ComponentID'] : 0;
+			$where = [];
+			if ($componentId != 0) {
+				$where['ComponentID'] = $componentId;
+			}
+			if ($ProjectStatusID != 0) {
+				$where['projects.ProjectStatusID'] = $ProjectStatusID;
+			}
+			// print_r($where); exit;
+			$projects = Projects::find()->joinWith('projectStatus')->where($where)->all();
 		} else {
-			$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid])->all();
+			if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
+				$ProjectStatusID = $params['FilterData']['ProjectStatusID'];
+				$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all();
+			} else {
+				$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid])->all();
+			}
 		}
 
 		$pStatus = ProjectStatus::findOne($ProjectStatusID);
 
 		$projectStatusName = !empty($pStatus) ? $pStatus->ProjectStatusName : '';
+
+		if ($cid == 0) {
+			$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
+		} else {
+			$components = [];
+		}
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('projects-finance', [
@@ -1334,13 +1355,16 @@ class ReportsController extends Controller
 		$model = new FilterData();
 		$model->ProjectID = 0;
 		$model->ProjectStatusID = $ProjectStatusID;
+		$model->ComponentID = $componentId;
 		//$pdf->Output('test.pdf', 'F');
 		return $this->render('viewreport', [
 			'content' => $content, 'months' => $months, 'years' => $years,
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
-			'CategoryFilterOnly' => true, 'projectStatus' => $projectStatus,
+			'CategoryFilterOnly' => true,
+			'projectStatus' => $projectStatus,
 			'projects' => [],
-			'bankAccounts' => $bankAccounts
+			'bankAccounts' => $bankAccounts,
+			'components' => $components,
 		]);
 	}
 

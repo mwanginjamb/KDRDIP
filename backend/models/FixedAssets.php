@@ -14,6 +14,7 @@ use Yii;
  * @property string $Location
  * @property string $SerialNumber
  * @property int $EmployeeID
+ * @property int $UnitID
  * @property int $AssetAllocationID
  * @property string $AcquisitionDate
  * @property string $Value
@@ -37,7 +38,7 @@ class FixedAssets extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectID', 'EmployeeID', 'CreatedBy', 'Deleted', 'AssetAllocationID'], 'integer'],
+			[['ProjectID', 'EmployeeID', 'CreatedBy', 'Deleted', 'AssetAllocationID', 'UnitID'], 'integer'],
 			[['AcquisitionDate', 'CreatedDate'], 'safe'],
 			[['Value'], 'number'],
 			[['AssetNo', 'SerialNumber'], 'string', 'max' => 45],
@@ -63,6 +64,7 @@ class FixedAssets extends \yii\db\ActiveRecord
 			'AcquisitionDate' => 'Acquisition Date',
 			'AssetAllocationID' => 'Asset Allocation',
 			'Value' => 'Value',
+			'UnitID' => 'Unit',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

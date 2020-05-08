@@ -97,10 +97,10 @@ class BankAccountsController extends Controller
 		}
 		$dataProvider = new ActiveDataProvider([
 			'query' => BankAccounts::find()->where($where),
-		]);	
+		]);
 
 		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
-		$communities = ArrayHelper::map(Communities::find()->orderBy('CommunityName')->all(), 'CommunityID', 'CommunityName');
+		$communities = ArrayHelper::map(Communities::find()->where(['CountyID' => $model->CountyID])->orderBy('CommunityName')->all(), 'CommunityID', 'CommunityName');
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,

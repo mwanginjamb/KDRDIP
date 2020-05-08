@@ -1,5 +1,8 @@
 <?php
 
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+
 /* @var $this yii\web\View */
 $baseUrl = Yii::$app->request->baseUrl;
 $this->title = 'Monitoring $ Evaluation';
@@ -133,45 +136,63 @@ $(window).on("load", function(){
 	});
 		
 	Morris.Bar({
-        element: 'monthly-sales1',
-        data: [{
-                y: '2016',
-                a: 650,
-                b: 420
-            }, {
-                y: '2015',
-                a: 540,
-                b: 380
-            }, {
-                y: '2014',
-                a: 480,
-                b: 360
-            }, {
-                y: '2013',
-                a: 320,
-                b: 390
-            }
-        ],
-        xkey: 'y',
-        ykeys: ['a', 'b'],
-        labels: ['Data 1', 'Data 2'],
-        barGap: 6,
-        barSizeRatio: 0.35,
-        smooth: true,
-        gridLineColor: '#e3e3e3',
-        numLines: 5,
-        gridtextSize: 14,
-        fillOpacity: 0.4,
-        resize: true,
-        barColors: ['#00A5A8', '#FF7D4D']
-    });
+		element: 'monthly-sales1',
+		data: [{
+					y: '2016',
+					a: 650,
+					b: 420
+			}, {
+					y: '2015',
+					a: 540,
+					b: 380
+			}, {
+					y: '2014',
+					a: 480,
+					b: 360
+			}, {
+					y: '2013',
+					a: 320,
+					b: 390
+			}
+		],
+		xkey: 'y',
+		ykeys: ['a', 'b'],
+		labels: ['Data 1', 'Data 2'],
+		barGap: 6,
+		barSizeRatio: 0.35,
+		smooth: true,
+		gridLineColor: '#e3e3e3',
+		numLines: 5,
+		gridtextSize: 14,
+		fillOpacity: 0.4,
+		resize: true,
+		barColors: ['#00A5A8', '#FF7D4D']
+	});
 });
 </script>
 <!-- Project Management -->
-<div class="row match-height">
+<section class="flexbox-container">
 
-	<div id="recent-sales" class="col-xl-6 col-12">
-		<div class="card">
+	<div class="card" style="padding: 15px;">
+		<div class="card-content collapse show">
+			<?php $form = ActiveForm::begin(); ?>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($dashboardFilter, 'ComponentID')->dropDownList($components, ['prompt' => 'Select...']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary', 'style' => 'margin-top: 25px']) ?>
+				</div>			
+			</div>
+			
+			<?php ActiveForm::end(); ?>
+		</div>
+	</div>
+</section>
+<div class="row">
+
+	<div id="recent-sales" class="col-xl-6 col-12" >
+		<div class="card" style="height:500px; overflow:auto; overflow-x: hidden">
 			<div class="card-header">
 				<h4 class="card-title">Project Budget</h4>
 				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
@@ -192,7 +213,7 @@ $(window).on("load", function(){
 							</tr>
 						</thead>
 						<tbody>
-							<?php foreach($budget as $item) { ?>
+							<?php foreach ($budget as $item) {?>
 								<tr>
 									<td class="text-truncate"><?= $item['ProjectName']; ?></td>
 									<td>
@@ -210,8 +231,8 @@ $(window).on("load", function(){
 			</div>
 		</div>
 	</div>
-	<div class="col-xl-6 col-12">			
-		<div class="card">
+	<div class="col-xl-6 col-12" >			
+		<div class="card" style="height:500px; overflow:auto; overflow-x: hidden">
 			<div class="card-header">
 				<h4 class="card-title">Projects by Status</h4>
 				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>

@@ -35,7 +35,13 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?php $form = ActiveForm::begin(); ?>
 							<div class="row">
 								<div class="col-md-4">
-									<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'All...']) ?>
+									<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control',
+													'onchange' => '
+													$.post( "' . Yii::$app->urlManager->createUrl('projects/communities?id=') . '"+$(this).val(), function( data ) {
+
+														$( "select#bankaccountfilter-communityid" ).html( data );
+													});
+												']) ?>
 								</div>
 								<div class="col-md-4">
 									<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'All...']) ?>

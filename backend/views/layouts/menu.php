@@ -10,6 +10,7 @@ $currentRoute = trim(Yii::$app->controller->module->requestedRoute);
 $option = isset($_GET['option']) ? $_GET['option'] : '';
 $cid = isset($_GET['cid']) ? $_GET['cid'] : '';
 $etid = isset($_GET['etid']) ? $_GET['etid'] : '';
+$m = isset($_GET['m']) ? $_GET['m'] : '';
 
 use app\models\Components;
 use app\models\EnterpriseTypes;
@@ -20,7 +21,7 @@ $enterpriseTypes = EnterpriseTypes::find()->all();
 $rights = (array) RightsController::Permissions(0);
 
 if (!empty($rights)) {
-	foreach($rights as $key => $right) {
+	foreach ($rights as $key => $right) {
 		if ($right['View'] != 1) {
 			unset($rights[$key]);
 		}
@@ -109,7 +110,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									</ul>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [64, 65, 66, 67, 68])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [64, 65, 66, 67, 68, 96])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 									<ul class="menu-content">
 										<?php if (in_array(64, $rights)) { ?>									
@@ -135,7 +136,11 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 										<?php if (in_array(68, $rights)) { ?>
 											<li <?= ($currentRoute == 'reports/monthly-finance-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/monthly-finance-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Monthly Finance Report</span></a>
 											</li>
-										<?php } ?>										
+										<?php } ?>
+										<?php if (in_array(96, $rights)) { ?>
+											<li <?= ($currentRoute == 'reports/projects-finance' && $cid == 0 ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=0"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+											</li>
+										<?php } ?>						
 									</ul>
 								</li>
 							<?php } ?>
@@ -361,7 +366,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								foreach ($components as $component) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $component->ComponentName; ?>"><?= $component->ShortName; ?></span></a>
 									<ul class="menu-content">
-										<?php 
+										<?php
 										if ($component->ComponentID != 3) { ?> 									
 											<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
 											</li>
@@ -373,8 +378,10 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											</li>
 											<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects Report</span></a>
 											</li>
-											<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
-											</li>
+											<?php if (in_array(96, $rights)) { ?>
+												<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+												</li>
+											<?php } ?>
 											<?php 
 										} else {
 											foreach ($enterpriseTypes as $enterpriseType) { ?> 
@@ -408,8 +415,10 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 														</li>
 														<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
 														</li>
-														<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
-														</li>
+														<?php if (in_array(96, $rights)) { ?>
+															<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+															</li>
+														<?php } ?>
 													</ul>
 												</li>
 												<?php 

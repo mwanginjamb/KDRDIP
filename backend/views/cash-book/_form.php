@@ -33,6 +33,44 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'DocumentReference')->textInput(['maxlength' => true]) ?>
 				</div>			
 			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control',
+													'onchange' => '
+													$.post( "' . Yii::$app->urlManager->createUrl('projects/communities?id=') . '"+$(this).val(), function( data ) {
+														$( "select#cashbook-communityid" ).html( data );
+													});
+												']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt' => 'Select...', 'class' => 'form-control',
+													'onchange' => '
+													$.post( "' . Yii::$app->urlManager->createUrl('cash-book/bank-accounts?communityId=') . '"+$(this).val()+ "&countyId="+$("#cashbook-countyid").val(), function( data ) {
+														$( "select#cashbook-accountid" ).html( data );
+													});
+													$.post( "' . Yii::$app->urlManager->createUrl('cash-book/projects?communityId=') . '"+$(this).val() + "&countyId="+$("#cashbook-countyid").val(), function( data ) {
+														$( "select#cashbook-projectid" ).html( data );
+													});
+												']) ?>
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt' => 'Select...', 'class' => 'form-control',
+													'onchange' => '
+													$.post( "' . Yii::$app->urlManager->createUrl('projects/disbursements?id=') . '"+$(this).val(), function( data ) {
+														$( "select#cashbook-projectdisbursementid" ).html( data );
+													});
+												']) ?>
+					
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectDisbursementID')->dropDownList($projectDisbursements, ['prompt'=>'Select']); ?>
+				</div>			
+			</div>
+			
 			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'AccountID')->dropDownList($bankAccounts, ['prompt'=>'Select']); ?>
@@ -52,7 +90,7 @@ use yii\widgets\ActiveForm;
 			</div>
 
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Cancel', ['bank-accounts/view', 'id' => $baid], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 

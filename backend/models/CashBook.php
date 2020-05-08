@@ -12,6 +12,8 @@ use Yii;
  * @property int $TypeID
  * @property int $BankAccountID
  * @property int $AccountID
+ * @property int $ProjectID
+ * @property int $ProjectDisbursementID
  * @property string $DocumentReference
  * @property string $Description
  * @property string $Debit
@@ -23,6 +25,9 @@ use Yii;
 class CashBook extends \yii\db\ActiveRecord
 {
 	public $Amount;
+	public $CountyID;
+	public $CommunityID;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -38,11 +43,12 @@ class CashBook extends \yii\db\ActiveRecord
 	{
 		return [
 			[['Date', 'CreatedDate'], 'safe'],
-			[['TypeID', 'BankAccountID', 'AccountID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['TypeID', 'BankAccountID', 'AccountID', 'CreatedBy', 'Deleted', 'ProjectID', 'CommunityID', 'CountyID', 'ProjectDisbursementID'], 'integer'],
 			[['Description'], 'string'],
 			[['Debit', 'Credit', 'Amount'], 'number'],
 			[['DocumentReference'], 'string', 'max' => 45],
-			[['Amount', 'Date', 'DocumentReference', 'AccountID'], 'required']
+			[['Amount', 'Date', 'DocumentReference', 'AccountID',  'ProjectID', 'CommunityID', 'CountyID', 'ProjectDisbursementID'], 'required'],
+			['Amount', 'validateAmount'],
 		];
 	}
 
@@ -54,9 +60,9 @@ class CashBook extends \yii\db\ActiveRecord
 		return [
 			'CashBookID' => 'Cash Book ID',
 			'Date' => 'Date',
-			'TypeID' => 'Type ID',
-			'BankAccountID' => 'Bank Account ID',
-			'AccountID' => 'Account ID',
+			'TypeID' => 'Type',
+			'BankAccountID' => 'Bank Account',
+			'AccountID' => 'Account',
 			'DocumentReference' => 'S/No.',
 			'Description' => 'Description',
 			'Debit' => 'Debit',
@@ -64,12 +70,56 @@ class CashBook extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'ProjectID' => 'Project',
+			'CountyID' => 'County',
+			'CommunityID' => 'Community',
+			'ProjectDisbursementID' => 'Disbursement',
 		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 * Total transfers should not be more than the allocated amount for a particular disbursement
+	 */
+	public function validateAmount($attribute, $params)
+	{
+		if (!$this->hasErrors()) {
+			$total = $this->totalDisbursement($this->ProjectDisbursementID);
+			$paid = $this->paidDisbursement($this->ProjectDisbursementID);
+			$expectedPaid = $paid + $this->Amount;
+			if ($expectedPaid > $total) {
+				$this->addError($attribute, 'Amount Exceeds Expected Disbursement');
+			}
+		}
+	}
+
+	public static function totalDisbursement($id)
+	{
+		$model = ProjectDisbursement::findOne($id);
+		if (!empty($model)) {
+			return $model->Amount;
+		}
+		return 0;
+	}
+
+	public static function paidDisbursement($id)
+	{
+		return CashBook::find()->where(['ProjectDisbursementID' => $id])->sum('Credit');
 	}
 
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
+	}
+
+	public function getProjectDisbursement()
+	{
+		return $this->hasOne(ProjectDisbursement::className(), ['ProjectDisbursementID' => 'ProjectDisbursementID'])->from(projectdisbursement::tableName());
 	}
 
 	public function getAccount()

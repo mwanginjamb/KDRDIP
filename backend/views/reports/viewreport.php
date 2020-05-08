@@ -48,7 +48,7 @@
 					<div class="col-lg-3">
 						<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...']); ?>
 					</div>
-					<?php 
+					<?php
 				}
 				?>
 				<?php

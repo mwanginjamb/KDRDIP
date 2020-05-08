@@ -14,7 +14,7 @@ $this->title = 'Payment Voucher';
 <table width="100%">
 	<tr>
 		<td ></td>
-		<td width="20%" align="right">Voucher No.: </td>
+		<td width="20%" align="right">PV No.: </td>
 		<td width="12%"><?= $model->PaymentID; ?></td>
 	</tr>
 	<tr>
@@ -24,12 +24,12 @@ $this->title = 'Payment Voucher';
 	</tr>
 </table>
 <div class="space"></div>
-<div class="supplier-name">Pay to1: <?= $model->suppliers->SupplierName; ?></div>
+<div class="supplier-name">Payee: <?= $model->suppliers->SupplierName; ?></div>
 <div class="space"></div>
 <table class="pdf-table">
 	<thead>
 		<tr>
-			<th >Description</th>
+			<th >Particulars</th>
 			<th width="15%">LSO/LPO No</th>
 			<th width="15%">Receipt No</th>
 			<th width="15%">Invoice No</th>

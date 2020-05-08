@@ -4,8 +4,11 @@ namespace backend\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use common\models\LoginForm;
+use app\models\DashboardFilter;
+use app\models\Components;
 use app\models\Projects;
 
 /**
@@ -73,12 +76,23 @@ class SiteController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
+		$dashboardFilter = new DashboardFilter();
+		$where = 'where projects.Deleted = 0 ';
+		if ($dashboardFilter->load(Yii::$app->request->post()) && $dashboardFilter->validate()) {
+			$componentID = Yii::$app->request->post()['DashboardFilter']['ComponentID'];
+			if ($componentID != 0) {
+				$where .= " AND projects.ComponentID = $componentID";
+			}
+		}
+
 		$sql = 'select temp.ProjectStatusID, ProjectStatusName, Total FROM (
 					Select ProjectStatusID, Count(*) as Total from projects
 					GROUP BY ProjectStatusID
 					) temp
 					RIGHT JOIN projectstatus ON projectstatus.ProjectStatusID = temp.ProjectStatusID';
 		$projectStatus = Projects::findBySql($sql)->asArray()->all();
+
 		$graph1 = '[';
 		foreach ($projectStatus as $key => $status) {
 			$graph1 .= '{ label: "' . $status['ProjectStatusName'] . '",';
@@ -94,18 +108,19 @@ class SiteController extends Controller
 			} else {
 				$bar1 .= '{ y: "' . $status['ProjectStatusName'] . '",';
 				$bar1 .=	' a: ' . (integer) $status['Total'] . ' }';
-			}			
+			}
 		}
 		$bar1 .= ']';
 
 		// Project Budget
-		$sql = 'select projects.ProjectID, ProjectName, TotalBudget from (
+		$sql = "select projects.ProjectID, ProjectName, TotalBudget from (
 					select ProjectID, Sum(activitybudget.Amount) as TotalBudget from activitybudget
 					JOIN activities ON activities.ActivityID = activitybudget.ActivityID
 					JOIN indicators ON indicators.IndicatorID = activities.IndicatorID
 					GROUP BY ProjectID
 					) temp 
-					RIGHT JOIN projects on projects.ProjectID = temp.ProjectID';
+					RIGHT JOIN (select * FROM projects $where) as projects on projects.ProjectID = temp.ProjectID
+					";
 		$budget = Projects::findBySql($sql)->asArray()->all();
 		// print_r(json_encode($graph1)); exit;
 
@@ -231,7 +246,9 @@ class SiteController extends Controller
 													'quotationStatus' => $quotationStatus,
 													'graph5' => $graph5,
 													'bar5' => $bar5,
-													'purchasesStatus' => $purchasesStatus
+													'purchasesStatus' => $purchasesStatus,
+													'components' => $components,
+													'dashboardFilter' => $dashboardFilter,
 												]);
 	}
 

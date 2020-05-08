@@ -5,6 +5,10 @@ namespace backend\controllers;
 use Yii;
 use app\models\CashBook;
 use app\models\BankAccounts;
+use app\models\Counties;
+use app\models\Projects;
+use app\models\ProjectDisbursement;
+use app\models\Communities;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -114,7 +118,7 @@ class CashBookController extends Controller
 		$model->Date = date('Y-m-d');
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 
-		if ($model->load(Yii::$app->request->post())) {
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 			$params = Yii::$app->request->post()['CashBook'];
 			
 			$model = new CashBook();
@@ -125,6 +129,10 @@ class CashBookController extends Controller
 			$model->AccountID = $params['AccountID'];
 			$model->Description = $params['Description'];
 			$model->DocumentReference = $params['DocumentReference'];
+			$model->ProjectID = $params['ProjectID'];
+			$model->CommunityID = $params['CommunityID'];
+			$model->CountyID = $params['CountyID'];
+			$model->ProjectDisbursementID = $params['ProjectDisbursementID'];
 			$model->Credit = $params['Amount'];
 			$model->Amount = $params['Amount'];
 			$model->save();
@@ -137,6 +145,10 @@ class CashBookController extends Controller
 			$model->AccountID = $baid;
 			$model->Description = $params['Description'];
 			$model->DocumentReference = $params['DocumentReference'];
+			$model->ProjectID = $params['ProjectID'];
+			$model->CommunityID = $params['CommunityID'];
+			$model->CountyID = $params['CountyID'];
+			$model->ProjectDisbursementID = $params['ProjectDisbursementID'];
 			$model->Debit = $params['Amount'];
 			$model->Amount = $params['Amount'];
 			$model->save();
@@ -144,11 +156,20 @@ class CashBookController extends Controller
 			return $this->redirect(['bank-accounts/view', 'id' => $baid]);
 		}
 
-		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
+		$bankAccounts = ArrayHelper::map(BankAccounts::find()->where(['CountyID' => $model->CountyID, 'CommunityID' => $model->CommunityID])->all(), 'BankAccountID', 'AccountName');
+		$projects = ArrayHelper::map(Projects::find()->where(['CountyID' => $model->CountyID, 'CommunityID' => $model->CommunityID])->all(), 'ProjectID', 'ProjectName');
+		$communities = ArrayHelper::map(Communities::find()->where(['CountyID' => $model->CountyID])->all(), 'CommunityID', 'CommunityName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$projectDisbursements = ArrayHelper::map(ProjectDisbursement::find()->where(['ProjectID' => $model->ProjectID])->all(), 'ProjectDisbursementID', 'Year');;
 		return $this->render('create', [
 			'model' => $model,
 			'bankAccounts' => $bankAccounts,
+			'projects' => $projects,
+			'counties' => $counties,
+			'communities' => $communities,
 			'rights' => $this->rights,
+			'projectDisbursements' => $projectDisbursements,
+			'baid' => $baid,
 		]);
 	}
 
@@ -202,5 +223,33 @@ class CashBookController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public function actionProjects($communityId, $countyId)
+	{
+		$model = Projects::find()->where(['CountyID' => $countyId, 'CommunityID' => $communityId])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->ProjectID . "'>" . $item->ProjectName . '</option>';
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
+	}
+
+	public function actionBankAccounts($communityId, $countyId)
+	{
+		$model = BankAccounts::find()->where(['CountyID' => $countyId, 'CommunityID' => $communityId])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->BankAccountID . "'>" . $item->AccountName . '</option>';
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
 	}
 }

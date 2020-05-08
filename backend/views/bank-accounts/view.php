@@ -91,6 +91,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										'tableOptions' => [
 											'class' => 'custom-table table-striped table-bordered',
 										],
+										'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
 										'columns' => [
 											/* [
 												'attribute' => 'CashBookID',

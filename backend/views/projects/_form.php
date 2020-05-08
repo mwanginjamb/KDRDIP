@@ -124,13 +124,13 @@ function calculateValue(row)
 
 					<div class="row">
 						<div class="col-md-6">
-						<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control',
-												'onchange' => '
-												$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-counties?id=') . '"+$(this).val(), function( data ) {
+							<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control',
+													'onchange' => '
+													$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-counties?id=') . '"+$(this).val(), function( data ) {
 
-													$( "select#projects-subcountyid" ).html( data );
-												});
-											']) ?>	
+														$( "select#projects-subcountyid" ).html( data );
+													});
+												']) ?>	
 						</div>
 						<div class="col-md-6">
 							<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt' => 'Select...', 'class' => 'form-control',

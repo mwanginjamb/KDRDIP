@@ -53,14 +53,14 @@ Modal::end();
 </style>
 
 <style>
-#ParameterTable .form-group {
-	margin-bottom: 0px !important;
-	margin-top: 0px !important;
-	/* padding: 4px !important; */
-}
-.modal-header {
-	display: block !important;
-}
+	#ParameterTable .form-group {
+		margin-bottom: 0px !important;
+		margin-top: 0px !important;
+		/* padding: 4px !important; */
+	}
+	.modal-header {
+		display: block !important;
+	}
 </style>
 <script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
 <script>

@@ -39,7 +39,7 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt' => 'Select...']) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'EmployeeID')->dropDownList($employees, ['prompt' => 'Select...']) ?>	
+					
 				</div>			
 			</div>
 
@@ -47,7 +47,8 @@ use yii\widgets\ActiveForm;
 				<div class="col-md-6">
 					<?= $form->field($model, 'AssetAllocationID')->dropDownList($assetAllocation, ['prompt' => 'Select...']) ?>
 				</div>
-				<div class="col-md-6">	
+				<div class="col-md-6">
+					<?= $form->field($model, 'EmployeeID')->dropDownList($employees, ['prompt' => 'Select...']) ?>	
 				</div>			
 			</div>
 

@@ -42,6 +42,7 @@ use app\models\CommunityGroups;
 use app\models\YouthPlacement;
 use app\models\ProducerOrganizations;
 use app\models\Businesses;
+use app\models\Communities;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -964,6 +965,34 @@ class ProjectsController extends Controller
 		}
 	}
 
+	public function actionCommunities($id)
+	{
+		$model = Communities::find()->where(['CountyID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->CommunityID . "'>" . $item->CommunityName . '</option>';
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
+	}
+
+	public function actionDisbursements($id)
+	{
+		$model = ProjectDisbursement::find()->where(['ProjectID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->ProjectDisbursementID . "'>" . $item->Year . '</option>';
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
+	}
+
 	public function saveProjectSafeguards($columns, $model)
 	{
 		foreach ($columns as $key => $column) {
@@ -1084,38 +1113,43 @@ class ProjectsController extends Controller
 				$projectData['ApprovalDate'] = date('Y-m-d', strtotime(self::extractData($res, '_submission_time')));
 
 				$projectId = self::saveProject($projectData);
-				if ($projectId) {
-					$attachements = self::extractData($res, '_attachments');
-					foreach ($attachements as $attachement) {
-						$id = self::extractData($attachement, 'id');
-						$imageData = [];
-						if (!self::imageExists($id)) {
-							$smallImage = self::extractData($attachement, 'download_small_url');
-							$mediumImage = self::extractData($attachement, 'download_medium_url');
-							$largeImage = self::extractData($attachement, 'download_large_url');
-							$image = self::extractData($attachement, 'download_url');
-							$mimeType = self::extractData($attachement, 'mimetype');
-							$filename = self::getFilenme(self::extractData($attachement, 'filename'));
-							
-							// echo $filename . '</br>';
-							// self::downloadFile($smallImage, $token, 'small/' . $filename); // Download Small Image
-							// self::downloadFile($mediumImage, $token, 'medium/' . $filename); // Download Medium Image
-							// self::downloadFile($largeImage, $token, 'large/' . $filename); // Download Large Image
+			} else {
+				$project = Projects::findOne(['IntegrationID' => $projectData['IntegrationID']]);
+				
+				$projectId = empty($project) ? null : $project->ProjectID;
+			}
+			if ($projectId) {
+				$attachements = self::extractData($res, '_attachments');
+				foreach ($attachements as $attachement) {
+					$id = self::extractData($attachement, 'id');
+					$imageData = [];
+					if (!self::imageExists($id)) {
+						$smallImage = self::extractData($attachement, 'download_small_url');
+						$mediumImage = self::extractData($attachement, 'download_medium_url');
+						$largeImage = self::extractData($attachement, 'download_large_url');
+						$image = self::extractData($attachement, 'download_url');
+						$mimeType = self::extractData($attachement, 'mimetype');
+						$filename = self::getFilenme(self::extractData($attachement, 'filename'));
+						
+						// echo $filename . '</br>';
+						// self::downloadFile($smallImage, $token, 'small/' . $filename); // Download Small Image
+						// self::downloadFile($mediumImage, $token, 'medium/' . $filename); // Download Medium Image
+						// self::downloadFile($largeImage, $token, 'large/' . $filename); // Download Large Image
 
-							// self::downloadFile($image, $token, $filename); // Download Image
-							$base64 = self::downloadFileBase64($image, $token, $filename, $mimeType);
+						// self::downloadFile($image, $token, $filename); // Download Image
+						$base64 = self::downloadFileBase64($image, $token, $filename, $mimeType);
 
-							$imageData['ProjectID'] = $projectId;
-							$imageData['Caption'] = $filename;
-							// $imageData['Image'] = $filename;
-							$imageData['Image'] = $base64;
-							$imageData['IntegrationID'] = $id;
-							if (self::saveImage($imageData)) {
-							}
+						$imageData['ProjectID'] = $projectId;
+						$imageData['Caption'] = $filename;
+						// $imageData['Image'] = $filename;
+						$imageData['Image'] = $base64;
+						$imageData['IntegrationID'] = $id;
+						if (self::saveImage($imageData)) {
 						}
 					}
 				}
 			}
+			
 			// exit;
 		}
 		\Yii::$app->session->setFlash('success', 'Import Completed');

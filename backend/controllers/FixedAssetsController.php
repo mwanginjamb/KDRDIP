@@ -121,7 +121,7 @@ class FixedAssetsController extends Controller
 
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
-		$assetAllocation = ArrayHelper::map(AssetAllocation::find()->all(), 'AssetAllocationID', 'AssetAllocationName');		
+		$assetAllocation = ArrayHelper::map(AssetAllocation::find()->all(), 'AssetAllocationID', 'AssetAllocationName');
 
 		return $this->render('create', [
 			'model' => $model,
