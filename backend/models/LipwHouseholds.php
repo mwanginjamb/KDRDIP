@@ -17,6 +17,10 @@ use Yii;
  */
 class LipwHouseholds extends \yii\db\ActiveRecord
 {
+	public $CountyID;
+	public $SubCountyID;
+	public $LocationID;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -25,16 +29,40 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 		return 'lipw_households';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['lipw_households.Deleted' => 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->deleted = 1;
+		$m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['SubLocationID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['SubLocationID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'LocationID'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['HouseholdName'], 'string', 'max' => 45],
+			[['SubLocationID', 'HouseholdName', 'CountyID', 'SubCountyID', 'LocationID'], 'required'],
 		];
 	}
 
@@ -46,7 +74,10 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 		return [
 			'HouseholdID' => 'Household ID',
 			'HouseholdName' => 'Household Name',
-			'SubLocationID' => 'Sub Location ID',
+			'SubLocationID' => 'Sub Location',
+			'CountyID' => 'County',
+			'SubCountyID' => 'Sub County',
+			'LocationID' => 'Location',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

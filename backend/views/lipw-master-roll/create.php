@@ -9,12 +9,15 @@ $this->title = 'Create Lipw Master Roll';
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Master Rolls', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="lipw-master-roll-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'counties' => $counties,
+		'subCounties' => $subCounties,
+		'locations' => $locations,
+		'subLocations' => $subLocations,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

@@ -10,12 +10,15 @@ $this->params['breadcrumbs'][] = ['label' => 'Lipw Master Rolls', 'url' => ['ind
 $this->params['breadcrumbs'][] = ['label' => $model->MasterRollID, 'url' => ['view', 'id' => $model->MasterRollID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="lipw-master-roll-update">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'counties' => $counties,
+		'subCounties' => $subCounties,
+		'locations' => $locations,
+		'subLocations' => $subLocations,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

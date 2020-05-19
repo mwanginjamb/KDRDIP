@@ -9,12 +9,15 @@ $this->title = 'Create Lipw Households';
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Households', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="lipw-households-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'counties' => $counties,
+		'subCounties' => $subCounties,
+		'locations' => $locations,
+		'subLocations' => $subLocations,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

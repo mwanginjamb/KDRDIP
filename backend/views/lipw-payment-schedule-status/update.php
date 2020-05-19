@@ -5,17 +5,16 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\LipwPaymentScheduleStatus */
 
-$this->title = 'Update Lipw Payment Schedule Status: ' . $model->PaymentScheduleStatusID;
+$this->title = 'Update Lipw Payment Schedule Status: ' . $model->PaymentScheduleStatusName;
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Payment Schedule Statuses', 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->PaymentScheduleStatusID, 'url' => ['view', 'id' => $model->PaymentScheduleStatusID]];
+$this->params['breadcrumbs'][] = ['label' => $model->PaymentScheduleStatusName, 'url' => ['view', 'id' => $model->PaymentScheduleStatusID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="lipw-payment-schedule-status-update">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

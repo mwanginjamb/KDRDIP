@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lipw Beneficiaries';
+$this->title = 'Lipw Master Roll Registers';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <style>
@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 <h4 class="form-section">Beneficiaries</h4>
 <p>
-	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/create?hId=' . $hId) . '", \'tab2\')']) : '' ?>	
+	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-master-roll-register/create?mId=' . $mId) . '", \'tab2\')']) : '' ?>	
 </p>
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
@@ -35,16 +35,32 @@ $this->params['breadcrumbs'][] = $this->title;
 			'class' => 'yii\grid\SerialColumn',
 			'headerOptions' => ['width' => '5%'],
 		],
-		'beneficiaryName',
 		[
-			'attribute' => 'IDNumber',
+			'label' => 'Beneficiary',
+			'attribute' => 'lipwBeneficiaries.BeneficiaryName',
+		],
+		[
+			'label' => 'ID Number',
+			'attribute' => 'lipwBeneficiaries.IDNumber',
 			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
 		[
-			'attribute' => 'DateOfBirth',
+			'label' => 'Date Of Birth',
+			'attribute' => 'lipwBeneficiaries.DateOfBirth',
 			'format' => ['date', 'php:d/m/Y'],
 			'headerOptions' => ['width' => '10%'],
+		],
+		[
+			'attribute' => 'DateAdded',
+			'format' => ['date', 'php:d/m/Y'],
+			'headerOptions' => ['width' => '10%'],
+		],
+		[
+			'attribute' => 'Rate',
+			'format' => ['decimal', 2],
+			'headerOptions' => ['width' => '10%', 'style' => 'text-align: right'],
+			'contentOptions' => ['style' => 'text-align: right'],
 		],
 		[
 			'attribute' => 'CreatedDate',
@@ -63,12 +79,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			'buttons' => [
 
 				'view' => function ($url, $model) use ($rights) {
-					return (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Edit', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/update?id=' . $model->BeneficiaryID) . '", \'tab2\')']) : '';
+					return (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Edit', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-master-roll-register/update?id=' . $model->MasterRollRegisterID) . '", \'tab2\')']) : '';
 				},
 				'delete' => function ($url, $model) use ($rights) {
 					return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', null, [
 						'class' => 'btn-sm btn-danger btn-xs',
-						'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/delete?id=' . $model->BeneficiaryID) . '", \'tab2\')',
+						'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('lipw-master-roll-register/delete?id=' . $model->MasterRollRegisterID) . '", \'tab2\')',
 					]) : '';
 				},
 			],

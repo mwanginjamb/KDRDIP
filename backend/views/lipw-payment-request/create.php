@@ -9,12 +9,12 @@ $this->title = 'Create Lipw Payment Request';
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Payment Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="lipw-payment-request-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'masterRoll' => $masterRoll,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

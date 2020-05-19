@@ -17,6 +17,10 @@ use Yii;
  */
 class LipwMasterRoll extends \yii\db\ActiveRecord
 {
+	public $CountyID;
+	public $SubCountyID;
+	public $LocationID;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -25,16 +29,40 @@ class LipwMasterRoll extends \yii\db\ActiveRecord
 		return 'lipw_master_roll';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['lipw_master_roll.Deleted' => 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['SubLocationID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['SubLocationID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'LocationID'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['MasterRollName'], 'string', 'max' => 45],
+			[['SubLocationID', 'MasterRollName', 'CountyID', 'SubCountyID', 'LocationID'], 'required'],
 		];
 	}
 
@@ -45,8 +73,11 @@ class LipwMasterRoll extends \yii\db\ActiveRecord
 	{
 		return [
 			'MasterRollID' => 'Master Roll ID',
-			'SubLocationID' => 'Sub Location ID',
+			'SubLocationID' => 'Village',
 			'MasterRollName' => 'Master Roll Name',
+			'CountyID' => 'County',
+			'SubCountyID' => 'Sub County',
+			'LocationID' => 'Location',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

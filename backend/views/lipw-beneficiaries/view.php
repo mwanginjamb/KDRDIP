@@ -11,42 +11,58 @@ $this->params['breadcrumbs'][] = ['label' => 'Lipw Beneficiaries', 'url' => ['in
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>
-<div class="lipw-beneficiaries-view">
+<style>
+.btn-primary {
+	border-color: #512E90 !important;
+	background-color: #6BA342 !important;
+	color: #FFFFFF !important;
+}
 
-    <h1><?= Html::encode($this->title) ?></h1>
+.btn-danger {
+	color: #FFFFFF !important;
+}
 
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->BeneficiaryID], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->BeneficiaryID], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
+.btn-warning {
+	color: #FFFFFF !important;
+}
+</style>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'BeneficiaryID',
-            'FirstName',
-            'MiddleName',
-            'LastName',
-            'IDNumber',
-            'Mobile',
-            'Gender',
-            'DateOfBirth',
-            'AlternativeID',
-            'HouseHoldID',
-            'BankAccountNumber',
-            'BankAccountName',
-            'BankID',
-            'BranchID',
-            'CreatedDate',
-            'CreatedBy',
-            'Deleted',
-        ],
-    ]) ?>
+<h4 class="form-section"><?= $this->title; ?></h4>
+<p>
+	<?= Html::a('<i class="ft-x"></i> Close', null, ['class' => 'btn-sm btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/index?hId=' . $model->HouseholdID) . '", \'tab2\')']) ?>
+	<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/update?id=' . $model->BeneficiaryID) . '", \'tab2\')']) : '' ?>
+	<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->BeneficiaryID], [
+			'class' => 'btn-sm btn-danger',
+			'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/delete?id=' . $model->BeneficiaryID) . '", \'tab2\')',
+	]) : '' ?>
+</p>
 
-</div>
+<?= DetailView::widget([
+	'model' => $model,
+	'attributes' => [
+		'BeneficiaryID',
+		'FirstName',
+		'MiddleName',
+		'LastName',
+		'IDNumber',
+		'Mobile',
+		'Gender',
+		[
+			'attribute' => 'DateOfBirth',
+			'format' => ['date', 'php:d/m/Y'],
+		],
+		'AlternativeID',
+		'BankAccountNumber',
+		'BankAccountName',
+		'banks.BankName',
+		'banks.bankBranches.BankBranchName',
+		[
+			'attribute' => 'createdTime',
+			'format' => ['date', 'php:d/m/Y h:i a'],
+		],
+		[
+			'label' => 'Created By',
+			'attribute' => 'users.fullName',
+		],
+	],
+]) ?>

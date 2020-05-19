@@ -8,120 +8,173 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * LipwPaymentRequestController implements the CRUD actions for LipwPaymentRequest model.
  */
 class LipwPaymentRequestController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	public $rights;
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		$this->rights = RightsController::Permissions(100);
 
-    /**
-     * Lists all LipwPaymentRequest models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => LipwPaymentRequest::find(),
-        ]);
+		$rightsArray = [];
+		if (isset($this->rights->View)) {
+			array_push($rightsArray, 'index', 'view');
+		}
+		if (isset($this->rights->Create)) {
+			array_push($rightsArray, 'view', 'create');
+		}
+		if (isset($this->rights->Edit)) {
+			array_push($rightsArray, 'index', 'view', 'update');
+		}
+		if (isset($this->rights->Delete)) {
+			array_push($rightsArray, 'delete');
+		}
+		$rightsArray = array_unique($rightsArray);
+		
+		if (count($rightsArray) <= 0) {
+			$rightsArray = ['none'];
+		}
+		
+		return [
+		'access' => [
+			'class' => AccessControl::className(),
+			'only' => ['index', 'view', 'create', 'update', 'delete'],
+			'rules' => [
+					// Guest Users
+					[
+						'allow' => true,
+						'actions' => ['none'],
+						'roles' => ['?'],
+					],
+					// Authenticated Users
+					[
+						'allow' => true,
+						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'roles' => ['@'],
+					],
+				],
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
+				],
+			],
+		];
+	}
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+	/**
+	 * Lists all LipwPaymentRequest models.
+	 * @return mixed
+	 */
+	public function actionIndex()
+	{
+		$dataProvider = new ActiveDataProvider([
+			'query' => LipwPaymentRequest::find(),
+		]);
 
-    /**
-     * Displays a single LipwPaymentRequest model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+		return $this->render('index', [
+			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
+		]);
+	}
 
-    /**
-     * Creates a new LipwPaymentRequest model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new LipwPaymentRequest();
+	/**
+	 * Displays a single LipwPaymentRequest model.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionView($id)
+	{
+		return $this->render('view', [
+			'model' => $this->findModel($id),
+			'rights' => $this->rights,
+		]);
+	}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
-        }
+	/**
+	 * Creates a new LipwPaymentRequest model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		$model = new LipwPaymentRequest();
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
+		}
 
-    /**
-     * Updates an existing LipwPaymentRequest model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+		$masterRoll = ArrayHelper::map(\app\models\LipwMasterRoll::find()->all(), 'MasterRollID', 'MasterRollName');
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
-        }
+		return $this->render('create', [
+			'model' => $model,
+			'rights' => $this->rights,
+			'masterRoll' => $masterRoll,
+		]);
+	}
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+	/**
+	 * Updates an existing LipwPaymentRequest model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
 
-    /**
-     * Deletes an existing LipwPaymentRequest model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
+		}
 
-        return $this->redirect(['index']);
-    }
+		$masterRoll = ArrayHelper::map(\app\models\LipwMasterRoll::find()->all(), 'MasterRollID', 'MasterRollName');
 
-    /**
-     * Finds the LipwPaymentRequest model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return LipwPaymentRequest the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = LipwPaymentRequest::findOne($id)) !== null) {
-            return $model;
-        }
+		return $this->render('update', [
+			'model' => $model,
+			'rights' => $this->rights,
+			'masterRoll' => $masterRoll,
+		]);
+	}
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+	/**
+	 * Deletes an existing LipwPaymentRequest model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
+
+		return $this->redirect(['index']);
+	}
+
+	/**
+	 * Finds the LipwPaymentRequest model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return LipwPaymentRequest the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if (($model = LipwPaymentRequest::findOne($id)) !== null) {
+			return $model;
+		}
+
+		throw new NotFoundHttpException('The requested page does not exist.');
+	}
 }

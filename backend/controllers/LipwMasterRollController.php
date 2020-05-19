@@ -4,124 +4,201 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\LipwMasterRoll;
+use app\models\Counties;
+use app\models\SubCounties;
+use app\models\Locations;
+use app\models\SubLocations;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * LipwMasterRollController implements the CRUD actions for LipwMasterRoll model.
  */
 class LipwMasterRollController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	public $rights;
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		$this->rights = RightsController::Permissions(99);
 
-    /**
-     * Lists all LipwMasterRoll models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => LipwMasterRoll::find(),
-        ]);
+		$rightsArray = [];
+		if (isset($this->rights->View)) {
+			array_push($rightsArray, 'index', 'view');
+		}
+		if (isset($this->rights->Create)) {
+			array_push($rightsArray, 'view', 'create');
+		}
+		if (isset($this->rights->Edit)) {
+			array_push($rightsArray, 'index', 'view', 'update');
+		}
+		if (isset($this->rights->Delete)) {
+			array_push($rightsArray, 'delete');
+		}
+		$rightsArray = array_unique($rightsArray);
+		
+		if (count($rightsArray) <= 0) {
+			$rightsArray = ['none'];
+		}
+		
+		return [
+		'access' => [
+			'class' => AccessControl::className(),
+			'only' => ['index', 'view', 'create', 'update', 'delete'],
+			'rules' => [
+					// Guest Users
+					[
+						'allow' => true,
+						'actions' => ['none'],
+						'roles' => ['?'],
+					],
+					// Authenticated Users
+					[
+						'allow' => true,
+						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'roles' => ['@'],
+					],
+				],
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST'],
+				],
+			],
+		];
+	}
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+	/**
+	 * Lists all LipwMasterRoll models.
+	 * @return mixed
+	 */
+	public function actionIndex()
+	{
+		$dataProvider = new ActiveDataProvider([
+			'query' => LipwMasterRoll::find(),
+		]);
 
-    /**
-     * Displays a single LipwMasterRoll model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+		return $this->render('index', [
+			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
+		]);
+	}
 
-    /**
-     * Creates a new LipwMasterRoll model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new LipwMasterRoll();
+	/**
+	 * Displays a single LipwMasterRoll model.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionView($id)
+	{
+		return $this->render('view', [
+			'model' => $this->findModel($id),
+			'rights' => $this->rights,
+		]);
+	}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->MasterRollID]);
-        }
+	/**
+	 * Creates a new LipwMasterRoll model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		$model = new LipwMasterRoll();
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->MasterRollID]);
+		}
 
-    /**
-     * Updates an existing LipwMasterRoll model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		$subLocations = [];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->MasterRollID]);
-        }
+		return $this->render('create', [
+			'model' => $model,
+			'rights' => $this->rights,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
+			'subLocations' => $subLocations,
+		]);
+	}
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+	/**
+	 * Updates an existing LipwMasterRoll model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
+		$subLocation = SubLocations::find()->joinWith('locations')
+				->joinWith('locations.subCounties')
+				->joinWith('locations.subCounties.counties')
+				->where($model->SubLocationID)->one();
+		$model->CountyID = $subLocation->locations->subCounties->CountyID;
+		$model->SubCountyID = $subLocation->locations->SubCountyID;
+		$model->LocationID = $subLocation->locations->LocationID;
 
-    /**
-     * Deletes an existing LipwMasterRoll model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->MasterRollID]);
+		}
 
-        return $this->redirect(['index']);
-    }
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
 
-    /**
-     * Finds the LipwMasterRoll model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return LipwMasterRoll the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = LipwMasterRoll::findOne($id)) !== null) {
-            return $model;
-        }
+		return $this->render('update', [
+			'model' => $model,
+			'rights' => $this->rights,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
+			'subLocations' => $subLocations,
+		]);
+	}
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+	/**
+	 * Deletes an existing LipwMasterRoll model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
+
+		return $this->redirect(['index']);
+	}
+
+	/**
+	 * Finds the LipwMasterRoll model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return LipwMasterRoll the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if (($model = LipwMasterRoll::findOne($id)) !== null) {
+			return $model;
+		}
+
+		throw new NotFoundHttpException('The requested page does not exist.');
+	}
 }

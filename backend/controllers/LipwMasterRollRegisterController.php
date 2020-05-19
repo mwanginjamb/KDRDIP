@@ -3,11 +3,9 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\LipwHouseholds;
-use app\models\Counties;
-use app\models\SubCounties;
-use app\models\Locations;
-use app\models\SubLocations;
+use app\models\LipwMasterRollRegister;
+use app\models\LipwBeneficiaries;
+use app\models\LipwMasterRoll;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -17,9 +15,9 @@ use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * LipwHouseholdsController implements the CRUD actions for LipwHouseholds model.
+ * LipwMasterRollRegisterController implements the CRUD actions for LipwMasterRollRegister model.
  */
-class LipwHouseholdsController extends Controller
+class LipwMasterRollRegisterController extends Controller
 {
 	public $rights;
 	/**
@@ -27,7 +25,7 @@ class LipwHouseholdsController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(97);
+		$this->rights = RightsController::Permissions(99);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -70,73 +68,77 @@ class LipwHouseholdsController extends Controller
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'delete' => ['POST'],
+					'delete' => ['POST', 'GET'],
 				],
 			],
 		];
 	}
 
 	/**
-	 * Lists all LipwHouseholds models.
+	 * Lists all LipwMasterRollRegister models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
+		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => LipwHouseholds::find(),
+			'query' => LipwMasterRollRegister::find(),
 		]);
 
-		return $this->render('index', [
+		return $this->renderPartial('index', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
+			'mId' => $mId,
 		]);
 	}
 
 	/**
-	 * Displays a single LipwHouseholds model.
+	 * Displays a single LipwMasterRollRegister model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	public function actionView($id)
 	{
-		return $this->render('view', [
+		return $this->renderPartial('view', [
 			'model' => $this->findModel($id),
 			'rights' => $this->rights,
 		]);
 	}
 
 	/**
-	 * Creates a new LipwHouseholds model.
+	 * Creates a new LipwMasterRollRegister model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$model = new LipwHouseholds();
+		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
+
+		$masterRoll = LipwMasterRoll::findOne($mId);
+
+		$model = new LipwMasterRollRegister();
+		$model->MasterRollID = $mId;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->HouseholdID]);
+			return $this->redirect(['view', 'id' => $model->MasterRollRegisterID]);
 		}
 
-		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
-		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
-		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
-		$subLocations = [];
+		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
+			->joinWith('lipwHouseHolds')
+			->andWhere(['lipwHouseHolds.SubLocationID' => $masterRoll->SubLocationID])
+			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
-		return $this->render('create', [
+		return $this->renderPartial('create', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'counties' => $counties,
-			'subCounties' => $subCounties,
-			'locations' => $locations,
-			'subLocations' => $subLocations,
+			'beneficiaries' => $beneficiaries,
 		]);
 	}
 
 	/**
-	 * Updates an existing LipwHouseholds model.
+	 * Updates an existing LipwMasterRollRegister model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -145,35 +147,25 @@ class LipwHouseholdsController extends Controller
 	public function actionUpdate($id)
 	{
 		$model = $this->findModel($id);
-		$subLocation = SubLocations::find()->joinWith('locations')
-														->joinWith('locations.subCounties')
-														->joinWith('locations.subCounties.counties')
-														->where($model->SubLocationID)->one();
-		$model->CountyID = $subLocation->locations->subCounties->CountyID;
-		$model->SubCountyID = $subLocation->locations->SubCountyID;
-		$model->LocationID = $subLocation->locations->LocationID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->HouseholdID]);
+			return $this->redirect(['view', 'id' => $model->MasterRollRegisterID]);
 		}
 
-		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
-		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
-		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
+		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
+			->joinWith('lipwHouseHolds')
+			->andWhere(['lipw_households.SubLocationID' => $model->lipwMasterRoll->SubLocationID])
+			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
-		return $this->render('update', [
+		return $this->renderPartial('update', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'counties' => $counties,
-			'subCounties' => $subCounties,
-			'locations' => $locations,
-			'subLocations' => $subLocations,
+			'beneficiaries' => $beneficiaries,
 		]);
 	}
 
 	/**
-	 * Deletes an existing LipwHouseholds model.
+	 * Deletes an existing LipwMasterRollRegister model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -187,15 +179,15 @@ class LipwHouseholdsController extends Controller
 	}
 
 	/**
-	 * Finds the LipwHouseholds model based on its primary key value.
+	 * Finds the LipwMasterRollRegister model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return LipwHouseholds the loaded model
+	 * @return LipwMasterRollRegister the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = LipwHouseholds::findOne($id)) !== null) {
+		if (($model = LipwMasterRollRegister::findOne($id)) !== null) {
 			return $model;
 		}
 

@@ -210,4 +210,18 @@ class BanksController extends Controller
 			}
 		}
 	}
+
+	public function actionBranches($id)
+	{
+		$model = BankBranches::find()->where(['BankID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->BankBranchID . "'>" . $item->BankBranchName . "</option>";
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
+	}
 }

@@ -13,6 +13,7 @@ use Yii;
  * @property string $EndDate
  * @property int $PaymentRequestStatusID
  * @property string $Total
+ * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -32,6 +33,24 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 		return parent::find()->andWhere(['lipw_payment_request.Deleted' => 0]);
 	}
 
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -40,7 +59,9 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 		return [
 			[['MasterRollID', 'PaymentRequestStatusID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['StartDate', 'EndDate', 'CreatedDate'], 'safe'],
+			[['Notes'], 'string'],
 			[['Total'], 'number'],
+			[['MasterRollID', 'StartDate', 'EndDate'], 'required']
 		];
 	}
 
@@ -56,6 +77,7 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 			'EndDate' => 'End Date',
 			'PaymentRequestStatusID' => 'Payment Request Status ID',
 			'Total' => 'Total',
+			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

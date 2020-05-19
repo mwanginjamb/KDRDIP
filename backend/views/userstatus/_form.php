@@ -7,6 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\UserStatus */
 /* @var $form yii\widgets\ActiveForm */
 ?>
+
 <div class="card">
 	<div class="card-header">
 		<h4 class="form-section"><?= $this->title; ?></h4>
@@ -25,7 +26,7 @@ use yii\widgets\ActiveForm;
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(); ?>
 	 
-	 		<div class="row">
+			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'UserStatusName')->textInput(['maxlength' => true]) ?>
 				</div>

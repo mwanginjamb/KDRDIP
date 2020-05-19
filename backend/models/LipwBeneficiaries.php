@@ -16,11 +16,11 @@ use Yii;
  * @property string $Gender
  * @property string $DateOfBirth
  * @property int $AlternativeID
- * @property int $HouseHoldID
+ * @property int $HouseholdID
  * @property string $BankAccountNumber
  * @property string $BankAccountName
  * @property int $BankID
- * @property int $BranchID
+ * @property int $BankBranchID
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -40,6 +40,24 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 		return parent::find()->andWhere(['lipw_beneficiaries.Deleted' => 0]);
 	}
 
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -47,9 +65,10 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	{
 		return [
 			[['DateOfBirth', 'CreatedDate'], 'safe'],
-			[['AlternativeID', 'HouseHoldID', 'BankID', 'BranchID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted'], 'integer'],
 			[['FirstName', 'MiddleName', 'LastName', 'IDNumber', 'Mobile', 'BankAccountNumber', 'BankAccountName'], 'string', 'max' => 45],
 			[['Gender'], 'string', 'max' => 1],
+			[['FirstName', 'LastName', 'IDNumber', 'Mobile', 'DateOfBirth', 'Gender'], 'required']
 		];
 	}
 
@@ -63,20 +82,25 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 			'FirstName' => 'First Name',
 			'MiddleName' => 'Middle Name',
 			'LastName' => 'Last Name',
-			'IDNumber' => 'Id Number',
+			'IDNumber' => 'ID Number',
 			'Mobile' => 'Mobile',
 			'Gender' => 'Gender',
 			'DateOfBirth' => 'Date Of Birth',
-			'AlternativeID' => 'Alternative ID',
-			'HouseHoldID' => 'House Hold ID',
+			'AlternativeID' => 'Alternative',
+			'HouseholdID' => 'Household',
 			'BankAccountNumber' => 'Bank Account Number',
 			'BankAccountName' => 'Bank Account Name',
-			'BankID' => 'Bank ID',
-			'BranchID' => 'Branch ID',
+			'BankID' => 'Bank',
+			'BankBranchID' => 'Branch',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
 		];
+	}
+
+	public function getBeneficiaryName()
+	{
+		return $this->FirstName . ' ' . $this->MiddleName . ' ' . $this->LastName;
 	}
 
 	public function getUsers()
@@ -86,7 +110,7 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 
 	public function getLipwHouseHolds()
 	{
-		return $this->hasOne(LipwHouseHolds::className(), ['HouseHoldID' => 'HouseHoldID']);
+		return $this->hasOne(LipwHouseHolds::className(), ['HouseholdID' => 'HouseholdID']);
 	}
 
 	public function getBanks()
@@ -96,6 +120,6 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 
 	public function getBankBranches()
 	{
-		return $this->hasOne(BankBranches::className(), ['BranchID' => 'BranchID']);
+		return $this->hasOne(BankBranches::className(), ['BankBranchID' => 'BankBranchID']);
 	}
 }

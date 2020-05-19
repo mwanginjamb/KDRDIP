@@ -26,6 +26,24 @@ class LipwMasterRollRegister extends \yii\db\ActiveRecord
 	{
 		return 'lipw_master_roll_register';
 	}
+	
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
 
 	/**
 	 * {@inheritdoc}

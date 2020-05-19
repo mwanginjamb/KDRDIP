@@ -29,6 +29,24 @@ class LipwPaymentScheduleStatus extends \yii\db\ActiveRecord
 		return parent::find()->andWhere(['lipw_payment_schedule_status.Deleted' => 0]);
 	}
 
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -39,6 +57,7 @@ class LipwPaymentScheduleStatus extends \yii\db\ActiveRecord
 			[['CreatedDate'], 'safe'],
 			[['CreatedBy', 'Deleted'], 'integer'],
 			[['PaymentScheduleStatusName'], 'string', 'max' => 45],
+			[['PaymentScheduleStatusName'], 'required'],
 		];
 	}
 

@@ -30,6 +30,24 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 		return parent::find()->andWhere(['lipw_payment_request_lines.Deleted' => 0]);
 	}
 
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->deleted = 1;
+		$m->deletedTime = time();
+		return $m->save();
+	}
+
+	public function save($runValidation = true, $attributeNames = null)
+	{
+		//this record is always new
+		if ($this->isNewRecord) {
+			$this->createdBy = Yii::$app->user->identity->userId;
+			$this->createdDate = date('Y-m-d h:i:s');
+		}
+		return parent::save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

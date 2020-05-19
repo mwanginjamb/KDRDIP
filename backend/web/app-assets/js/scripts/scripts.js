@@ -7,6 +7,50 @@ function submittheform(form)
 	console.log($(form).submit());
 }
 
+
+function submitForm(url,destination,formName)
+{
+	
+	var form = document.getElementById(formName);	
+	// Create a new FormData object.
+	console.log(form);
+	var formData = new FormData(form);
+
+	// Set up the request.
+	var xhr = new XMLHttpRequest();
+	// Open the connection.
+	xhr.open('POST', url, true);
+	// Set up a handler for when the request finishes.
+	xhr.onload = function () 
+	{
+		if (xhr.status === 200)  
+	  	{
+			// File(s) uploaded.
+			// rest = xhr.responseText;
+			document.getElementById(destination).innerHTML = xhr.responseText
+			// alert(rest);
+			// loadtab(url,destination,element,'Saved Successfully');
+	  	} else 
+		{
+			document.getElementById('msg').innerHTML = 'Failed to save Record';
+	  	}
+	};	
+	// Send the Data.
+	xhr.send(formData);		
+}
+
+function deleteItem(url,destination,loader)
+{
+	msg = "Are you sure you wish to delete this record";
+	var a = confirm(msg); 
+	if (!a) 
+	{ 
+		return false; 
+	}	
+	
+	loadpage(url,destination,loader);
+}
+
 function loadcomplaints(url,destination,loader,op,ID)
 {
 	xmlhttp=GetXmlHttpObject()

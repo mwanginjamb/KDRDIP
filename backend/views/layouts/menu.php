@@ -556,6 +556,32 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							</ul>
 						</li>
 					<?php } ?>
+					<?php if (count(array_intersect($rights, [97, 99, 100, 101, 102])) > 0) { ?>
+						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">LIPW</span></a>
+							<ul class="menu-content">
+								<?php if (in_array(97, $rights)) { ?>
+									<li <?= ($currentPage == 'lipw-households') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-households"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Households</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(99, $rights)) { ?>
+									<li <?= ($currentPage == 'lipw-master-roll') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-master-roll"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Master Roll</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(100, $rights)) { ?>
+									<li <?= ($currentPage == 'lipw-payment-request') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-payment-request"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Request</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(101, $rights)) { ?>
+									<li <?= ($currentPage == 'lipw-payment-request-status') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-payment-request-status"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Request Status</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(102, $rights)) { ?>
+									<li <?= ($currentPage == 'lipw-payment-schedule-status') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-payment-schedule-status"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Schedule Status</span></a>
+									</li>
+								<?php } ?>
+							</ul>
+						</li>
+					<?php } ?>
 
 					<?php if (count(array_intersect($rights, [15, 54, 63, 19, 13])) > 0) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
