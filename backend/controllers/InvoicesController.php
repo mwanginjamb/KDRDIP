@@ -32,7 +32,7 @@ class InvoicesController extends Controller
 	{
 		$this->rights = RightsController::Permissions(25);
 
-		$rightsArray = []; 
+		$rightsArray = [];
 		if (isset($this->rights->View)) {
 			array_push($rightsArray, 'index', 'view');
 		}
@@ -47,7 +47,7 @@ class InvoicesController extends Controller
 		}
 		$rightsArray = array_unique($rightsArray);
 		
-		if (count($rightsArray) <= 0) { 
+		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
 		}
 		
@@ -55,7 +55,7 @@ class InvoicesController extends Controller
 		'access' => [
 			'class' => AccessControl::className(),
 			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [				
+			'rules' => [
 					// Guest Users
 					[
 						'allow' => true,
@@ -88,16 +88,16 @@ class InvoicesController extends Controller
 		$searchfor = [1 => 'ID', 2 => 'PO No.', 3 => 'Amount'];
 		$search = new Search();
 		$params = Yii::$app->request->post();
-		if (!empty($params)) {			
+		if (!empty($params)) {
 			$where = '';
 			if ($params['Search']['searchfor'] == 1) {
 				$searchstring = $params['Search']['searchstring'];
 				$where = "InvoiceID = '$searchstring'";
 			} elseif ($params['Search']['searchfor'] == 2) {
-				$searchstring = $params['Search']['searchstring']; 
+				$searchstring = $params['Search']['searchstring'];
 				$where = "PurchaseID like '%$searchstring%'";
 			} elseif ($params['Search']['searchfor'] == 3) {
-				$searchstring = $params['Search']['searchstring']; 
+				$searchstring = $params['Search']['searchstring'];
 				$where = "Amount = '$searchstring'";
 			}
 			$dataProvider = new ActiveDataProvider([
@@ -146,7 +146,7 @@ class InvoicesController extends Controller
 		$purchases = Purchases::findBySql($sql)->asArray()->all();
 		$documents = Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1])->all();
 
-		// Display Documents 
+		// Display Documents
 		$documentProvider = new ActiveDataProvider([
 			'query' => Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1]),
 			'pagination' => false,
@@ -187,7 +187,7 @@ class InvoicesController extends Controller
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$purchases = []; // ArrayHelper::map(Purchases::find()->all(), 'PurchaseID', 'PurchaseID');
 
-		// Display Documents 
+		// Display Documents
 		$documentProvider = new ActiveDataProvider([
 			'query' => Documents::find()->where(['RefNumber' => 0, 'DocumentTypeID' => 1]),
 			'pagination' => false,
@@ -227,10 +227,10 @@ class InvoicesController extends Controller
 		$sql = "Select PurchaseID, concat(PurchaseName, ' ( Ksh: ', COALESCE(format(`Amount`,2), format(0,2)), ')') as PurchaseName FROM (
 			SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate)) AS `PurchaseName`, (Select sum(Quantity * UnitPrice) as Amount FROM purchaselines
 				WHERE PurchaseID = purchases.PurchaseID) as Amount FROM `purchases` WHERE `SupplierID`= $supplierID
-			) temp"; 
+			) temp";
 		$purchases = ArrayHelper::map(Purchases::findBySql($sql)->asArray()->all(), 'PurchaseID', 'PurchaseName');
 
-		// Display Documents 
+		// Display Documents
 		$documentProvider = new ActiveDataProvider([
 			'query' => Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1]),
 			'pagination' => false,
@@ -281,12 +281,12 @@ class InvoicesController extends Controller
 		$sql = "Select PurchaseID, concat(PurchaseName, ' ( Ksh: ', COALESCE(format(`Amount`,2), format(0,2)), ')') as PurchaseName FROM (
 					SELECT `PurchaseID`, concat(PurchaseID, ' - ', DATE(CreatedDate)) AS `PurchaseName`, (Select sum(Quantity * UnitPrice) as Amount FROM purchaselines
 						WHERE PurchaseID = purchases.PurchaseID) as Amount FROM `purchases` WHERE `SupplierID`= $id
-					) temp"; 
+					) temp";
 		$model = Purchases::findBySql($sql)->asArray()->all();
 			
 		if (!empty($model)) {
 			foreach ($model as $item) {
-				echo "<option value='" . $item['PurchaseID'] . "'>" . $item['PurchaseName'] . "</option>";
+				echo "<option value='" . $item['PurchaseID'] . "'>" . $item['PurchaseName'] . '</option>';
 			}
 		} else {
 			echo '<option>-</option>';
@@ -312,7 +312,7 @@ class InvoicesController extends Controller
 		return $this->redirect(['update', 'id' => $InvoiceID]);
 	}
 
-	public function actionViewDocument($id, $InvoiceID, $source='view')
+	public function actionViewDocument($id, $InvoiceID, $source = 'view')
 	{
 		ini_set('max_execution_time', 5*60); // 5 minutes
 		$model = Documents::findOne($id);
@@ -328,6 +328,6 @@ class InvoicesController extends Controller
 			return $this->redirect(['view', 'id' => $InvoiceID]);
 		} else {
 			return $this->redirect(['update', 'id' => $InvoiceID]);
-		}		
+		}
 	}
 }
