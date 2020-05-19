@@ -10,12 +10,12 @@ $this->params['breadcrumbs'][] = ['label' => 'Lipw Work Registers', 'url' => ['i
 $this->params['breadcrumbs'][] = ['label' => $model->WorkRegisterID, 'url' => ['view', 'id' => $model->WorkRegisterID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
-<div class="lipw-work-register-update">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'beneficiaries' => $beneficiaries,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

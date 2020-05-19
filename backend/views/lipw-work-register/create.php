@@ -9,12 +9,12 @@ $this->title = 'Create Lipw Work Register';
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Work Registers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="lipw-work-register-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+		'beneficiaries' => $beneficiaries,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
-
-</div>
+</section>

@@ -4,124 +4,193 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\LipwWorkRegister;
+use app\models\LipwBeneficiaries;
+use app\models\LipwMasterRoll;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\ArrayHelper;
+use yii\filters\AccessControl;
+use backend\controllers\RightsController;
 
 /**
  * LipwWorkRegisterController implements the CRUD actions for LipwWorkRegister model.
  */
 class LipwWorkRegisterController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function behaviors()
-    {
-        return [
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'delete' => ['POST'],
-                ],
-            ],
-        ];
-    }
+	public $rights;
+	/**
+	 * @inheritdoc
+	 */
+	public function behaviors()
+	{
+		$this->rights = RightsController::Permissions(99);
 
-    /**
-     * Lists all LipwWorkRegister models.
-     * @return mixed
-     */
-    public function actionIndex()
-    {
-        $dataProvider = new ActiveDataProvider([
-            'query' => LipwWorkRegister::find(),
-        ]);
+		$rightsArray = [];
+		if (isset($this->rights->View)) {
+			array_push($rightsArray, 'index', 'view');
+		}
+		if (isset($this->rights->Create)) {
+			array_push($rightsArray, 'view', 'create');
+		}
+		if (isset($this->rights->Edit)) {
+			array_push($rightsArray, 'index', 'view', 'update');
+		}
+		if (isset($this->rights->Delete)) {
+			array_push($rightsArray, 'delete');
+		}
+		$rightsArray = array_unique($rightsArray);
+		
+		if (count($rightsArray) <= 0) {
+			$rightsArray = ['none'];
+		}
+		
+		return [
+		'access' => [
+			'class' => AccessControl::className(),
+			'only' => ['index', 'view', 'create', 'update', 'delete'],
+			'rules' => [
+					// Guest Users
+					[
+						'allow' => true,
+						'actions' => ['none'],
+						'roles' => ['?'],
+					],
+					// Authenticated Users
+					[
+						'allow' => true,
+						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'roles' => ['@'],
+					],
+				],
+			],
+			'verbs' => [
+				'class' => VerbFilter::className(),
+				'actions' => [
+					'delete' => ['POST', 'GET'],
+				],
+			],
+		];
+	}
 
-        return $this->render('index', [
-            'dataProvider' => $dataProvider,
-        ]);
-    }
+	/**
+	 * Lists all LipwWorkRegister models.
+	 * @return mixed
+	 */
+	public function actionIndex()
+	{
+		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
 
-    /**
-     * Displays a single LipwWorkRegister model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+		$dataProvider = new ActiveDataProvider([
+			'query' => LipwWorkRegister::find(),
+		]);
 
-    /**
-     * Creates a new LipwWorkRegister model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new LipwWorkRegister();
+		return $this->renderPartial('index', [
+			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
+			'mId' => $mId,
+		]);
+	}
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->WorkRegisterID]);
-        }
+	/**
+	 * Displays a single LipwWorkRegister model.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionView($id)
+	{
+		return $this->renderPartial('view', [
+			'model' => $this->findModel($id),
+			'rights' => $this->rights,
+		]);
+	}
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
-    }
+	/**
+	 * Creates a new LipwWorkRegister model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 * @return mixed
+	 */
+	public function actionCreate()
+	{
+		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
 
-    /**
-     * Updates an existing LipwWorkRegister model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
+		$masterRoll = LipwMasterRoll::findOne($mId);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->WorkRegisterID]);
-        }
+		$model = new LipwWorkRegister();
+		$model->MasterRollID = $mId;
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
-    }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->WorkRegisterID]);
+		}
 
-    /**
-     * Deletes an existing LipwWorkRegister model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
+		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
+			->joinWith('lipwHouseHolds')
+			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID])
+			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
-        return $this->redirect(['index']);
-    }
+		return $this->renderPartial('create', [
+			'model' => $model,
+			'rights' => $this->rights,
+			'beneficiaries' => $beneficiaries,
+		]);
+	}
 
-    /**
-     * Finds the LipwWorkRegister model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return LipwWorkRegister the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = LipwWorkRegister::findOne($id)) !== null) {
-            return $model;
-        }
+	/**
+	 * Updates an existing LipwWorkRegister model.
+	 * If update is successful, the browser will be redirected to the 'view' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionUpdate($id)
+	{
+		$model = $this->findModel($id);
 
-        throw new NotFoundHttpException('The requested page does not exist.');
-    }
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			return $this->redirect(['view', 'id' => $model->WorkRegisterID]);
+		}
+
+		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
+			->joinWith('lipwHouseHolds')
+			->andWhere(['lipw_households.SubLocationID' => $model->lipwMasterRoll->SubLocationID])
+			->all(), 'BeneficiaryID', 'BeneficiaryName');
+
+		return $this->renderPartial('update', [
+			'model' => $model,
+			'rights' => $this->rights,
+			'beneficiaries' => $beneficiaries,
+		]);
+	}
+
+	/**
+	 * Deletes an existing LipwWorkRegister model.
+	 * If deletion is successful, the browser will be redirected to the 'index' page.
+	 * @param integer $id
+	 * @return mixed
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	public function actionDelete($id)
+	{
+		$this->findModel($id)->delete();
+
+		return $this->redirect(['index']);
+	}
+
+	/**
+	 * Finds the LipwWorkRegister model based on its primary key value.
+	 * If the model is not found, a 404 HTTP exception will be thrown.
+	 * @param integer $id
+	 * @return LipwWorkRegister the loaded model
+	 * @throws NotFoundHttpException if the model cannot be found
+	 */
+	protected function findModel($id)
+	{
+		if (($model = LipwWorkRegister::findOne($id)) !== null) {
+			return $model;
+		}
+
+		throw new NotFoundHttpException('The requested page does not exist.');
+	}
 }

@@ -50,7 +50,10 @@ $this->params['breadcrumbs'][] = $this->title;
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-master-roll-register/index?mId=' . $model->MasterRollID);?>', 'tab2')">Beneficiaries</a>
-							</li>											
+							</li>		
+							<li class="nav-item">
+								<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-work-register/index?mId=' . $model->MasterRollID);?>', 'tab3')">Work Register</a>
+							</li>										
 						</ul>
 						<div class="tab-content px-1 pt-1">
 							<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -77,8 +80,13 @@ $this->params['breadcrumbs'][] = $this->title;
 									],
 								]) ?>
 							</div>
+
 							<div class="tab-pane" id="tab2" aria-labelledby="base-tab2">
 								<h4 class="form-section">Beneficiaries</h4>
+							</div>
+
+							<div class="tab-pane" id="tab3" aria-labelledby="base-tab3">
+								<h4 class="form-section">Work Register</h4>
 							</div>
 
 						</div>	

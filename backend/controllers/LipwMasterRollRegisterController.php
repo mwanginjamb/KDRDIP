@@ -127,7 +127,7 @@ class LipwMasterRollRegisterController extends Controller
 
 		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
 			->joinWith('lipwHouseHolds')
-			->andWhere(['lipwHouseHolds.SubLocationID' => $masterRoll->SubLocationID])
+			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID])
 			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
 		return $this->renderPartial('create', [
