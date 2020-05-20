@@ -66,7 +66,7 @@ $FormID = 23;
 		if (count($categories) > 0)
 		{ ?>
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Close', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 			<?php

@@ -58,7 +58,7 @@ $FormID = 15;
 								<?php
 							} ?>
 							<?= (isset($rights->View)) ? Html::a('GRN', ['grn', 'id' => $model->DeliveryID], ['class' => 'btn btn-primary place-right', 'style' => 'margin-right:10px']) : '' ?>
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= Html::a('<i class="ft-x"></i> Close', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 						<?php ActiveForm::end(); ?>
 					</p>
 

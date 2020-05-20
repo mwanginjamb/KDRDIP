@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class="card-body">	
 
 						<p>
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['/community-groups/view', 'id' => $model->CommunityGroupID], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= Html::a('<i class="ft-x"></i> Close', ['/community-groups/view', 'id' => $model->CommunityGroupID], ['class' => 'btn btn-warning mr-1']) ?>
 							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['/group-members/update', 'id' => $model->CommunityGroupMemberID], ['class' => 'btn btn-primary']) : ''?>
 							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['/group-members/delete', 'id' => $model->CommunityGroupMemberID], [
 									'class' => 'btn btn-danger',

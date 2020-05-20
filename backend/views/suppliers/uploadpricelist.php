@@ -45,7 +45,7 @@ $baseUrl = Yii::$app->request->baseUrl;
 						<div class="help-block-error"><?= $message; ?></div>
 						<p></p>
 						<div class="form-group">
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['update', 'id' => $id], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= Html::a('<i class="ft-x"></i> Close', ['update', 'id' => $id], ['class' => 'btn btn-warning mr-1']) ?>
 							<?= Html::submitButton('<i class="ft-upload"></i> Upload', ['class' => 'btn btn-primary']) ?>
 						</div>
 						<?php ActiveForm::end(); ?>

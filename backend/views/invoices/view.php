@@ -35,7 +35,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<div class="card-body">	
 
 						<p>
-							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+							<?= Html::a('<i class="ft-x"></i> Close', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 							<?php
 							if ($model->ApprovalStatusID == 0) { ?>
 								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->InvoiceID], ['class' => 'btn btn-primary']) : ''?>

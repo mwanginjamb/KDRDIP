@@ -59,7 +59,7 @@ $FormID = 12;
 							<?php // $form->field($model, 'ApprovalStatusID')->dropDownList($approvalstatus,['prompt'=>'Select...']) ?>
 
 							<div class="form-group">
-								<?= Html::a('<i class="ft-x"></i> Cancel', ['index', 'option' => $option], ['class' => 'btn btn-warning mr-1']) ?>
+								<?= Html::a('<i class="ft-x"></i> Close', ['index', 'option' => $option], ['class' => 'btn btn-warning mr-1']) ?>
 								<?= Html::submitButton('<i class="ft-check"></i> Approve', ['class' => 'btn btn-success', 'name'=>'Approve']);?>
 								<?= Html::submitButton('<i class="ft-x"></i> Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']); ?>
 							</div>

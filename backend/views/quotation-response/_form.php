@@ -90,7 +90,7 @@ use yii\widgets\ActiveForm;
 			</table>
 
 			<div class="form-actions" style="margin-top:0px">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['quotation/view', 'id' => $model->QuotationID], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Close', ['quotation/view', 'id' => $model->QuotationID], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 

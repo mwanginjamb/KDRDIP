@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 					<?= $form->field($model, 'ConfirmPassword', ['options' => ['class' => 'form-group required']])->passwordInput() ?>
 
 					<div class="form-group">
-						<?= Html::a('<i class="ft-x"></i> Cancel', ['view', 'id' => $model->UserID], ['class' => 'btn btn-warning mr-1']) ?>
+						<?= Html::a('<i class="ft-x"></i> Close', ['view', 'id' => $model->UserID], ['class' => 'btn btn-warning mr-1']) ?>
 						<?= Html::submitButton('<i class="ft-unlock"></i> Change Password', ['class' => 'btn btn-outline-info btn-block1', 'name' => 'login-button']) ?>
 					</div>
 					

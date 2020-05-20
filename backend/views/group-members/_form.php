@@ -73,7 +73,7 @@ use yii\widgets\ActiveForm;
 			
 
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['/community-groups/view', 'id' => $model->CommunityGroupID], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Close', ['/community-groups/view', 'id' => $model->CommunityGroupID], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 

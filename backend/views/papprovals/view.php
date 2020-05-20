@@ -69,7 +69,7 @@ $Total = number_format($Total,2);
 								<?php //$form->field($model, 'ApprovalStatusID')->dropDownList($approvalstatus,['prompt'=>'Select...']) ?>
 
 								<div class="form-group">
-									<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+									<?= Html::a('<i class="ft-x"></i> Close', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 									<?= (isset($rights->Edit)) ? Html::submitButton('Approve', ['class' => 'btn btn-success', 'name'=>'Approve']) : '';?>
 									<?= (isset($rights->Edit)) ? Html::submitButton('Adjustment', ['class' => 'btn btn-primary', 'name'=>'Adjustment']) : ''; ?>
 									<?= (isset($rights->Edit)) ? Html::submitButton('Reject', ['class' => 'btn btn-danger', 'name'=>'Reject']) : ''; ?>

@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								<?= $form->field($model, 'IssueQuantity')->textInput(['type' => 'number']) ?>
 
 								<div class="form-group">
-									<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
+									<?= Html::a('<i class="ft-x"></i> Close', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
 									<?= (isset($rights->Edit)) ? Html::submitButton('<i class="ft-check"></i> Save', ['class' => 'btn btn-success']) : '';?>
 								</div>
 								

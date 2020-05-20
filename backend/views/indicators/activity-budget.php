@@ -39,7 +39,7 @@ $this->title = 'Activity Budget'
 			</table>	 
 
 			<div class="form-group">				
-				<button type="button" class="btn btn-warning mr-1" data-dismiss="modal"><i class="ft-x"></i> Cancel</button>
+				<button type="button" class="btn btn-warning mr-1" data-dismiss="modal"><i class="ft-x"></i> Close</button>
 				<button type="button" class="btn btn-primary mr-1" data-dismiss="modal" onclick="submitForm(<?= $id; ?>)"><i class="ft-tick"></i> Save</button>
 			</div>
 

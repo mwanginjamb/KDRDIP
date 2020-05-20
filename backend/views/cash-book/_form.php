@@ -90,7 +90,7 @@ use yii\widgets\ActiveForm;
 			</div>
 
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Cancel', ['bank-accounts/view', 'id' => $baid], ['class' => 'btn btn-warning mr-1']) ?>
+				<?= Html::a('<i class="ft-x"></i> Close', ['bank-accounts/view', 'id' => $baid], ['class' => 'btn btn-warning mr-1']) ?>
 				<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 			</div>
 
