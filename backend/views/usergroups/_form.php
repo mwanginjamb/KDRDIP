@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 	</div>
 	<div class="card-content collapse show">
 		<div class="card-body">
-			<?php $form = ActiveForm::begin(); ?>
+			<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
 	 
 	 		<div class="row">
 				<div class="col-md-6">

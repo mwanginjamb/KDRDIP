@@ -33,8 +33,8 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 	public function delete()
 	{
 		$m = parent::findOne($this->getPrimaryKey());
-		$m->deleted = 1;
-		$m->deletedTime = time();
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
 		return $m->save();
 	}
 
@@ -42,8 +42,8 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 	{
 		//this record is always new
 		if ($this->isNewRecord) {
-			$this->createdBy = Yii::$app->user->identity->userId;
-			$this->createdDate = date('Y-m-d h:i:s');
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
 		}
 		return parent::save();
 	}

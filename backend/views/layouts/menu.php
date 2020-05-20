@@ -72,7 +72,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<li <?= ($currentPage == 'payments') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [24, 29])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [24, 29, 103])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 									<ul class="menu-content">
 										<?php if (in_array(24, $rights)) { ?>									
@@ -82,17 +82,29 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 										<?php if (in_array(29, $rights)) { ?>
 											<li <?= ($currentPage == 'payments-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
 											</li>	
-										<?php } ?>			
+										<?php } ?>	
+										<?php if (in_array(103, $rights)) { ?>
+											<li <?= ($currentPage == 'lipw-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payment</span></a>
+											</li>	
+										<?php } ?>
 									</ul>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [24, 29])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [24, 29, 103])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
-									<ul class="menu-content">									
-										<li <?= ($currentPage == 'invoice-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoice-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
-										</li>
-										<li <?= ($currentPage == 'payments-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
-										</li>						
+									<ul class="menu-content">	
+										<?php if (in_array(24, $rights)) { ?>								
+											<li <?= ($currentPage == 'invoice-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoice-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
+											</li>
+										<?php } ?>
+										<?php if (in_array(29, $rights)) { ?>
+											<li <?= ($currentPage == 'payments-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
+											</li>
+										<?php } ?>
+										<?php if (in_array(103, $rights)) { ?>
+											<li <?= ($currentPage == 'lipw-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payment</span></a>
+											</li>	
+										<?php } ?>					
 									</ul>
 								</li>
 							<?php } ?>

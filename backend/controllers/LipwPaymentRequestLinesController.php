@@ -3,9 +3,7 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\LipwWorkRegister;
-use app\models\LipwBeneficiaries;
-use app\models\LipwMasterRoll;
+use app\models\LipwPaymentRequestLines;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -15,9 +13,9 @@ use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * LipwWorkRegisterController implements the CRUD actions for LipwWorkRegister model.
+ * LipwPaymentRequestLinesController implements the CRUD actions for LipwPaymentRequestLines model.
  */
-class LipwWorkRegisterController extends Controller
+class LipwPaymentRequestLinesController extends Controller
 {
 	public $rights;
 	/**
@@ -25,7 +23,7 @@ class LipwWorkRegisterController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(99);
+		$this->rights = RightsController::Permissions(100);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -75,26 +73,25 @@ class LipwWorkRegisterController extends Controller
 	}
 
 	/**
-	 * Lists all LipwWorkRegister models.
+	 * Lists all LipwPaymentRequestLines models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
-		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
+		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => LipwWorkRegister::find(),
+			'query' => LipwPaymentRequestLines::find()->andWhere(['PaymentRequestID' => $pId]),
 		]);
 
 		return $this->renderPartial('index', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
-			'mId' => $mId,
 		]);
 	}
 
 	/**
-	 * Displays a single LipwWorkRegister model.
+	 * Displays a single LipwPaymentRequestLines model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
@@ -108,37 +105,29 @@ class LipwWorkRegisterController extends Controller
 	}
 
 	/**
-	 * Creates a new LipwWorkRegister model.
+	 * Creates a new LipwPaymentRequestLines model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
+		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
-		$masterRoll = LipwMasterRoll::findOne($mId);
-
-		$model = new LipwWorkRegister();
-		$model->MasterRollID = $mId;
+		$model = new LipwPaymentRequestLines();
+		$model->PaymentRequestID = $pId;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'mId' => $model->MasterRollID]);
+			return $this->redirect(['view', 'id' => $model->PaymentRequestLineID]);
 		}
-
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
-			->joinWith('lipwHouseHolds')
-			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID])
-			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
 		return $this->renderPartial('create', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'beneficiaries' => $beneficiaries,
 		]);
 	}
 
 	/**
-	 * Updates an existing LipwWorkRegister model.
+	 * Updates an existing LipwPaymentRequestLines model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -149,23 +138,17 @@ class LipwWorkRegisterController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'mId' => $model->MasterRollID]);
+			return $this->redirect(['view', 'id' => $model->PaymentRequestLineID]);
 		}
-
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
-			->joinWith('lipwHouseHolds')
-			->andWhere(['lipw_households.SubLocationID' => $model->lipwMasterRoll->SubLocationID])
-			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
 		return $this->renderPartial('update', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'beneficiaries' => $beneficiaries,
 		]);
 	}
 
 	/**
-	 * Deletes an existing LipwWorkRegister model.
+	 * Deletes an existing LipwPaymentRequestLines model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -179,15 +162,15 @@ class LipwWorkRegisterController extends Controller
 	}
 
 	/**
-	 * Finds the LipwWorkRegister model based on its primary key value.
+	 * Finds the LipwPaymentRequestLines model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return LipwWorkRegister the loaded model
+	 * @return LipwPaymentRequestLines the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = LipwWorkRegister::findOne($id)) !== null) {
+		if (($model = LipwPaymentRequestLines::findOne($id)) !== null) {
 			return $model;
 		}
 

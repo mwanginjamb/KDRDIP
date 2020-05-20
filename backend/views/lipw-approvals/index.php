@@ -6,10 +6,28 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Lipw Payment Requests';
+$this->title = ($option==1) ? 'Invoice Review' : 'Invoice Approvals';
+switch ($option) {
+	case 1:
+		$this->title = 'Invoice Review';
+		break;
+	case 2:
+		$this->title = 'Invoice Approvals';
+		break;
+	case 3:
+		$this->title = 'Invoice Approved';
+		break;
+	case 4:
+		$this->title = 'Invoice Rejected';
+		break;
+	default:
+		$this->title = 'Invoice Review';
+}
 $this->params['breadcrumbs'][] = $this->title;
-?>
 
+$Rights = Yii::$app->params['rights'];
+$FormID = 12;
+?>
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -28,9 +46,6 @@ $this->params['breadcrumbs'][] = $this->title;
 				</div>
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
-						<div class="form-actions" style="margin-top:0px">
-							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>		
-						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'layout' => '{items}',
@@ -59,53 +74,44 @@ $this->params['breadcrumbs'][] = $this->title;
 									'headerOptions' => ['width' => '10%'],
 								],
 								[
+									'label'=>'Requested By',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'users.Full_Name',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
 									'label'=>'Approval Status',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'approvalStatus.ApprovalStatusName',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
-								[
-									'label'=>'Approved Date',
-									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
+									[
+									'label'=>'Posting Date',
+									'headerOptions' => ['width' => '10%','style'=>'color:black; text-align:left'],
 									'format'=>'date',
-									'value' => 'ApprovalDate',
+									'value' => 'PostingDate',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
-								// [
-								// 	'attribute' => 'CreatedDate',
-								// 	'format' => ['date', 'php:d/m/Y h:i a'],
-								// 	'headerOptions' => ['width' => '15%'],
-								// ],
-								// [
-								// 	'label' => 'Created By',
-								// 	'attribute' => 'users.fullName',
-								// 	'headerOptions' => ['width' => '15%'],
-								// ],
 								[
 									'class' => 'yii\grid\ActionColumn',
-									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
-									'template' => '{view} {delete}',
+									'headerOptions' => ['width' => '7%', 'style'=>'color:black; text-align:center'],
+									'template' => '{update}',
 									'buttons' => [
-				
-										'view' => function ($url, $model) use ($rights) {
-											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->PaymentRequestID], ['class' => 'btn-sm btn-primary']) : '';
-										},
-										'delete' => function ($url, $model) use ($rights) {
-											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentRequestID], [
-												'class' => 'btn-sm btn-danger btn-xs',
-												'data' => [
-													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
-													'method' => 'post',
-												],
-											]) : '';
-										},
 
+										//update button
+										'update' => function ($url, $model) use ($Rights, $FormID, $option, $rights) {
+											$baseUrl = Yii::$app->request->baseUrl;
+											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> Select', $baseUrl . '/lipw-approvals/view?id=' . $model->PaymentRequestID . '&option=' . $option, [
+														'title' => Yii::t('app', 'Select'),
+														'class'=>'btn-sm btn-primary btn-xs',
+														]) : '';
+										},						
 									],
 								],
 							],
 						]); ?>
-
 					</div>
 				</div>										  
 			</div>

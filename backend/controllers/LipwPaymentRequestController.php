@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\LipwPaymentRequest;
+use app\models\LipwPaymentRequestLines;
+use app\models\LipwWorkRegister;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -112,6 +114,23 @@ class LipwPaymentRequestController extends Controller
 		$model = new LipwPaymentRequest();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			// LipwPaymentRequestLines
+			/*
+				Compute the work done between the two days and pick the work that is not paid
+			*/
+			$works = LipwWorkRegister::find()->andWhere(['MasterRollID' => $model->MasterRollID, 'Paid' => 0])
+						->andWhere(['between', 'date', $model->StartDate, $model->EndDate])->all();
+
+			foreach ($works as $work) {
+				$lines = new LipwPaymentRequestLines();
+				$lines->PaymentRequestID = $model->PaymentRequestID;
+				$lines->WorkRegisterID = $work->WorkRegisterID;
+				$lines->Amount = $work->Amount;
+				if ($lines->save()) {
+					$work->Paid = 1;
+					$work->save();
+				}
+			}
 			return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
 		}
 
@@ -160,6 +179,19 @@ class LipwPaymentRequestController extends Controller
 		$this->findModel($id)->delete();
 
 		return $this->redirect(['index']);
+	}
+
+	public function actionSubmit($id)
+	{
+		$model = $this->findModel($id);
+		$model->ApprovalStatusID = 1;
+		$model->submit = 1;
+		if ($model->save()) {
+			// $result = UsersController::sendEmailNotification(29);
+			return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
+		} else {
+			// print_r($model->getErrors()); exit;
+		}
 	}
 
 	/**

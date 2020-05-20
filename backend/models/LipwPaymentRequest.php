@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use app\models\LipwPaymentRequestLines;
 
 /**
  * This is the model class for table "lipw_payment_request".
@@ -17,9 +18,16 @@ use Yii;
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property int $Posted
+ * @property string $PostingDate
+ * @property int ApprovalStatusID
+ * @property int ApprovalStatusID
+ * @property string ApprovalDate
  */
+
 class LipwPaymentRequest extends \yii\db\ActiveRecord
 {
+	public $submit;
 	/**
 	 * {@inheritdoc}
 	 */
@@ -47,6 +55,8 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 		if ($this->isNewRecord) {
 			$this->CreatedBy = Yii::$app->user->identity->UserID;
 			$this->CreatedDate = date('Y-m-d h:i:s');
+			$this->PaymentRequestStatusID = 1;
+			$this->ApprovalStatusID = 0;
 		}
 		return parent::save();
 	}
@@ -57,8 +67,8 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['MasterRollID', 'PaymentRequestStatusID', 'CreatedBy', 'Deleted'], 'integer'],
-			[['StartDate', 'EndDate', 'CreatedDate'], 'safe'],
+			[['MasterRollID', 'PaymentRequestStatusID', 'CreatedBy', 'Deleted', 'Posted', 'ApprovalStatusID', 'ApprovedBy'], 'integer'],
+			[['StartDate', 'EndDate', 'CreatedDate', 'PostingDate', 'ApprovalDate'], 'safe'],
 			[['Notes'], 'string'],
 			[['Total'], 'number'],
 			[['MasterRollID', 'StartDate', 'EndDate'], 'required']
@@ -75,12 +85,17 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 			'MasterRollID' => 'Master Roll ID',
 			'StartDate' => 'Start Date',
 			'EndDate' => 'End Date',
-			'PaymentRequestStatusID' => 'Payment Request Status ID',
+			'PaymentRequestStatusID' => 'Payment Request Status',
 			'Total' => 'Total',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'Posted' => 'Posted',
+			'PostingDate' => 'Posting Date',
+			'ApprovalStatusID' => 'Approval Status',
+			'ApprovedBy' => 'Approved By',
+			'ApprovalDate' => 'Approval Date',
 		];
 	}
 
@@ -97,5 +112,20 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 	public function getLipwPaymentRequestStatus()
 	{
 		return $this->hasOne(LipwPaymentRequestStatus::className(), ['PaymentRequestStatusID' => 'PaymentRequestStatusID']);
+	}
+
+	public function getCalculatedTotal()
+	{
+		return LipwPaymentRequestLines::find()->andWhere(['PaymentRequestID' =>  $this->PaymentRequestID])->sum('Amount');
+	}
+
+	public function getApprover()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'ApprovedBy']);
+	}
+
+	public function getApprovalStatus()
+	{
+		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID']);
 	}
 }

@@ -36,6 +36,11 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions' => ['width' => '5%'],
 		],
 		[
+			'attribute' => 'Date',
+			'format' => ['date', 'php:d/m/Y'],
+			'headerOptions' => ['width' => '10%'],
+		],
+		[
 			'label' => 'Beneficiary',
 			'attribute' => 'lipwBeneficiaries.BeneficiaryName',
 		],
@@ -45,17 +50,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
-		[
+/* 		[
 			'label' => 'Date Of Birth',
 			'attribute' => 'lipwBeneficiaries.DateOfBirth',
 			'format' => ['date', 'php:d/m/Y'],
 			'headerOptions' => ['width' => '10%'],
-		],
-		[
-			'attribute' => 'Date',
-			'format' => ['date', 'php:d/m/Y'],
-			'headerOptions' => ['width' => '10%'],
-		],
+		], */
 		[
 			'attribute' => 'Amount',
 			'format' => ['decimal', 2],
@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'buttons' => [
 
 				'view' => function ($url, $model) use ($rights) {
-					return (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Edit', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-work-register/update?id=' . $model->WorkRegisterID) . '", \'tab3\')']) : '';
+					return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-work-register/view?id=' . $model->WorkRegisterID) . '", \'tab3\')']) : '';
 				},
 				'delete' => function ($url, $model) use ($rights) {
 					return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', null, [

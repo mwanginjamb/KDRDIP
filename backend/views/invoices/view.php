@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?php	
+							<?php
 							if ($model->ApprovalStatusID == 0) { ?>
 								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->InvoiceID], ['class' => 'btn btn-primary']) : ''?>
 								<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->InvoiceID], [
@@ -46,11 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 											'method' => 'post',
 										],
 								]) : ''?>
-							<?php 
-							} ?>
-
-							<?php
-								if ($model->ApprovalStatusID == 0) { ?>
+							
 								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->InvoiceID], [
 									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 									'data' => [
@@ -59,8 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
 											]
 									]) : '' ?>
 								<?php
-							}
-							?>	
+							} ?>
 						</p>
 
 						<?= DetailView::widget([

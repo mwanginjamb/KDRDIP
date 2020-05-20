@@ -33,22 +33,34 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Cancel', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->PaymentRequestID], ['class' => 'btn btn-primary']) : '';?>
-							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentRequestID], [
-									'class' => 'btn btn-danger',
+							<?php
+							if ($model->ApprovalStatusID == 0) { ?>
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->PaymentRequestID], ['class' => 'btn btn-primary']) : '';?>
+								<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->PaymentRequestID], [
+										'class' => 'btn btn-danger',
+										'data' => [
+											'confirm' => 'Are you sure you want to delete this item?',
+											'method' => 'post',
+										],
+								]) : '';?>
+								
+								<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Send for Approval', ['submit', 'id' => $model->PaymentRequestID], [
+									'class' => 'btn btn-danger place-right', 'style' => 'width: 140px !important;margin-right: 5px;',
 									'data' => [
-										'confirm' => 'Are you sure you want to delete this item?',
-										'method' => 'post',
-									],
-							]) : '';?>
-						</p>
+												'confirm' => 'Are you sure you want to submit this item?',
+												'method' => 'post',
+											]
+								]) : '' ?>
+								<?php
+							} ?>
+						</p>	
 
 						<ul class="nav nav-tabs nav-top-border no-hover-bg">
 							<li class="nav-item">
 								<a class="nav-link active" id="base-tab1" data-toggle="tab" aria-controls="tab1" href="#tab1" aria-expanded="true">Details</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-beneficiaries/index?hId=' . $model->PaymentRequestID);?>', 'tab2')">Beneficiaries</a>
+								<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-payment-request-lines/index?pId=' . $model->PaymentRequestID);?>', 'tab2')">Beneficiaries</a>
 							</li>											
 						</ul>
 						<div class="tab-content px-1 pt-1">
@@ -72,9 +84,12 @@ $this->params['breadcrumbs'][] = $this->title;
 										'lipwMasterRoll.subLocations.locations.LocationName',
 										'lipwMasterRoll.subLocations.locations.subCounties.SubCountyName',
 										'lipwMasterRoll.subLocations.locations.subCounties.counties.CountyName',
-										'lipwPaymentRequestStatus.PaymentRequestStatusName',
 										[
-											'attribute' => 'Total',
+											'attribute' => 'lipwPaymentRequestStatus.PaymentRequestStatusName',
+											'label' => 'Status',
+										],
+										[
+											'attribute' => 'calculatedTotal',
 											'format' => ['decimal', 2],
 										],
 										[

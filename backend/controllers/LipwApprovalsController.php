@@ -3,8 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\Invoices;
-use app\models\DeliveryLines;
+use app\models\LipwPaymentRequest;
+use app\models\LipwPaymentRequestLines;
 use app\models\ApprovalNotes;
 use app\models\ApprovalStatus;
 use app\models\Purchases;
@@ -21,7 +21,7 @@ use backend\controllers\RightsController;
 /**
  * RequisitionController implements the CRUD actions for Requisition model.
  */
-class InvoiceApprovalsController extends Controller
+class LipwApprovalsController extends Controller
 {
 	public $rights;
 	/**
@@ -29,7 +29,7 @@ class InvoiceApprovalsController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(24);
+		$this->rights = RightsController::Permissions(103);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -79,14 +79,14 @@ class InvoiceApprovalsController extends Controller
 	}
 
 	/**
-	 * Lists all Invoices models.
+	 * Lists all LipwPaymentRequest models.
 	 * @return mixed
 	 */
 	public function actionIndex($option)
 	{
-		$StatusID = $option; //==1 ? 1 : 2;
+		$StatusID = $option;
 		$dataProvider = new ActiveDataProvider([
-			'query' => Invoices::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
+			'query' => LipwPaymentRequest::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
 		]);
 
 		return $this->render('index', [
@@ -108,22 +108,13 @@ class InvoiceApprovalsController extends Controller
 		$model->submit = 1;
 		
 		$params = Yii::$app->request->post();
-		$PurchaseID = $model->PurchaseID;
+		// $PurchaseID = $model->PurchaseID;
 
-		$sql ="select * from deliverylines
-				join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
-				join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
-				join product on product.ProductID = purchaselines.ProductID
-				WHERE deliveries.PurchaseID = $PurchaseID
-				ORDER BY deliveries.DeliveryID";
-		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+		// $requestLines = LipwPaymentRequestLines::find()->andWhere(['PaymentRequestID' => $id])->all();
 
-		$sql ="select * from purchaselines
-		LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
-		LEFT JOIN product on product.ProductID = purchaselines.ProductID
-		WHERE purchases.PurchaseID = $PurchaseID";
-
-		$purchases = Purchases::findBySql($sql)->asArray()->all();
+		$requestLines = new ActiveDataProvider([
+			'query' => LipwPaymentRequestLines::find()->andWhere(['PaymentRequestID' => $id]),
+		]);
 
 		$notes = new ApprovalNotes();
 		if (Yii::$app->request->post()) {
@@ -149,7 +140,7 @@ class InvoiceApprovalsController extends Controller
 			// Add Notes to the notes table
 			$notes->Note = $params['ApprovalNotes']['Note'];
 			$notes->ApprovalStatusID = $model->ApprovalStatusID;
-			$notes->ApprovalTypeID = 5;
+			$notes->ApprovalTypeID = 7;
 			$notes->ApprovalID = $id;
 			$notes->CreatedBy = $UserID;
 			$notes->save();
@@ -161,15 +152,15 @@ class InvoiceApprovalsController extends Controller
 		}
 
 		$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where('ApprovalStatusID > 1')->all(), 'ApprovalStatusID', 'ApprovalStatusName');
-		$detailmodel = Invoices::find()->where(['InvoiceID'=> $id])->joinWith('approvalstatus')->one();
+		$detailmodel = LipwPaymentRequest::find()->where(['PaymentRequestID'=> $id])->one();
+
 		return $this->render('view', [
 			'model' => $model,
 			'detailmodel' => $detailmodel,
-			'deliveries' => $deliveries,
 			'approvalstatus' => $approvalstatus,
 			'notes' => $notes,
 			'option' => $option,
-			'purchases' => $purchases,
+			'requestLines' => $requestLines,
 			'rights' => $this->rights,
 		]);
 	}
@@ -183,7 +174,7 @@ class InvoiceApprovalsController extends Controller
 	 */
 	protected function findModel($id)
 	{
-		if (($model = Invoices::findOne($id)) !== null) {
+		if (($model = LipwPaymentRequest::findOne($id)) !== null) {
 			return $model;
 		} else {
 			throw new NotFoundHttpException('The requested page does not exist.');

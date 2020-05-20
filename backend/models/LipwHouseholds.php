@@ -74,7 +74,7 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 		return [
 			'HouseholdID' => 'Household ID',
 			'HouseholdName' => 'Household Name',
-			'SubLocationID' => 'Sub Location',
+			'SubLocationID' => 'Village',
 			'CountyID' => 'County',
 			'SubCountyID' => 'Sub County',
 			'LocationID' => 'Location',

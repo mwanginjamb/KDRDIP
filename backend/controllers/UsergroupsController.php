@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\UserGroups;
 use app\models\UserGroupRights;
+use app\models\UGR;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -174,15 +175,13 @@ class UsergroupsController extends Controller
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$params = Yii::$app->request->post();
-			$lines = $params['UserGroupRights'];
+			$lines = $params['UGR'];
 			
-			foreach ($lines as $key => $line)
-			{
+			foreach ($lines as $key => $line) {
 				//print_r($lines);exit;
 				 
-				if ($line['UserGroupRightID'] == '')
-				{				
-					$_line = new UserGroupRights();
+				if ($line['UserGroupRightID'] == '') {
+					$_line = new UGR();
 					$_line->UserGroupID = $id;
 					$_line->PageID = $line['PageID'];
 					$_line->View = $line['View'];
@@ -190,8 +189,7 @@ class UsergroupsController extends Controller
 					$_line->Create = $line['Create'];
 					$_line->Delete = $line['Delete'];
 					$_line->save();
-				} else
-				{
+				} else {
 					$_line = UserGroupRights::findOne($line['UserGroupRightID']);
 					$_line->View = $line['View'];
 					$_line->Edit = $line['Edit'];
@@ -209,12 +207,11 @@ class UsergroupsController extends Controller
 					AND UserGroupID = $id";
 		// echo $sql; exit;
 
-		$data = UserGroupRights::findBySql($sql)->asArray()->all();
+		$data = UGR::findBySql($sql)->asArray()->all();
 		/* print('<pre>');
 		print_r($data); exit; */
-		for ($x = 0; $x < count($data); $x++)
-		{ 
-			$_line = new UserGroupRights();
+		for ($x = 0; $x < count($data); $x++) { 
+			$_line = new UGR();
 			$_line->PageID = $data[$x]['PageID'];
 			$_line->PageName = $data[$x]['PageName'];
 			$_line->View = $data[$x]['View'];
