@@ -37,11 +37,6 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-								/* [
-									'attribute' => 'ComponentID',
-									'label' => 'ID',
-									'headerOptions' => ['width' => '5%'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -50,8 +45,8 @@ $this->params['breadcrumbs'][] = $this->title;
 								[
 									'attribute' => 'ShortName',
 									'label' => 'Short Name',
-									'headerOptions' => ['width' => '10%'],
-								],								
+									'headerOptions' => ['width' => '13%'],
+								],
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],

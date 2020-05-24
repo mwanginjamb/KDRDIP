@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <h4 class="form-section"><?= $this->title; ?></h4>
 <p>
 	<?= Html::a('<i class="ft-x"></i> Close', null, ['class' => 'btn-sm btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-work-register/index?mId=' . $model->WorkRegisterID) . '", \'tab3\')']) ?>
-	<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-work-register/update?id=' . $model->WorkRegisterID) . '", \'tab3\')']) : '' ?>
+	<?php // (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-work-register/update?id=' . $model->WorkRegisterID) . '", \'tab3\')']) : '' ?>
 	<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->WorkRegisterID], [
 			'class' => 'btn-sm btn-danger',
 			'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('lipw-work-register/delete?id=' . $model->WorkRegisterID) . '", \'tab3\')',

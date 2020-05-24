@@ -122,4 +122,9 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(BankBranches::className(), ['BankBranchID' => 'BankBranchID']);
 	}
+
+	public function getLipwMasterRollRegister()
+	{
+		return $this->hasOne(LipwMasterRollRegister::className(), ['BeneficiaryID' => 'BeneficiaryID']);
+	}
 }

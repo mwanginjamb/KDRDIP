@@ -402,19 +402,19 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 														<?php if ($enterpriseType->EnterpriseTypeID == 1) { ?>
 															<li <?= ($currentPage == 'community-groups' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/community-groups?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Community Groups</span></a>
 															</li>
-															<?php 
+															<?php
 														} elseif ($enterpriseType->EnterpriseTypeID == 2) { ?>
 															<li <?= ($currentPage == 'businesses' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/businesses?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Businesses</span></a>
 															</li>
-															<?php														
+															<?php										
 														} elseif ($enterpriseType->EnterpriseTypeID == 3) { ?>
 															<li <?= ($currentPage == 'producer-organizations' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/producer-organizations?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Producer Organizations</span></a>
 															</li>
-															<?php 
+															<?php
 														} elseif ($enterpriseType->EnterpriseTypeID == 4) { ?>
 															<li <?= ($currentPage == 'youth-placement' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/youth-placement?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Youth Placement</span></a>
 															</li>
-															<?php 
+															<?php
 														} ?>
 														
 														<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
@@ -432,7 +432,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 															</li>
 														<?php } ?>
 														<?php if (in_array(105, $rights)  && $cid == 3) { ?>
-															<li <?= ($currentRoute == 'reports/projects-finance-entities' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance-entities?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+															<li <?= ($currentRoute == 'reports/projects-finance-entities' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance-entities?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Finance Report</span></a>
 															</li>
 														<?php } ?>
 													</ul>

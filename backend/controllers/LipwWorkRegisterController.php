@@ -5,6 +5,8 @@ namespace backend\controllers;
 use Yii;
 use app\models\LipwWorkRegister;
 use app\models\LipwBeneficiaries;
+use app\models\LipwWorkHeader;
+use app\models\LipwWorkLines;
 use app\models\LipwMasterRoll;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -117,23 +119,61 @@ class LipwWorkRegisterController extends Controller
 		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
 
 		$masterRoll = LipwMasterRoll::findOne($mId);
+		$header = new LipwWorkHeader();
+		$header->MasterRollID = $mId;
 
-		$model = new LipwWorkRegister();
-		$model->MasterRollID = $mId;
+/* 		if (Yii::$app->request->post()) {
+			print_r(Yii::$app->request->post()); exit;
+		} */
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'mId' => $model->MasterRollID]);
+
+		if ($header->load(Yii::$app->request->post()) && $header->validate()) {
+			$lines = Yii::$app->request->post()['LipwWorkLines'];
+			$header = Yii::$app->request->post()['LipwWorkHeader'];
+			foreach ($lines as $line) {
+				if ($line['Worked'] == 1) {
+					if ($line['WorkRegisterID'] == '') {
+						$model = new LipwWorkRegister();
+					} else {
+						$model = LipwWorkRegister::findOne($line['WorkRegisterID']);
+					}
+					$model->MasterRollID = $header['MasterRollID'];
+					$model->BeneficiaryID = $line['BeneficiaryID'];
+					$model->Date = $header['Date'];
+					$model->Amount = $line['Rate'];
+					$model->save();
+				} else {
+					if ($line['WorkRegisterID'] != '') {
+						// $model = LipwWorkRegister::findOne($line['WorkRegisterID'])->delete();
+					}
+				}
+			}
+			return $this->redirect(['index', 'mId' => $header['MasterRollID']]);
 		}
-
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
+		
+		$beneficiaries = LipwBeneficiaries::find()
 			->joinWith('lipwHouseHolds')
+			->joinWith('lipwMasterRollRegister')
 			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID])
-			->all(), 'BeneficiaryID', 'BeneficiaryName');
-
+			->asArray()
+			->all();
+		$lines = [];
+		foreach ($beneficiaries as $key => $beneficiary) {
+			$lines[$key] = new LipwWorkLines();
+			$lines[$key]->WorkRegisterID = null;
+			$lines[$key]->BeneficiaryName = $beneficiary['FirstName'] . ' ' . $beneficiary['LastName'];
+			$lines[$key]->BeneficiaryID = $beneficiary['BeneficiaryID'];
+			$lines[$key]->Rate = $beneficiary['lipwMasterRollRegister']['Rate'];
+			$lines[$key]->Worked = 2;
+		}
+		// print('<pre>');
+		// print_r($beneficiaries); exit;
+		$model = new LipwWorkRegister();
 		return $this->renderPartial('create', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'beneficiaries' => $beneficiaries,
+			'header' => $header,
+			'lines' => $lines,
 		]);
 	}
 

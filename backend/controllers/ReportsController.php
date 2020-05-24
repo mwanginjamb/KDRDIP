@@ -1407,7 +1407,7 @@ class ReportsController extends Controller
 	public function actionProjectsFinanceEntities($cid)
 	{
 		$params = Yii::$app->request->post();
-		$Title = 'Project Finance Report';
+		$Title = 'Finance Report';
 
 		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
 		$ProjectStatusID = 0;
