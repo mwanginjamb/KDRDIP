@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
+$baseUrl = Yii::$app->request->baseUrl;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\projects */
 /* @var $form yii\widgets\ActiveForm */
@@ -14,7 +16,6 @@ use yii\widgets\ActiveForm;
 	/* padding: 4px !important; */
 }
 </style>
-
 <script>
 function calculateValue(row)
 {
@@ -82,7 +83,19 @@ function calculateValue(row)
 							<?= $form->field($model, 'ProjectName')->textInput(['maxlength' => true]) ?>
 						</div>
 						<div class="col-md-6">
-							<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'Select']); ?>
+							<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'Select', 'onchange' => '
+								var componentId = $(this).val();
+								if (componentId == 1) {
+									$("#projectsectorid").show();
+									$("#organizationid").hide();
+								} else if (componentId == 3) {
+									$("#projectsectorid").hide();
+									$("#organizationid").show();
+								} else {
+									$("#projectsectorid").hide();
+									$("#organizationid").hide();
+								}
+							']); ?>
 						</div>			
 					</div>
 
@@ -91,7 +104,8 @@ function calculateValue(row)
 							<?= $form->field($model, 'ProjectParentID')->dropDownList($projects, ['prompt'=>'Select']); ?>
 						</div>
 						<div class="col-md-6">
-							<?= ($model->ComponentID == 3) ? $form->field($model, 'OrganizationID')->dropDownList($organizations, ['prompt'=>'Select']) : ''; ?>
+							<div id="organizationid"><?= $form->field($model, 'OrganizationID')->dropDownList($organizations, ['prompt'=>'Select']);?> </div>
+							<div id="projectsectorid"><?= $form->field($model, 'ProjectSectorID')->dropDownList($projectSectors, ['prompt'=>'Select']); ?></div>
 						</div>			
 					</div>
 
@@ -351,7 +365,8 @@ function calculateValue(row)
 					<tr>
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">County</td>
-						<td style="padding: 4px !important" width="30%">Sub County</td>
+						<td style="padding: 4px !important" width="20%">Sub County</td>
+						<td style="padding: 4px !important" width="10%">Gender</td>
 						<td style="padding: 4px !important" width="15%">Host Population</td>
 						<td style="padding: 4px !important" width="15%">Refugee Population</td>
 					</tr>	
@@ -373,6 +388,7 @@ function calculateValue(row)
 													'])->label(false) ?>
 							</td>
 							<td><?= $form->field($column, '[' . $x . ']SubCountyID', ['template' => '{label}{input}'])->dropDownList(isset($subCounties[$column->CountyID]) ? $subCounties[$column->CountyID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']Gender', ['template' => '{label}{input}'])->dropDownList($gender, ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
 							<td><?= $form->field($column, '[' . $x . ']HostPopulation')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
 							<td><?= $form->field($column, '[' . $x . ']RefugeePopulation')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
 						</tr>

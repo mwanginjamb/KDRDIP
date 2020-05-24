@@ -110,7 +110,7 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 
 	public function getLipwHouseHolds()
 	{
-		return $this->hasOne(LipwHouseHolds::className(), ['HouseholdID' => 'HouseholdID']);
+		return $this->hasOne(LipwHouseholds::className(), ['HouseholdID' => 'HouseholdID']);
 	}
 
 	public function getBanks()

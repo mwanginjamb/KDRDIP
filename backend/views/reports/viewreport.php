@@ -19,55 +19,101 @@
 					'enableAjaxValidation'=> false,
 				],
 			]);
-			?>
-			<div class="row">
-				<div class="col-lg-3">
-					<?php
-					if (isset($StockFilter) && $StockFilter == true) {
-						echo $form->field($model, 'StockTakeID')->dropDownList($stocktake, ['prompt'=>'All...']);
-					} elseif (isset($SupplierFilter) && $SupplierFilter == true && isset($suppliers) && (count($suppliers) > 0)) {
-						echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
-					} elseif (count($productcategories) > 0) {
-						echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
-					} elseif (isset($bankAccounts) && count($bankAccounts) > 0) {
-						echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
-					} elseif (isset($projectStatus) && count($projectStatus) > 0) {
-						echo $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']);
-					} elseif (isset($projects) && count($projects) > 0) {
-						echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project');
-					}
-					?>
-				</div>
-				<?php if (isset($projects) && count($projects) > 0 && isset($SupplierFilter) && $SupplierFilter) { ?>
+			if (isset($report) && $report == 'projects-report') { ?>
+				<div class="row">
 					<div class="col-lg-3">
-						<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project'); ?>
+						<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']); ?>
 					</div>
-				<?php } ?>
-				<?php
-				if (isset($components) && count($components) > 0) { ?>
 					<div class="col-lg-3">
 						<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...']); ?>
 					</div>
-					<?php
-				}
-				?>
-				<?php
-				if (!$CategoryFilterOnly) { ?>
 					<div class="col-lg-3">
-						<?= $form->field($model, 'Month')->dropDownList($months, ['prompt'=>'All...']) ?>
+						<?= $form->field($model, 'ProjectSectorID')->dropDownList($projectSectors, ['prompt'=>'All...']); ?>
 					</div>
 					<div class="col-lg-3">
-						<?= $form->field($model, 'Year')->dropDownList($years, []) ?>
-					</div>
-					
-					<?php
-				} ?>
-				<div class="col-lg-3">
-					<div class="form-group" style="padding-top:15px">
-					<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'All...', 'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-counties?id=') . '"+$(this).val(), function( data ) {
+								$( "select#filterdata-subcountyid" ).html( data );
+							});
+						']); ?>
 					</div>
 				</div>
-			</div>
+				<div class="row">
+					<div class="col-lg-3">
+						<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt'=>'All...', 'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('projects/locations?id=') . '"+$(this).val(), function( data ) {
+								$( "select#filterdata-locationid" ).html( data );
+							});
+						']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'LocationID')->dropDownList($locations, ['prompt'=>'All...', 'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-locations?id=') . '"+$(this).val(), function( data ) {
+								$( "select#filterdata-sublocationid" ).html( data );
+							});
+						']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'SubLocationID')->dropDownList($subLocations, ['prompt'=>'All...']); ?>
+					</div>
+					<div class="col-lg-3">
+						<div class="form-group" style="padding-top:15px">
+						<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						</div>
+					</div>
+				</div>
+				<?php
+			} else { ?>
+				<div class="row">
+					<div class="col-lg-3">
+						<?php
+						if (isset($StockFilter) && $StockFilter == true) {
+							echo $form->field($model, 'StockTakeID')->dropDownList($stocktake, ['prompt'=>'All...']);
+						} elseif (isset($SupplierFilter) && $SupplierFilter == true && isset($suppliers) && (count($suppliers) > 0)) {
+							echo $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'All...']);
+						} elseif (count($productcategories) > 0) {
+							echo $form->field($model, 'ProductCategoryID')->dropDownList($productcategories, ['prompt'=>'All...']);
+						} elseif (isset($bankAccounts) && count($bankAccounts) > 0) {
+							echo $form->field($model, 'BankAccountID')->dropDownList($bankAccounts, ['prompt'=>'All...']);
+						} elseif (isset($projectStatus) && count($projectStatus) > 0) {
+							echo $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']);
+						} elseif (isset($projects) && count($projects) > 0) {
+							echo $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project');
+						}
+						?>
+					</div>
+					<?php if (isset($projects) && count($projects) > 0 && isset($SupplierFilter) && $SupplierFilter) { ?>
+						<div class="col-lg-3">
+							<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...'])->label('Sub Project'); ?>
+						</div>
+					<?php } ?>
+					<?php
+					if (isset($components) && count($components) > 0) { ?>
+						<div class="col-lg-3">
+							<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...']); ?>
+						</div>
+						<?php
+					}
+					?>
+					<?php
+					if (!$CategoryFilterOnly) { ?>
+						<div class="col-lg-3">
+							<?= $form->field($model, 'Month')->dropDownList($months, ['prompt'=>'All...']) ?>
+						</div>
+						<div class="col-lg-3">
+							<?= $form->field($model, 'Year')->dropDownList($years, []) ?>
+						</div>
+						
+						<?php
+					} ?>
+					<div class="col-lg-3">
+						<div class="form-group" style="padding-top:15px">
+						<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						</div>
+					</div>
+				</div>
+				<?php 
+			} ?>
 
 			<?php ActiveForm::end();
 		}

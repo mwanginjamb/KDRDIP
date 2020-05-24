@@ -13,13 +13,19 @@ class FilterData extends Model
 	public $BankAccountID;
 	public $ProjectID;
 	public $ProjectStatusID;
+	public $ProjectSectorID;
 	public $ComponentID;
+	public $CountyID;
+	public $SubCountyID;
+	public $LocationID;
+	public $SubLocationID;
 
 	public function rules()
 	{
 		return [
 			[['Month', 'Year', 'ProductCategoryID'], 'required'],
-			[['Month', 'Year', 'ProductCategoryID', 'StockTakeID', 'SupplierID', 'ProjectStatusID', 'ComponentID'], 'integer'],
+			[['Month', 'Year', 'ProductCategoryID', 'StockTakeID', 'SupplierID', 'ProjectStatusID', 'ComponentID',
+				'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID', 'ProjectSectorID'], 'integer'],
 		];
 	}
 
@@ -34,6 +40,11 @@ class FilterData extends Model
 			'ProjectID' => 'Project',
 			'ProjectStatusID' => 'Project Status',
 			'ComponentID' => 'Component',
+			'CountyID' => 'County',
+			'SubCountyID' => 'SubCounty',
+			'LocationID' => 'Location',
+			'SubLocationID' => 'Village',
+			'ProjectSectorID' => 'Project Sector',
 		];
 	}
 }

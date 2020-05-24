@@ -13,6 +13,7 @@ use Yii;
  * @property int $SubCountyID
  * @property int $HostPopulation
  * @property int $RefugeePopulation
+ * @property string $Gender
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -35,6 +36,7 @@ class ProjectBeneficiaries extends \yii\db\ActiveRecord
 		return [
 			[['ProjectID', 'CountyID', 'SubCountyID', 'HostPopulation', 'RefugeePopulation', 'CreatedBy', 'Deleted'], 'integer'],
 			[['CreatedDate'], 'safe'],
+			[['Gender'], 'string', 'max' => 1],
 		];
 	}
 
@@ -50,6 +52,7 @@ class ProjectBeneficiaries extends \yii\db\ActiveRecord
 			'SubCountyID' => 'Sub County ID',
 			'HostPopulation' => 'Host Population',
 			'RefugeePopulation' => 'Refugee Population',
+			'Gender' => 'Gender',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

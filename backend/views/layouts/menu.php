@@ -371,7 +371,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 						</ul>
 					</li>
 					<?php } ?>
-					<?php if (count(array_intersect($rights, [14, 22, 37, 47, 46, 35, 38, 57, 48, 12])) > 0) { ?>
+					<?php if (count(array_intersect($rights, [14, 22, 37, 47, 46, 35, 38, 57, 48, 12, 105, 96])) > 0) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">work_outline</i><span class="menu-title" data-i18n="nav.project.main">Project  Management</span></a>
 							<ul class="menu-content">
 								<?php
@@ -427,8 +427,12 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 														</li>
 														<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
 														</li>
-														<?php if (in_array(96, $rights)) { ?>
+														<?php if (in_array(96, $rights) && $cid != 3) { ?>
 															<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+															</li>
+														<?php } ?>
+														<?php if (in_array(105, $rights)  && $cid == 3) { ?>
+															<li <?= ($currentRoute == 'reports/projects-finance-entities' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance-entities?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
 															</li>
 														<?php } ?>
 													</ul>
@@ -444,7 +448,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li <?= ($currentPage == 'components') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/components"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">Manage Components</span></a>
 									</li>
 								<?php } ?>
-								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77])) > 0) { ?>
+								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77, 104])) > 0) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
 										<ul class="menu-content">	
 											<?php if (in_array(22, $rights)) { ?>								
@@ -514,7 +518,11 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<?php if (in_array(95, $rights)) { ?>
 												<li <?= ($currentPage == 'reporting-frequency') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reporting-frequency"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Reporting Frequency</span></a>
 												</li>	
-											<?php } ?>																					
+											<?php } ?>		
+											<?php if (in_array(104, $rights)) { ?>
+												<li <?= ($currentPage == 'project-sectors') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-sectors"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Project Sectors</span></a>
+												</li>	
+											<?php } ?>																			
 										</ul>
 									</li>
 								<?php } ?>

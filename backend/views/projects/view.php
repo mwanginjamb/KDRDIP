@@ -269,6 +269,7 @@ Modal::end();
 													'Latitude',
 													'enterpriseTypes.EnterpriseTypeName',
 													'organizationName',
+													'projectSectors.ProjectSectorName',
 													[
 														'attribute' => 'projectStatus.ProjectStatusName',
 														'label' => 'Status',
@@ -423,12 +424,7 @@ Modal::end();
 													'class' => 'custom-table table-striped table-bordered',
 												],
 												'columns' => [
-													/* [
-														'attribute' => 'ProjectBeneficiaryID',
-														'label' => 'ID',
-														'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
-														'contentOptions' => ['style' => 'text-align:center'],
-													], */
+
 													[
 														'class' => 'yii\grid\SerialColumn',
 														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -446,6 +442,20 @@ Modal::end();
 														'format'=>'text',
 														'value' => 'subCounties.SubCountyName',
 														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'label'=>'Gender',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => function ($model) {
+															if ($model['Gender'] == 'M') {
+																return 'Male';
+															} elseif ($model['Gender'] == 'F') {
+																return 'Female';
+															} else {
+																return '';
+															}
+														},
 													],
 													[
 														'label'=>'Host Population',

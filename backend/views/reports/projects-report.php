@@ -7,16 +7,17 @@ use yii\grid\GridView;
 /* @var $model app\models\Product */
 
 $this->title = !empty($project) ? $project->ProjectName : '';
-/* $Total = 0;
-if (!empty($dataProvider->getModels()))
-{
-	foreach ($dataProvider->getModels() as $key => $val) {
-		//print_r($val);
-		$Total += $val['Amount'];
-	}
-}
-$Total = number_format($Total, 2); */
 ?>
+<div class="row">
+	<div class="col-lg-12">
+		<?php 
+		echo 'Filter: ';
+		foreach ($filter as $key => $value) {
+			echo "$key = $value ,";
+		} ?>
+	</div>
+</div>
+<p></p>
 <table class="custom-table table-striped table-bordered" style="border-color: black; border-collapse: collapse; width:50%" border="0">
 <thead>
 	<tr>
@@ -25,13 +26,13 @@ $Total = number_format($Total, 2); */
 	</tr>
 </thead>
 <tbody>
-	<?php 
+	<?php
 	foreach ($statuses as $status) { ?>
 		<tr>
 			<td><?= $status['ProjectStatusName']; ?></td>
 			<td align="right" style="background-color: <?= $status['ColorCode']; ?>"><?= number_format($status['Total'], 0); ?></td>
 		</tr>
-		<?php 
+		<?php
 	}
 	?>
 </tbody>

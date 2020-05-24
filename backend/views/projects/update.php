@@ -2,6 +2,8 @@
 
 use yii\helpers\Html;
 
+$baseUrl = Yii::$app->request->baseUrl;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\projects */
 
@@ -10,6 +12,22 @@ $this->params['breadcrumbs'][] = ['label' => 'Sub-Project', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->ProjectName, 'url' => ['view', 'id' => $model->ProjectID]];
 $this->params['breadcrumbs'][] = 'Update';
 ?>
+<script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script>
+$(window).on("load", function(){
+	var componentId = <?= $model->ComponentID ;?>;
+	if (componentId == 1) {
+		$("#projectsectorid").show();
+		$("#organizationid").hide();
+	} else if (componentId == 3) {
+		$("#projectsectorid").hide();
+		$("#organizationid").show();
+	} else {
+		$("#projectsectorid").hide();
+		$("#organizationid").hide();
+	}
+});
+</script>
 <section class="flexbox-container">
 
 	<?= $this->render('_form', [
@@ -44,6 +62,8 @@ $this->params['breadcrumbs'][] = 'Update';
 		'locations' => $locations,
 		'wards' => $wards,
 		'organizations' => $organizations,
+		'projectSectors' => $projectSectors,
+		'gender' => $gender,
 	]) ?>
 
 </section>

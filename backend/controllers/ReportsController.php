@@ -25,6 +25,11 @@ use app\models\Activities;
 use app\models\ActivityBudget;
 use app\models\ProjectStatus;
 use app\models\FundsRequisition;
+use app\models\Counties;
+use app\models\SubCounties;
+use app\models\Locations;
+use app\models\SubLocations;
+use app\models\ProjectSectors;
 use app\models\Components;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -1174,6 +1179,11 @@ class ReportsController extends Controller
 		]);
 	}
 
+/* 	public static function getSelected($model, $id)
+	{
+		foreach ()
+	}
+ */
 	public function actionProjectsReport($cid)
 	{
 		$Title = 'Projects Report';
@@ -1182,21 +1192,28 @@ class ReportsController extends Controller
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 
 		$ProjectStatusID = 0;
+		$model = new FilterData();
 		$ComponentID = $cid;
-		if (Yii::$app->request->post()) {
+		if (Yii::$app->request->post() && $model->load(Yii::$app->request->post())) {
 			$params = Yii::$app->request->post()['FilterData'];
 			$ProjectStatusID = isset($params['ProjectStatusID']) && $params['ProjectStatusID'] != '' ? $params['ProjectStatusID'] : 0;
 			$ComponentID = isset($params['ComponentID']) && $params['ComponentID'] != '' ? $params['ComponentID'] : 0;
 		}
 
+		$projectSectors = ArrayHelper::map(ProjectSectors::find()->all(), 'ProjectSectorID', 'ProjectSectorName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
+	
 		$projects = Projects::find()->joinWith('components')->joinWith('projectStatus');
 
-		if ($ProjectStatusID != 0) {			
-			$projects->andWhere(['projects.ProjectStatusID' => $ProjectStatusID])->all(); 
-		} 
-		if ($ComponentID != 0) {			
-			$projects->andWhere(['projects.ComponentID' => $ComponentID])->all(); 
-		} 
+		if ($ProjectStatusID != 0) {
+			$projects->andWhere(['projects.ProjectStatusID' => $ProjectStatusID])->all();
+		}
+		if ($ComponentID != 0) {
+			$projects->andWhere(['projects.ComponentID' => $ComponentID])->all();
+		}
 		$projects = $projects->OrderBy('componentID')->all();
 
 		$sql = "select temp.Total, projectstatus.ProjectStatusID, ProjectStatusName, ColorCode FROM (
@@ -1207,18 +1224,26 @@ class ReportsController extends Controller
 
 		$statuses = ProjectStatus::findBySql($sql)->asArray()->all();
 
-		// print('<pre>');
-		// print_r($projects); exit;
-
 		$pStatus = ProjectStatus::findOne($ProjectStatusID);
 		$projectStatusName = !empty($pStatus) ? $pStatus->ProjectStatusName : 'All';
+
+		$filter = [
+			'Project Status' => isset($projectStatus[$model->ProjectStatusID]) ? $projectStatus[$model->ProjectStatusID] : 'All',
+			'Component' => isset($components[$model->ComponentID]) ? $components[$model->ComponentID] : 'All',
+			'Project Sector' => isset($projectSectors[$model->ProjectSectorID]) ? $projectSectors[$model->ProjectSectorID] : 'All',
+			'County' => isset($counties[$model->CountyID]) ? $counties[$model->CountyID] : 'All',
+			'Sub County' => isset($subCounties[$model->SubCountyID]) ? $subCounties[$model->SubCountyID] : 'All',
+			'Location' => isset($locations[$model->LocationID]) ?  $locations[$model->LocationID] : 'All',
+			'SubLocation' => isset($subLocations[$model->SubLocationID]) ? $subLocations[$model->SubLocationID] : 'All',
+		];
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('projects-report', [
 																				'projectStatus' => $projectStatus,
 																				'projects' => $projects,
-																				'projectStatusName' => $projectStatusName,	
-																				'statuses' => $statuses,																			
+																				'projectStatusName' => $projectStatusName,
+																				'statuses' => $statuses,
+																				'filter' => $filter,														
 																			]);
 		
 		// setup kartik\mpdf\Pdf component
@@ -1242,8 +1267,8 @@ class ReportsController extends Controller
 			'options' => ['title' => $Title],
 				// call mPDF methods on the fly
 			'methods' => [
-				'SetHeader' => [$Title . '||Generated On: ' . date("d M Y h:m a")],
-				'SetFooter'=>['Page {PAGENO} ||Generate By: '. Yii::$app->user->identity->FirstName . ' ' . Yii::$app->user->identity->LastName],				
+				'SetHeader' => [$Title . '||Generated On: ' . date('d M Y h:m a')],
+				'SetFooter'=>['Page {PAGENO} ||Generate By: ' . Yii::$app->user->identity->FirstName . ' ' . Yii::$app->user->identity->LastName],				
 			]
 		]);
 
@@ -1256,18 +1281,29 @@ class ReportsController extends Controller
 		$years = [];
 		$productcategories = [];
 		$bankAccounts = [];
-		$model = new FilterData();
+		// $model = new FilterData();
 		$model->ProjectID = 0;
 		$model->ProjectStatusID = $ProjectStatusID;
 		$model->ComponentID = $ComponentID;
 		//$pdf->Output('test.pdf', 'F');
 		return $this->render('viewreport', [
-			'content' => $content, 'months' => $months, 'years' => $years,
-			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
-			'CategoryFilterOnly' => true, 'projectStatus' => $projectStatus,
+			'content' => $content,
+			'months' => $months,
+			'years' => $years,
+			'model' => $model,
+			'productcategories' => $productcategories,
+			'Filter' => true,
+			'CategoryFilterOnly' => true,
+			'projectStatus' => $projectStatus,
 			'projects' => [],
 			'bankAccounts' => $bankAccounts,
 			'components' => $components,
+			'report' => 'projects-report',
+			'projectSectors' => $projectSectors,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
+			'subLocations' => $subLocations,
 		]);
 	}
 
@@ -1313,6 +1349,104 @@ class ReportsController extends Controller
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('projects-finance', [
+																				'projectStatus' => $projectStatus,
+																				'projects' => $projects,
+																				'projectStatusName' => $projectStatusName,
+																			]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			'cssInline' => '.kv-heading-1{font-size:18px}',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		// return the pdf output as per the destination setting
+		// return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+		$months = [];
+		$years = [];
+		$productcategories = [];
+		$bankAccounts = [];
+		$model = new FilterData();
+		$model->ProjectID = 0;
+		$model->ProjectStatusID = $ProjectStatusID;
+		$model->ComponentID = $componentId;
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content, 'months' => $months, 'years' => $years,
+			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
+			'CategoryFilterOnly' => true,
+			'projectStatus' => $projectStatus,
+			'projects' => [],
+			'bankAccounts' => $bankAccounts,
+			'components' => $components,
+		]);
+	}
+
+	public function actionProjectsFinanceEntities($cid)
+	{
+		$params = Yii::$app->request->post();
+		$Title = 'Project Finance Report';
+
+		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+		$ProjectStatusID = 0;
+		$componentId = 0;
+		
+		if ($cid == 0) {
+			$ProjectStatusID = isset($params['FilterData']['ProjectStatusID']) ? $params['FilterData']['ProjectStatusID'] : 0;
+			$componentId = isset($params['FilterData']['ComponentID']) ? $params['FilterData']['ComponentID'] : 0;
+			$where = [];
+			if ($componentId != 0) {
+				$where['ComponentID'] = $componentId;
+			}
+			if ($ProjectStatusID != 0) {
+				$where['projects.ProjectStatusID'] = $ProjectStatusID;
+			}
+			$projects = Projects::find()->joinWith('projectStatus')->where($where)->all();
+		} else {
+			if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
+				$ProjectStatusID = $params['FilterData']['ProjectStatusID'];
+				$projects = Projects::find()->joinWith('projectStatus')
+														->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all();
+			} else {
+				$projects = Projects::find()->joinWith('projectStatus')
+														->where(['ComponentID' => $cid])->all();
+			}
+		}
+
+		$pStatus = ProjectStatus::findOne($ProjectStatusID);
+
+		$projectStatusName = !empty($pStatus) ? $pStatus->ProjectStatusName : '';
+
+		if ($cid == 0) {
+			$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
+		} else {
+			$components = [];
+		}
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('projects-finance-entities', [
 																				'projectStatus' => $projectStatus,
 																				'projects' => $projects,
 																				'projectStatusName' => $projectStatusName,

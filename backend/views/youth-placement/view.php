@@ -44,36 +44,53 @@ $this->params['breadcrumbs'][] = $this->title;
 							]) : ''?>
 						</p>
 
-						<?= DetailView::widget([
-							'model' => $model,
-							'attributes' => [
-									'YouthPlacementID',
-									'YouthPlacementName',
-									'PostalAddress',
-									'PostalCode',
-									'Town',
-									'countries.CountryName',
-									'Telephone',
-									'Mobile',
-									'Email:email',
-									'Url:url',
-									'PhysicalLocation',
-									'counties.CountyName',
-									'subCounties.SubCountyName',
-									'wards.WardName',
-									'Village',
-									[
-										'attribute' => 'CreatedDate',
-										'format' => ['date', 'php:d/m/Y h:i a'],
-										
+						<ul class="nav nav-tabs nav-top-border no-hover-bg">
+							<li class="nav-item">
+								<a class="nav-link active" id="base-tab1" data-toggle="tab" aria-controls="tab1" href="#tab1" aria-expanded="true">Details</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('disbursement/index?eTypeId=4&eId=' . $model->YouthPlacementID);?>', 'tab3')">Disbursement</a>
+							</li>				
+						</ul><div class="tab-content px-1 pt-1">
+							<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
+								<h4 class="form-section">Details</h4>
+
+								<?= DetailView::widget([
+									'model' => $model,
+									'attributes' => [
+											'YouthPlacementID',
+											'YouthPlacementName',
+											'PostalAddress',
+											'PostalCode',
+											'Town',
+											'countries.CountryName',
+											'Telephone',
+											'Mobile',
+											'Email:email',
+											'Url:url',
+											'PhysicalLocation',
+											'counties.CountyName',
+											'subCounties.SubCountyName',
+											'wards.WardName',
+											'Village',
+											[
+												'attribute' => 'CreatedDate',
+												'format' => ['date', 'php:d/m/Y h:i a'],
+												
+											],
+											[
+												'label' => 'Created By',
+												'attribute' => 'users.fullName',
+												
+											],
 									],
-									[
-										'label' => 'Created By',
-										'attribute' => 'users.fullName',
-										
-									],
-							],
-						]) ?>
+								]) ?>
+								</div>
+
+							<div class="tab-pane" id="tab3" aria-labelledby="base-tab3">
+								<h4 class="form-section">Disbursement</h4>								
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>																			

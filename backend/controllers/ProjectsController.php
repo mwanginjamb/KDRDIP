@@ -43,6 +43,7 @@ use app\models\YouthPlacement;
 use app\models\ProducerOrganizations;
 use app\models\Businesses;
 use app\models\Communities;
+use app\models\ProjectSectors;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -404,6 +405,7 @@ class ProjectsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
 		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		$projectSectors = ArrayHelper::map(ProjectSectors::find()->all(), 'ProjectSectorID', 'ProjectSectorName');
 		$subLocations = [];
 		$wards = [];
 	
@@ -467,6 +469,7 @@ class ProjectsController extends Controller
 		}
 
 		$safeguardParameters = ArrayHelper::index($safeguardParameters, null, 'SafeguardName');
+		$gender = ['M' => 'Male', 'F' => 'Female'];
 
 		return $this->render('create', [
 			'model' => $model,
@@ -500,6 +503,8 @@ class ProjectsController extends Controller
 			'locations' => $locations,
 			'wards' => $wards,
 			'organizations' => $organizations,
+			'projectSectors' => $projectSectors,
+			'gender' => $gender,
 		]);
 	}
 
@@ -633,6 +638,8 @@ class ProjectsController extends Controller
 			$projectSafeguards[$SGID]->SGPID	= 	$SGID;
 		}
 		$safeguardParameters = ArrayHelper::index($safeguardParameters, null, 'SafeguardName');
+		$projectSectors = ArrayHelper::map(ProjectSectors::find()->all(), 'ProjectSectorID', 'ProjectSectorName');
+		$gender = ['M' => 'Male', 'F' => 'Female'];
 
 		return $this->render('update', [
 			'model' => $model,
@@ -666,6 +673,8 @@ class ProjectsController extends Controller
 			'locations' => $locations,
 			'wards' => $wards,
 			'organizations' => $organizations,
+			'projectSectors' => $projectSectors,
+			'gender' => $gender,
 		]);
 	}
 
@@ -828,6 +837,7 @@ class ProjectsController extends Controller
 					$_column->ProjectID = $model->ProjectID;
 					$_column->CountyID = $column['CountyID'];
 					$_column->SubCountyID = $column['SubCountyID'];
+					$_column->Gender = $column['Gender'];
 					$_column->HostPopulation = $column['HostPopulation'];
 					$_column->RefugeePopulation = $column['RefugeePopulation'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
@@ -838,6 +848,7 @@ class ProjectsController extends Controller
 				$_column->CountyID = $column['CountyID'];
 				$_column->SubCountyID = $column['SubCountyID'];
 				$_column->HostPopulation = $column['HostPopulation'];
+				$_column->Gender = $column['Gender'];
 				$_column->RefugeePopulation = $column['RefugeePopulation'];
 				$_column->save();
 			}

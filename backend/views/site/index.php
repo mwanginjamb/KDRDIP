@@ -16,7 +16,7 @@ $(window).on("load", function(){
 		resize: true,
 		colors: ['#40C7CA', '#FF7588', '#2DCEE3', '#FFA87D', '#16D39A']
 	});
-
+	console.log(<?= $bar1; ?>);
 	Morris.Bar({
 		element: 'sessions-browser-bar1',
 		data: <?= $bar1; ?>,

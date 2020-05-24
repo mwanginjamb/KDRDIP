@@ -38,6 +38,7 @@ use Yii;
  * @property int $OrganizationID
  * @property int $EnterpriseTypeID
  * @property string $IntegrationID
+ * @property int $ProjectSectorID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -57,13 +58,13 @@ class Projects extends \yii\db\ActiveRecord
 		return [
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID',
-				'OrganizationID', 'EnterpriseTypeID'], 'integer'],
+				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID'], 'integer'],
 			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
 			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
-				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID', 
+				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID',
 				'LocationID', 'SubLocationID', 'WardID'], 'required']
 		];
 	}
@@ -78,8 +79,8 @@ class Projects extends \yii\db\ActiveRecord
 			'ProjectName' => 'Sub-Project',
 			'ProjectParentID' => 'Parent Project',
 			'Objective' => 'Objective',
-			'StartDate' => 'Start Date',
-			'EndDate' => 'End Date',
+			'StartDate' => 'Date of Formation',
+			'EndDate' => 'Date Wound Up',
 			'ProjectCost' => 'Project Cost',
 			'ReportingPeriodID' => 'Reporting Period',
 			'ApprovalDate' => 'Approval Date',
@@ -95,13 +96,14 @@ class Projects extends \yii\db\ActiveRecord
 			'CommunityID' => 'Community',
 			'CountyID' => 'County',
 			'SafeguardsRecommendedAction' => 'If there is at least one ‘Yes’, which course of action do you recommend?',
-			'SubCountyID'  => 'Sub County', 
-			'LocationID'  => 'Location', 
+			'SubCountyID'  => 'Sub County',
+			'LocationID'  => 'Location',
 			'SubLocationID'  => 'Sub Location',
 			'WardID' => 'Ward',
 			'OrganizationID' => 'Organization',
 			'EnterpriseTypeID' => 'Enterprise Type',
-			'IntegrationID' => 'Integration ID',
+			'IntegrationID' => 'Integration',
+			'ProjectSectorID' => 'Project Sector',
 		];
 	}
 
@@ -160,6 +162,11 @@ class Projects extends \yii\db\ActiveRecord
 		return $this->hasOne(Wards::className(), ['WardID' => 'WardID'])->from(wards::tableName());
 	}
 
+	public function getProjectSectors()
+	{
+		return $this->hasOne(ProjectSectors::className(), ['ProjectSectorID' => 'ProjectSectorID']);
+	}
+
 	public function getBudgetedAmount()
 	{
 		return ActivityBudget::find()->joinWith('activities')
@@ -195,7 +202,7 @@ class Projects extends \yii\db\ActiveRecord
 			$organization = YouthPlacement::find()->where(['YouthPlacementID' => $this->OrganizationID])->select('YouthPlacementID as OrganizationID, YouthPlacementName as OrganizationName')->asArray()->one();
 		} else {
 			$organization = [];
-		}	
+		}
 		return (!empty($organization)) ? $organization['OrganizationName'] : '';
 	}
 }

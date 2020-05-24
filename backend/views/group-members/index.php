@@ -10,7 +10,7 @@ $this->title = 'Group Members';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
-<div class="form-actions" style="margin-top:0px">
+<div class="form-actions1" style="margin-top:0px">
 	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['/group-members/create', 'gid' => $model->CommunityGroupID], ['class' => 'btn btn-primary mr-1']) : '' ?>
 </div>
 <?= GridView::widget([
@@ -24,9 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
 			'class' => 'yii\grid\SerialColumn',
 			'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 		],
-		'MemberName',	
+		'MemberName',
 		'Gender',
-		'groupRoles.GroupRoleName',							
+		'groupRoles.GroupRoleName',
 		[
 			'attribute' => 'DateOfBirth',
 			'format' => ['date', 'php:d/m/Y'],

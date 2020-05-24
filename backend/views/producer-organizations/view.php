@@ -62,7 +62,10 @@ $this->params['breadcrumbs'][] = $this->title;
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false">Community Groups</a>
-										</li>				
+										</li>		
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('disbursement/index?eTypeId=3&eId=' . $model->ProducerOrganizationID);?>', 'tab3')">Disbursement</a>
+										</li>			
 									</ul>
 									<div class="tab-content px-1 pt-1">
 										<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -126,6 +129,11 @@ $this->params['breadcrumbs'][] = $this->title;
 											<?php ActiveForm::end(); ?>
 											
 										</div>
+
+										<div class="tab-pane" id="tab3" aria-labelledby="base-tab3">
+											<h4 class="form-section">Disbursement</h4>								
+										</div>
+
 									</div>
 								</div>
 							</div>
