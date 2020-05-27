@@ -1616,12 +1616,16 @@ class ReportsController extends Controller
 		}
 		
 		$Title = 'Work Plan';
-		$activities = Activities::find()->joinWith('indicators')->joinWith('employees')
+		$activities = Activities::find()->joinWith('indicators')
+													->joinWith('employees')
+													->joinWith('activityBudget')
+													->joinWith('activityOutputs')
 													->where(['indicators.ProjectID' => $ProjectID])
 													->asArray()
 													->orderBy('indicators.IndicatorID')
 													->all();
-
+/* 		print('<pre>');
+		print_r($activities); exit; */
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('work-plan', [
 																			'activities' => $activities,
@@ -1635,7 +1639,7 @@ class ReportsController extends Controller
 			// A4 paper format
 			'format' => Pdf::FORMAT_A4,
 			// portrait orientation
-			'orientation' => Pdf::ORIENT_PORTRAIT,
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
 			// stream to browser inline
 			'destination' => Pdf::DEST_STRING,
 			// your html content input

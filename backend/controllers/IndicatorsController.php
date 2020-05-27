@@ -8,6 +8,7 @@ use app\models\ProjectTeams;
 use app\models\Projects;
 use app\models\Accounts;
 use app\models\ActivityBudget;
+use app\models\ActivityOutputs;
 use app\models\Components;
 use app\models\UnitsOfMeasure;
 use app\models\SubComponents;
@@ -278,26 +279,29 @@ class IndicatorsController extends Controller
 
 	public function actionActivityBudget($id)
 	{
-
 		if (Yii::$app->request->post()) {
-			// print_r(Yii::$app->request->post()); exit;
 			$this->saveActivityBudget(Yii::$app->request->post()['ActivityBudget'], $id);
+			$this->saveActivityOutput(Yii::$app->request->post()['ActivityOutputs'], $id);
+			// print_r(Yii::$app->request->post()); exit;
 			return '';
-			// exit;
 		}
 
 		$budget = ActivityBudget::find()->where(['ActivityID' => $id])->all();
+		$output = ActivityOutputs::find()->where(['ActivityID' => $id])->all();
 		$accounts = ArrayHelper::map(Accounts::find()->all(), 'AccountID', 'AccountName');
 
 		for ($x = count($budget); $x <= 5; $x++) {
 			$budget[$x] = new ActivityBudget();
 		}
-		// print('<pre>');
-		// print_r($budget); exit;
+
+		for ($x = count($output); $x <= 5; $x++) {
+			$output[$x] = new ActivityOutputs();
+		}
 
 		return $this->renderPartial('activity-budget', [
 			'budget' => $budget,
 			'accounts' => $accounts,
+			'output' => $output,
 			'id' => $id
 		]);
 	}
@@ -372,6 +376,26 @@ class IndicatorsController extends Controller
 				$_column->Description = $column['Description'];
 				$_column->AccountID = $column['AccountID'];
 				$_column->Amount = $column['Amount'];
+				$_column->save();
+			}
+		}
+	}
+
+	private static function saveActivityOutput($columns, $ActivityID)
+	{
+		// print_r($columns); exit;
+		foreach ($columns as $key => $column) {
+			if ($column['ActivityOutputID'] == '') {
+				if (trim($column['Output']) != '') {
+					$_column = new ActivityOutputs();
+					$_column->ActivityID = $ActivityID;
+					$_column->Output = $column['Output'];
+					$_column->CreatedBy = Yii::$app->user->identity->UserID;
+					$_column->save();
+				}
+			} else {
+				$_column = ActivityOutputs::findOne($column['ActivityOutputID']);
+				$_column->Output = $column['Output'];
 				$_column->save();
 			}
 		}

@@ -80,6 +80,16 @@ class Activities extends \yii\db\ActiveRecord
 		return $this->hasOne(Indicators::className(), ['IndicatorID' => 'IndicatorID'])->from(indicators::tableName());
 	}
 
+	public function getActivityBudget()
+	{
+		return $this->hasMany(ActivityBudget::className(), ['ActivityID' => 'ActivityID']);
+	}
+
+	public function getActivityOutputs()
+	{
+		return $this->hasMany(ActivityOutputs::className(), ['ActivityID' => 'ActivityID']);
+	}
+
 	public static function totals($projectID)
 	{
 		$sql = "SELECT sum(Amount) as Total, activitybudget.ActivityID FROM activitybudget

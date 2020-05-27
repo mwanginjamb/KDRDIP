@@ -83,7 +83,7 @@ class LipwBeneficiariesController extends Controller
 		$hId = isset(Yii::$app->request->get()['hId']) ? Yii::$app->request->get()['hId'] : 0;
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => LipwBeneficiaries::find(),
+			'query' => LipwBeneficiaries::find()->where(['HouseholdID' => $hId]),
 		]);
 
 		return $this->renderPartial('index', [

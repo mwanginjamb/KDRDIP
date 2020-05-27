@@ -4,6 +4,8 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\grid\GridView;
 
+$baseUrl = Yii::$app->request->baseUrl;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\Banks */
 

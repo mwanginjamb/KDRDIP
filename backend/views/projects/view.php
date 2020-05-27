@@ -107,7 +107,7 @@ Modal::end();
 		});
 	});
 
-	function submitForm(id) {
+	function submitCurrentForm(id) {
 		$.ajax({
 			type: "POST",
 			url: $("#budget").attr('action'),
