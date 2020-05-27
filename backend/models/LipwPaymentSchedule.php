@@ -43,8 +43,8 @@ class LipwPaymentSchedule extends \yii\db\ActiveRecord
 	{
 		//this record is always new
 		if ($this->isNewRecord) {
-			$this->createdBy = Yii::$app->user->identity->userId;
-			$this->createdDate = date('Y-m-d h:i:s');
+			$this->CreatedBy = Yii::$app->user->identity->UserID;
+			$this->CreatedDate = date('Y-m-d h:i:s');
 		}
 		return parent::save();
 	}

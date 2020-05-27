@@ -225,7 +225,13 @@ Modal::end();
 										</li>		
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab17" data-toggle="tab" aria-controls="tab17" href="#tab17" aria-expanded="false">GBV/SEA</a>
-										</li>					
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab18" data-toggle="tab" aria-controls="tab18" href="#tab18" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('implementation-status/index?pId=' . $model->ProjectID);?>', 'tab18')">Implementation Status</a>
+										</li>		
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab19" data-toggle="tab" aria-controls="tab19" href="#tab19" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('project-challenges/index?pId=' . $model->ProjectID);?>', 'tab19')">Challenges</a>
+										</li>				
 									</ul>
 									<div class="tab-content px-1 pt-1">
 										<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -1039,6 +1045,14 @@ Modal::end();
 												</table>
 												<?= Html::submitButton('<i class="la la-check-square-o"></i> Save', ['class' => 'btn btn-primary']) ?>
 											<?php ActiveForm::end(); ?>
+										</div>
+
+										<div class="tab-pane" id="tab18" aria-labelledby="base-tab18">
+											<h4 class="form-section">Implementation Status</h4>
+										</div>
+
+										<div class="tab-pane" id="tab19" aria-labelledby="base-tab19">
+											<h4 class="form-section">Challenges</h4>
 										</div>
 
 									</div>
