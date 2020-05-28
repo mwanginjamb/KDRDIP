@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\LipwBeneficiaries;
 use app\models\BankBranches;
+use app\models\LipwBeneficiaryTypes;
 use app\models\Banks;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -83,7 +84,7 @@ class LipwBeneficiariesController extends Controller
 		$hId = isset(Yii::$app->request->get()['hId']) ? Yii::$app->request->get()['hId'] : 0;
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => LipwBeneficiaries::find()->where(['HouseholdID' => $hId]),
+			'query' => LipwBeneficiaries::find()->andWhere(['HouseholdID' => $hId]),
 		]);
 
 		return $this->renderPartial('index', [
@@ -120,12 +121,14 @@ class LipwBeneficiariesController extends Controller
 		$model->HouseholdID = $hId;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'hId' => $model->BeneficiaryID]);
+			return $this->redirect(['index', 'hId' => $model->HouseholdID]);
 		}
 
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
 		$bankBranches = ArrayHelper::map(BankBranches::find()->andWhere(['BankID' => $model->BankID])->all(), 'BankBranchID', 'BankBranchName');
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()->all(), 'BeneficiaryID', 'BeneficiaryName');
+		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()->andWhere(['BeneficiaryTypeID' => 1])->all(), 'BeneficiaryID', 'BeneficiaryName');
+		$beneficiaryTypes = ArrayHelper::map(LipwBeneficiaryTypes::find()->all(), 'BeneficiaryTypeID', 'BeneficiaryTypeName');
+		
 		$gender = ['M' => 'Male', 'F' => 'Female'];
 
 		return $this->renderPartial('create', [
@@ -136,6 +139,7 @@ class LipwBeneficiariesController extends Controller
 			'bankBranches' => $bankBranches,
 			'beneficiaries' => $beneficiaries,
 			'gender' => $gender,
+			'beneficiaryTypes' => $beneficiaryTypes
 		]);
 	}
 
@@ -152,12 +156,13 @@ class LipwBeneficiariesController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'hId' => $model->BeneficiaryID]);
+			return $this->redirect(['index', 'hId' => $model->HouseholdID]);
 		}
 
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
 		$bankBranches = ArrayHelper::map(BankBranches::find()->andWhere(['BankID' => $model->BankID])->all(), 'BankBranchID', 'BankBranchName');
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()->all(), 'BeneficiaryID', 'BeneficiaryName');
+		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()->andWhere(['BeneficiaryTypeID' => 1])->andWhere("BeneficiaryID <> $id")->all(), 'BeneficiaryID', 'BeneficiaryName');
+		$beneficiaryTypes = ArrayHelper::map(LipwBeneficiaryTypes::find()->all(), 'BeneficiaryTypeID', 'BeneficiaryTypeName');
 		$gender = ['M' => 'Male', 'F' => 'Female'];
 
 		return $this->renderPartial('update', [
@@ -167,6 +172,7 @@ class LipwBeneficiariesController extends Controller
 			'bankBranches' => $bankBranches,
 			'beneficiaries' => $beneficiaries,
 			'gender' => $gender,
+			'beneficiaryTypes' => $beneficiaryTypes,
 		]);
 	}
 

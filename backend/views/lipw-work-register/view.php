@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\LipwWorkRegister */
 
-$this->title = 'Work Register ID: ' . $model->WorkRegisterID;
+$this->title = 'Daily Attendance Register ID: ' . $model->WorkRegisterID;
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Work Registers', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);

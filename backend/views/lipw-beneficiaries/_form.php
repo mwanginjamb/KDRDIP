@@ -44,6 +44,22 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'DateOfBirth')->textInput(['type' => 'date']) ?>	
 				</div>			
 			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'LastName')->textInput(['maxlength' => true]) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'DateOfBirth')->textInput(['type' => 'date']) ?>	
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'BeneficiaryTypeID')->dropDownList($beneficiaryTypes, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">	
+				</div>			
+			</div>			
 			
 			<div class="row">
 				<div class="col-md-6">

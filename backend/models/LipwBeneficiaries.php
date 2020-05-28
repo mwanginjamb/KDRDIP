@@ -65,10 +65,11 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	{
 		return [
 			[['DateOfBirth', 'CreatedDate'], 'safe'],
-			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted', 'BeneficiaryTypeID'], 'integer'],
 			[['FirstName', 'MiddleName', 'LastName', 'IDNumber', 'Mobile', 'BankAccountNumber', 'BankAccountName'], 'string', 'max' => 45],
 			[['Gender'], 'string', 'max' => 1],
-			[['FirstName', 'LastName', 'IDNumber', 'Mobile', 'DateOfBirth', 'Gender'], 'required']
+			[['FirstName', 'LastName', 'IDNumber', 'Mobile', 'DateOfBirth', 'Gender'], 'required'],
+			['BeneficiaryTypeID', 'validateBeneficiatyType'],
 		];
 	}
 
@@ -92,15 +93,53 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 			'BankAccountName' => 'Bank Account Name',
 			'BankID' => 'Bank',
 			'BankBranchID' => 'Branch',
+			'BeneficiaryTypeID' => 'Beneficiary Type',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
 		];
 	}
 
+		/**
+	 * {@inheritdoc}
+	 * Total transfers should not be more than the allocated amount for a particular disbursement
+	 */
+	public function validateBeneficiatyType($attribute, $params)
+	{
+		if (!$this->hasErrors()) {
+			if ($this->BeneficiaryTypeID == 1) {
+				if ($this->getAge() > 70) {
+					$this->addError($attribute, 'The Beneficiary is not eligible Age is more than 70');
+				} elseif ($this->getAge() < 18) {
+					$this->addError($attribute, 'The Beneficiary is not eligible Age is less than 18');
+				}
+			}
+		}
+		if (!$this->hasErrors()) {
+			if ($this->BeneficiaryTypeID == 1) {
+				$total = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID])->count();
+				$eligible = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID, 'BeneficiaryTypeID' => 1])->andWhere('BeneficiaryID <> ' . $this->BeneficiaryID)->count();
+				$total = ($total) ? $total : 0;
+				if ($total <= 5 && $eligible >= 1) {
+					$this->addError($attribute, 'Your Household is only allowed 1 (One) Eligible Beneficiary');
+				} elseif ($total > 5 && $total <= 10 && $eligible >= 2) {
+					$this->addError($attribute, 'Your Household is only allowed 2 (Two) Eligible Beneficiary');
+				} elseif ($total > 10 && $eligible >= 3) {
+					$this->addError($attribute, 'Your Household is only allowed 3 (Three) Eligible Beneficiary');
+				}
+			}
+		}
+	}
+
 	public function getBeneficiaryName()
 	{
 		return $this->FirstName . ' ' . $this->MiddleName . ' ' . $this->LastName;
+	}
+
+	public function getAge()
+	{
+		$diff = date_diff(date_create($this->DateOfBirth), date_create());
+		return $diff->y;
 	}
 
 	public function getUsers()
@@ -126,5 +165,10 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	public function getLipwMasterRollRegister()
 	{
 		return $this->hasOne(LipwMasterRollRegister::className(), ['BeneficiaryID' => 'BeneficiaryID']);
+	}
+
+	public function getLipwBeneficiaryTypes()
+	{
+		return $this->hasOne(LipwBeneficiaryTypes::className(), ['BeneficiaryTypeID' => 'BeneficiaryTypeID']);
 	}
 }

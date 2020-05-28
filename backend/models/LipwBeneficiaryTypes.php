@@ -5,38 +5,35 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "lipw_payment_request_lines".
+ * This is the model class for table "lipw_beneficiary_types".
  *
- * @property int $PaymentRequestLineID
- * @property int $PaymentRequestID
- * @property int $WorkRegisterID
- * @property string $Amount
+ * @property int $BeneficiaryTypeID
+ * @property string $BeneficiaryTypeName
+ * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
  */
-class LipwPaymentRequestLines extends \yii\db\ActiveRecord
+class LipwBeneficiaryTypes extends \yii\db\ActiveRecord
 {
-	public $BeneficiaryID;
-	public $Total;
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
-		return 'lipw_payment_request_lines';
+		return 'lipw_beneficiary_types';
 	}
 
+	
 	public static function find()
 	{
-		return parent::find()->andWhere(['lipw_payment_request_lines.Deleted' => 0]);
+		return parent::find()->andWhere(['lipw_beneficiary_types.Deleted' => 0]);
 	}
 
 	public function delete()
 	{
 		$m = parent::findOne($this->getPrimaryKey());
 		$m->Deleted = 1;
-		// $m->deletedTime = time();
 		return $m->save();
 	}
 
@@ -56,9 +53,10 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['PaymentRequestID', 'WorkRegisterID', 'CreatedBy', 'Deleted'], 'integer'],
-			[['Amount'], 'number'],
+			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['BeneficiaryTypeName'], 'string', 'max' => 45],
 		];
 	}
 
@@ -68,10 +66,9 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'PaymentRequestLineID' => 'Payment Request Line ID',
-			'PaymentRequestID' => 'Payment Request ID',
-			'WorkRegisterID' => 'Work Register ID',
-			'Amount' => 'Amount',
+			'BeneficiaryTypeID' => 'Beneficiary Type ID',
+			'BeneficiaryTypeName' => 'Beneficiary Type Name',
+			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
@@ -81,15 +78,5 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy']);
-	}
-
-	public function getLipwPaymentRequest()
-	{
-		return $this->hasOne(LipwPaymentRequest::className(), ['PaymentRequestID' => 'PaymentRequestID']);
-	}
-
-	public function getLipwWorkRegister()
-	{
-		return $this->hasOne(LipwWorkRegister::className(), ['WorkRegisterID' => 'WorkRegisterID']);
 	}
 }

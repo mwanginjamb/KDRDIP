@@ -69,7 +69,7 @@ class Suppliers extends \yii\db\ActiveRecord
 			'Deleted' => 'Deleted',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
-		'CreditPeriod' => 'Credit Period',
+			'CreditPeriod' => 'Credit Period',
 		];
 	}
 

@@ -56,6 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		'BankAccountName',
 		'banks.BankName',
 		'banks.bankBranches.BankBranchName',
+		'lipwBeneficiaryTypes.BeneficiaryTypeName',
 		[
 			'attribute' => 'createdTime',
 			'format' => ['date', 'php:d/m/Y h:i a'],

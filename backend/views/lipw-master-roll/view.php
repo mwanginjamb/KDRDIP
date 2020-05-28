@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-master-roll-register/index?mId=' . $model->MasterRollID);?>', 'tab2')">Beneficiaries</a>
 							</li>		
 							<li class="nav-item">
-								<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-work-register/index?mId=' . $model->MasterRollID);?>', 'tab3')">Work Register</a>
+								<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-work-register/index?mId=' . $model->MasterRollID);?>', 'tab3')">Daily Attendance Register</a>
 							</li>										
 						</ul>
 						<div class="tab-content px-1 pt-1">

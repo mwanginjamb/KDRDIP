@@ -40,15 +40,21 @@ $this->params['breadcrumbs'][] = $this->title;
 			'attribute' => 'lipwBeneficiaries.BeneficiaryName',
 		],
 		[
+			'label' => 'Household',
+			'attribute' => 'lipwBeneficiaries.lipwHouseHolds.HouseholdName',
+			'format' => 'text',
+			'headerOptions' => ['width' => '15%'],
+		],
+		[
 			'label' => 'ID Number',
 			'attribute' => 'lipwBeneficiaries.IDNumber',
 			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
 		[
-			'label' => 'Date Of Birth',
-			'attribute' => 'lipwBeneficiaries.DateOfBirth',
-			'format' => ['date', 'php:d/m/Y'],
+			'label' => 'Age',
+			'attribute' => 'lipwBeneficiaries.Age',
+			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
 		[
@@ -62,16 +68,16 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions' => ['width' => '10%', 'style' => 'text-align: right'],
 			'contentOptions' => ['style' => 'text-align: right'],
 		],
-		[
-			'attribute' => 'CreatedDate',
-			'format' => ['date', 'php:d/m/Y h:i a'],
-			'headerOptions' => ['width' => '15%'],
-		],
-		[
-			'label' => 'Created By',
-			'attribute' => 'users.fullName',
-			'headerOptions' => ['width' => '15%'],
-		],
+		// [
+		// 	'attribute' => 'CreatedDate',
+		// 	'format' => ['date', 'php:d/m/Y h:i a'],
+		// 	'headerOptions' => ['width' => '15%'],
+		// ],
+		// [
+		// 	'label' => 'Created By',
+		// 	'attribute' => 'users.fullName',
+		// 	'headerOptions' => ['width' => '15%'],
+		// ],
 		[
 			'class' => 'yii\grid\ActionColumn',
 			'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],

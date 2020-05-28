@@ -3,10 +3,12 @@
 namespace backend\controllers;
 
 use Yii;
+use yii\db\Expression;
 use app\models\LipwPaymentRequest;
 use app\models\LipwPaymentRequestLines;
 use app\models\ApprovalNotes;
 use app\models\ApprovalStatus;
+use app\models\LipwPaymentSchedule;
 use app\models\Purchases;
 use app\models\Product;
 use yii\data\ActiveDataProvider;
@@ -127,6 +129,27 @@ class LipwApprovalsController extends Controller
 				$model->Posted = 1;
 				$model->ApprovedBy  = $UserID;
 				$model->ApprovalDate = date('Y-m-d h:i:s');
+
+				// Send Information to the Payment Schedule
+				// LipwPaymentSchedule
+				$lines = LipwPaymentRequestLines::find()
+				->select([new Expression('SUM(lipw_payment_request_lines.Amount) as Total'), 'BeneficiaryID'])
+								
+								->joinWith('lipwWorkRegister')
+								->groupBy('BeneficiaryID')
+								->andWhere(['PaymentRequestID' => $id])
+								// ->asArray()
+								->all();
+				// print_r($lines); exit;
+				foreach ($lines as $line) {
+					$ln = new LipwPaymentSchedule();
+					$ln->PaymentRequestID = $id;
+					$ln->BeneficiaryID = $line['BeneficiaryID'];
+					$ln->Amount = $line['Total'];
+					if (!$ln->save()) {
+						print_r($ln->getErrors()); exit;
+					}
+				}
 			}
 			
 			if (isset($params['Reject'])) {

@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		color: #FFFFFF !important;
 	}
 </style>
-<h4 class="form-section">Work Register</h4>
+<h4 class="form-section">Daily Attendance Register</h4>
 <p>
 	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-work-register/create?mId=' . $mId) . '", \'tab3\')']) : '' ?>
 </p>

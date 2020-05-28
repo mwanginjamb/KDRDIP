@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 
+use app\models\LipwPaymentRequestLines;
+
 /**
  * This is the model class for table "lipw_payment_schedule".
  *
@@ -45,6 +47,7 @@ class LipwPaymentSchedule extends \yii\db\ActiveRecord
 		if ($this->isNewRecord) {
 			$this->CreatedBy = Yii::$app->user->identity->UserID;
 			$this->CreatedDate = date('Y-m-d h:i:s');
+			$this->PaymentScheduleStatusID = 1;
 		}
 		return parent::save();
 	}
@@ -76,6 +79,12 @@ class LipwPaymentSchedule extends \yii\db\ActiveRecord
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
 		];
+	}
+
+	public function getDaysWorked()
+	{
+		return LipwPaymentRequestLines::find()->joinWith('lipwWorkRegister')
+															->where(['PaymentRequestID' => $this->PaymentRequestID, 'lipw_work_register.BeneficiaryID' => $this->BeneficiaryID])->count();
 	}
 
 	public function getUsers()

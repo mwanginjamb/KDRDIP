@@ -49,7 +49,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 			<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 					<li <?= ($currentPage == 'site') ? 'class="active"' : ''; ?> class=" nav-item"><a href="<?= $baseUrl;?>/site"><i class="material-icons">settings_input_svideo</i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
 					</li>
-					<?php if (count(array_intersect($rights, [1, 5, 21, 25, 30, 24, 29, 64, 65, 66, 67, 68, 7, 2, 28, 17, 8])) > 0) { ?>
+					<?php if (count(array_intersect($rights, [1, 5, 21, 25, 30, 24, 29, 64, 65, 66, 67, 68, 7, 2, 28, 17, 8, 100])) > 0) { ?>
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Finance</span></a>
 						<ul class="menu-content">
 							<?php if (in_array(1, $rights)) { ?>
@@ -70,6 +70,10 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							<?php } ?>
 							<?php if (in_array(30, $rights)) { ?>
 								<li <?= ($currentPage == 'payments') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
+								</li>
+							<?php } ?>
+							<?php if (in_array(100, $rights)) { ?>
+								<li <?= ($currentPage == 'lipw-payment-schedule') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-payment-schedule"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payments</span></a>
 								</li>
 							<?php } ?>
 							<?php if (count(array_intersect($rights, [24, 29, 103])) > 0) { ?>

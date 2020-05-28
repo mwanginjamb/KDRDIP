@@ -37,24 +37,29 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		'beneficiaryName',
 		[
+			'label' => 'Type',
+			'attribute' => 'lipwBeneficiaryTypes.BeneficiaryTypeName',
+			'format' => 'text',
+			'headerOptions' => ['width' => '15%'],
+		],
+		[
 			'attribute' => 'IDNumber',
 			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
 		[
-			'attribute' => 'DateOfBirth',
-			'format' => ['date', 'php:d/m/Y'],
+			'attribute' => 'Age',
+			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
 		[
-			'attribute' => 'CreatedDate',
-			'format' => ['date', 'php:d/m/Y h:i a'],
-			'headerOptions' => ['width' => '15%'],
-		],
-		[
-			'label' => 'Created By',
-			'attribute' => 'users.fullName',
-			'headerOptions' => ['width' => '15%'],
+			'label' => 'Gender',
+			'attribute' => 'Gender',
+			'value' => function ($model) {
+				return strtoupper($model['Gender']) == 'M' ? 'Male' : 'Female';
+			},
+			'format' => 'text',
+			'headerOptions' => ['width' => '10%'],
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',

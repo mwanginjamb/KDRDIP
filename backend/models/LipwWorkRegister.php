@@ -10,6 +10,7 @@ use Yii;
  * @property int $WorkRegisterID
  * @property int $MasterRollID
  * @property int $BeneficiaryID
+ * @property int $ProjectID
  * @property string $Date
  * @property string $Amount
  * @property string $CreatedDate
@@ -55,7 +56,7 @@ class LipwWorkRegister extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['MasterRollID', 'BeneficiaryID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['MasterRollID', 'BeneficiaryID', 'CreatedBy', 'Deleted', 'ProjectID'], 'integer'],
 			[['Date', 'CreatedDate'], 'safe'],
 			[['Amount'], 'number'],
 		];
@@ -72,6 +73,7 @@ class LipwWorkRegister extends \yii\db\ActiveRecord
 			'BeneficiaryID' => 'Beneficiary ID',
 			'Date' => 'Date',
 			'Amount' => 'Amount',
+			'ProjectID' => 'Project',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

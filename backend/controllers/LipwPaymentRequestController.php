@@ -116,7 +116,7 @@ class LipwPaymentRequestController extends Controller
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			// LipwPaymentRequestLines
 			/*
-				Compute the work done between the two days and pick the work that is not paid
+				Compute the work done between the two dates and pick the work that is not paid
 			*/
 			$works = LipwWorkRegister::find()->andWhere(['MasterRollID' => $model->MasterRollID, 'Paid' => 0])
 						->andWhere(['between', 'date', $model->StartDate, $model->EndDate])->all();
@@ -127,8 +127,11 @@ class LipwPaymentRequestController extends Controller
 				$lines->WorkRegisterID = $work->WorkRegisterID;
 				$lines->Amount = $work->Amount;
 				if ($lines->save()) {
-					$work->Paid = 1;
-					$work->save();
+					$currentWork = LipwWorkRegister::findOne($work->WorkRegisterID);
+					if (!empty($currentWork)) {
+						$currentWork->Paid = 1;
+						$currentWork->save();
+					}
 				}
 			}
 			return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
@@ -155,6 +158,25 @@ class LipwPaymentRequestController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$works = LipwWorkRegister::find()->andWhere(['MasterRollID' => $model->MasterRollID, 'Paid' => 0])
+						->andWhere(['between', 'date', $model->StartDate, $model->EndDate])->all();
+
+			foreach ($works as $work) {
+				$lines = LipwPaymentRequestLines::findOne($work->WorkRegisterID);
+				if (empty($lines)) {
+					$lines = new LipwPaymentRequestLines();
+					$lines->PaymentRequestID = $model->PaymentRequestID;
+					$lines->WorkRegisterID = $work->WorkRegisterID;
+					$lines->Amount = $work->Amount;
+					if ($lines->save()) {
+						$currentWork = LipwWorkRegister::findOne($work->WorkRegisterID);
+						if (!empty($currentWork)) {
+							$currentWork->Paid = 1;
+							$currentWork->save();
+						}
+					}
+				}
+			}
 			return $this->redirect(['view', 'id' => $model->PaymentRequestID]);
 		}
 
