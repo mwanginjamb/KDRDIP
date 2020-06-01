@@ -10,8 +10,17 @@ $this->title = $model->MasterRollName;
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Master Rolls', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
-?>
 
+// Attempt to initialize Data Tables
+$this->registerJs(' $(document).ready( function () {
+	$("table").DataTable();
+} )');
+?>
+<style>
+	.prev {
+		background-color: green;
+	}
+</style>
 <section id="configuration">
 	<div class="row">
 		<div class="col-12">
@@ -61,6 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 								<?= DetailView::widget([
 									'model' => $model,
+									'options' => [
+										'class' => 'custom-table table-striped table-bordered zero-configuration',
+									],
 									'attributes' => [
 										'MasterRollID',
 										'MasterRollName',

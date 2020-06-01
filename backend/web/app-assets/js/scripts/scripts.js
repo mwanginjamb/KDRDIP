@@ -7,7 +7,6 @@ function submittheform(form)
 	console.log($(form).submit());
 }
 
-
 function submitForm(url,destination,formName)
 {
 	
@@ -37,6 +36,33 @@ function submitForm(url,destination,formName)
 	};	
 	// Send the Data.
 	xhr.send(formData);		
+}
+
+function loadListPage(url,destination,loader)
+{
+	xmlhttp=GetXmlHttpObject()
+	if (xmlhttp==null)
+ 	{
+ 		alert ("Browser does not support HTTP Request")
+ 		return
+ 	}
+
+	try 
+	{
+		xmlhttp.open("GET",url,false);
+		xmlhttp.send();
+		rest = xmlhttp.responseText;
+		document.getElementById(destination).innerHTML= rest;
+		$(function(){
+			$('table').DataTable();	
+		});
+	}
+	catch(err) 
+	{
+		//document.getElementById("demo").innerHTML = err.message;
+		rest = "System Error";
+	}			
+	return rest;	
 }
 
 function deleteItem(url,destination,loader)
@@ -1319,6 +1345,7 @@ function loadnewpage(url,destination)
 
 function loadpage(url,destination,loader)
 { 
+	// $('table').DataTable();
 	dest = destination;
 	Loader = loader;
 	xmlHttp4=GetXmlHttpObject()
@@ -1327,13 +1354,24 @@ function loadpage(url,destination,loader)
  		alert ("Browser does not support HTTP Request")
  		return
  	}
-	if (document.getElementById(loader))
-		document.getElementById(loader).innerHTML= 'loading....'
+	if (document.getElementById(destination))
+		document.getElementById(destination).innerHTML= 'loading....'
 		//document.getElementById(loader).innerHTML= '<img src="images/ajax-loader.gif" width="16" height="16" />'
 	url=url+"&sid="+Math.random()
 	xmlHttp4.onreadystatechange=contentpage
 	xmlHttp4.open("GET",url,true)
 	xmlHttp4.send(null)
+}
+
+function contentpage() 
+{ 
+	if (xmlHttp4.readyState==4 || xmlHttp4.readyState=="complete") { 
+		if (document.getElementById(Loader)) {
+			document.getElementById(dest).innerHTML= ""
+		}
+		document.getElementById(dest).innerHTML=xmlHttp4.responseText;
+		$('table').DataTable();
+ 	} 
 }
 
 function loadmypage(url,destination,loader,op,id,pageid)
@@ -1372,16 +1410,6 @@ function mycontentpage()
 			loadTable3(Op,ID)
 		else
 			loadTable(Op,ID)
- 	} 
-}
-
-function contentpage() 
-{ 
-	if (xmlHttp4.readyState==4 || xmlHttp4.readyState=="complete")
- 	{ 
-		if (document.getElementById(Loader))
-			document.getElementById(Loader).innerHTML= ""
-		document.getElementById(dest).innerHTML=xmlHttp4.responseText 
  	} 
 }
 

@@ -8,6 +8,7 @@ use app\models\LipwPaymentRequestLines;
 use app\models\LipwWorkRegister;
 use app\models\LipwPaymentSchedule;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -83,6 +84,7 @@ class LipwPaymentScheduleController extends Controller
 	{
 		$dataProvider = new ActiveDataProvider([
 			'query' => LipwPaymentRequest::find()->andWhere(['ApprovalStatusID' => 3]),
+			'sort'=> ['defaultOrder' => ['ApprovalDate'=>SORT_DESC]],
 		]);
 
 		return $this->render('index', [
@@ -107,6 +109,18 @@ class LipwPaymentScheduleController extends Controller
 
 	public function actionSchedule($pId)
 	{
+		$message = '';
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post()['LipwPaymentSchedule'];
+			foreach ($params as $id => $param) {
+				$model = LipwPaymentSchedule::findOne($id);
+				$model->PaymentScheduleStatusID = $param['PaymentScheduleStatusID'];
+				$model->save();
+			}
+			Yii::$app->session->setFlash('success', 'Saved Successfully');
+			$message = 'Saved Successfully';
+		}
+
 		$dataProvider = new ActiveDataProvider([
 			'query' => LipwPaymentSchedule::find()->andWhere(['PaymentRequestID' => $pId]),
 		]);
@@ -114,6 +128,8 @@ class LipwPaymentScheduleController extends Controller
 		return $this->renderPartial('schedule', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
+			'pId' => $pId,
+			'message' => $message,
 		]);
 	}
 

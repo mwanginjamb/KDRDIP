@@ -39,6 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= DetailView::widget([
 	'model' => $model,
+	'options' => [
+		'class' => 'custom-table table-striped table-bordered zero-configuration',
+	],
 	'attributes' => [
 		'MasterRollRegisterID',
 		[

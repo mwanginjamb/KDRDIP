@@ -450,32 +450,32 @@ Modal::end();
 														'contentOptions' => ['style' => 'text-align:left'],
 													],
 													[
-														'label'=>'Gender',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+														'label' => 'Host Male',
+														'attribute' => 'HostPopulationMale',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
+														'contentOptions' => ['style' => 'text-align:right'],
 														'format'=>'text',
-														'value' => function ($model) {
-															if ($model['Gender'] == 'M') {
-																return 'Male';
-															} elseif ($model['Gender'] == 'F') {
-																return 'Female';
-															} else {
-																return '';
-															}
-														},
 													],
 													[
-														'label'=>'Host Population',
-														'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
-														'format'=> ['decimal', 2],
-														'value' => 'HostPopulation',
+														'label' => 'Host Female',
+														'attribute'=>'HostPopulationFemale',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
 														'contentOptions' => ['style' => 'text-align:right'],
+														'format'=>'text',
 													],
 													[
-														'label'=>'Refugee Population',
-														'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
-														'format'=> ['decimal', 2],
-														'value' => 'RefugeePopulation',
+														'label' => 'Refugee Male',
+														'attribute'=>'RefugeePopulationMale',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
 														'contentOptions' => ['style' => 'text-align:right'],
+														'format'=>'text',
+													],
+													[
+														'label' => 'Refugee Female',
+														'attribute'=>'RefugeePopulationFemale',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
+														'contentOptions' => ['style' => 'text-align:right'],
+														'format'=>'text',
 													],
 												],
 											]); ?>

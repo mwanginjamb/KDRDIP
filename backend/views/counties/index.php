@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
 						<div class="form-actions" style="margin-top:0px">
-							<<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>	
+							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>	
 						</div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,

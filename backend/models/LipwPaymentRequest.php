@@ -99,6 +99,12 @@ class LipwPaymentRequest extends \yii\db\ActiveRecord
 		];
 	}
 
+	public function getTransferStatus()
+	{
+		$pending = LipwPaymentSchedule::find()->andWhere(['PaymentRequestID' => $this->PaymentRequestID, 'PaymentScheduleStatusID' => 1])->count();
+		return ($pending > 0) ? 1 : 2;
+	}
+
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy']);

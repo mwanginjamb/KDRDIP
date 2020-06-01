@@ -74,7 +74,7 @@ class LipwPaymentSchedule extends \yii\db\ActiveRecord
 			'PaymentRequestID' => 'Payment Request ID',
 			'BeneficiaryID' => 'Beneficiary ID',
 			'Amount' => 'Amount',
-			'PaymentScheduleStatusID' => 'Payment Schedule Status ID',
+			'PaymentScheduleStatusID' => '',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

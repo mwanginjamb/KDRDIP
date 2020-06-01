@@ -81,9 +81,11 @@ class LipwMasterRollRegisterController extends Controller
 	public function actionIndex()
 	{
 		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
+		$page = isset($_GET['page']) ? $_GET['page'] : 1;
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => LipwMasterRollRegister::find(),
+			'pagination' => false,
 		]);
 
 		return $this->renderPartial('index', [
@@ -127,7 +129,7 @@ class LipwMasterRollRegisterController extends Controller
 
 		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
 			->joinWith('lipwHouseHolds')
-			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID])
+			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID, 'BeneficiaryTypeID' => 1])
 			->all(), 'BeneficiaryID', 'BeneficiaryName');
 
 		return $this->renderPartial('create', [

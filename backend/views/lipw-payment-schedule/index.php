@@ -37,6 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
 							'columns' => [
 								[
 									'class' => 'yii\grid\SerialColumn',
+									'contentOptions' => function ($model) {
+										return ['style' => 'color: white; background-color:'
+											 . ($model->transferStatus == '1' ? 'red' : 'blue')];
+									},
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								'lipwMasterRoll.MasterRollName',

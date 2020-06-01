@@ -38,9 +38,32 @@ $this->params['breadcrumbs'][] = $this->title;
 			'attribute' => 'lipwWorkRegister.lipwBeneficiaries.BeneficiaryName',
 		],
 		[
+			'label' => 'Household',
+			'attribute' => 'lipwWorkRegister.lipwBeneficiaries.lipwHouseHolds.HouseholdName',
+		],
+		[
+			'label' => 'Gender',
+			'attribute' => 'lipwWorkRegister.lipwBeneficiaries.Gender',
+		],
+		[
+			'label' => 'Age',
+			'attribute' => 'lipwWorkRegister.lipwBeneficiaries.Age',
+		],
+		[
 			'label' => 'ID Number',
 			'attribute' => 'lipwWorkRegister.lipwBeneficiaries.IDNumber',
 			'format' => 'text',
+			'headerOptions' => ['width' => '10%'],
+		],
+		[
+			'label' => 'Sub Project',
+			'attribute' => 'lipwWorkRegister.projects.ProjectName',
+			'headerOptions' => ['width' => '15%'],
+		],
+		[
+			'label' => 'Work Date',
+			'attribute' => 'lipwWorkRegister.Date',
+			'format' => ['date', 'php:d/m/Y'],
 			'headerOptions' => ['width' => '10%'],
 		],
 		[
@@ -48,16 +71,6 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => ['decimal', 2],
 			'headerOptions' => ['width' => '10%', 'style' => 'text-align: right'],
 			'contentOptions' => ['style' => 'text-align: right'],
-		],
-		[
-			'attribute' => 'CreatedDate',
-			'format' => ['date', 'php:d/m/Y h:i a'],
-			'headerOptions' => ['width' => '15%'],
-		],
-		[
-			'label' => 'Created By',
-			'attribute' => 'users.fullName',
-			'headerOptions' => ['width' => '15%'],
 		],
 	],
 ]); ?>

@@ -50,27 +50,23 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
 		],
-/* 		[
-			'label' => 'Date Of Birth',
-			'attribute' => 'lipwBeneficiaries.DateOfBirth',
-			'format' => ['date', 'php:d/m/Y'],
-			'headerOptions' => ['width' => '10%'],
-		], */
+		[
+			'label' => 'Sub Projects',
+			'attribute' => 'projects.ProjectName',
+			'format' => 'text',
+			'headerOptions' => ['width' => '15%'],
+		],
+		[
+			'label' => 'Village',
+			'attribute' => 'lipwBeneficiaries.lipwHouseHolds.subLocations.SubLocationName',
+			'format' => 'text',
+			'headerOptions' => ['width' => '15%'],
+		],
 		[
 			'attribute' => 'Amount',
 			'format' => ['decimal', 2],
 			'headerOptions' => ['width' => '10%', 'style' => 'text-align: right'],
 			'contentOptions' => ['style' => 'text-align: right'],
-		],
-		[
-			'attribute' => 'CreatedDate',
-			'format' => ['date', 'php:d/m/Y h:i a'],
-			'headerOptions' => ['width' => '15%'],
-		],
-		[
-			'label' => 'Created By',
-			'attribute' => 'users.fullName',
-			'headerOptions' => ['width' => '15%'],
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',

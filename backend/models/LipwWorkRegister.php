@@ -94,4 +94,9 @@ class LipwWorkRegister extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(LipwBeneficiaries::className(), ['BeneficiaryID' => 'BeneficiaryID']);
 	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID']);
+	}
 }

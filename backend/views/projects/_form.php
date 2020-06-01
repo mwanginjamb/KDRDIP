@@ -366,9 +366,17 @@ function calculateValue(row)
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">County</td>
 						<td style="padding: 4px !important" width="20%">Sub County</td>
-						<td style="padding: 4px !important" width="10%">Gender</td>
-						<td style="padding: 4px !important" width="15%">Host Population</td>
-						<td style="padding: 4px !important" width="15%">Refugee Population</td>
+						<td colspan="2" style="padding: 4px !important" width="15%">Host Population</td>
+						<td colspan="2" style="padding: 4px !important" width="15%">Refugee Population</td>
+					</tr>
+					<tr>
+						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
+						<td style="padding: 4px !important">County</td>
+						<td style="padding: 4px !important" width="20%">Sub County</td>
+						<td style="padding: 4px !important" width="15%">Male</td>
+						<td style="padding: 4px !important" width="15%">Female</td>
+						<td style="padding: 4px !important" width="15%">Male</td>
+						<td style="padding: 4px !important" width="15%">Female</td>
 					</tr>	
 					</thead>
 					<?php
@@ -388,9 +396,10 @@ function calculateValue(row)
 													'])->label(false) ?>
 							</td>
 							<td><?= $form->field($column, '[' . $x . ']SubCountyID', ['template' => '{label}{input}'])->dropDownList(isset($subCounties[$column->CountyID]) ? $subCounties[$column->CountyID] : [], ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
-							<td><?= $form->field($column, '[' . $x . ']Gender', ['template' => '{label}{input}'])->dropDownList($gender, ['prompt'=>'', 'class'=>'form-control'])->label(false) ?></td>
-							<td><?= $form->field($column, '[' . $x . ']HostPopulation')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
-							<td><?= $form->field($column, '[' . $x . ']RefugeePopulation')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']HostPopulationMale')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']HostPopulationFemale')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']RefugeePopulationMale')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
+							<td><?= $form->field($column, '[' . $x . ']RefugeePopulationFemale')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>
 						</tr>
 						<?php
 					} ?>

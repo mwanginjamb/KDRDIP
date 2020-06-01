@@ -10,6 +10,11 @@ $this->title = 'Payment Request ID: ' . $model->PaymentRequestID;
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Payment Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+// Attempt to initialize Data Tables
+$this->registerJs(' $(document).ready( function () {
+	$("table").DataTable();
+} )');
 ?>
 <section id="configuration">
 	<div class="row">
@@ -69,6 +74,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 								<?= DetailView::widget([
 									'model' => $model,
+									'options' => [
+										'class' => 'custom-table table-striped table-bordered zero-configuration',
+									],
 									'attributes' => [
 										'PaymentRequestID',
 										'lipwMasterRoll.MasterRollName',

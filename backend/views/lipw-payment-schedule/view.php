@@ -10,6 +10,11 @@ $this->title = 'Payment Request ID: ' . $model->PaymentRequestID;
 $this->params['breadcrumbs'][] = ['label' => 'Lipw Payment Requests', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+// Attempt to initialize Data Tables
+$this->registerJs(' $(document).ready( function () {
+	$("table").DataTable();
+} )');
 ?>
 <section id="configuration">
 	<div class="row">
@@ -54,6 +59,25 @@ $this->params['breadcrumbs'][] = $this->title;
 								<?php
 							} ?>
 						</p>	
+						<div class="row">
+							<div class="col-6"><?= DetailView::widget([
+									'model' => $model,
+									'options' => [
+										'class' => 'custom-table table-striped table-bordered zero-configuration',
+									],
+									'attributes' => [
+										[
+											'attribute' => 'StartDate',
+											'format' => ['date', 'php:d/m/Y'],
+										],
+										[
+											'attribute' => 'EndDate',
+											'format' => ['date', 'php:d/m/Y'],
+										],
+									],
+								]) ?></div>
+							<div class="col-6"></div>
+						</div>						
 
 						<ul class="nav nav-tabs nav-top-border no-hover-bg">
 							<li class="nav-item">
@@ -64,14 +88,17 @@ $this->params['breadcrumbs'][] = $this->title;
 							</li>	
 							<li class="nav-item">
 								<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-payment-schedule/schedule?pId=' . $model->PaymentRequestID);?>', 'tab3')">Payment Schedule/ Payroll</a>
-							</li>										
+							</li>
 						</ul>
 						<div class="tab-content px-1 pt-1">
 							<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
 								<h4 class="form-section">Details</h4>
-
+								
 								<?= DetailView::widget([
 									'model' => $model,
+									'options' => [
+										'class' => 'custom-table table-striped table-bordered zero-configuration',
+									],
 									'attributes' => [
 										'PaymentRequestID',
 										'lipwMasterRoll.MasterRollName',

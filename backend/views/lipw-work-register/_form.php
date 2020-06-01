@@ -16,7 +16,7 @@ use yii\widgets\ActiveForm;
 </style>
 <div class="card">
 	<div class="card-header1">
-		<h4 class="form-section">Work Register</h4>
+		<h4 class="form-section">Daily Attendance Register</h4>
 	</div>
 	<div class="card-content collapse show">
 		<div class="card-body">
@@ -27,7 +27,8 @@ use yii\widgets\ActiveForm;
 				<div class="col-md-2">
 					<?= $form->field($header, 'Date')->textInput(['type' => 'date']) ?>
 				</div>
-				<div class="col-md-10">
+				<div class="col-md-6">
+					<?= $form->field($header, 'ProjectID')->dropDownList($projects, ['prompt'=>'Select...']) ?>
 				</div>			
 			</div>
 
@@ -52,7 +53,7 @@ use yii\widgets\ActiveForm;
 					</td>
 					<td style="padding: 0px 4px !important"><?= $line['BeneficiaryName']; ?></td>
 					<td style="padding: 0px 4px !important; text-align: right;"><?= $line['Rate']; ?></td>
-					<td style="padding: 0px 4px !important; text-align: center"><?= $form->field($line, '[' . $x . ']Worked')->radioList([1 => 'Yes', 2 => 'No'], ['unselect' => null], ['item' => 'style="margin-bottom: 0px"'] ); ?></td>
+					<td style="padding: 0px 4px !important; text-align: center"><?= $form->field($line, '[' . $x . ']Worked')->radioList([1 => 'Yes', 2 => 'No'], ['unselect' => null], ['item' => 'style="margin-bottom: 0px"']); ?></td>
 				</tr>
 				<?php
 			} ?>

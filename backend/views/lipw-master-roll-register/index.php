@@ -26,9 +26,10 @@ $this->params['breadcrumbs'][] = $this->title;
 </p>
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
+	'id' => 'Mytable',
 	'layout' => '{items}',
 	'tableOptions' => [
-		'class' => 'custom-table table-striped table-bordered zero-configuration',
+		'class' => 'custom-table table-striped table-bordered zero-configuration datatables',
 	],
 	'columns' => [
 		[
@@ -46,6 +47,12 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions' => ['width' => '15%'],
 		],
 		[
+			'label' => 'Village',
+			'attribute' => 'lipwBeneficiaries.lipwHouseHolds.subLocations.SubLocationName',
+			'format' => 'text',
+			'headerOptions' => ['width' => '15%'],
+		],
+		[
 			'label' => 'ID Number',
 			'attribute' => 'lipwBeneficiaries.IDNumber',
 			'format' => 'text',
@@ -55,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'label' => 'Age',
 			'attribute' => 'lipwBeneficiaries.Age',
 			'format' => 'text',
-			'headerOptions' => ['width' => '10%'],
+			'headerOptions' => ['width' => '5%'],
 		],
 		[
 			'attribute' => 'DateAdded',
@@ -65,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		[
 			'attribute' => 'Rate',
 			'format' => ['decimal', 2],
-			'headerOptions' => ['width' => '10%', 'style' => 'text-align: right'],
+			'headerOptions' => ['width' => '8%', 'style' => 'text-align: right'],
 			'contentOptions' => ['style' => 'text-align: right'],
 		],
 		// [

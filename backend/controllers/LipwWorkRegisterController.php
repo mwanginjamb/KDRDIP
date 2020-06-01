@@ -86,6 +86,7 @@ class LipwWorkRegisterController extends Controller
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => LipwWorkRegister::find(),
+			'pagination' => false,
 		]);
 
 		return $this->renderPartial('index', [
@@ -122,14 +123,10 @@ class LipwWorkRegisterController extends Controller
 		$header = new LipwWorkHeader();
 		$header->MasterRollID = $mId;
 
-/* 		if (Yii::$app->request->post()) {
-			print_r(Yii::$app->request->post()); exit;
-		} */
-
-
 		if ($header->load(Yii::$app->request->post()) && $header->validate()) {
 			$lines = Yii::$app->request->post()['LipwWorkLines'];
 			$header = Yii::$app->request->post()['LipwWorkHeader'];
+
 			foreach ($lines as $line) {
 				if ($line['Worked'] == 1) {
 					if ($line['WorkRegisterID'] == '') {
@@ -139,6 +136,7 @@ class LipwWorkRegisterController extends Controller
 					}
 					$model->MasterRollID = $header['MasterRollID'];
 					$model->BeneficiaryID = $line['BeneficiaryID'];
+					$model->ProjectID = $header['ProjectID'];
 					$model->Date = $header['Date'];
 					$model->Amount = $line['Rate'];
 					$model->save();
@@ -166,14 +164,16 @@ class LipwWorkRegisterController extends Controller
 			$lines[$key]->Rate = $beneficiary['lipwMasterRollRegister']['Rate'];
 			$lines[$key]->Worked = 2;
 		}
-		// print('<pre>');
-		// print_r($beneficiaries); exit;
+
+		$projects = ArrayHelper::map(\app\models\Projects::find()->all(), 'ProjectID', 'ProjectName');
+
 		$model = new LipwWorkRegister();
 		return $this->renderPartial('create', [
 			'model' => $model,
 			'rights' => $this->rights,
 			'header' => $header,
 			'lines' => $lines,
+			'projects' => $projects,
 		]);
 	}
 

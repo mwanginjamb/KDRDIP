@@ -285,7 +285,7 @@ class ProjectsController extends Controller
 									->where(['indicators.ProjectID' => $id])->asArray()->all();
 		$targets = ArrayHelper::index($indicatorTargets, 'ReportingPeriodID', [function ($element) {
 															return $element['IndicatorID'];
-													}]);
+												}]);
 
 		$indicatorActuals = IndicatorActuals::find()->joinWith('indicators')
 													->where(['indicators.ProjectID' => $id])->asArray()->all();
@@ -837,9 +837,11 @@ class ProjectsController extends Controller
 					$_column->ProjectID = $model->ProjectID;
 					$_column->CountyID = $column['CountyID'];
 					$_column->SubCountyID = $column['SubCountyID'];
-					$_column->Gender = $column['Gender'];
-					$_column->HostPopulation = $column['HostPopulation'];
-					$_column->RefugeePopulation = $column['RefugeePopulation'];
+					$_column->HostPopulationMale = $column['HostPopulationMale'];
+					$_column->RefugeePopulationMale = $column['RefugeePopulationMale'];
+					$_column->RefugeePopulationMale = $column['RefugeePopulationMale'];
+					$_column->HostPopulationFemale = $column['HostPopulationFemale'];
+					$_column->RefugeePopulationFemale = $column['RefugeePopulationFemale'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
@@ -847,9 +849,10 @@ class ProjectsController extends Controller
 				$_column = ProjectBeneficiaries::findOne($column['ProjectBeneficiaryID']);
 				$_column->CountyID = $column['CountyID'];
 				$_column->SubCountyID = $column['SubCountyID'];
-				$_column->HostPopulation = $column['HostPopulation'];
-				$_column->Gender = $column['Gender'];
-				$_column->RefugeePopulation = $column['RefugeePopulation'];
+				$_column->HostPopulationMale = $column['HostPopulationMale'];
+				$_column->RefugeePopulationMale = $column['RefugeePopulationMale'];
+				$_column->HostPopulationFemale = $column['HostPopulationFemale'];
+				$_column->RefugeePopulationFemale = $column['RefugeePopulationFemale'];
 				$_column->save();
 			}
 		}
