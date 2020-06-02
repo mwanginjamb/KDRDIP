@@ -87,15 +87,27 @@ function calculateValue(row)
 								var componentId = $(this).val();
 								if (componentId == 1) {
 									$("#projectsectorid").show();
+									$("#sectorinterventionid").show();
 									$("#organizationid").hide();
 								} else if (componentId == 3) {
 									$("#projectsectorid").hide();
+									$("#sectorinterventionid").hide();
 									$("#organizationid").show();
 								} else {
 									$("#projectsectorid").hide();
+									$("#sectorinterventionid").hide();									
 									$("#organizationid").hide();
 								}
 							']); ?>
+						</div>			
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							<?= $form->field($model, 'SubComponentID')->dropDownList($subComponents, ['prompt'=>'Select']); ?>
+						</div>
+						<div class="col-md-6">
+							<?= $form->field($model, 'SubComponentCategoryID')->dropDownList($subComponentCategories, ['prompt'=>'Select']); ?>
 						</div>			
 					</div>
 
@@ -106,6 +118,15 @@ function calculateValue(row)
 						<div class="col-md-6">
 							<div id="organizationid"><?= $form->field($model, 'OrganizationID')->dropDownList($organizations, ['prompt'=>'Select']);?> </div>
 							<div id="projectsectorid"><?= $form->field($model, 'ProjectSectorID')->dropDownList($projectSectors, ['prompt'=>'Select']); ?></div>
+						</div>			
+					</div>
+
+					<div class="row">
+						<div class="col-md-6">
+							
+						</div>
+						<div class="col-md-6">
+							<div id="sectorinterventionid"><?= $form->field($model, 'SectorInterventionID')->dropDownList($projectSectorInterventions, ['prompt'=>'Select']);?> </div>
 						</div>			
 					</div>
 

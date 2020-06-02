@@ -118,7 +118,14 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 		if (!$this->hasErrors()) {
 			if ($this->BeneficiaryTypeID == 1) {
 				$total = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID])->count();
-				$eligible = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID, 'BeneficiaryTypeID' => 1])->andWhere('BeneficiaryID <> ' . $this->BeneficiaryID)->count();
+				if ($this->isNewRecord) {
+					$total ++;
+				}
+				if ($this->BeneficiaryID) {
+					$eligible = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID, 'BeneficiaryTypeID' => 1])->andWhere('BeneficiaryID <> ' . $this->BeneficiaryID)->count();
+				} else {
+					$eligible = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID, 'BeneficiaryTypeID' => 1])->count();
+				}
 				$total = ($total) ? $total : 0;
 				if ($total <= 5 && $eligible >= 1) {
 					$this->addError($attribute, 'Your Household is only allowed 1 (One) Eligible Beneficiary');

@@ -276,6 +276,9 @@ Modal::end();
 													'enterpriseTypes.EnterpriseTypeName',
 													'organizationName',
 													'projectSectors.ProjectSectorName',
+													'subComponents.SubComponentName',
+													'subComponentCategories.SubComponentCategoryName',
+													'projectSectorInterventions.SectorInterventionName',
 													[
 														'attribute' => 'projectStatus.ProjectStatusName',
 														'label' => 'Status',

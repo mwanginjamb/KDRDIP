@@ -452,7 +452,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li <?= ($currentPage == 'components') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/components"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">Manage Components</span></a>
 									</li>
 								<?php } ?>
-								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77, 104])) > 0) { ?>
+								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77, 104, 108, 109])) > 0) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
 										<ul class="menu-content">	
 											<?php if (in_array(22, $rights)) { ?>								
@@ -526,7 +526,15 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<?php if (in_array(104, $rights)) { ?>
 												<li <?= ($currentPage == 'project-sectors') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-sectors"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Project Sectors</span></a>
 												</li>	
-											<?php } ?>																			
+											<?php } ?>		
+											<?php if (in_array(108, $rights)) { ?>
+												<li <?= ($currentPage == 'project-sector-interventions') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-sector-interventions"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sectors Interventions</span></a>
+												</li>	
+											<?php } ?>
+											<?php if (in_array(109, $rights)) { ?>
+												<li <?= ($currentPage == 'sub-component-categories') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-component-categories"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub Comp Categories</span></a>
+												</li>	
+											<?php } ?>																	
 										</ul>
 									</li>
 								<?php } ?>

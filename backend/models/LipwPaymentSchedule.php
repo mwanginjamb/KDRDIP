@@ -36,8 +36,7 @@ class LipwPaymentSchedule extends \yii\db\ActiveRecord
 	public function delete()
 	{
 		$m = parent::findOne($this->getPrimaryKey());
-		$m->deleted = 1;
-		$m->deletedTime = time();
+		$m->Deleted = 1;
 		return $m->save();
 	}
 

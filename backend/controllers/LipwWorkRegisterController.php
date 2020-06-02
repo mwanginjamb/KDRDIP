@@ -85,7 +85,7 @@ class LipwWorkRegisterController extends Controller
 		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => LipwWorkRegister::find(),
+			'query' => LipwWorkRegister::find()->andWhere(['MasterRollID' => $mId]),
 			'pagination' => false,
 		]);
 
@@ -129,20 +129,31 @@ class LipwWorkRegisterController extends Controller
 
 			foreach ($lines as $line) {
 				if ($line['Worked'] == 1) {
-					if ($line['WorkRegisterID'] == '') {
+					/* if ($line['WorkRegisterID'] == '') {
 						$model = new LipwWorkRegister();
 					} else {
 						$model = LipwWorkRegister::findOne($line['WorkRegisterID']);
+					} */
+
+					/* Check if the beneficiary's entry exists for the same day */
+					$exists = LipwWorkRegister::findOne([
+						'MasterRollID' => $header['MasterRollID'],
+						'BeneficiaryID' => $line['BeneficiaryID'],
+						'Date' => $header['Date']
+					]);
+
+					if (empty($exists)) {
+						/* if No entry exists create a new entry */
+						$model = new LipwWorkRegister();
+						$model->MasterRollID = $header['MasterRollID'];
+						$model->BeneficiaryID = $line['BeneficiaryID'];
+						$model->ProjectID = $header['ProjectID'];
+						$model->Date = $header['Date'];
+						$model->Amount = $line['Rate'];
+						$model->save();
 					}
-					$model->MasterRollID = $header['MasterRollID'];
-					$model->BeneficiaryID = $line['BeneficiaryID'];
-					$model->ProjectID = $header['ProjectID'];
-					$model->Date = $header['Date'];
-					$model->Amount = $line['Rate'];
-					$model->save();
 				} else {
 					if ($line['WorkRegisterID'] != '') {
-						// $model = LipwWorkRegister::findOne($line['WorkRegisterID'])->delete();
 					}
 				}
 			}

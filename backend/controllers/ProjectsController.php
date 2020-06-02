@@ -44,6 +44,9 @@ use app\models\ProducerOrganizations;
 use app\models\Businesses;
 use app\models\Communities;
 use app\models\ProjectSectors;
+use app\models\ProjectSectorInterventions;
+use app\models\SubComponentCategories;
+use app\models\SubComponents;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -406,6 +409,10 @@ class ProjectsController extends Controller
 		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
 		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
 		$projectSectors = ArrayHelper::map(ProjectSectors::find()->all(), 'ProjectSectorID', 'ProjectSectorName');
+		$projectSectorInterventions = ArrayHelper::map(ProjectSectorInterventions::find()->all(), 'SectorInterventionID', 'SectorInterventionName');
+		$subComponentCategories = ArrayHelper::map(SubComponentCategories::find()->all(), 'SubComponentCategoryID', 'SubComponentCategoryName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		
 		$subLocations = [];
 		$wards = [];
 	
@@ -505,6 +512,9 @@ class ProjectsController extends Controller
 			'organizations' => $organizations,
 			'projectSectors' => $projectSectors,
 			'gender' => $gender,
+			'projectSectorInterventions' => $projectSectorInterventions,
+			'subComponentCategories' => $subComponentCategories,
+			'subComponents' => $subComponents,
 		]);
 	}
 
@@ -564,6 +574,10 @@ class ProjectsController extends Controller
 		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
 		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID ])->all(), 'WardID', 'WardName');
+
+		$projectSectorInterventions = ArrayHelper::map(ProjectSectorInterventions::find()->all(), 'SectorInterventionID', 'SectorInterventionName');
+		$subComponentCategories = ArrayHelper::map(SubComponentCategories::find()->all(), 'SubComponentCategoryID', 'SubComponentCategoryName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
 
 
 		$etid = $model->EnterpriseTypeID;
@@ -675,6 +689,9 @@ class ProjectsController extends Controller
 			'organizations' => $organizations,
 			'projectSectors' => $projectSectors,
 			'gender' => $gender,
+			'projectSectorInterventions' => $projectSectorInterventions,
+			'subComponentCategories' => $subComponentCategories,
+			'subComponents' => $subComponents,
 		]);
 	}
 

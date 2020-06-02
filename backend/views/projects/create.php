@@ -63,6 +63,9 @@ $(window).on("load", function(){
 		'organizations' => $organizations,
 		'projectSectors' => $projectSectors,
 		'gender' => $gender,
+		'projectSectorInterventions' => $projectSectorInterventions,
+		'subComponentCategories' => $subComponentCategories,
+		'subComponents' => $subComponents,
 	]) ?>
 
 </section>

@@ -3,9 +3,8 @@
 namespace backend\controllers;
 
 use Yii;
-use app\models\LipwMasterRollRegister;
-use app\models\LipwBeneficiaries;
-use app\models\LipwMasterRoll;
+use app\models\SubComponentCategories;
+use app\models\SubComponents;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -15,9 +14,9 @@ use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 
 /**
- * LipwMasterRollRegisterController implements the CRUD actions for LipwMasterRollRegister model.
+ * SubComponentCategoriesController implements the CRUD actions for SubComponentCategories model.
  */
-class LipwMasterRollRegisterController extends Controller
+class SubComponentCategoriesController extends Controller
 {
 	public $rights;
 	/**
@@ -25,7 +24,7 @@ class LipwMasterRollRegisterController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(99);
+		$this->rights = RightsController::Permissions(109);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -68,79 +67,66 @@ class LipwMasterRollRegisterController extends Controller
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'delete' => ['POST', 'GET'],
+					'delete' => ['POST'],
 				],
 			],
 		];
 	}
 
 	/**
-	 * Lists all LipwMasterRollRegister models.
+	 * Lists all SubComponentCategories models.
 	 * @return mixed
 	 */
 	public function actionIndex()
 	{
-		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
-		$page = isset($_GET['page']) ? $_GET['page'] : 1;
-
 		$dataProvider = new ActiveDataProvider([
-			'query' => LipwMasterRollRegister::find()->andWhere(['MasterRollID' => $mId]),
-			'pagination' => false,
+			'query' => SubComponentCategories::find(),
 		]);
 
-		return $this->renderPartial('index', [
+		return $this->render('index', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
-			'mId' => $mId,
 		]);
 	}
 
 	/**
-	 * Displays a single LipwMasterRollRegister model.
+	 * Displays a single SubComponentCategories model.
 	 * @param integer $id
 	 * @return mixed
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	public function actionView($id)
 	{
-		return $this->renderPartial('view', [
+		return $this->render('view', [
 			'model' => $this->findModel($id),
 			'rights' => $this->rights,
 		]);
 	}
 
 	/**
-	 * Creates a new LipwMasterRollRegister model.
+	 * Creates a new SubComponentCategories model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 * @return mixed
 	 */
 	public function actionCreate()
 	{
-		$mId = isset(Yii::$app->request->get()['mId']) ? Yii::$app->request->get()['mId'] : 0;
-
-		$masterRoll = LipwMasterRoll::findOne($mId);
-
-		$model = new LipwMasterRollRegister();
-		$model->MasterRollID = $mId;
+		$model = new SubComponentCategories();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->MasterRollRegisterID]);
+			return $this->redirect(['view', 'id' => $model->SubComponentCategoryID]);
 		}
 
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
-			->joinWith('lipwHouseHolds')
-			->andWhere(['lipw_households.SubLocationID' => $masterRoll->SubLocationID, 'BeneficiaryTypeID' => 1])
-			->all(), 'BeneficiaryID', 'BeneficiaryName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
 
-		return $this->renderPartial('create', [
+		return $this->render('create', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'beneficiaries' => $beneficiaries,
+			'subComponents' => $subComponents
 		]);
 	}
 
 	/**
-	 * Updates an existing LipwMasterRollRegister model.
+	 * Updates an existing SubComponentCategories model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id
 	 * @return mixed
@@ -151,23 +137,20 @@ class LipwMasterRollRegisterController extends Controller
 		$model = $this->findModel($id);
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->MasterRollRegisterID]);
+			return $this->redirect(['view', 'id' => $model->SubComponentCategoryID]);
 		}
 
-		$beneficiaries = ArrayHelper::map(LipwBeneficiaries::find()
-			->joinWith('lipwHouseHolds')
-			->andWhere(['lipw_households.SubLocationID' => $model->lipwMasterRoll->SubLocationID])
-			->all(), 'BeneficiaryID', 'BeneficiaryName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
 
-		return $this->renderPartial('update', [
+		return $this->render('update', [
 			'model' => $model,
 			'rights' => $this->rights,
-			'beneficiaries' => $beneficiaries,
+			'subComponents' => $subComponents
 		]);
 	}
 
 	/**
-	 * Deletes an existing LipwMasterRollRegister model.
+	 * Deletes an existing SubComponentCategories model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.
 	 * @param integer $id
 	 * @return mixed
@@ -181,15 +164,15 @@ class LipwMasterRollRegisterController extends Controller
 	}
 
 	/**
-	 * Finds the LipwMasterRollRegister model based on its primary key value.
+	 * Finds the SubComponentCategories model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $id
-	 * @return LipwMasterRollRegister the loaded model
+	 * @return SubComponentCategories the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = LipwMasterRollRegister::findOne($id)) !== null) {
+		if (($model = SubComponentCategories::findOne($id)) !== null) {
 			return $model;
 		}
 

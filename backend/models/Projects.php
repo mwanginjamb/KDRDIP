@@ -39,6 +39,9 @@ use Yii;
  * @property int $EnterpriseTypeID
  * @property string $IntegrationID
  * @property int $ProjectSectorID
+ * @property int $SubComponentID
+ * @property int $SubComponentCategoryID
+ * @property int $SectorInterventionID
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -58,8 +61,8 @@ class Projects extends \yii\db\ActiveRecord
 		return [
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID',
-				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID'], 'integer'],
-			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID'], 'string'],
+				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID', 'SubComponentID', 'SubComponentCategoryID'], 'integer'],
+			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID', 'SectorInterventionID'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
@@ -104,6 +107,9 @@ class Projects extends \yii\db\ActiveRecord
 			'EnterpriseTypeID' => 'Enterprise Type',
 			'IntegrationID' => 'Integration',
 			'ProjectSectorID' => 'Project Sector',
+			'SubComponentID' => 'Sub Component',
+			'SubComponentCategoryID' => 'Sub Component Category',
+			'SectorInterventionID' => 'Sector Intervention',
 		];
 	}
 
@@ -187,6 +193,21 @@ class Projects extends \yii\db\ActiveRecord
 	public function getEnterpriseTypes()
 	{
 		return $this->hasOne(EnterpriseTypes::className(), ['EnterpriseTypeID' => 'EnterpriseTypeID'])->from(enterprisetypes::tableName());
+	}
+
+	public function getSubComponents()
+	{
+		return $this->hasOne(SubComponents::className(), ['SubComponentID' => 'SubComponentID']);
+	}
+
+	public function getSubComponentCategories()
+	{
+		return $this->hasOne(SubComponentCategories::className(), ['SubComponentCategoryID' => 'SubComponentCategoryID']);
+	}
+
+	public function getProjectSectorInterventions()
+	{
+		return $this->hasOne(ProjectSectorInterventions::className(), ['SectorInterventionID' => 'SectorInterventionID']);
 	}
 
 	public function getOrganizationName()

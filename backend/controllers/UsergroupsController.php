@@ -156,7 +156,7 @@ class UsergroupsController extends Controller
 		}
 
 		return $this->render('create', [
-			'model' => $model, 
+			'model' => $model,
 			'lines' => $lines,
 			'rights' => $this->rights,
 		]);
