@@ -12,6 +12,9 @@ $cid = isset($_GET['cid']) ? $_GET['cid'] : '';
 $etid = isset($_GET['etid']) ? $_GET['etid'] : '';
 $m = isset($_GET['m']) ? $_GET['m'] : '';
 
+// echo $currentPage;
+// echo $currentRoute; exit;
+
 use app\models\Components;
 use app\models\EnterpriseTypes;
 
@@ -189,7 +192,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 						</ul>
 					</li>
 					<?php } ?>
-					<?php if (count(array_intersect($rights, [33, 56, 45, 41, 18, 39, 50, 40, 27, 49, 69, 70, 53, 52, 51, 50, 71, 72, 73, 74, 75, 76, 32, 55, 58, 31])) > 0) { ?>
+					<?php if (count(array_intersect($rights, [33, 56, 45, 41, 18, 39, 50, 40, 27, 49, 69, 70, 53, 52, 51, 50, 71, 72, 73, 74, 75, 76, 32, 55, 58, 31, 110])) > 0) { ?>
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Procurement</span></a>
 						<ul class="menu-content">
 							<?php if (in_array(33, $rights)) { ?>
@@ -218,6 +221,10 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							<?php } ?>
 							<?php if (in_array(50, $rights)) { ?>	
 								<li <?= ($currentPage == 'stocktake') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
+								</li>		
+							<?php } ?>
+							<?php if (in_array(110, $rights)) { ?>	
+								<li <?= ($currentRoute == 'reports/procurement-plan') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/procurement-plan"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan</span></a>
 								</li>		
 							<?php } ?>
 							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70])) > 0) { ?>		
@@ -366,7 +373,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											</li>	
 										<?php } ?>	
 										<?php if (in_array(31, $rights)) { ?>	
-											<li <?= ($currentPage == 'procurement-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Methods</span></a>
+											<li <?= ($currentRoute == 'reports/procurement-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Methods</span></a>
 											</li>	
 										<?php } ?>							
 									</ul>

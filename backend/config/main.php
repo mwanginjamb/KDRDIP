@@ -16,6 +16,10 @@ return [
 						],
 	'modules' => [],
 	'components' => [
+		'formatter' => [
+			'class' => 'yii\i18n\Formatter',
+			'timeZone' => 'Africa/Nairobi'
+		],
 		'request' => [
 			'csrfParam' => '_csrf-backend',
 			// 'csrfParam' => '_backendCSRF',

@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		color: #FFFFFF !important;
 	}
 </style>
-<h4 class="form-section">Beneficiaries</h4>
+<h4 class="form-section">Eligible Workers</h4>
 
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions' => ['width' => '5%'],
 		],
 		[
-			'label' => 'Beneficiary',
+			'label' => 'Name',
 			'attribute' => 'lipwWorkRegister.lipwBeneficiaries.BeneficiaryName',
 		],
 		[

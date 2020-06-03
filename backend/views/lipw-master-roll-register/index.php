@@ -20,7 +20,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	color: #FFFFFF !important;
 }
 </style>
-<h4 class="form-section">Beneficiaries</h4>
+<h4 class="form-section">Eligible Workers</h4>
 <p>
 	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-master-roll-register/create?mId=' . $mId) . '", \'tab2\')']) : '' ?>	
 </p>
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions' => ['width' => '5%'],
 		],
 		[
-			'label' => 'Beneficiary',
+			'label' => 'Name',
 			'attribute' => 'lipwBeneficiaries.BeneficiaryName',
 		],
 		[

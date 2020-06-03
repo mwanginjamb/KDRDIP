@@ -47,6 +47,7 @@ use app\models\ProjectSectors;
 use app\models\ProjectSectorInterventions;
 use app\models\SubComponentCategories;
 use app\models\SubComponents;
+use app\models\EnterpriseTypes;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -412,6 +413,7 @@ class ProjectsController extends Controller
 		$projectSectorInterventions = ArrayHelper::map(ProjectSectorInterventions::find()->all(), 'SectorInterventionID', 'SectorInterventionName');
 		$subComponentCategories = ArrayHelper::map(SubComponentCategories::find()->all(), 'SubComponentCategoryID', 'SubComponentCategoryName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		$enterpriseTypes = ArrayHelper::map(EnterpriseTypes::find()->all(), 'EnterpriseTypeID', 'EnterpriseTypeName');
 		
 		$subLocations = [];
 		$wards = [];
@@ -515,6 +517,7 @@ class ProjectsController extends Controller
 			'projectSectorInterventions' => $projectSectorInterventions,
 			'subComponentCategories' => $subComponentCategories,
 			'subComponents' => $subComponents,
+			'enterpriseTypes' => $enterpriseTypes,
 		]);
 	}
 
@@ -578,6 +581,7 @@ class ProjectsController extends Controller
 		$projectSectorInterventions = ArrayHelper::map(ProjectSectorInterventions::find()->all(), 'SectorInterventionID', 'SectorInterventionName');
 		$subComponentCategories = ArrayHelper::map(SubComponentCategories::find()->all(), 'SubComponentCategoryID', 'SubComponentCategoryName');
 		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		$enterpriseTypes = ArrayHelper::map(EnterpriseTypes::find()->all(), 'EnterpriseTypeID', 'EnterpriseTypeName');
 
 
 		$etid = $model->EnterpriseTypeID;
@@ -692,6 +696,7 @@ class ProjectsController extends Controller
 			'projectSectorInterventions' => $projectSectorInterventions,
 			'subComponentCategories' => $subComponentCategories,
 			'subComponents' => $subComponents,
+			'enterpriseTypes' => $enterpriseTypes,
 		]);
 	}
 

@@ -42,7 +42,7 @@ class ProjectSectorInterventions extends \yii\db\ActiveRecord
 		//this record is always new
 		if ($this->isNewRecord) {
 			$this->CreatedBy = Yii::$app->user->identity->UserID;
-			$this->CreatedDate = date('Y-m-d h:i:s');
+			// $this->CreatedDate = date('Y-m-d h:i:s');
 		}
 		return parent::save();
 	}

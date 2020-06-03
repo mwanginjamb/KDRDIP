@@ -17,13 +17,13 @@ $(window).on("load", function(){
 	var componentId = <?= $model->ComponentID ;?>;
 	if (componentId == 1) {
 		$("#projectsectorid").show();
-		$("#organizationid").hide();
+		$("#organizations").hide();
 	} else if (componentId == 3) {
 		$("#projectsectorid").hide();
-		$("#organizationid").show();
+		$("#organizations").show();
 	} else {
 		$("#projectsectorid").hide();
-		$("#organizationid").hide();
+		$("#organizations").hide();
 	}
 });
 </script>
@@ -66,6 +66,7 @@ $(window).on("load", function(){
 		'projectSectorInterventions' => $projectSectorInterventions,
 		'subComponentCategories' => $subComponentCategories,
 		'subComponents' => $subComponents,
+		'enterpriseTypes' => $enterpriseTypes,
 	]) ?>
 
 </section>

@@ -107,7 +107,8 @@ use yii\widgets\ActiveForm;
 				<td style="padding: 4px !important; width: 5% !important">End Date</td>
 				<td style="padding: 4px !important; width: 5% !important">Actual Start Date</td>
 				<td style="padding: 4px !important; width: 5% !important">Actual End Date</td>
-				<td style="padding: 4px !important; width: 10% !important">Responsibility</td>
+				<td style="padding: 4px !important; width: 12% !important">Responsibility</td>
+				<td style="padding: 4px !important; width: 5% !important">Procurement</td>
 			</tr>	
 			</thead>
 			<?php
@@ -124,6 +125,7 @@ use yii\widgets\ActiveForm;
 					<td><?= $form->field($column, '[' . $x . ']ActualStartDate')->textInput(['class' => 'form-control1 slim-field ', 'type' => 'date'])->label(false) ?></td>
 					<td><?= $form->field($column, '[' . $x . ']ActualEndDate')->textInput(['class' => 'form-control1 slim-field ', 'type' => 'date'])->label(false) ?></td>
 					<td><?= $form->field($column, '[' . $x . ']ResponsibilityID', ['template' => '{label}{input}'])->dropDownList($employees, ['prompt'=>'','class'=>'form-control1 slim-field '])->label(false) ?></td>
+					<td align="center"><?= $form->field($column, '[' . $x . ']ProcurementItem')->checkBox()->label(false) ?></td>
 				</tr>
 				<?php
 			} ?>

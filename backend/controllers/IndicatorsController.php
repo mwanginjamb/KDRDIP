@@ -341,6 +341,7 @@ class IndicatorsController extends Controller
 					$_column->EndDate = $column['EndDate'];
 					$_column->ActualStartDate = $column['ActualStartDate'];
 					$_column->ActualEndDate = $column['ActualEndDate'];
+					$_column->ProcurementItem = $column['ProcurementItem'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
 				}
@@ -352,6 +353,7 @@ class IndicatorsController extends Controller
 				$_column->EndDate = $column['EndDate'];
 				$_column->ActualStartDate = $column['ActualStartDate'];
 				$_column->ActualEndDate = $column['ActualEndDate'];
+				$_column->ProcurementItem = $column['ProcurementItem'];
 				$_column->save();
 			}
 		}

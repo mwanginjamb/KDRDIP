@@ -11,7 +11,7 @@
 .pdf-table tbody td, .pdf-table tbody th {
 	font-size: 1rem;
 	font-weight: 400;
-	height: 2.5rem;
+	height: 2.0rem;
 	padding-top: 0 !important;
 	padding-bottom: 0 !important;
 	padding-left: 3px !important;
@@ -22,7 +22,7 @@
 .pdf-table thead td, .pdf-table thead th, .pdf-table tfoot td, .pdf-table tfoot th {
 	font-size: 1rem;
 	font-weight: 900;
-	/* height: 2.5rem; */
+	height: 2.0rem;
 	padding-top: 3px !important;
 	padding-bottom: 3px !important;
 	padding-left: 3px !important;
@@ -31,6 +31,13 @@
 	background-color: darkgray;
 	text-align: left;
 }
+
+.pdf-table tbody th {
+	background-color: darkgray;
+}
+
+.pdf-table tbody tr:nth-child(even) {background: #F5F5F5}
+.pdf-table tbody tr:nth-child(odd) {background: #FFFFFF}
 
 .company-name {
 	margin: 3px;

@@ -18,6 +18,7 @@ use Yii;
  * @property string $ActualEndDate
  * @property int $ResponsibilityID
  * @property string $CreatedDate
+ * @property int $ProcurementItem
  * @property int $CreatedBy
  * @property int $Deleted
  */
@@ -39,7 +40,7 @@ class Activities extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['IndicatorID', 'ResponsibilityID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['IndicatorID', 'ResponsibilityID', 'CreatedBy', 'Deleted', 'ProcurementItem'], 'integer'],
 			[['StartDate', 'EndDate', 'ActualStartDate', 'ActualEndDate', 'CreatedDate'], 'safe'],
 			[['ActivityName'], 'string', 'max' => 500],
 		];
@@ -58,7 +59,8 @@ class Activities extends \yii\db\ActiveRecord
 			'EndDate' => 'End Date',
 			'ActualStartDate' => 'Actual Start Date',
 			'ActualEndDate' => 'Actual End Date',
-			'ResponsibilityID' => 'Responsibility ID',
+			'ResponsibilityID' => 'Responsibility',
+			'ProcurementItem' => '',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
