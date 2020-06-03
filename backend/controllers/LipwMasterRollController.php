@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\LipwMasterRoll;
+use app\models\LipwBeneficiaries;
+use app\models\LipwMasterRollRegister;
 use app\models\Counties;
 use app\models\SubCounties;
 use app\models\Locations;
@@ -116,6 +118,19 @@ class LipwMasterRollController extends Controller
 		$model = new LipwMasterRoll();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			/* Add existing beneficiaries to the new master-roll register*/
+			$beneficiaries = LipwBeneficiaries::find()->joinWith('lipwHouseHolds')
+																	->andWhere(['lipw_households.SubLocationID' => $model->SubLocationID])
+																	->all();
+			foreach ($beneficiaries as $beneficiary) {
+				$m = new LipwMasterRollRegister();
+				$m->BeneficiaryID = $beneficiary->BeneficiaryID;
+				$m->MasterRollID = $model->MasterRollID;
+				$m->DateAdded = date('Y-m-d');
+				$m->Rate = 250;
+				$m->Active = 1;
+				$m->save();
+			}
 			return $this->redirect(['view', 'id' => $model->MasterRollID]);
 		}
 

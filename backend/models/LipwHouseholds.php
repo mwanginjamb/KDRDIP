@@ -10,6 +10,7 @@ use Yii;
  * @property int $HouseholdID
  * @property string $HouseholdName
  * @property int $SubLocationID
+ * @property int $TotalBeneficiaries
  * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
@@ -58,11 +59,11 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['SubLocationID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'LocationID'], 'integer'],
+			[['SubLocationID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'LocationID', 'TotalBeneficiaries'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['HouseholdName'], 'string', 'max' => 45],
-			[['SubLocationID', 'HouseholdName', 'CountyID', 'SubCountyID', 'LocationID'], 'required'],
+			[['SubLocationID', 'HouseholdName', 'CountyID', 'SubCountyID', 'LocationID', 'TotalBeneficiaries'], 'required'],
 		];
 	}
 
@@ -79,6 +80,7 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 			'SubCountyID' => 'Sub County',
 			'LocationID' => 'Location',
 			'Notes' => 'Notes',
+			'TotalBeneficiaries' => 'Total Beneficiaries',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

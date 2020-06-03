@@ -117,7 +117,8 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 		}
 		if (!$this->hasErrors()) {
 			if ($this->BeneficiaryTypeID == 1) {
-				$total = parent::find()->andWhere(['HouseholdID' => $this->HouseholdID])->count();
+				$m = parent::findOne($this->HouseholdID);
+				$total = !empty($m) ? $m->TotalBeneficiaries : 0;
 				if ($this->isNewRecord) {
 					$total ++;
 				}

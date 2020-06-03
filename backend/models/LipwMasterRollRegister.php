@@ -64,8 +64,8 @@ class LipwMasterRollRegister extends \yii\db\ActiveRecord
 	{
 		return [
 			'MasterRollRegisterID' => 'Master Roll Register ID',
-			'BeneficiaryID' => 'Beneficiary ID',
-			'MasterRollID' => 'Master Roll ID',
+			'BeneficiaryID' => 'Beneficiary',
+			'MasterRollID' => 'Master Roll',
 			'Rate' => 'Rate',
 			'DateAdded' => 'Date Added',
 			'Active' => 'Active',

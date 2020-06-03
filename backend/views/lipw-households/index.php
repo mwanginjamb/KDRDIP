@@ -44,6 +44,10 @@ $this->params['breadcrumbs'][] = $this->title;
 								],
 								'HouseholdName',
 								[
+									'attribute' => 'TotalBeneficiaries',
+									'headerOptions' => ['width' => '10%'],
+								],
+								[
 									'attribute' => 'subLocations.SubLocationName',
 									'format' => 'text',
 									'headerOptions' => ['width' => '15%'],

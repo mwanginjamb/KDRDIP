@@ -66,7 +66,7 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'SubLocationID')->dropDownList($subLocations, ['prompt'=>'Select']); ?>
 				</div>
 				<div class="col-md-6">
-						
+					<?= $form->field($model, 'TotalBeneficiaries')->textInput(['type' => 'number']) ?>				
 				</div>			
 			</div>
 

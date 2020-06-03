@@ -77,7 +77,7 @@ class LipwMasterRoll extends \yii\db\ActiveRecord
 			'MasterRollName' => 'Master Roll Name',
 			'CountyID' => 'County',
 			'SubCountyID' => 'Sub County',
-			'LocationID' => 'Location',
+			'LocationID' => 'Ward',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
