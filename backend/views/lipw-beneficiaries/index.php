@@ -34,6 +34,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		[
 			'class' => 'yii\grid\SerialColumn',
 			'headerOptions' => ['width' => '5%'],
+			'contentOptions' => function ($model) {
+				return ['style' => 'background-color:'
+					 . ($model->Principal == '1' ? 'blue; color: white; ' : 'white')];
+			},
 		],
 		'beneficiaryName',
 		[
@@ -60,6 +64,11 @@ $this->params['breadcrumbs'][] = $this->title;
 			},
 			'format' => 'text',
 			'headerOptions' => ['width' => '10%'],
+		],
+		[
+			'attribute' => 'Principal',
+			'format' => 'boolean',
+			'headerOptions' => ['width' => '5%'],
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',

@@ -20,6 +20,7 @@ use Yii;
  * @property string $BankAccountNumber
  * @property string $BankAccountName
  * @property int $BankID
+ * @property int $Principal
  * @property int $BankBranchID
  * @property string $CreatedDate
  * @property int $CreatedBy
@@ -65,7 +66,7 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	{
 		return [
 			[['DateOfBirth', 'CreatedDate'], 'safe'],
-			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted', 'BeneficiaryTypeID'], 'integer'],
+			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted', 'BeneficiaryTypeID', 'Principal'], 'integer'],
 			[['FirstName', 'MiddleName', 'LastName', 'IDNumber', 'Mobile', 'BankAccountNumber', 'BankAccountName'], 'string', 'max' => 45],
 			[['Gender'], 'string', 'max' => 1],
 			[['FirstName', 'LastName', 'IDNumber', 'Mobile', 'DateOfBirth', 'Gender'], 'required'],
@@ -93,6 +94,7 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 			'BankAccountName' => 'Bank Account Name',
 			'BankID' => 'Bank',
 			'BankBranchID' => 'Branch',
+			'Principal' => 'Principal',
 			'BeneficiaryTypeID' => 'Beneficiary Type',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
@@ -117,7 +119,7 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 		}
 		if (!$this->hasErrors()) {
 			if ($this->BeneficiaryTypeID == 1) {
-				$m = parent::findOne($this->HouseholdID);
+				$m = LipwHouseholds::findOne($this->HouseholdID);
 				$total = !empty($m) ? $m->TotalBeneficiaries : 0;
 				if ($this->isNewRecord) {
 					$total ++;

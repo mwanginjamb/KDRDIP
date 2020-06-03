@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use app\models\ActivityBudget;
 use app\models\FundsRequisition;
 use app\models\Payments;
@@ -188,6 +189,24 @@ class Projects extends \yii\db\ActiveRecord
 	public function getAmountSpent()
 	{
 		return Payments::find()->joinWith('invoices')->joinWith('invoices.purchases')->where(['purchases.ProjectID' => $this->ProjectID])->sum('payments.Amount');
+	}
+
+	public function getCummulativeExpenditure()
+	{
+		$startDate = date('Y') . '-01-01';
+		$endDate = date('Y-m-d');
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post();
+			$startDate = isset($params['FilterData']['StartDate']) ? $params['FilterData']['StartDate'] : date('Y') . '-01-01';
+			$endDate = isset($params['FilterData']['EndDate']) ? $params['FilterData']['EndDate'] : date('Y-m-d');
+		}
+
+		return Payments::find()->joinWith('invoices')
+										->joinWith('invoices.purchases')
+										->andWhere(['purchases.ProjectID' => $this->ProjectID])
+										->andWhere(['>=','purchases.ApprovalDate', $startDate])
+										->andWhere(['<=','purchases.ApprovalDate', $endDate])
+										->sum('payments.Amount');
 	}
 
 	public function getEnterpriseTypes()

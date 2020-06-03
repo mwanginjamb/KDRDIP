@@ -51,6 +51,10 @@ $this->params['breadcrumbs'][] = $this->title;
 			'attribute' => 'DateOfBirth',
 			'format' => ['date', 'php:d/m/Y'],
 		],
+		[
+			'attribute' => 'Principal',
+			'format' => 'boolean',
+		],
 		'AlternativeID',
 		'BankAccountNumber',
 		'BankAccountName',

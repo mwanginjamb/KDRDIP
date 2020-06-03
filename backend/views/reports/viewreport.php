@@ -63,6 +63,27 @@
 					</div>
 				</div>
 				<?php
+			} elseif ($report == 'projects-cummulative-expenditure') { ?>
+				<div class="row">
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...']); ?>
+					</div>
+					<div class="col-lg-2">
+						<?= $form->field($model, 'StartDate')->textInput(['type' => 'date']) ?>
+					</div>
+					<div class="col-lg-2">
+						<?= $form->field($model, 'EndDate')->textInput(['type' => 'date']) ?>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group" style="padding-top:15px">
+						<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						</div>
+					</div>
+				</div>				
+				<?php
 			} else { ?>
 				<div class="row">
 					<div class="col-lg-3">
@@ -112,7 +133,7 @@
 						</div>
 					</div>
 				</div>
-				<?php 
+				<?php
 			} ?>
 
 			<?php ActiveForm::end();

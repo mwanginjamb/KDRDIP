@@ -49,7 +49,9 @@ use yii\widgets\ActiveForm;
 				<div class="col-md-6">
 					<?= $form->field($model, 'BeneficiaryTypeID')->dropDownList($beneficiaryTypes, ['prompt'=>'Select']); ?>
 				</div>
-				<div class="col-md-6">	
+				<div class="col-md-6">
+					<label for="lipwbeneficiaries-principal" style="display: block;">Principal</label>
+					<?= Html::activeCheckbox($model, 'Principal', ['class' => 'form-control', 'label' => '', 'style' => 'width: 20px; margin-top: 20px']); ?>
 				</div>			
 			</div>			
 			

@@ -19,6 +19,8 @@ class FilterData extends Model
 	public $SubCountyID;
 	public $LocationID;
 	public $SubLocationID;
+	public $StartDate;
+	public $EndDate;
 
 	public function rules()
 	{
@@ -26,6 +28,7 @@ class FilterData extends Model
 			[['Month', 'Year', 'ProductCategoryID'], 'required'],
 			[['Month', 'Year', 'ProductCategoryID', 'StockTakeID', 'SupplierID', 'ProjectStatusID', 'ComponentID',
 				'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID', 'ProjectSectorID'], 'integer'],
+			[['StartDate', 'EndDate'], 'safe']
 		];
 	}
 
@@ -45,6 +48,8 @@ class FilterData extends Model
 			'LocationID' => 'Location',
 			'SubLocationID' => 'Village',
 			'ProjectSectorID' => 'Project Sector',
+			'EndDate' => 'End Date',
+			'StartDate' => 'Start Date',
 		];
 	}
 }

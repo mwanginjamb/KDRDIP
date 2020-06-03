@@ -84,7 +84,7 @@ $this->registerJs(' $(document).ready( function () {
 								<a class="nav-link active" id="base-tab1" data-toggle="tab" aria-controls="tab1" href="#tab1" aria-expanded="true">Details</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-payment-request-lines/index?pId=' . $model->PaymentRequestID);?>', 'tab2')">Eligible Workers</a>
+								<a class="nav-link" id="base-tab2" data-toggle="tab" aria-controls="tab2" href="#tab2" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-payment-request-lines/index?pId=' . $model->PaymentRequestID . '&mId=' . $model->MasterRollID);?>', 'tab2')">Eligible Workers</a>
 							</li>	
 							<li class="nav-item">
 								<a class="nav-link" id="base-tab3" data-toggle="tab" aria-controls="tab3" href="#tab3" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('lipw-payment-schedule/schedule?pId=' . $model->PaymentRequestID);?>', 'tab3')">Payment Schedule/ Payroll</a>

@@ -6,29 +6,13 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Eligible Workers';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<style>
-	.btn-primary {
-		border-color: #512E90 !important;
-		background-color: #6BA342 !important;
-		color: #FFFFFF !important;
-	}
-
-	.btn-danger {
-		color: #FFFFFF !important;
-	}
-</style>
-<!-- <h4 class="form-section">Eligible Workers</h4> -->
-
-<h4 class="form-section"><?= $this->title; ?><span style="float: right"><a href="<?= Yii::$app->urlManager->createUrl('lipw-payment-request-lines/print?pId=' . $pId);?>"><span class="material-icons">picture_as_pdf</span></a></span></h4>
-
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
 	'layout' => '{items}',
 	'tableOptions' => [
-		'class' => 'custom-table table-striped table-bordered zero-configuration',
+		'class' => 'pdf-table',
 	],
 	'columns' => [
 		[

@@ -129,7 +129,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									</ul>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [64, 65, 66, 67, 68, 96])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [64, 65, 66, 67, 68, 96, 101])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reports</span></a>
 									<ul class="menu-content">
 										<?php if (in_array(64, $rights)) { ?>									
@@ -158,6 +158,10 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 										<?php } ?>
 										<?php if (in_array(96, $rights)) { ?>
 											<li <?= ($currentRoute == 'reports/projects-finance' && $cid == 0 ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=0"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
+											</li>
+										<?php } ?>
+										<?php if (in_array(101, $rights)) { ?>
+											<li <?= ($currentRoute == 'reports/projects-cummulative-expenditure' && $cid == 0 ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-cummulative-expenditure?cid=0"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Cummulative Expenditure</span></a>
 											</li>
 										<?php } ?>						
 									</ul>

@@ -21,7 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	color: #FFFFFF !important;
 }
 </style>
-<h4 class="form-section">Payment Schedule / Payroll</h4>
+<h4 class="form-section">Payment Schedule / Payroll <span style="float: right"><a href="<?= Yii::$app->urlManager->createUrl('lipw-payment-schedule/print?pId=' . $pId);?>"><span class="material-icons">picture_as_pdf</span></a></span></h4>
 <p style="color: red"><?= $message; ?></p>
 <?php $form = ActiveForm::begin(['id' => 'currentForm']); ?>
 
