@@ -49,16 +49,16 @@ $this->params['breadcrumbs'][] = $this->title;
 							'attributes' => [
 								'ComplaintID',
 								'ComplainantName',
-								'PostalAddress',
+								/* 'PostalAddress',
 								'PostalCode',
-								'Town',
+								'Town', */
 								'countries.CountryName',
 								'counties.CountyName',
 								'subCounties.SubCountyName',
 								'wards.WardName',
 								'Village',
-								'Telephone',
-								'Mobile',
+								/* 'Telephone',
+								'Mobile', */
 								'complaintTypes.ComplaintTypeName',
 								'IncidentDate',
 								'projects.ProjectName',
@@ -77,12 +77,10 @@ $this->params['breadcrumbs'][] = $this->title;
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
-									
 								],
 								[
 									'label' => 'Created By',
-									'attribute' => 'users.fullName',
-									
+									'attribute' => 'users.fullName',									
 								],
 							],
 						]) ?>

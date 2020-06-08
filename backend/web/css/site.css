@@ -267,3 +267,16 @@ input[type='checkbox'].form-control:focus {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.3);
 }
 
+.pdf-table1 {
+	background-color: #FFFFFF;
+	border: 0;
+	margin-bottom: 1rem;
+	max-width: 100%;
+	width: 100%;
+	clear: both;
+	margin-top: 6px !important;
+	margin-bottom: 6px !important;
+	max-width: none !important;
+	border-collapse: separate !important;
+	border-spacing: 0;
+}

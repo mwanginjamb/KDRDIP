@@ -63,7 +63,7 @@
 					</div>
 				</div>
 				<?php
-			} elseif ($report == 'projects-cummulative-expenditure') { ?>
+			} elseif (isset($report) && $report == 'projects-cummulative-expenditure') { ?>
 				<div class="row">
 					<div class="col-lg-3">
 						<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...']); ?>
@@ -83,6 +83,41 @@
 						</div>
 					</div>
 				</div>				
+				<?php
+			} elseif (isset($report) && $report == 'component-finance-report') { ?>
+				<?php
+			} elseif (isset($report) && ($report == 'component1-report' || $report == 'component2-report' || $report == 'component3-report')) { ?>
+				<div class="row">
+					<div class="col-lg-3">
+						<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'All...', 'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-counties?id=') . '"+$(this).val(), function( data ) {
+								$( "select#filterdata-subcountyid" ).html( data );
+							});
+						']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt'=>'All...', 'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('projects/locations?id=') . '"+$(this).val(), function( data ) {
+								$( "select#filterdata-locationid" ).html( data );
+							});
+						']); ?>
+					</div>
+					<div class="col-lg-2">
+						<?= $form->field($model, 'LocationID')->dropDownList($locations, ['prompt'=>'All...', 'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-locations?id=') . '"+$(this).val(), function( data ) {
+								$( "select#filterdata-sublocationid" ).html( data );
+							});
+						']); ?>
+					</div>
+					<div class="col-lg-2">
+						<?= $form->field($model, 'SubLocationID')->dropDownList($subLocations, ['prompt'=>'All...']); ?>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group" style="padding-top:15px">
+						<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						</div>
+					</div>
+				</div>
 				<?php
 			} else { ?>
 				<div class="row">

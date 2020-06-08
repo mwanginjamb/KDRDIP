@@ -31,6 +31,8 @@ use app\models\Locations;
 use app\models\SubLocations;
 use app\models\ProjectSectors;
 use app\models\Components;
+use app\models\SubComponentCategories;
+use app\models\EnterpriseTypes;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -1910,6 +1912,393 @@ class ReportsController extends Controller
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
 			'CategoryFilterOnly' => true, 'projects' => $projects,
 			'bankAccounts' => $bankAccounts
+		]);
+	}
+
+	public function actionComponent1Report()
+	{
+		$params = Yii::$app->request->post();
+		$model = new FilterData();
+		$model->StartDate = date('Y') . '-01-01';
+		$model->EndDate = date('Y-m-d');
+
+		$model->CountyID = 0;
+		$model->SubCountyID = 0;
+		$model->LocationID = 0;
+		$model->SubLocationID = 0;
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			// Validate something
+		}
+		
+		$Title = 'Component 1 Finance Reports';
+
+		// $m = Projects::find()->joinWith('projectSectors')->joinWith('subComponents')->asArray()->all();
+		$sql = 'SELECT `subcomponents`.`SubComponentID`, `projectsectors`.`ProjectSectorID`, sum(activitybudget.Amount) AS `BudgetAmount` FROM `activitybudget` 
+					LEFT JOIN `activities` ON `activitybudget`.`ActivityID` = `activities`.`ActivityID` 
+					LEFT JOIN `indicators` ON `activities`.`IndicatorID` = `indicators`.`IndicatorID` 
+					LEFT JOIN `projects` ON `indicators`.`ProjectID` = `projects`.`ProjectID` 
+					LEFT JOIN `subcomponents` ON `subcomponents`.`SubComponentID` = `projects`.`SubComponentID` 
+					LEFT JOIN `projectsectors` ON `projectsectors`.`ProjectSectorID` = `projects`.`ProjectSectorID` 
+					WHERE `projects`.`ComponentID`=1
+					GROUP BY `subcomponents`.`SubComponentID`, `projectsectors`.`ProjectSectorID`';
+		$budget = ActivityBudget::findBySql($sql)->asArray()->all();
+		  
+		$budget = ArrayHelper::index($budget, function ($element) {
+			return $element['ProjectSectorID'];
+		}, 'SubComponentID');
+
+		$sql = 'SELECT `subcomponents`.`SubComponentID`, `projectsectors`.`ProjectSectorID`, SUM(payments.Amount) as AmountSpent FROM `payments` 
+					LEFT JOIN `invoices` ON `payments`.`InvoiceID` = `invoices`.`InvoiceID` 
+					LEFT JOIN `purchases` ON `invoices`.`PurchaseID` = `purchases`.`PurchaseID` 
+					LEFT JOIN `projects` ON `purchases`.`ProjectID` = `projects`.`ProjectID` 
+					LEFT JOIN `subcomponents` ON `subcomponents`.`SubComponentID` = `projects`.`SubComponentID` 
+					LEFT JOIN `projectsectors` ON `projectsectors`.`ProjectSectorID` = `projects`.`ProjectSectorID` 
+					WHERE `projects`.`ComponentID`=1
+					GROUP BY `subcomponents`.`SubComponentID`, `projectsectors`.`ProjectSectorID`';
+		$expenditure = Payments::findBySql($sql)->asArray()->all();
+
+		$expenditure = ArrayHelper::index($expenditure, function ($element) {
+			return $element['ProjectSectorID'];
+		}, 'SubComponentID');
+
+		$subComponents = \app\models\SubComponents::find()->andWhere(['ComponentID' => 1])->all();
+		$sectors = ProjectSectors::find()->all();
+		$component = Components::findOne(1);
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('component1-report', [
+			'component' => $component,
+			'subComponents' => $subComponents,
+			'sectors' => $sectors,
+			'budget' => $budget,
+			'expenditure' => $expenditure,
+		]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			// 'cssInline' => '.kv-heading-1{font-size:18px}',
+			'cssFile' => 'css/pdf.css',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->andWhere(['CountyID' => $model->CountyID])->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->andWhere(['SubCountyID' => $model->SubCountyID])->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->andWhere(['LocationID' => $model->LocationID])->orderBy('SubLocationName')->all(), 'SubLocationID', 'SubLocationName');
+
+		// return the pdf output as per the destination setting
+		//return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content,
+			'model' => $model,
+			'report' => 'component1-report',
+			'Filter' => true,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
+			'subLocations' => $subLocations,
+		]);
+	}
+
+	public function actionComponent2Report()
+	{
+		$params = Yii::$app->request->post();
+		$model = new FilterData();
+		$model->StartDate = date('Y') . '-01-01';
+		$model->EndDate = date('Y-m-d');
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			// Validate something
+		}
+		
+		$Title = 'Component 2 Finance Reports';
+
+		// $m = Projects::find()->joinWith('projectSectors')->joinWith('subComponents')->asArray()->all();
+		$sql = 'SELECT `subcomponents`.`SubComponentID`, `sub_component_categories`.`SubComponentCategoryID`, sum(activitybudget.Amount) AS `BudgetAmount` FROM `activitybudget` 
+					LEFT JOIN `activities` ON `activitybudget`.`ActivityID` = `activities`.`ActivityID` 
+					LEFT JOIN `indicators` ON `activities`.`IndicatorID` = `indicators`.`IndicatorID` 
+					LEFT JOIN `projects` ON `indicators`.`ProjectID` = `projects`.`ProjectID` 
+					LEFT JOIN `subcomponents` ON `subcomponents`.`SubComponentID` = `projects`.`SubComponentID` 
+					LEFT JOIN `sub_component_categories` ON `sub_component_categories`.`SubComponentCategoryID` = `projects`.`SubComponentCategoryID`
+					WHERE `projects`.`ComponentID` = 2
+					GROUP BY `subcomponents`.`SubComponentID`, `sub_component_categories`.`SubComponentCategoryID`';
+		$budget = ActivityBudget::findBySql($sql)->asArray()->all();
+		  
+		$budget = ArrayHelper::index($budget, function ($element) {
+			return $element['SubComponentCategoryID'];
+		}, 'SubComponentID');
+
+		$sql = 'SELECT `subcomponents`.`SubComponentID`, `sub_component_categories`.`SubComponentCategoryID`, SUM(payments.Amount) as AmountSpent FROM `payments` 
+					LEFT JOIN `invoices` ON `payments`.`InvoiceID` = `invoices`.`InvoiceID` 
+					LEFT JOIN `purchases` ON `invoices`.`PurchaseID` = `purchases`.`PurchaseID` 
+					LEFT JOIN `projects` ON `purchases`.`ProjectID` = `projects`.`ProjectID` 
+					LEFT JOIN `subcomponents` ON `subcomponents`.`SubComponentID` = `projects`.`SubComponentID` 
+					LEFT JOIN `sub_component_categories` ON `sub_component_categories`.`SubComponentCategoryID` = `projects`.`SubComponentCategoryID` 
+					WHERE `projects`.`ComponentID` = 2
+					GROUP BY `subcomponents`.`SubComponentID`, `sub_component_categories`.`SubComponentCategoryID`';
+		$expenditure = Payments::findBySql($sql)->asArray()->all();
+
+		$expenditure = ArrayHelper::index($expenditure, function ($element) {
+			return $element['SubComponentCategoryID'];
+		}, 'SubComponentID');
+
+		$subComponents = \app\models\SubComponents::find()->andWhere(['ComponentID' => 2])->all();
+		$categories = SubComponentCategories::find()->all();
+		$component = Components::findOne(2);
+
+		// print('<pre>');
+		// print_r($budget); exit;
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('component2-report', [
+			'component' => $component,
+			'subComponents' => $subComponents,
+			'categories' => $categories,
+			'budget' => $budget,
+			'expenditure' => $expenditure,
+		]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			// 'cssInline' => '.kv-heading-1{font-size:18px}',
+			'cssFile' => 'css/pdf.css',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->andWhere(['CountyID' => $model->CountyID])->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->andWhere(['SubCountyID' => $model->SubCountyID])->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->andWhere(['LocationID' => $model->LocationID])->orderBy('SubLocationName')->all(), 'SubLocationID', 'SubLocationName');
+		
+		// return the pdf output as per the destination setting
+		//return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content,
+			'model' => $model,
+			'report' => 'component2-report',
+			'Filter' => true,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
+			'subLocations' => $subLocations,
+		]);
+	}
+
+	public function actionComponent3Report()
+	{
+		$params = Yii::$app->request->post();
+		$model = new FilterData();
+		$model->StartDate = date('Y') . '-01-01';
+		$model->EndDate = date('Y-m-d');
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			// Validate something
+		}
+		
+		$Title = 'Component 3 Finance Reports';
+
+		$sql = 'SELECT `subcomponents`.`SubComponentID`, `enterprisetypes`.`EnterpriseTypeID`, sum(activitybudget.Amount) AS `BudgetAmount` FROM `activitybudget` 
+					LEFT JOIN `activities` ON `activitybudget`.`ActivityID` = `activities`.`ActivityID` 
+					LEFT JOIN `indicators` ON `activities`.`IndicatorID` = `indicators`.`IndicatorID` 
+					LEFT JOIN `projects` ON `indicators`.`ProjectID` = `projects`.`ProjectID` 
+					LEFT JOIN `subcomponents` ON `subcomponents`.`SubComponentID` = `projects`.`SubComponentID` 
+					LEFT JOIN `enterprisetypes` ON `enterprisetypes`.`EnterpriseTypeID` = `projects`.`EnterpriseTypeID` 
+					WHERE `projects`.`ComponentID` = 3
+					GROUP BY `subcomponents`.`SubComponentID`, `enterprisetypes`.`EnterpriseTypeID`';
+		$budget = ActivityBudget::findBySql($sql)->asArray()->all();
+		  
+		$budget = ArrayHelper::index($budget, function ($element) {
+			return $element['EnterpriseTypeID'];
+		}, 'SubComponentID');
+
+		$sql = 'SELECT `subcomponents`.`SubComponentID`, `enterprisetypes`.`EnterpriseTypeID`, SUM(payments.Amount) as AmountSpent FROM `payments` 
+					LEFT JOIN `invoices` ON `payments`.`InvoiceID` = `invoices`.`InvoiceID` 
+					LEFT JOIN `purchases` ON `invoices`.`PurchaseID` = `purchases`.`PurchaseID` 
+					LEFT JOIN `projects` ON `purchases`.`ProjectID` = `projects`.`ProjectID` 
+					LEFT JOIN `subcomponents` ON `subcomponents`.`SubComponentID` = `projects`.`SubComponentID` 
+					LEFT JOIN `enterprisetypes` ON `enterprisetypes`.`EnterpriseTypeID` = `projects`.`EnterpriseTypeID` 
+					WHERE `projects`.`ComponentID` = 3
+					GROUP BY `subcomponents`.`SubComponentID`, `enterprisetypes`.`EnterpriseTypeID`';
+		$expenditure = Payments::findBySql($sql)->asArray()->all();
+
+		$expenditure = ArrayHelper::index($expenditure, function ($element) {
+			return $element['EnterpriseTypeID'];
+		}, 'SubComponentID');
+
+		$subComponents = \app\models\SubComponents::find()->andWhere(['ComponentID' => 3])->all();
+		$enterpriseTypes = EnterpriseTypes::find()->all();
+		$component = Components::findOne(3);
+
+		// print('<pre>');
+		// print_r($budget); exit;
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('component3-report', [
+			'component' => $component,
+			'subComponents' => $subComponents,
+			'enterpriseTypes' => $enterpriseTypes,
+			'budget' => $budget,
+			'expenditure' => $expenditure,
+		]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			// 'cssInline' => '.kv-heading-1{font-size:18px}',
+			'cssFile' => 'css/pdf.css',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->andWhere(['CountyID' => $model->CountyID])->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->andWhere(['SubCountyID' => $model->SubCountyID])->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->andWhere(['LocationID' => $model->LocationID])->orderBy('SubLocationName')->all(), 'SubLocationID', 'SubLocationName');
+		
+		// return the pdf output as per the destination setting
+		//return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content,
+			'model' => $model,
+			'report' => 'component3-report',
+			'Filter' => true,
+			'counties' => $counties,
+			'subCounties' => $subCounties,
+			'locations' => $locations,
+			'subLocations' => $subLocations,
+		]);
+	}
+
+	public function actionComponentFinanceReport()
+	{
+		$params = Yii::$app->request->post();
+		$model = new FilterData();
+		$model->StartDate = date('Y') . '-01-01';
+		$model->EndDate = date('Y-m-d');
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			// Validate something
+		}
+		
+		$Title = 'Component Finance Reports';
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => Components::find(),
+			'pagination' => false,
+		]);
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('component-finance-report', ['dataProvider' => $dataProvider]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			// 'cssInline' => '.kv-heading-1{font-size:18px}',
+			'cssFile' => 'css/pdf.css',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		// return the pdf output as per the destination setting
+		//return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content,
+			'model' => $model,
+			'report' => 'component-finance-report',
+			'Filter' => true,
 		]);
 	}
 

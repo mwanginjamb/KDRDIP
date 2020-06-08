@@ -18,6 +18,7 @@ use Yii;
  */
 class ActivityBudget extends \yii\db\ActiveRecord
 {
+	public $ActivityID;
 	/**
 	 * {@inheritdoc}
 	 */

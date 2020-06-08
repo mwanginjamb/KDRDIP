@@ -52,6 +52,34 @@ class ProjectSectors extends \yii\db\ActiveRecord
 		];
 	}
 
+	public function getBudgetedAmount()
+	{
+		$startDate = date('Y') . '-01-01';
+		$endDate = date('Y-m-d');
+		if (Yii::$app->request->post()) {
+			$params = Yii::$app->request->post();
+			$startDate = isset($params['FilterData']['StartDate']) ? $params['FilterData']['StartDate'] : date('Y') . '-01-01';
+			$endDate = isset($params['FilterData']['EndDate']) ? $params['FilterData']['EndDate'] : date('Y-m-d');
+		}
+		
+		$total = ActivityBudget::find()->joinWith('activities')
+												->joinWith('activities.indicators')
+												->joinWith('activities.indicators.projects')
+												->andWhere(['projects.ProjectSectorID' => $this->ProjectSectorID])
+												->sum('activitybudget.Amount');
+		return isset($total) ? $total : 0;
+	}
+
+	public function getAmountSpent()
+	{
+		$total = Payments::find()->joinWith('invoices')
+										->joinWith('invoices.purchases')
+										->joinWith('invoices.purchases.projects')
+										->andWhere(['projects.ProjectSectorID' => $this->ProjectSectorID])
+										->sum('payments.Amount');
+		return isset($total) ? $total : 0;
+	}
+
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());

@@ -6,6 +6,12 @@
 	max-width: 100%;
 	width: 100%;
 	border-collapse: collapse;
+	clear: both;
+	margin-top: 6px !important;
+	margin-bottom: 6px !important;
+	max-width: none !important;
+	border-collapse: separate !important;
+	border-spacing: 0;
 }
 
 .pdf-table tbody td, .pdf-table tbody th {
@@ -16,24 +22,24 @@
 	padding-bottom: 0 !important;
 	padding-left: 3px !important;
 	padding-right: 3px !important;
-	border: 1px solid #E3EBF3;
+	border: 1px solid #E1E1E1;
 }
 
 .pdf-table thead td, .pdf-table thead th, .pdf-table tfoot td, .pdf-table tfoot th {
 	font-size: 1rem;
-	font-weight: 900;
+	font-weight: bold !important;
 	height: 2.0rem;
 	padding-top: 3px !important;
 	padding-bottom: 3px !important;
 	padding-left: 3px !important;
 	padding-right: 3px !important;
-	border: 1px solid #E3EBF3;
-	background-color: darkgray;
+	border: 1px solid #E1E1E1;
+	/* background-color: #d9d9d9; */
 	text-align: left;
 }
 
 .pdf-table tbody th {
-	background-color: darkgray;
+	background-color: #d9d9d9;
 }
 
 .pdf-table tbody tr:nth-child(even) {background: #F5F5F5}
@@ -56,9 +62,6 @@
 	font-size: 1rem;
 	font-weight: 900;
 	height: 4rem;
-	/* padding-top: 3px !important;
-	padding-bottom: 3px !important;
-	padding-left: 3px !important; */
 	padding-right: 5px !important;
 	vertical-align: bottom;
 }
@@ -84,4 +87,8 @@
 
 .space {
 	height: 10px;
+}
+
+.table-bordered {
+    border: 1px solid #E1E1E1;
 }
