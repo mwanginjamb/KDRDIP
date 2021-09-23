@@ -45,7 +45,7 @@ class Pages extends \yii\db\ActiveRecord
 		return [
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CreatedBy', 'Deleted'], 'integer'],
+			[['CreatedBy', 'Deleted','PageCategoryID'], 'integer'],
 			[['PageName'], 'string', 'max' => 50],
 		];
 	}
