@@ -27,6 +27,19 @@ class SubLocations extends \yii\db\ActiveRecord
 		return 'sublocations';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'sublocations.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -47,9 +60,9 @@ class SubLocations extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'SubLocationID' => 'Sub Location ID',
-			'SubLocationName' => 'Sub Location Name',
-			'LocationID' => 'Location',
+			'SubLocationID' => 'Village ID',
+			'SubLocationName' => 'Village',
+			'LocationID' => 'Ward',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

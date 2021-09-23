@@ -24,6 +24,19 @@ class IndicatorTypes extends \yii\db\ActiveRecord
 		return 'indicatortypes';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'indicatortypes.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -55,5 +68,10 @@ class IndicatorTypes extends \yii\db\ActiveRecord
 	public function getUsers()
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
+	}
+
+	public function getResultIndicators()
+	{
+		return $this->hasMany(ResultIndicators::className(), ['IndicatorTypeID' => 'IndicatorTypeID']);
 	}
 }

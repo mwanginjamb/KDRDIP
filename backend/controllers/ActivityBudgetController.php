@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\ActivityBudget;
 use yii\data\ArrayDataProvider;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -84,6 +85,14 @@ class ActivityBudgetController extends Controller
 					WHERE ProjectID = $id";
 		$dataProvider = new ArrayDataProvider([
 			'query' => ActivityBudget::findBySql($sql)->asArray(),
+		]);
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => ActivityBudget::find()->joinWith('activities')
+													->joinWith('activities.indicators')
+													->where(['ProjectID' => $id])
+													->asArray()
+													->orderBy('activities.ActivityID'),
 		]);
 
 		return $this->render('index', [

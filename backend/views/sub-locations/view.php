@@ -48,22 +48,20 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'SubLocationID',
-									'SubLocationName',
-									'locations.subCounties.counties.CountyName',
-									'locations.subCounties.SubCountyName',
-									'locations.LocationName',
-									'Notes:ntext',
-									[
-										'attribute' => 'CreatedDate',
-										'format' => ['date', 'php:d/m/Y h:i a'],
-										
-									],
-									[
-										'label' => 'Created By',
-										'attribute' => 'users.fullName',
-										
-									],
+								'SubLocationID',
+								'SubLocationName',
+								'locations.subCounties.counties.CountyName',
+								'locations.subCounties.SubCountyName',
+								'locations.LocationName',
+								'Notes:ntext',
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],										
+								],
+								[
+									'label' => 'Created By',
+									'attribute' => 'users.fullName',										
+								],
 							],
 						]) ?>
 					</div>

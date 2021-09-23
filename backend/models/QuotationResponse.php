@@ -26,6 +26,19 @@ class QuotationResponse extends \yii\db\ActiveRecord
 		return 'quotationresponse';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'quotationresponse.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

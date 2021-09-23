@@ -30,6 +30,7 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'ComplaintStatusName')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
+					<?= $form->field($model, 'Closure')->checkbox([]) ?>
 				</div>			
 			</div>
 

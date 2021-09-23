@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\Product */
 
-$this->title = 'View Product: ' . $model->ProductName;
+$this->title = 'View Item: ' . $model->ProductName;
 $this->params['breadcrumbs'][] = $this->title;
 $Rights = Yii::$app->params['rights'];
 $FormID = 1;

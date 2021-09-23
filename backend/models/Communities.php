@@ -25,6 +25,19 @@ class Communities extends \yii\db\ActiveRecord
 		return 'communities';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'communities.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -46,7 +59,7 @@ class Communities extends \yii\db\ActiveRecord
 	{
 		return [
 			'CommunityID' => 'Community ID',
-			'CommunityName' => 'Community',
+			'CommunityName' => 'Community / CPMC',
 			'CountyID' => 'County',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',

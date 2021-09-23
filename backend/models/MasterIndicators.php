@@ -33,6 +33,19 @@ class MasterIndicators extends \yii\db\ActiveRecord
 		return 'masterindicators';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'masterindicators.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

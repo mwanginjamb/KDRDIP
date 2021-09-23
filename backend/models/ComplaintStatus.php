@@ -10,6 +10,7 @@ use Yii;
  * @property int $ComplaintStatusID
  * @property string $ComplaintStatusName
  * @property string $Notes
+ * @property string $Closure
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -24,6 +25,19 @@ class ComplaintStatus extends \yii\db\ActiveRecord
 		return 'complaintstatus';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'complaintstatus.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -32,7 +46,7 @@ class ComplaintStatus extends \yii\db\ActiveRecord
 		return [
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CreatedBy', 'Deleted'], 'integer'],
+			[['CreatedBy', 'Deleted', 'Closure'], 'integer'],
 			[['ComplaintStatusName'], 'string', 'max' => 45],
 			[['ComplaintStatusName'], 'required']
 		];
@@ -45,8 +59,9 @@ class ComplaintStatus extends \yii\db\ActiveRecord
 	{
 		return [
 			'ComplaintStatusID' => 'Complaint Status ID',
-			'ComplaintStatusName' => 'Complaint Status Name',
+			'ComplaintStatusName' => 'Complaint Status',
 			'Notes' => 'Notes',
+			'Closure' => 'Closure',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',

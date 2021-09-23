@@ -33,7 +33,7 @@ $model = $budgetProvider->getModels();
 	$activityTotal = 0;
 	$grandTotal = 0;
 	foreach ($model as $key => $row) {
-		if ($activityId != $row->activities->ActivityID) { 
+		if (isset($row['activities']) && $activityId != $row['activities']['ActivityID']) {
 			if ($activityId != 0) { ?>
 				<tr>
 					<th colspan="2" align="left">Activity Total</th>
@@ -42,20 +42,20 @@ $model = $budgetProvider->getModels();
 				<?php
 			}	?>
 			<tr>
-				<td colspan="3">Activity: <?= $row->activities->ActivityName; ?></td>
+				<td colspan="3">Activity: <?= $row['activities']['ActivityName']; ?></td>
 			</tr>
 			<?php
-			$activityId = $row->activities->ActivityID;
+			$activityId = $row['activities']['ActivityID'];
 			$activityTotal = 0;
 		} ?>
 		<tr>
 			<td><?= $key+1; ?></td>
-			<td><?= $row->Description; ?></td>
+			<td><?= $row['Description']; ?></td>
 			<td align="right"><?= number_format($row['Amount'], 2); ?></td>
 		</tr>
 		<?php
 		$activityTotal += $row['Amount'];
-		$grandTotal += $row->Amount;
+		$grandTotal += $row['Amount'];
 	} ?>
 	<tr>
 		<th colspan="2" align="left">Activity Total</th>

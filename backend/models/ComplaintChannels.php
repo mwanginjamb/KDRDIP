@@ -24,6 +24,19 @@ class ComplaintChannels extends \yii\db\ActiveRecord
 		return 'complaintchannels';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'complaintchannels.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -45,7 +58,7 @@ class ComplaintChannels extends \yii\db\ActiveRecord
 	{
 		return [
 			'ComplaintChannelID' => 'Complaint Channel ID',
-			'ComplaintChannelName' => 'Complaint Channel Name',
+			'ComplaintChannelName' => 'Complaint Channel',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

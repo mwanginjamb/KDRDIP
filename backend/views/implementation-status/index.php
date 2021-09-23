@@ -37,6 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		'projectStatus.ProjectStatusName',
 		[
+			'attribute' => 'periods.PeriodName',
+			'format' => 'text',
+			'headerOptions' => ['width' => '15%'],
+		],
+		[
 			'attribute' => 'Date',
 			'format' => ['date', 'php:d/m/Y'],
 			'headerOptions' => ['width' => '10%'],
@@ -64,7 +69,8 @@ $this->params['breadcrumbs'][] = $this->title;
 					return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', null, [
 						'class' => 'btn-sm btn-danger btn-xs',
 						'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('implementation-status/delete?id=' . $model->ImplementationStatusID) . '", \'tab18\')',
-					]) : '';
+						['data-method' => 'POST']
+						]) : '';
 				},
 			],
 		],

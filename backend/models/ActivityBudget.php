@@ -18,13 +18,26 @@ use Yii;
  */
 class ActivityBudget extends \yii\db\ActiveRecord
 {
-	public $ActivityID;
+	public $ActivityName;
 	/**
 	 * {@inheritdoc}
 	 */
 	public static function tableName()
 	{
 		return 'activitybudget';
+	}
+
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'activitybudget.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
 	}
 
 	/**
@@ -48,7 +61,7 @@ class ActivityBudget extends \yii\db\ActiveRecord
 		return [
 			'ActivityBudgetID' => 'Activity Budget ID',
 			'ActivityID' => 'Activity ID',
-			'Description' => 'Description',
+			'Description' => 'Sub Activity',
 			'AccountID' => 'Account ID',
 			'Amount' => 'Amount',
 			'CreatedBy' => 'Created By',

@@ -31,6 +31,19 @@ class CommunityGroups extends \yii\db\ActiveRecord
 		return 'communitygroups';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'communitygroups.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -38,10 +51,10 @@ class CommunityGroups extends \yii\db\ActiveRecord
 	{
 		return [
 			[['FormationDate', 'DateDisbanded', 'CreatedDate'], 'safe'],
-			[['CountyID', 'SubCountyID', 'WardID', 'CommunityGroupStatusID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['CountyID', 'SubCountyID', 'WardID', 'CommunityGroupStatusID', 'CreatedBy', 'Deleted', 'SubLocationID'], 'integer'],
 			[['Notes'], 'string'],
 			[['CommunityGroupName', 'Village'], 'string', 'max' => 45],
-			[['CommunityGroupName', 'CountyID', 'SubCountyID', 'WardID', 'CommunityGroupStatusID', 'FormationDate' ], 'required'],
+			[['CommunityGroupName', 'CountyID', 'SubCountyID', 'WardID', 'CommunityGroupStatusID', 'FormationDate', 'SubLocationID' ], 'required'],
 		];
 	}
 
@@ -58,6 +71,7 @@ class CommunityGroups extends \yii\db\ActiveRecord
 			'SubCountyID' => 'Sub County',
 			'WardID' => 'Ward',
 			'Village' => 'Village',
+			'SubLocationID' => 'Village',
 			'Notes' => 'Notes',
 			'CommunityGroupStatusID' => 'Status',
 			'DateDisbanded' => 'Date Disbanded',
@@ -87,8 +101,13 @@ class CommunityGroups extends \yii\db\ActiveRecord
 		return $this->hasOne(Wards::className(), ['WardID' => 'WardID'])->from(wards::tableName());
 	}
 
+	public function getSubLocations()
+	{
+		return $this->hasOne(SubLocations::className(), ['SubLocationID' => 'SubLocationID']);
+	}
+
 	public function getCommunityGroupStatus()
 	{
 		return $this->hasOne(CommunityGroupStatus::className(), ['CommunityGroupStatusID' => 'CommunityGroupStatusID'])->from(communitygroupstatus::tableName());
-	}	
+	}
 }

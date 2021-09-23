@@ -8,8 +8,6 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Requisition */
 /* @var $form yii\widgets\ActiveForm */
 
-$Rights = Yii::$app->params['rights'];
-$FormID = 6;
 $disabled = !$model->isNewRecord;
 //echo Url::to(['requisition/getfields']);
 $url = Url::home(true);

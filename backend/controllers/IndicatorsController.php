@@ -208,7 +208,8 @@ class IndicatorsController extends Controller
 		$activities = Activities::find()->where(['IndicatorID' => $id])->all();
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {	
-			$this->saveIndicatorTargets(Yii::$app->request->post()['IndicatorTargets'], $model);
+			$indicatorTargets = isset(Yii::$app->request->post()['IndicatorTargets']) ? Yii::$app->request->post()['IndicatorTargets'] : [];
+			$this->saveIndicatorTargets($indicatorTargets, $model);
 			$this->saveActivities(Yii::$app->request->post()['Activities'], $model);
 
 			return $this->redirect(['projects/view', 'id' => $pid]);
@@ -223,6 +224,7 @@ class IndicatorsController extends Controller
 			$activities[$x] = new Activities();
 		}
 
+		$indicatorTargets = [];
 		foreach ($indicatorTargetsArr as $key => $target) {
 			$indicatorTargets[$key] = new IndicatorTargets();
 			$indicatorTargets[$key]->IndicatorTargetID = $target['IndicatorTargetID'];
@@ -368,7 +370,7 @@ class IndicatorsController extends Controller
 					$_column = new ActivityBudget();
 					$_column->ActivityID = $ActivityID;
 					$_column->Description = $column['Description'];
-					$_column->AccountID = $column['AccountID'];
+					// $_column->AccountID = $column['AccountID'];
 					$_column->Amount = $column['Amount'];
 					$_column->CreatedBy = Yii::$app->user->identity->UserID;
 					$_column->save();
@@ -376,7 +378,7 @@ class IndicatorsController extends Controller
 			} else {
 				$_column = ActivityBudget::findOne($column['ActivityBudgetID']);
 				$_column->Description = $column['Description'];
-				$_column->AccountID = $column['AccountID'];
+				// $_column->AccountID = $column['AccountID'];
 				$_column->Amount = $column['Amount'];
 				$_column->save();
 			}

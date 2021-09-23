@@ -16,39 +16,52 @@ use Yii;
  */
 class ProjectPeriods extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'projectperiods';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'projectperiods';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted'], 'integer'],
-            [['ProjectPeriodName'], 'string', 'max' => 45],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'projectperiods.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'ProjectPeriodID' => 'Project Period ID',
-            'ProjectPeriodName' => 'Project Period Name',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['ProjectPeriodName'], 'string', 'max' => 45],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'ProjectPeriodID' => 'Project Period ID',
+			'ProjectPeriodName' => 'Project Period Name',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

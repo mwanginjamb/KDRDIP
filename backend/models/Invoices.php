@@ -12,7 +12,9 @@ use Yii;
  *
  * @property int $InvoiceID
  * @property int $SupplierID
+ * @property int $ProjectID
  * @property int $PurchaseID
+ * @property int $ProcurementPlanLineID
  * @property string $InvoiceNumber
  * @property string $InvoiceDate
  * @property string $Amount
@@ -36,18 +38,31 @@ class Invoices extends \yii\db\ActiveRecord
 		return 'invoices';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'invoices.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['SupplierID', 'PurchaseID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['SupplierID', 'PurchaseID', 'CreatedBy', 'Deleted', 'ProjectID', 'ProcurementPlanLineID'], 'integer'],
 			[['InvoiceDate', 'CreatedDate'], 'safe'],
 			[['Amount'], 'number'],
 			[['InvoiceNumber', 'Description', 'Description2'], 'string', 'max' => 45],
 			[['imageFile', 'imageFile2'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
-			[['SupplierID', 'PurchaseID', 'InvoiceNumber', 'Amount', 'InvoiceDate'], 'required'],
+			[['SupplierID', 'InvoiceNumber', 'Amount', 'InvoiceDate'], 'required'],
 			[['Description', 'Description2'], 'required', 'when' => function($model) {	 
 				return $model->submit == 0;
 			}],
@@ -62,6 +77,8 @@ class Invoices extends \yii\db\ActiveRecord
 		return [
 			'InvoiceID' => 'Invoice ID',
 			'SupplierID' => 'Supplier',
+			'ProjectID' => 'Sub Project',
+			'ProcurementPlanLineID' => 'Procurement Plan Activity',
 			'PurchaseID' => 'PO. No.',
 			'InvoiceNumber' => 'Supplier Invoice Number',
 			'InvoiceDate' => 'Invoice Date',
@@ -101,29 +118,45 @@ class Invoices extends \yii\db\ActiveRecord
 		return $this->hasOne(ApprovalStatus::className(), ['ApprovalStatusID' => 'ApprovalStatusID'])->from(approvalstatus::tableName());
 	}
 
+	public function getProcurementPlanLines()
+	{
+		return $this->hasOne(ProcurementPlanLines::className(), ['ProcurementPlanLineID' => 'ProcurementPlanLineID']);
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID']);
+	}
+
 	public function upload($id, $type)
 	{
 		if ($this->validate()) {
 			// exit;
-			$filename = (string) time() . '_' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
-			$this->imageFile->saveAs('uploads/' . $filename);
-			$document = new Documents();
-			$document->Description = $this->Description;
-			$document->FileName = $filename;
-			$document->DocumentTypeID = $type;
-			$document->RefNumber = $id;
-			$document->CreatedBy = Yii::$app->user->identity->UserID;
-			$document->save();
+			if ($this->imageFile) {
+				$filename = (string) time() . '_' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+				$this->imageFile->saveAs('uploads/' . $filename);
+				$document = new Documents();
+				$document->Description = $this->Description;
+				$document->FileName = $filename;
+				$document->DocumentCategoryID = $type;
+				$document->DocumentTypeID = $type;
+				$document->RefNumber = $id;
+				$document->CreatedBy = Yii::$app->user->identity->UserID;
+				$document->save();
+			}
 
-			$filename = (string) time() . '_' . $this->imageFile2->baseName . '.' . $this->imageFile2->extension;
-			$this->imageFile->saveAs('uploads/' . $filename);
-			$document = new Documents();
-			$document->Description = $this->Description2;
-			$document->FileName = $filename;
-			$document->DocumentTypeID = $type;
-			$document->RefNumber = $id;
-			$document->CreatedBy = Yii::$app->user->identity->UserID;
-			$document->save();
+			if ($this->imageFile2) {
+				$filename = (string) time() . '_' . $this->imageFile2->baseName . '.' . $this->imageFile2->extension;
+				$this->imageFile->saveAs('uploads/' . $filename);
+				$document = new Documents();
+				$document->Description = $this->Description2;
+				$document->FileName = $filename;
+				$document->DocumentCategoryID = $type;
+				$document->DocumentTypeID = $type;
+				$document->RefNumber = $id;
+				$document->CreatedBy = Yii::$app->user->identity->UserID;
+				$document->save();
+			}
 			return true;
 		} else {
 			return false;

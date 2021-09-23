@@ -15,9 +15,9 @@ use Yii;
  * @property string $Description
  * @property integer ApprovalStatusID
  * @property string ApprovalDate
+ * @property integer ApprovedBy
  * @property string StartDate
  * @property string ExpiryDate
- * @property integer ApprovedBy
  * @property string Notes
  */
 class Quotation extends \yii\db\ActiveRecord
@@ -57,9 +57,9 @@ class Quotation extends \yii\db\ActiveRecord
 			'Description' => 'Description',
 			'ApprovalStatusID' => 'Status',
 			'ApprovalDate' => 'Approval Date',
-			'StartDate' => 'Start Date',
-			'ExpiryDate' => 'Expiry Date',
 			'ApprovedBy' => 'Approved By',
+			'StartDate' => 'Start Date',
+			'ExpiryDate' => 'Expiry Date',			
 			'Notes' => 'Notes',
 		];
 	}

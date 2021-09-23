@@ -6,8 +6,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Productcategory */
 /* @var $form yii\widgets\ActiveForm */
-$Rights = Yii::$app->params['rights'];
-$FormID = 4;
+
 ?>
 
 <div class="card">

@@ -24,6 +24,19 @@ class ComplaintTypes extends \yii\db\ActiveRecord
 		return 'complainttypes';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'complainttypes.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -45,7 +58,7 @@ class ComplaintTypes extends \yii\db\ActiveRecord
 	{
 		return [
 			'ComplaintTypeID' => 'Complaint Type ID',
-			'ComplaintTypeName' => 'Complaint Type Name',
+			'ComplaintTypeName' => 'Complaint Type',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

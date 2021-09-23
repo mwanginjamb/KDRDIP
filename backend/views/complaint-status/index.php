@@ -37,16 +37,18 @@ $this->params['breadcrumbs'][] = $this->title;
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
 							'columns' => [
-								/* [
-									'attribute' => 'BankTypeID',
-									'label' => 'ID',
-									'headerOptions' => ['width' => '5%'],
-								], */
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								'ComplaintStatusName',
+								[
+									'attribute' => 'Closure',
+									'value' => function($model) {
+										return $model['Closure'] == 1 ? 'Yes' : 'No';
+									},
+									'headerOptions' => ['width' => '10%'],
+								],
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],

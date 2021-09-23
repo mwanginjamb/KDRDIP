@@ -7,9 +7,14 @@ use app\models\Payments;
 use app\models\PaymentMethods;
 use app\models\DeliveryLines;
 use app\models\Purchases;
+use app\models\ProcurementPlanLines;
 use app\models\Invoices;
 use app\models\Suppliers;
+use app\models\Documents;
+use app\models\Projects;
 use app\models\BankAccounts;
+use app\models\PaymentTypes;
+use app\models\ApprovalNotes;
 use app\models\Search;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -20,6 +25,7 @@ use backend\controllers\ReportsController;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 use kartik\mpdf\Pdf;
+use yii\web\UploadedFile;
 
 /**
  * PaymentsController implements the CRUD actions for Payments model.
@@ -107,6 +113,7 @@ class PaymentsController extends Controller
 				$searchstring = $params['Search']['searchstring'];
 				$where = "Amount like '%$searchstring%'";
 			}
+			
 			$search->searchfor = $params['Search']['searchfor'];
 			$search->searchstring = $params['Search']['searchstring'];
 		}
@@ -136,22 +143,38 @@ class PaymentsController extends Controller
 	{
 		$model = $this->findModel($id);
 		$invoice = Invoices::findOne($model->InvoiceID);
-		$PurchaseID = $invoice->PurchaseID;
+		$PurchaseID = null;
+		if ($invoice) {
+			$PurchaseID = $invoice->PurchaseID;
+		} else {
+			$invoice = [];  
+		}
+		$purchases = [];
+		$deliveries = [];
+		if ($PurchaseID) {
+			$sql ="select * from deliverylines
+			join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
+			join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
+			join product on product.ProductID = purchaselines.ProductID
+			WHERE deliveries.PurchaseID = $PurchaseID
+			ORDER BY deliveries.DeliveryID";
+			$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
 
-		$sql ="select * from deliverylines
-		join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
-		join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
-		join product on product.ProductID = purchaselines.ProductID
-		WHERE deliveries.PurchaseID = $PurchaseID
-		ORDER BY deliveries.DeliveryID";
-		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+			$sql ="select * from purchaselines
+			LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
+			LEFT JOIN product on product.ProductID = purchaselines.ProductID
+			WHERE purchases.PurchaseID = $PurchaseID";
 
-		$sql ="select * from purchaselines
-		LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
-		LEFT JOIN product on product.ProductID = purchaselines.ProductID
-		WHERE purchases.PurchaseID = $PurchaseID";
+			$purchases = Purchases::findBySql($sql)->asArray()->all();
+		}
 
-		$purchases = Purchases::findBySql($sql)->asArray()->all();
+		$approvalNotesProvider = new ActiveDataProvider([
+			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 6]),
+		]);
+
+		$documentsProvider = new ActiveDataProvider([
+			'query' => Documents::find()->andWhere(['RefNumber' => $id, 'DocumentCategoryID' => 8]),
+		]);
 
 		return $this->render('view', [
 			'model' => $this->findModel($id),
@@ -159,6 +182,8 @@ class PaymentsController extends Controller
 			'deliveries' => $deliveries,
 			'invoice' => $invoice,
 			'rights' => $this->rights,
+			'documentsProvider' => $documentsProvider,
+			'approvalNotesProvider' => $approvalNotesProvider,
 		]);
 	}
 
@@ -171,15 +196,52 @@ class PaymentsController extends Controller
 	{
 		$model = new Payments();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		$model->PaymentTypeID = 1;
+		$model->Date = date('Y-m-d');
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->PaymentID]);
+		if (Yii::$app->request->post()) {
+			if (Yii::$app->request->post()['Payments']['PaymentTypeID'] == 1) {
+				// get the ProcurementPlanLineID
+                if (isset(Yii::$app->request->post()['Payments']['InvoiceID'])) {
+                    $invoice = Invoices::findOne(Yii::$app->request->post()['Payments']['InvoiceID']);
+                    if ($invoice) {
+                        $model->ProcurementPlanLineID = $invoice->ProcurementPlanLineID;
+                    }
+                }
+			}
+		}
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			if ($model->save()) {
+				if ($model->imageFile) {
+					$document = new Documents();
+					$document->Description = 'Disbursement';
+					$document->DocumentTypeID = 6;
+					$document->DocumentCategoryID = 8;
+					$document->RefNumber = $model->PaymentID;
+					$document->Image = $model->formatImage();
+					$document->imageFile = $model->imageFile;
+					$document->CreatedBy = Yii::$app->user->identity->UserID;
+					if (!$document->save()) {
+						// print_r($document->getErrors()); exit;
+					}
+				}
+				return $this->redirect(['view', 'id' => $model->PaymentID]);
+			}
 		}
 
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$invoices = []; //ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
 		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
+		$paymentTypes = ArrayHelper::map(PaymentTypes::find()->all(), 'PaymentTypeID', 'PaymentTypeName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$procurementPlanLines = ArrayHelper::map(ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $model->ProjectID])->all(), 'ProcurementPlanLineID', 'ServiceDescription');
+
+		$documentsProvider = new ActiveDataProvider([
+			'query' => Documents::find()->andWhere(['RefNumber' => 0, 'DocumentCategoryID' => 8]),
+		]);
 
 		return $this->render('create', [
 			'model' => $model,
@@ -188,6 +250,10 @@ class PaymentsController extends Controller
 			'paymentMethods' => $paymentMethods,
 			'bankAccounts' => $bankAccounts,
 			'rights' => $this->rights,
+			'documentsProvider' => $documentsProvider,
+			'paymentTypes' => $paymentTypes,
+			'projects' => $projects,
+			'procurementPlanLines' => $procurementPlanLines,
 		]);
 	}
 
@@ -202,17 +268,41 @@ class PaymentsController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['view', 'id' => $model->PaymentID]);
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			if ($model->save()) {
+				if ($model->imageFile) {
+					$document = new Documents();
+					$document->Description = 'Disbursement';
+					$document->DocumentTypeID = 6;
+					$document->DocumentCategoryID = 8;
+					$document->RefNumber = $model->PaymentID;
+					$document->Image = $model->formatImage();
+					$document->imageFile = $model->imageFile;
+					$document->CreatedBy = Yii::$app->user->identity->UserID;
+					if (!$document->save()) {
+						// print_r($document->getErrors()); exit;
+					}
+				}
+				return $this->redirect(['view', 'id' => $model->PaymentID]);
+			}
 		}
+
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		// $invoices = ArrayHelper::map(Invoices::find()->all(), 'InvoiceID', 'InvoiceID');
 		$paymentMethods = ArrayHelper::map(PaymentMethods::find()->all(), 'PaymentMethodID', 'PaymentMethodName');
 		$bankAccounts = ArrayHelper::map(BankAccounts::find()->all(), 'BankAccountID', 'AccountName');
-		$supplierID = $model->SupplierID;
+		$paymentTypes = ArrayHelper::map(PaymentTypes::find()->all(), 'PaymentTypeID', 'PaymentTypeName');
+		$supplierID = $model->SupplierID ? $model->SupplierID :  0;
 		$sql = "SELECT InvoiceID, CONCAT('InvID: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName FROM invoices
 					WHERE SupplierID = $supplierID";
 		$invoices = ArrayHelper::map(Invoices::findBySql($sql)->asArray()->all(), 'InvoiceID', 'InvoiceName');
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$procurementPlanLines = ArrayHelper::map(ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $model->ProjectID])->all(), 'ProcurementPlanLineID', 'ServiceDescription');
+
+		$documentsProvider = new ActiveDataProvider([
+			'query' => Documents::find()->andWhere(['RefNumber' => $id, 'DocumentCategoryID' => 8]),
+		]);
 
 		return $this->render('update', [
 			'model' => $model,
@@ -221,6 +311,10 @@ class PaymentsController extends Controller
 			'paymentMethods' => $paymentMethods,
 			'bankAccounts' => $bankAccounts,
 			'rights' => $this->rights,
+			'documentsProvider' => $documentsProvider,
+			'paymentTypes' => $paymentTypes,
+			'projects' => $projects,
+			'procurementPlanLines' => $procurementPlanLines,
 		]);
 	}
 
@@ -270,7 +364,7 @@ class PaymentsController extends Controller
 	{
 		$sql = "SELECT InvoiceID, CONCAT('Inv No.: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName 
 					FROM invoices
-					WHERE SupplierID = $id"; 
+					WHERE SupplierID = $id AND ApprovalStatusID = 3"; 
 		$model = Invoices::findBySql($sql)->asArray()->all();
 		echo '<option></option>';	
 		if (!empty($model)) {
@@ -301,6 +395,17 @@ class PaymentsController extends Controller
 											->all();
 		$diplayFields = ['Date', 'SupplierName', 'PaymentMethodName', 'ApprovalStatusName', 'ApprovalDate'];
 		return ReportsController::WriteExcel($model, 'Payment Report', $diplayFields);
+	}
+	
+	public function actionProcurementPlanLines($id)
+	{
+		$model = ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $id])->all();
+		// print('<pre>');
+		// print_r($model); exit;
+		echo '<option value="0">Select...</option>';			
+		foreach ($model as $item) {
+			echo "<option value='" . $item->ProcurementPlanLineID . "'>" . $item->ServiceDescription . "</option>";
+		}
 	}
 
 	public function actionPaymentVoucher($id)

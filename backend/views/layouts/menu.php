@@ -46,13 +46,13 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 			</div>
 		</div> -->
 		<div class="user-profile1" style="background-color: white; padding:5px; text-align:center" >
-			<img src="<?= $baseUrl; ?>/assets/images/kenya.png" width="60%">		
+			<img src="<?= $baseUrl; ?>/assets/images/kenya.png" width="60%">			
 		</div>
 		<div class="main-menu-content">
 			<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
 					<li <?= ($currentPage == 'site') ? 'class="active"' : ''; ?> class=" nav-item"><a href="<?= $baseUrl;?>/site"><i class="material-icons">settings_input_svideo</i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
 					</li>
-					<?php if (count(array_intersect($rights, [1, 5, 21, 25, 30, 24, 29, 64, 65, 66, 67, 68, 7, 2, 28, 17, 8, 100])) > 0) { ?>
+					<?php if (count(array_intersect($rights, [1, 5, 21, 25, 30, 24, 29, 64, 65, 66, 67, 68, 7, 2, 28, 17, 8, 100, 132, 133, 134])) > 0) { ?>
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Finance</span></a>
 						<ul class="menu-content">
 							<?php if (in_array(1, $rights)) { ?>
@@ -75,11 +75,15 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<li <?= ($currentPage == 'payments') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
 								</li>
 							<?php } ?>
+							<?php if (in_array(132, $rights)) { ?>
+								<li <?= ($currentPage == 'cash-disbursements') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/cash-disbursements"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Cash Disbursements</span></a>
+								</li>
+							<?php } ?>
 							<?php if (in_array(100, $rights)) { ?>
 								<li <?= ($currentPage == 'lipw-payment-schedule') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-payment-schedule"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payments</span></a>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [24, 29, 103])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [24, 29, 103, 133])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 									<ul class="menu-content">
 										<?php if (in_array(24, $rights)) { ?>									
@@ -94,24 +98,20 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<li <?= ($currentPage == 'lipw-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payment</span></a>
 											</li>	
 										<?php } ?>
+										<?php if (in_array(133, $rights)) { ?>
+											<li <?= ($currentPage == 'cash-disbursement-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/cash-disbursement-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Cash Disbursements</span></a>
+											</li>	
+										<?php } ?>
 									</ul>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [24, 29, 103])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [24, 29, 103, 134])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
-									<ul class="menu-content">	
-										<?php if (in_array(24, $rights)) { ?>								
-											<li <?= ($currentPage == 'invoice-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/invoice-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Invoices</span></a>
-											</li>
-										<?php } ?>
-										<?php if (in_array(29, $rights)) { ?>
-											<li <?= ($currentPage == 'payments-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payments-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payments</span></a>
-											</li>
-										<?php } ?>
+									<ul class="menu-content">
 										<?php if (in_array(103, $rights)) { ?>
 											<li <?= ($currentPage == 'lipw-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payment</span></a>
 											</li>	
-										<?php } ?>					
+										<?php } ?>				
 									</ul>
 								</li>
 							<?php } ?>
@@ -205,7 +205,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 										<?php if (in_array(8, $rights)) { ?>
 											<li <?= ($currentRoute == 'bank-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/bank-types"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Bank Types</span></a>
 											</li>
-										<?php } ?>					
+										<?php } ?>										
 									</ul>
 								</li>	
 							<?php } ?>						
@@ -247,9 +247,17 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<li <?= ($currentRoute == 'reports/procurement-plan') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/procurement-plan"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan</span></a>
 								</li>		
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70])) > 0) { ?>		
+							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70, 125, 126])) > 0) { ?>		
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 									<ul class="menu-content">
+										<?php if (in_array(125, $rights)) { ?>
+											<li <?= ($currentPage == 'procurement-plan-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-plan-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan</span></a>
+											</li>	
+										<?php } ?>
+										<?php if (in_array(126, $rights)) { ?>
+											<li <?= ($currentPage == 'procurement-line-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-line-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan Activity</span></a>
+											</li>	
+										<?php } ?>
 										<?php if (in_array(40, $rights)) { ?>										
 											<li <?= ($currentPage == 'qapprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/qapprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotations</span></a>
 											</li>
@@ -273,9 +281,17 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									</ul>
 								</li>
 							<?php } ?>
-							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70])) > 0) { ?>
+							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70, 125, 126])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
 									<ul class="menu-content">		
+										<?php if (in_array(125, $rights)) { ?>
+											<li <?= ($currentPage == 'procurement-plan-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-plan-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan</span></a>
+											</li>	
+										<?php } ?>
+										<?php if (in_array(126, $rights)) { ?>
+											<li <?= ($currentPage == 'procurement-line-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-line-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan Activity</span></a>
+											</li>	
+										<?php } ?>
 										<?php if (in_array(40, $rights)) { ?>							
 											<li <?= ($currentPage == 'qapprovals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/qapprovals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotations</span></a>
 											</li>
@@ -402,11 +418,14 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 						</ul>
 					</li>
 					<?php } ?>
-					<?php if (count(array_intersect($rights, [14, 22, 37, 47, 46, 35, 38, 57, 48, 12, 105, 96])) > 0) { ?>
-						<li class=" nav-item"><a href="#"><i class="material-icons">work_outline</i><span class="menu-title" data-i18n="nav.project.main">Project  Management</span></a>
+					<?php if (count(array_intersect($rights, [14, 22, 37, 47, 46, 35, 38, 57, 48, 12, 105, 96, 139, 140, 141, 142, 36, 143])) > 0) { ?>
+						<li class=" nav-item"><a href="#"><i class="material-icons">work_outline</i><span class="menu-title" data-i18n="nav.project.main">Project Management</span></a>
 							<ul class="menu-content">
+								<li <?= ($currentPage == 'taks-assigned') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/tasks-assigned"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Assigned Tasks</span></a>
+								</li>
 								<?php
 								foreach ($components as $component) { ?>
+								
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $component->ComponentName; ?>"><?= $component->ShortName; ?></span></a>
 									<ul class="menu-content">
 										<?php
@@ -426,51 +445,32 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 												</li>
 											<?php } ?>
 											<?php 
-										} else {
-											foreach ($enterpriseTypes as $enterpriseType) { ?> 
-												<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main" title="<?= $enterpriseType->EnterpriseTypeName; ?>"><?= $enterpriseType->ShortName; ?></span></a>
-													<ul class="menu-content">
-														<?php if ($enterpriseType->EnterpriseTypeID == 1) { ?>
-															<li <?= ($currentPage == 'community-groups' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/community-groups?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Community Groups</span></a>
-															</li>
-															<?php
-														} elseif ($enterpriseType->EnterpriseTypeID == 2) { ?>
-															<li <?= ($currentPage == 'businesses' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/businesses?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Businesses</span></a>
-															</li>
-															<?php										
-														} elseif ($enterpriseType->EnterpriseTypeID == 3) { ?>
-															<li <?= ($currentPage == 'producer-organizations' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/producer-organizations?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Producer Organizations</span></a>
-															</li>
-															<?php
-														} elseif ($enterpriseType->EnterpriseTypeID == 4) { ?>
-															<li <?= ($currentPage == 'youth-placement' && $cid == $component->ComponentID ) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/youth-placement?cid=<?= $component->ComponentID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Youth Placement</span></a>
-															</li>
-															<?php
-														} ?>
-														
-														<li <?= ($currentPage == 'projects' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/projects?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub-Projects</span></a>
-														</li>
-														<li <?= ($currentRoute == 'reports/progress-report' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/progress-report?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Progress Report</span></a>
-														</li>
-														<li <?= ($currentRoute == 'reports/work-plan' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/work-plan?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Work Plan</span></a>
-														</li>
-														<li <?= ($currentRoute == 'reports/budget' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/budget?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Budget</span></a>
-														</li>
-														<li <?= ($currentRoute == 'reports/projects-report' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-report?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">sub-Projects Report</span></a>
-														</li>
-														<?php if (in_array(96, $rights) && $cid != 3) { ?>
-															<li <?= ($currentRoute == 'reports/projects-finance' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Project Finance Report</span></a>
-															</li>
-														<?php } ?>
-														<?php if (in_array(105, $rights)  && $cid == 3) { ?>
-															<li <?= ($currentRoute == 'reports/projects-finance-entities' && $cid == $component->ComponentID && $etid == $enterpriseType->EnterpriseTypeID) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/projects-finance-entities?cid=<?= $component->ComponentID; ?>&etid=<?= $enterpriseType->EnterpriseTypeID; ?>"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Finance Report</span></a>
-															</li>
-														<?php } ?>
-													</ul>
-												</li>
-												<?php 
-											}
-										}?>
+										} else { ?>
+                                            <?php if (in_array(139, $rights)) { ?>
+                                                <li <?= ($currentPage == 'organizations') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/organizations"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Community Groups</span></a>
+                                                </li>
+                                            <?php } ?>
+                                            <?php if (in_array(140, $rights)) { ?>
+                                                <li <?= ($currentPage == 'livelihood-activities') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/livelihood-activities"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Livelihood Activities</span></a>
+                                                </li>
+                                            <?php } ?>
+
+                                            <?php if (in_array(141, $rights)) { ?>
+                                                <li <?= ($currentPage == 'funding-years') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/funding-years"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Funding Years</span></a>
+                                                </li>
+                                            <?php } ?>
+
+                                            <?php if (in_array(142, $rights)) { ?>
+                                                <li <?= ($currentPage == 'age-groups') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/age-groups"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Age Groups</span></a>
+                                                </li>
+                                            <?php } ?>
+                                            
+                                            <?php if (in_array(143, $rights)) { ?>
+                                                <li <?= ($currentPage == 'training-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/training-types"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Training Types</span></a>
+                                                </li>
+                                            <?php } ?>
+                                            <?php
+                                        }?>
 									</ul>
 								</li>
 									<?php
@@ -479,7 +479,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li <?= ($currentPage == 'components') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/components"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">Manage Components</span></a>
 									</li>
 								<?php } ?>
-								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77, 104, 108, 109])) > 0) { ?>
+								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77, 104, 108, 109, 123])) > 0) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
 										<ul class="menu-content">	
 											<?php if (in_array(22, $rights)) { ?>								
@@ -561,13 +561,18 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											<?php if (in_array(109, $rights)) { ?>
 												<li <?= ($currentPage == 'sub-component-categories') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-component-categories"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Sub Comp Categories</span></a>
 												</li>	
-											<?php } ?>																	
+											<?php } ?>		
+											<?php if (in_array(123, $rights)) { ?>
+												<li <?= ($currentPage == 'expense-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/expense-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Expense Types</span></a>
+												</li>	
+											<?php } ?>															
 										</ul>
 									</li>
 								<?php } ?>
 							</ul>
 						</li>
 					<?php } ?>
+
 					<?php if (count(array_intersect($rights, [20])) > 0) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Human Resources</span></a>
 							<ul class="menu-content">
@@ -579,11 +584,69 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 						</li>
 					<?php } ?>
 
-					<?php if (count(array_intersect($rights, [80])) > 0) { ?>
+					<?php if (count(array_intersect($rights, [130, 131, 136, 137, 138])) > 0) { ?>
+						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Safeguards</span></a>
+							<ul class="menu-content">
+								<?php if (in_array(131, $rights)) { ?>
+									<li <?= ($currentPage == 'safeguards-dashboard') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/safeguards-dashboard"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Dashboard</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(130, $rights)) { ?>
+									<li <?= ($currentPage == 'project-safeguards') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-safeguards"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Safeguards</span></a>
+									</li>
+								<?php } ?>
+								<?php if (count(array_intersect($rights, [136])) > 0) { ?>
+								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
+									<ul class="menu-content">
+										<?php if (in_array(24, $rights)) { ?>									
+											<li <?= ($currentPage == 'document-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Documents</span></a>
+											</li>
+										<?php } ?>										
+									</ul>
+								</li>
+								<?php } ?>
+								<?php if (count(array_intersect($rights, [137])) > 0) { ?>
+									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
+										<ul class="menu-content">	
+											<?php if (in_array(24, $rights)) { ?>								
+												<li <?= ($currentPage == 'document-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Documents</span></a>
+												</li>
+											<?php } ?>														
+										</ul>
+									</li>
+								<?php } ?>
+								<?php if (count(array_intersect($rights, [138])) > 0) { ?>
+									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Rejected</span></a>
+										<ul class="menu-content">	
+											<?php if (in_array(24, $rights)) { ?>								
+												<li <?= ($currentPage == 'document-approvals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-approvals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Documents</span></a>
+												</li>
+											<?php } ?>					
+										</ul>
+									</li>
+								<?php } ?>
+								
+							</ul>
+						</li>
+					<?php } ?>
+
+					<?php if (count(array_intersect($rights, [80, 82, 83, 84, 85, 127,128, 129])) > 0) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Complaints</span></a>
 							<ul class="menu-content">
 								<?php if (in_array(20, $rights)) { ?>
 									<li <?= ($currentPage == 'complaints') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Complaints</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(127, $rights)) { ?>
+									<li <?= ($currentPage == 'complaints-assigned') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints-assigned"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Assigned Complaints</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(128, $rights)) { ?>
+									<li <?= ($currentPage == 'complaints-resolved') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints-resolved"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Resolved Complaints</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(128, $rights)) { ?>
+									<li <?= ($currentPage == 'complaints-closed') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints-closed"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Closed Complaints</span></a>
 									</li>
 								<?php } ?>
 								<?php if (count(array_intersect($rights, [81, 82, 83, 84, 85])) > 0) { ?>
@@ -641,8 +704,25 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							</ul>
 						</li>
 					<?php } ?>
-
-					<?php if (count(array_intersect($rights, [15, 54, 63, 19, 13])) > 0) { ?>
+					<?php if (count(array_intersect($rights, [117, 118, 119])) > 0) { ?>
+						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Monitoring</span></a>
+							<ul class="menu-content">
+								<?php if (in_array(118, $rights)) { ?>
+									<li <?= ($currentRoute == 'result-indicators') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/result-indicators"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Result Indicators</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(117, $rights)) { ?>
+									<li <?= ($currentRoute == 'reports/implementation-status-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/implementation-status-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Implementation Status</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(119, $rights)) { ?>
+									<li <?= ($currentRoute == 'reports/result-framework') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/result-framework"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Result Framework</span></a>
+									</li>
+								<?php } ?>
+							</ul>
+						</li>
+					<?php } ?>	
+					<?php if (count(array_intersect($rights, [15, 54, 63, 19, 13, 116, 120])) > 0) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
 							<ul class="menu-content">
 								<?php if (in_array(15, $rights)) { ?>
@@ -653,16 +733,12 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li <?= ($currentPage == 'sub-counties') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-counties"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Sub Counties</span></a>
 									</li>
 								<?php } ?>
-								<?php if (in_array(78, $rights)) { ?>
-									<li <?= ($currentPage == 'locations') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/locations"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Locations</span></a>
+								<?php if (in_array(63, $rights)) { ?>
+									<li <?= ($currentPage == 'wards') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/wards"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Wards</span></a>
 									</li>
 								<?php } ?>
 								<?php if (in_array(79, $rights)) { ?>
-									<li <?= ($currentPage == 'sub-locations') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-locations"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Sub Locations</span></a>
-									</li>
-								<?php } ?>
-								<?php if (in_array(63, $rights)) { ?>
-									<li <?= ($currentPage == 'wards') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/wards"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Wards</span></a>
+									<li <?= ($currentPage == 'sub-locations') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/sub-locations"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Villages</span></a>
 									</li>
 								<?php } ?>
 								<?php if (in_array(19, $rights)) { ?>
@@ -671,6 +747,14 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<?php } ?>
 								<?php if (in_array(13, $rights)) { ?>
 									<li <?= ($currentPage == 'company') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/company/update?id=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Company</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(116, $rights)) { ?>
+									<li <?= ($currentPage == 'questionnaire-status') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/questionnaire-status"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Questionnaire Status</span></a>
+									</li>
+								<?php } ?>
+								<?php if (in_array(120, $rights)) { ?>
+									<li <?= ($currentRoute == 'document-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-types"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Document Types</span></a>
 									</li>
 								<?php } ?>
 							</ul>

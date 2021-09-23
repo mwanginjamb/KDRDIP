@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\ProjectChallenges */
 
-$this->title = $model->ProjectChallengeID;
+$this->title = $model->Challenge;
 $this->params['breadcrumbs'][] = ['label' => 'Project Challenges', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -39,21 +39,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?= DetailView::widget([
 	'model' => $model,
+	'options' => [
+		'class' => 'custom-table table-striped table-bordered zero-configuration',
+	],
 	'attributes' => [
 		'ProjectChallengeID',
 		'Challenge:ntext',
 		'CorrectiveAction:ntext',
 		[
 			'label' => 'Assigned To',
-			'attribute' => 'AssignedTo',
+			'attribute' => 'employees.EmployeeName',
 		],
 		[
 			'attribute' => 'AgreedDate',
 			'format' => ['date', 'php:d/m/Y'],
 		],
-		'Notes',
+		'projectChallengeStatus.ProjectChallengeStatusName',
+		// 'Notes',
 		[
-			'attribute' => 'createdTime',
+			'attribute' => 'CreatedDate',
 			'format' => ['date', 'php:d/m/Y h:i a'],
 		],
 		[

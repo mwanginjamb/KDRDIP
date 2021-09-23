@@ -19,16 +19,24 @@ $baseUrl = Yii::$app->request->baseUrl;
 		var typeid = document.getElementById("bankaccounts-banktypeid").value;
 		if (typeid == 1) {
 			$("#countyList").hide();
-			$("#communityList").hide();
+			$("#organizationList").hide();
+            $("#projectList").hide();
 		} else if (typeid == 2) {
 			$("#countyList").show();
-			$("#communityList").hide();
+			$("#organizationList").hide();
+            $("#projectList").hide();
 		} else if (typeid == 3) {
-			$("#countyList").hide();
-			$("#communityList").show();
+			$("#countyList").show();
+			$("#organizationList").show();
+            $("#projectList").hide();
+		}else if (typeid == 4) {
+			$("#countyList").show();
+			$("#projectList").show();
+            $("#organizationList").hide();
 		} else {
 			$("#countyList").hide();
-			$("#communityList").hide();
+			$("#organizationList").hide();
+            $("#projectList").hide();
 		}
 	}
 
@@ -79,10 +87,21 @@ $baseUrl = Yii::$app->request->baseUrl;
 					'onchange' => 'manageType()']) ?>
 				</div>
 				<div class="col-md-6" id="countyList">
-					<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'Select...']) ?>
+                    <?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control select2',
+                        'onchange' => '
+                        $.post( "' . Yii::$app->urlManager->createUrl('counties/projects?id=') . '"+$(this).val(), function( data ) {
+                            $( "select#bankaccounts-projectid" ).html( data );
+                        });
+                        $.post( "' . Yii::$app->urlManager->createUrl('counties/organizations?id=') . '"+$(this).val(), function( data ) {
+                            $( "select#bankaccounts-organizationid" ).html( data );
+                        });
+                    ']) ?>
 				</div>
-				<div class="col-md-6" id="communityList">
-					<?= $form->field($model, 'CommunityID')->dropDownList($communities, ['prompt'=>'Select...']) ?>
+                <div class="col-md-6" id="organizationList">
+					<?= $form->field($model, 'OrganizationID')->dropDownList($organizations, ['prompt'=>'Select...']) ?>
+				</div>
+                <div class="col-md-6" id="projectList">
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'Select...']) ?>
 				</div>			
 			</div>
 

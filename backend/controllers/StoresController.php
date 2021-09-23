@@ -107,11 +107,11 @@ class StoresController extends Controller
 	 */
 	public function actionCreate()
 	{
-	$identity = Yii::$app->user->identity;
-	$UserID = $identity->UserID;
+		$identity = Yii::$app->user->identity;
+		$UserID = $identity->UserID;
 	
 		$model = new Stores();
-	$model->CreatedBy = $UserID;
+		$model->CreatedBy = $UserID;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->StoreID]);

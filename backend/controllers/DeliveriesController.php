@@ -237,9 +237,10 @@ class DeliveriesController extends Controller
 	public function actionPost($id)
 	{
 		// check for missing products
-		$lines = DeliveryLines::find()->where(['DeliveredQuantity'=> 0])->orWhere('DeliveredQuantity is null')->count();
+		$lines = DeliveryLines::find()->andWhere(['DeliveryID' => $id])
+												->andWhere('DeliveredQuantity = 0 OR DeliveredQuantity is null')->count();
 		// echo $lines; exit;
-		if ($lines > 0) {
+		if ($lines <= 0) {
 			$model = $this->findModel($id);
 		
 			$model->Posted = 1;

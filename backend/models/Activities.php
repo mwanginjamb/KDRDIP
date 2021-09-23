@@ -34,6 +34,19 @@ class Activities extends \yii\db\ActiveRecord
 		return 'activities';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'activities.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -95,7 +108,7 @@ class Activities extends \yii\db\ActiveRecord
 	public static function totals($projectID)
 	{
 		$sql = "SELECT sum(Amount) as Total, activitybudget.ActivityID FROM activitybudget
-					JOIN activities on activities.ActivityID = activitybudget.AccountID
+					JOIN activities on activities.ActivityID = activitybudget.ActivityID
 					JOIN indicators on indicators.IndicatorID = activities.IndicatorID
 					WHERE indicators.ProjectID = $projectID
 					Group By activitybudget.ActivityID";

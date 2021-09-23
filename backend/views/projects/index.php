@@ -59,8 +59,8 @@ $(document).ready(function() {
 								],
 								'ProjectName',
 								[
-									'label' => 'Parent Project',
-									'attribute' => 'parentProject.ProjectName',
+									'label' => 'Sector',
+									'attribute' => 'projectSectors.ProjectSectorName',
 									'headerOptions' => ['width' => '25%'],
 								],
 								[

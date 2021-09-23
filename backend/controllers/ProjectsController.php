@@ -48,6 +48,10 @@ use app\models\ProjectSectorInterventions;
 use app\models\SubComponentCategories;
 use app\models\SubComponents;
 use app\models\EnterpriseTypes;
+use app\models\ImplementationStatus;
+use app\models\Kobo;
+use app\models\ProjectQuestionResponses;
+use app\models\ProjectChallengesImp;
 use yii\data\ActiveDataProvider;
 use yii\data\ArrayDataProvider;
 use yii\web\Controller;
@@ -141,6 +145,7 @@ class ProjectsController extends Controller
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $projects,
+			'pagination' => false,
 		]);
 
 		return $this->render('index', [
@@ -167,7 +172,7 @@ class ProjectsController extends Controller
 											
 		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') { 
 			$model->andWhere(['projects.ComponentID' => Yii::$app->request->get()['cid']]);
-		} 
+		}
 		if (isset(Yii::$app->request->get()['etid']) && Yii::$app->request->get()['etid'] != '') { 
 			$model->andWhere(['projects.EnterpriseTypeID' => Yii::$app->request->get()['etid']]);
 		}
@@ -185,6 +190,8 @@ class ProjectsController extends Controller
 	 */
 	public function actionView($id)
 	{
+		// print('<pre>');
+		// print_r(Yii::$app->request->post()); exit;
 		if (Yii::$app->request->post()) {
 			$model = $this->findModel($id);
 			$this->saveProjectQuestionnaire(Yii::$app->request->post()['ProjectQuestionnaire'], $model);
@@ -270,6 +277,10 @@ class ProjectsController extends Controller
 			'query' => Complaints::find()->where(['ProjectID'=> $id]),
 		]);
 
+		$projectQuestionResponses = new ActiveDataProvider([
+			'query' => ProjectQuestionResponses::find()->where(['ProjectID'=> $id]),
+		]);
+
 		$sql = "SELECT safeguards.SafeguardName, temp.* FROM (
 					SELECT safeguardparameters.SafeguardParamaterID as SGPID, SafeguardParamaterName, SafeguardID, `projectsafeguards`.* FROM `projectsafeguards` 
 					RIGHT JOIN `safeguardparameters` ON `projectsafeguards`.`SafeguardParamaterID` = `safeguardparameters`.`SafeguardParamaterID` 
@@ -281,8 +292,8 @@ class ProjectsController extends Controller
 		$projectSafeguards = ProjectSafeguards::findBySql($sql)->asArray()->all();
 		$projectSafeguards = ArrayHelper::index($projectSafeguards, null, 'SafeguardName');
 
-		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();	
-		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');		
+		$activitiesArray = Activities::find()->joinWith('indicators')->where(['indicators.ProjectID' => $id])->all();
+		$activities = ArrayHelper::index($activitiesArray, null, 'IndicatorID');
 		$activityTotals = Activities::totals($id);
 
 		$indicatorTargets = IndicatorTargets::find()->joinWith('indicators')
@@ -347,6 +358,7 @@ class ProjectsController extends Controller
 			'complaints' => $complaints,
 			'projectQuestionnaire' => $projectQuestionnaire,
 			'questionnaireStatus' => $questionnaireStatus,
+			'projectQuestionResponses' => $projectQuestionResponses,
 		]);
 	}
 
@@ -358,6 +370,7 @@ class ProjectsController extends Controller
 	public function actionCreate()
 	{
 		$model = new projects();
+		$model->ComponentID = 0;
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 		if (isset(Yii::$app->request->get()['cid']) && Yii::$app->request->get()['cid'] != '') {
 			$model->ComponentID = Yii::$app->request->get()['cid'];
@@ -400,23 +413,28 @@ class ProjectsController extends Controller
 		$projectUnits = ArrayHelper::map(projectUnits::find()->all(), 'ProjectUnitID', 'ProjectUnitName');
 		$projectRoles = ArrayHelper::map(projectRoles::find()->all(), 'ProjectRoleID', 'ProjectRoleName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
+		// $subCounties = ArrayHelper::map(SubCounties::find()->all(), 'SubCountyID', 'SubCountyName', 'CountyID');
 		$riskLikelihood = ArrayHelper::map(RiskLikelihood::find()->all(), 'RiskLikelihoodID', 'RiskLikelihoodName');
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 		$currencies = ArrayHelper::map(\app\models\Currencies::find()->all(), 'CurrencyID', 'CurrencyName');
 		$communities = ArrayHelper::map(\app\models\Communities::find()->all(), 'CommunityID', 'CommunityName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
-		$locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
+		// $subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		// $locations = ArrayHelper::map(Locations::find()->orderBy('LocationName')->all(), 'LocationID', 'LocationName');
 		$projectSectors = ArrayHelper::map(ProjectSectors::find()->all(), 'ProjectSectorID', 'ProjectSectorName');
 		$projectSectorInterventions = ArrayHelper::map(ProjectSectorInterventions::find()->all(), 'SectorInterventionID', 'SectorInterventionName');
 		$subComponentCategories = ArrayHelper::map(SubComponentCategories::find()->all(), 'SubComponentCategoryID', 'SubComponentCategoryName');
-		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->andWhere(['ComponentID' => $model->ComponentID])->all(), 'SubComponentID', 'SubComponentName');
 		$enterpriseTypes = ArrayHelper::map(EnterpriseTypes::find()->all(), 'EnterpriseTypeID', 'EnterpriseTypeName');
+
+		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
+		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
+		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID ])->all(), 'WardID', 'WardName');
 		
-		$subLocations = [];
-		$wards = [];
+		// $subLocations = [];
+		// $wards = [];
 	
 		for ($x = 0; $x <= 4; $x++) {
 			$projectRisk[$x] = new ProjectRisk();
@@ -575,12 +593,12 @@ class ProjectsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
 		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
-		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->WardID ])->all(), 'SubLocationID', 'SubLocationName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID ])->all(), 'WardID', 'WardName');
 
 		$projectSectorInterventions = ArrayHelper::map(ProjectSectorInterventions::find()->all(), 'SectorInterventionID', 'SectorInterventionName');
 		$subComponentCategories = ArrayHelper::map(SubComponentCategories::find()->all(), 'SubComponentCategoryID', 'SubComponentCategoryName');
-		$subComponents = ArrayHelper::map(SubComponents::find()->all(), 'SubComponentID', 'SubComponentName');
+		$subComponents = ArrayHelper::map(SubComponents::find()->andWhere(['ComponentID' => $model->ComponentID])->all(), 'SubComponentID', 'SubComponentName');
 		$enterpriseTypes = ArrayHelper::map(EnterpriseTypes::find()->all(), 'EnterpriseTypeID', 'EnterpriseTypeName');
 
 
@@ -947,7 +965,7 @@ class ProjectsController extends Controller
 
 	public function actionSubCounties($id)
 	{
-		$model = SubCounties::find()->where(['CountyID' => $id])->all();
+		$model = SubCounties::find()->orderBy('SubCountyName')->where(['CountyID' => $id])->all();
 			
 		if (!empty($model)) {
 			echo '<option value="0">Select...</option>';
@@ -961,7 +979,7 @@ class ProjectsController extends Controller
 
 	public function actionWards($id)
 	{
-		$model = Wards::find()->where(['SubCountyID' => $id])->all();
+		$model = Wards::find()->orderBy('WardName')->where(['SubCountyID' => $id])->all();
 			
 		if (!empty($model)) {
 			echo '<option value="0">Select...</option>';
@@ -975,7 +993,7 @@ class ProjectsController extends Controller
 
 	public function actionLocations($id)
 	{
-		$model = Locations::find()->where(['SubCountyID' => $id])->all();
+		$model = Locations::find()->orderBy('SubCountyName')->where(['SubCountyID' => $id])->all();
 			
 		if (!empty($model)) {
 			echo '<option value="0">Select...</option>';
@@ -1116,80 +1134,200 @@ class ProjectsController extends Controller
 	{
 		// echo strtotime('2020-04-05T14:45:41.953+03:00');
 		// exit;
-		$url = 'https://kc.kobotoolbox.org/api/v1/data/425000?format=json';
+		// $url = 'https://kc.kobotoolbox.org/api/v1/data/425000?format=json';
+		$url = 'https://kc.kobotoolbox.org/api/v1/data/506020?format=json';
+		// $url = 'https://kc.kobotoolbox.org/api/v1/data/506020?format=json&query={"today": {"$gte": "2020-09-08"}}'; // Test
+		$url = 'https://kc.kobotoolbox.org/api/v1/data/425000?format=json&query={"today": {"$gte": "2020-10-01"}}'; // Production
 		$token = 'd3387997e65bd2d4e75ee73ccd86e6b5439407ff';
 
-		$data = self::fetchData($url, $token);
+		$result = self::fetchData($url, $token);
+		// echo $result; exit;
+		// $res = json_decode($result);
+		$res = json_decode($result);
+		$data = ArrayHelper::toArray($res);
+		// print('<pre>');
+		// print_r($data); exit;
+
+		// if ($res == null) {
+		// 	return  ['error' => 'Failed to Process Request1'];
+		// } else {
+		// 	return $res;
+		// }
 		$projectData = [];
 		foreach ($data as $res) {
-			$projectData['IntegrationID'] = self::extractData($res, 'projectsite_info/site_id');
-			if (!self::projectExists($projectData['IntegrationID'])) {
-				$projectData['ProjectName'] = self::extractData($res, 'projectsite_info/site_name');
-				$projectData['Objective'] = self::extractData($res, 'projectsite_info/Site_Description');
-				$projectData['StartDate'] = date('Y-m-d', strtotime(self::extractData($res, 'start')));
-				$projectData['EndDate'] = date('Y-m-d', strtotime(self::extractData($res, 'end')));
-				$projectData['ComponentID'] = self::getComponentId(self::extractData($res, 'projectsite_info/component'));
-				$projectData['CountyID'] = self::extractData($res, 'Geography/county');
-				$projectData['WardID'] = self::extractData($res, 'Geography/ward');
-				$projectData['Village'] = self::extractData($res, 'Geography/Village_community');
-				$projectData['SubCountyID'] = self::extractData($res, 'Geography/Subcounty');
-				$projectData['ContactPerson'] = self::extractData($res, 'Primary_Informant_Name');
-				$projectData['Beneficiaries'] = self::extractData($res, 'projectsite_info/beneficiaries');
-				$projectData['Enumerator'] = self::extractData($res, 'enumerator_name');
-				$projectData['ProjectStatusID'] = self::getProjectStatusId(self::extractData($res, 'projectsite_info/implementation_status'));
-				$projectData['Location'] = self::extractData($res, 'Geography/Location');
-				$geolocation = self::extractData($res, '_geolocation');
-				$projectData['Latitude'] = isset($geolocation[0]) ? $geolocation[0] : '';
-				$projectData['Longitude'] = isset($geolocation[1]) ? $geolocation[1] : '';
-				$projectData['CurrencyID'] = 1;
-				$projectData['CommunityID'] = 0;
-				$projectData['LocationID'] = 0;
-				$projectData['SubLocationID'] = 0;
-				$projectData['Justification'] = $projectData['Objective'];
-				$projectData['ApprovalDate'] = date('Y-m-d', strtotime(self::extractData($res, '_submission_time')));
+			$_id = self::extractData($res, '_id');
 
-				$projectId = self::saveProject($projectData);
-			} else {
-				$project = Projects::findOne(['IntegrationID' => $projectData['IntegrationID']]);
-				
-				$projectId = empty($project) ? null : $project->ProjectID;
-			}
-			if ($projectId) {
-				$attachements = self::extractData($res, '_attachments');
-				foreach ($attachements as $attachement) {
-					$id = self::extractData($attachement, 'id');
-					$imageData = [];
-					if (!self::imageExists($id)) {
-						$smallImage = self::extractData($attachement, 'download_small_url');
-						$mediumImage = self::extractData($attachement, 'download_medium_url');
-						$largeImage = self::extractData($attachement, 'download_large_url');
-						$image = self::extractData($attachement, 'download_url');
-						$mimeType = self::extractData($attachement, 'mimetype');
-						$filename = self::getFilenme(self::extractData($attachement, 'filename'));
-						
-						// echo $filename . '</br>';
-						// self::downloadFile($smallImage, $token, 'small/' . $filename); // Download Small Image
-						// self::downloadFile($mediumImage, $token, 'medium/' . $filename); // Download Medium Image
-						// self::downloadFile($largeImage, $token, 'large/' . $filename); // Download Large Image
+			if (!self::alreadyImported($_id)) {
+				// $projectData['IntegrationID'] = self::extractData($res, 'projectsite_info/site_id');
+				$projectData['ProjectID'] = self::extractData($res, 'projectsite_info/site_id');
+				if (!self::projectExists($projectData['ProjectID'])) {
+					$projectData['ProjectName'] = self::extractData($res, 'projectsite_info/site_name');
+					$projectData['Objective'] = self::extractData($res, 'projectsite_info/Site_Description');
+					$projectData['StartDate'] = date('Y-m-d', strtotime(self::extractData($res, 'start')));
+					$projectData['EndDate'] = date('Y-m-d', strtotime(self::extractData($res, 'end')));
+					$projectData['ComponentID'] = self::getComponentId(self::extractData($res, 'projectsite_info/component'));
+					$projectData['CountyID'] = self::extractData($res, 'Geography/county');
+					$projectData['WardID'] = self::extractData($res, 'Geography/ward');
+					$projectData['Village'] = self::extractData($res, 'Geography/Village_community');
+					$projectData['SubCountyID'] = self::extractData($res, 'Geography/Subcounty');
+					$projectData['ContactPerson'] = self::extractData($res, 'Primary_Informant_Name');
+					$projectData['Beneficiaries'] = self::extractData($res, 'projectsite_info/beneficiaries');
+					$projectData['Enumerator'] = self::extractData($res, 'enumerator_name');
+					$projectData['ProjectStatusID'] = self::getProjectStatusId(self::extractData($res, 'projectsite_info/implementation_status'));
+					$projectData['Location'] = self::extractData($res, 'Geography/Location');
+					$geolocation = self::extractData($res, '_geolocation');
+					$projectData['Latitude'] = isset($geolocation[0]) ? $geolocation[0] : '';
+					$projectData['Longitude'] = isset($geolocation[1]) ? $geolocation[1] : '';
+					$projectData['CurrencyID'] = 1;
+					$projectData['CommunityID'] = 0;
+					$projectData['LocationID'] = 0;
+					$projectData['SubLocationID'] = 0;
+					$projectData['Justification'] = $projectData['Objective'];
+					$projectData['ApprovalDate'] = date('Y-m-d', strtotime(self::extractData($res, '_submission_time')));
 
-						// self::downloadFile($image, $token, $filename); // Download Image
-						$base64 = self::downloadFileBase64($image, $token, $filename, $mimeType);
+					$projectId = self::saveProject($projectData);
+				} else {
+					// $project = Projects::findOne(['IntegrationID' => $projectData['IntegrationID']]);
+					$project = Projects::findOne($projectData['ProjectID']);
+					
+					$projectId = empty($project) ? null : $project->ProjectID;
+				}
+				// echo $projectId; exit;
+				if ($projectId) {
+					// Save implementation Status
+					//Calculate the year quarter.
+					$quarter = ceil(date('n') / 3);
+					switch ($quarter) {
+						case 1:
+						  	$realQuarter = 3;
+						  	break;
+						case 2:
+							$realQuarter = 4;
+						  	break;
+						case 3:
+							$realQuarter = 1;
+							  break;
+						case 4:
+							$realQuarter = 2;
+							break;
+						default:
+							$realQuarter = 0;
+					}
 
-						$imageData['ProjectID'] = $projectId;
-						$imageData['Caption'] = $filename;
-						// $imageData['Image'] = $filename;
-						$imageData['Image'] = $base64;
-						$imageData['IntegrationID'] = $id;
-						if (self::saveImage($imageData)) {
+					// echo $realQuarter; exit;
+
+					$implementationStatus = ImplementationStatus::findOne(['ProjectID' => $projectId, 'PeriodID' => $realQuarter]);
+					if (!$implementationStatus) {
+						$implementationStatus = new ImplementationStatus();
+						$implementationStatus->ProjectID = $projectId;
+						$implementationStatus->PeriodID = $realQuarter;
+					}					
+					$implementationStatus->ProjectStatusID = self::getProjectStatusId(self::extractData($res, 'projectsite_info/implementation_status'));
+					$implementationStatus->Date = self::extractData($res, 'today');
+					
+					if (!$implementationStatus->save()) {
+						// print_r($implementationStatus->getErrors()); exit;
+					}
+
+
+					// Save attachments;
+					$attachements = self::extractData($res, '_attachments');
+					foreach ($attachements as $attachement) {
+						$id = self::extractData($attachement, 'id');
+						$imageData = [];
+						if (!self::imageExists($id)) {
+							$smallImage = self::extractData($attachement, 'download_small_url');
+							$mediumImage = self::extractData($attachement, 'download_medium_url');
+							$largeImage = self::extractData($attachement, 'download_large_url');
+							$image = self::extractData($attachement, 'download_url');
+							$mimeType = self::extractData($attachement, 'mimetype');
+							$filename = self::getFilenme(self::extractData($attachement, 'filename'));
+							
+							// echo $filename . '</br>';
+							// self::downloadFile($smallImage, $token, 'small/' . $filename); // Download Small Image
+							// self::downloadFile($mediumImage, $token, 'medium/' . $filename); // Download Medium Image
+							// self::downloadFile($largeImage, $token, 'large/' . $filename); // Download Large Image
+
+							// self::downloadFile($image, $token, $filename); // Download Image
+							$base64 = self::downloadFileBase64($image, $token, $filename, $mimeType);
+
+							$imageData['ProjectID'] = $projectId;
+							$imageData['Caption'] = $filename;
+							// $imageData['Image'] = $filename;
+							$imageData['Image'] = $base64;
+							$imageData['IntegrationID'] = $id;
+							if (self::saveImage($imageData)) {
+							}
 						}
 					}
+
+					// Save Site Issues
+					$issues = self::extractData($res, 'projectsite_info/site_issues');
+
+					$projectChallenges = new ProjectChallengesImp();
+					$projectChallenges->ProjectID = $projectId;
+					$projectChallenges->Challenge = $issues;
+					$projectChallenges->ProjectChallengeStatusID = 1;
+					$projectChallenges->MajorChallenge = 0;
+					// $projectChallenges->save();
+					if (!$projectChallenges->save()) {
+						// print_r($projectChallenges->getErrors()); exit;
+					}
+
+					// Capture Additional Questions
+					/** 1. projectsite_info/involve_land - 1
+					 *  2. projectsite_info/land_size - 2
+					 *  3. projectsite_info/irrigation - 3
+					 *  4. projectsite_info/new_improved - 5
+					 */
+
+					$response1 = self::extractData($res, 'projectsite_info/involve_land');
+					self::saveResultQuestions(1, $projectId, $response1);
+
+					$response2 = self::extractData($res, 'projectsite_info/land_size');
+					self::saveResultQuestions(2, $projectId, $response2);
+
+					$response3 = self::extractData($res, 'projectsite_info/irrigation');
+					self::saveResultQuestions(3, $projectId, $response3);
+
+					$response5 = self::extractData($res, 'projectsite_info/new_improved');
+					self::saveResultQuestions(5, $projectId, $response5);
+
+					self::saveContent(['KoboID' => $_id, 'ProjectID' => $projectId, 'Content' => $result]);
+
+					// echo "1235"; exit;
 				}
 			}
 			
-			// exit;
 		}
 		\Yii::$app->session->setFlash('success', 'Import Completed');
 		return $this->redirect(['index']);
+	}
+
+	public static function alreadyImported($id)
+	{
+		return Kobo::findOne($id);
+	}
+
+	public static function saveContent($params)
+	{
+		$model = new Kobo();
+		if ($model->load(['Kobo' => $params]) && $model->save()) {
+			return true;
+		}
+		return false;
+	}
+
+	public static function saveResultQuestions($questionId, $projectId, $response)
+	{
+		$model = ProjectQuestionResponses::findOne(['ProjectID' => $projectId, 'projectResultQuestionID' => $questionId]);
+		if (!$model) {
+			$model = new ProjectQuestionResponses();
+			$model->projectResultQuestionID = $questionId;
+			$model->ProjectID = $projectId;
+		}
+		$model->Response = $response;
+		$model->save();
 	}
 
 	public static function saveProject($params)
@@ -1200,8 +1338,8 @@ class ProjectsController extends Controller
 		if ($model->load($data) && $model->save()) {
 			return $model->ProjectID;
 		} else {
-			// print('<pre>');
-			// print_r($model->getErrors());
+			print('<pre>');
+			print_r($model->getErrors());
 		}
 		return null;
 	}
@@ -1222,7 +1360,8 @@ class ProjectsController extends Controller
 
 	public static function projectExists($integrationId)
 	{
-		if (empty(Projects::findOne(['IntegrationID' => $integrationId]))) {
+		// if (empty(Projects::findOne(['IntegrationID' => $integrationId]))) {
+		if (empty(Projects::findOne($integrationId))) {
 			return false;
 		}
 		return true;
@@ -1282,16 +1421,7 @@ class ProjectsController extends Controller
 			return ['error' => 'Failed to submit data'];
 		} else {
 			if (curl_getinfo($ch, CURLINFO_HTTP_CODE) == 200) {
-				// $res = json_decode($result);
-				$res = json_decode($result);
-				$res = ArrayHelper::toArray($res);
-				// print('<pre>');
-				// print_r($res); exit;
-				if ($res == null) {
-					return  ['error' => 'Failed to Process Request1'];
-				} else {
-					return $res;
-				}
+				return $result;
 			} elseif (curl_getinfo($ch, CURLINFO_HTTP_CODE) == '401') {
 				return ['error' => 'Failed to Process Request2'];
 			} else {
@@ -1390,6 +1520,7 @@ class ProjectsController extends Controller
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_AUTOREFERER, false);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 20); //timeout in seconds
 		curl_setopt($ch, CURLOPT_REFERER, 'https://kc.kobotoolbox.org');
 		curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);

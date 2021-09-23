@@ -6,11 +6,8 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Product Categories';
+$this->title = 'Item Categories';
 $this->params['breadcrumbs'][] = $this->title;
-
-$Rights = Yii::$app->params['rights'];
-$FormID = 4;
 ?>
 <section id="configuration">
 	<div class="row">

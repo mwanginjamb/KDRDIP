@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\ImplementationStatus;
 use app\models\ProjectStatus;
+use app\models\Periods;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -84,7 +85,7 @@ class ImplementationStatusController extends Controller
 		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => ImplementationStatus::find(),
+			'query' => ImplementationStatus::find()->andWhere(['ProjectID' => $pId]),
 		]);
 
 		return $this->renderPartial('index', [
@@ -118,18 +119,21 @@ class ImplementationStatusController extends Controller
 		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
 		$model = new ImplementationStatus();
+		$model->ProjectID = $pId;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['index', 'pId' => $model->ProjectID]);
 		}
 
 		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+		$periods = ArrayHelper::map(Periods::find()->all(), 'PeriodID', 'PeriodName');
 
 		return $this->renderPartial('create', [
 			'model' => $model,
 			'rights' => $this->rights,
 			'pId' => $pId,
 			'projectStatus' => $projectStatus,
+			'periods' => $periods,
 		]);
 	}
 
@@ -149,12 +153,14 @@ class ImplementationStatusController extends Controller
 		}
 
 		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+		$periods = ArrayHelper::map(Periods::find()->all(), 'PeriodID', 'PeriodName');
 
 		return $this->renderPartial('update', [
 			'model' => $model,
 			'rights' => $this->rights,
 			'pId' => $model->ProjectID,
 			'projectStatus' => $projectStatus,
+			'periods' => $periods,
 		]);
 	}
 
@@ -167,9 +173,10 @@ class ImplementationStatusController extends Controller
 	 */
 	public function actionDelete($id)
 	{
+		$model = $this->findModel($id);
 		$this->findModel($id)->delete();
 
-		return $this->redirect(['index']);
+		return $this->redirect(['index', 'pId' => $model->ProjectID]);
 	}
 
 	/**

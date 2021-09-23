@@ -8,61 +8,82 @@ use Yii;
  * This is the model class for table "projectbeneficiaries".
  *
  * @property int $ProjectBeneficiaryID
- * @property int $ProjectID
- * @property int $CountyID
- * @property int $SubCountyID
- * @property int $HostPopulationMale
- * @property int $RefugeePopulationMale
- * @property int $HostPopulationFemale
- * @property int $RefugeePopulationFemale
- * @property string $Gender
+ * @property int|null $ProjectID
+ * @property int|null $CountyID
+ * @property int|null $SubCountyID
+ * @property int|null $HostPopulationMale
+ * @property int|null $RefugeePopulationMale
+ * @property int|null $HostPopulationFemale
+ * @property int|null $RefugeePopulationFemale
+ * @property int|null $MinorityClans
+ * @property int|null $Women
+ * @property int|null $Youth
+ * @property int|null $Minority
+ * @property int|null $Men
  * @property string $CreatedDate
- * @property int $CreatedBy
+ * @property int|null $CreatedBy
  * @property int $Deleted
  */
 class ProjectBeneficiaries extends \yii\db\ActiveRecord
 {
-	/**
-	 * {@inheritdoc}
-	 */
-	public static function tableName()
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'projectbeneficiaries';
+    }
+    
+	public static function find()
 	{
-		return 'projectbeneficiaries';
+		return parent::find()->andWhere(['=', 'projectbeneficiaries.Deleted', 0]);
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function rules()
+	public function delete()
 	{
-		return [
-			[['ProjectID', 'CountyID', 'SubCountyID', 'HostPopulationMale', 'RefugeePopulationMale', 'HostPopulationFemale',
-				'RefugeePopulationFemale', 'CreatedBy', 'Deleted'], 'integer'],
-			[['CreatedDate'], 'safe'],
-		];
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
 	}
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function attributeLabels()
-	{
-		return [
-			'ProjectBeneficiaryID' => 'Project Beneficiary ID',
-			'ProjectID' => 'Project ID',
-			'CountyID' => 'County ID',
-			'SubCountyID' => 'Sub County ID',
-			'HostPopulationMale' => 'Host Population Male',
-			'RefugeePopulationMale' => 'Refugee Population Male',
-			'HostPopulationFeMale' => 'Host Population Female',
-			'RefugeePopulationFeMale' => 'Refugee Population Female',
-			'CreatedDate' => 'Created Date',
-			'CreatedBy' => 'Created By',
-			'Deleted' => 'Deleted',
-		];
-	}
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['ProjectID', 'CountyID', 'SubCountyID', 'HostPopulationMale', 'RefugeePopulationMale', 'HostPopulationFemale', 'RefugeePopulationFemale', 'MinorityClans', 'Women', 'Youth', 'Minority', 'Men', 'CreatedBy', 'Deleted'], 'integer'],
+            [['CreatedDate'], 'safe'],
+        ];
+    }
 
-	public function getCounties()
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'ProjectBeneficiaryID' => 'Project Beneficiary ID',
+            'ProjectID' => 'Project',
+            'CountyID' => 'County',
+            'SubCountyID' => 'Sub County',
+            'HostPopulationMale' => 'Host Population Male',
+            'RefugeePopulationMale' => 'Refugee Population Male',
+            'HostPopulationFemale' => 'Host Population Female',
+            'RefugeePopulationFemale' => 'Refugee Population Female',
+            'MinorityClans' => 'Minority Clans',
+            'Women' => 'Women',
+            'Youth' => 'Youth',
+            'Minority' => 'Minority',
+            'Men' => 'Men',
+            'CreatedDate' => 'Created Date',
+            'CreatedBy' => 'Created By',
+            'Deleted' => 'Deleted',
+        ];
+    }
+
+    public function getCounties()
 	{
 		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
 	}

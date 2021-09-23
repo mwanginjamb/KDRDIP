@@ -46,7 +46,7 @@ use yii\widgets\ActiveForm;
 
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Close', null, ['class' => 'btn btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-master-roll-register/index?mId=' . $model->MasterRollID) . '", \'tab2\')']) ?>
-				<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl($model->isNewRecord ? 'lipw-master-roll-register/create?1=1' : 'lipw-master-roll-register/update?id=' . $model->MasterRollRegisterID) . '",\'tab2\',\'currentForm\')']) ?>
+				<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['id' => 'saveBtn', 'class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl($model->isNewRecord ? 'lipw-master-roll-register/create?1=1' : 'lipw-master-roll-register/update?id=' . $model->MasterRollRegisterID) . '",\'tab2\',\'currentForm\', \'saveBtn\')']) ?>
 			</div>
 
 			<?php ActiveForm::end(); ?>

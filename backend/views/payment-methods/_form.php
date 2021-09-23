@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(); ?>
 	 
-	 		<div class="row">
+			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'PaymentMethodName')->textInput(['maxlength' => true]) ?>
 				</div>

@@ -64,7 +64,8 @@ $this->params['breadcrumbs'][] = $this->title;
 											'banks.BankName',
 											'bankBranches.BankBranchName',
 											'counties.CountyName',
-											'communities.CommunityName',
+											'organizations.OrganizationName',
+                                            'projects.ProjectName',
 											'Notes:ntext',
 											[
 												'attribute' => 'CreatedDate',
@@ -93,12 +94,6 @@ $this->params['breadcrumbs'][] = $this->title;
 										],
 										'formatter' => ['class' => 'yii\i18n\Formatter','nullDisplay' => ''],
 										'columns' => [
-											/* [
-												'attribute' => 'CashBookID',
-												'label' => 'ID',
-												'headerOptions' => [ 'width' => '5%', 'style'=>'color:black; text-align:center'],
-												'contentOptions' => ['style' => 'text-align:center'],
-											], */
 											[
 												'class' => 'yii\grid\SerialColumn',
 												'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -109,30 +104,33 @@ $this->params['breadcrumbs'][] = $this->title;
 												'headerOptions' => ['width' => '10%'],
 											],
 											[
+												'attribute' => 'DocumentReference',
+												'headerOptions' => ['width' => '10%'],
+											],											
+											[
 												'label'=>'Corresponding Acc',
-												'headerOptions' => ['width' => '20%', 'style'=>'color:black; text-align:left'],
+												'headerOptions' => ['style'=>'color:black; text-align:left'],
 												'format'=>'text',
 												'attribute' => 'account.AccountName',
 												'contentOptions' => ['style' => 'text-align:left'],
 											],
-											'DocumentReference',
 											[
-												'label'=>'Description',
-												'headerOptions' => ['style'=>'color:black; text-align:left'],
+												'label'=>'Sub Project',
+												'headerOptions' => ['width' => '25%', 'style'=>'color:black; text-align:left'],
 												'format'=>'text',
-												'value' => 'Description',
+												'attribute' => 'projects.ProjectName',
 												'contentOptions' => ['style' => 'text-align:left'],
 											],
 											[
 												'label'=>'Debit',
-												'headerOptions' => ['width' => '20%', 'style'=>'color:black; text-align:right'],
+												'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
 												'format'=> ['Decimal',2],
 												'value' => 'Debit',
 												'contentOptions' => ['style' => 'text-align:right'],
 											],
 											[
 												'label'=>'Credit',
-												'headerOptions' => ['width' => '20%', 'style'=>'color:black; text-align:right'],
+												'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:right'],
 												'format'=> ['Decimal',2],
 												'value' => 'Credit',
 												'contentOptions' => ['style' => 'text-align:right'],

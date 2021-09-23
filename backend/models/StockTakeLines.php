@@ -14,42 +14,42 @@ use Yii;
  */
 class StockTakeLines extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'stocktakelines';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['StockTakeID', 'ProductID'], 'integer'],
-            [['CurrentStock', 'PhysicalStock'], 'number'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'StockTakeLineID' => 'Stock Take Line ID',
-            'StockTakeID' => 'Stock Take ID',
-            'ProductID' => 'Product ID',
-            'CurrentStock' => 'Current Stock',
-			'PhysicalStock' => 'Physical sStock',
-			'Variance' => 'Variance'
-        ];
-    }
-	
-	public function getProduct() 
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
 	{
-        return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(Product::tableName());
-    }
+		return 'stocktakelines';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['StockTakeID', 'ProductID'], 'integer'],
+			[['CurrentStock', 'PhysicalStock'], 'number'],
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'StockTakeLineID' => 'Stock Take Line ID',
+			'StockTakeID' => 'Stock Take ID',
+			'ProductID' => 'Product ID',
+			'CurrentStock' => 'Current Stock',
+		'PhysicalStock' => 'Physical sStock',
+		'Variance' => 'Variance'
+		];
+	}
+
+public function getProduct() 
+{
+		return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(Product::tableName());
+	}
 }

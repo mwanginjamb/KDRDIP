@@ -46,6 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'attribute' => 'Date',
 			'format' => ['date', 'php:d/m/Y'],
 		],
+		'periods.PeriodName',
 		'Notes',
 		[
 			'attribute' => 'createdTime',

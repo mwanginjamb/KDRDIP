@@ -17,52 +17,53 @@ if (!empty($budgetProvider->getModels())) {
 	}
 }
 $Total = number_format($Total, 2);
+$model = $budgetProvider->getModels();
 ?>
-
-<?= GridView::widget([
-	'dataProvider' => $budgetProvider,
-	'layout' => '{items}',
-	'showFooter' => true,
-	'tableOptions' => [
-		'class' => 'custom-table table-striped table-bordered',
-	],
-	'columns' => [
-		/* [
-			'attribute' => 'ActivityBudgetID',
-			'label' => 'ID',
-			'headerOptions' => ['style' => 'width:5% !important'],
-		], */
-		[
-			'class' => 'yii\grid\SerialColumn',
-			'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-		],
-		[
-			'attribute' => 'accounts.AccountName',
-			'footer' => 'Total',
-			'footerOptions' => ['style' => 'font-weight:bold; padding: 5px 15px'],
-			// 'headerOptions' => ['style' => 'width:15% !important; '],
-		],
-		// [
-		// 	'attribute' => 'Description',
-		// 	'headerOptions' => [],
-		// ],
-		[
-			'attribute' => 'Amount',
-			'headerOptions' => ['style' => 'width:15% !important; text-align:right'],
-			'contentOptions' => ['style' => 'text-align:right'],
-			'format' => ['decimal', 2],
-			'footer' => $Total,
-			'footerOptions' => ['style' => 'text-align:right; font-weight:bold; padding: 5px 15px'],
-		],
-/* 		[
-			'attribute' => 'CreatedDate',
-			'format' => ['date', 'php:d/m/Y h:i a'],
-			'headerOptions' => ['style' => 'width:17% !important'],
-		],
-		[
-			'label' => 'Created By',
-			'attribute' => 'users.fullName',
-			'headerOptions' => ['style' => 'width:15% !important'],
-		] */
-	],
-]); ?>
+<table class="custom-table table-striped table-bordered">
+<thead>
+	<tr>
+		<th width="5%">ID</th>
+		<th>Sub Activity</th>
+		<th width="15%" align="right">Amount</th>
+	</tr>
+</thead>	
+<tbody>
+	<?php
+	$activityId = 0;
+	$activityTotal = 0;
+	$grandTotal = 0;
+	foreach ($model as $key => $row) {
+		if (isset($row['activities']) && $activityId != $row['activities']['ActivityID']) {
+			if ($activityId != 0) { ?>
+				<tr>
+					<th colspan="2" align="left">Activity Total</th>
+					<th style="text-align:right"><?= number_format($activityTotal, 2); ?></th>
+				</tr>
+				<?php
+			}	?>
+			<tr>
+				<td colspan="3">Activity: <?= $row['activities']['ActivityName']; ?></td>
+			</tr>
+			<?php
+			$activityId = $row['activities']['ActivityID'];
+			$activityTotal = 0;
+		} ?>
+		<tr>
+			<td><?= $key+1; ?></td>
+			<td><?= $row['Description']; ?></td>
+			<td align="right"><?= number_format($row['Amount'], 2); ?></td>
+		</tr>
+		<?php
+		$activityTotal += $row['Amount'];
+		$grandTotal += $row['Amount'];
+	} ?>
+	<tr>
+		<th colspan="2" align="left">Activity Total</th>
+		<th style="text-align:right"><?= number_format($activityTotal, 2); ?></th>
+	</tr>
+	<tr>
+		<th colspan="2" align="left">Grand Total</th>
+		<th style="text-align:right"><?= number_format($grandTotal, 2); ?></th>
+	</tr>
+</tbody>
+</table>

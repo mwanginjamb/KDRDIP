@@ -13,7 +13,7 @@ use Yii;
  * @property string $Notes
  * @property string $CreatedDate
  * @property int $CreatedBy
- * @property int $Deleed
+ * @property int $Deleted
  */
 class EnterpriseTypes extends \yii\db\ActiveRecord
 {
@@ -25,6 +25,19 @@ class EnterpriseTypes extends \yii\db\ActiveRecord
 		return 'enterprisetypes';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'enterprisetypes.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -33,7 +46,7 @@ class EnterpriseTypes extends \yii\db\ActiveRecord
 		return [
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
-			[['CreatedBy', 'Deleed'], 'integer'],
+			[['CreatedBy', 'Deleted'], 'integer'],
 			[['EnterpriseTypeName'], 'string', 'max' => 100],
 			[['ShortName'], 'string', 'max' => 45],
 			[['EnterpriseTypeName', 'ShortName'], 'required'],
@@ -52,7 +65,7 @@ class EnterpriseTypes extends \yii\db\ActiveRecord
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
-			'Deleed' => 'Deleed',
+			'Deleted' => 'Deleted',
 		];
 	}
 

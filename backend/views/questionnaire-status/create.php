@@ -9,12 +9,12 @@ $this->title = 'Create Questionnaire Status';
 $this->params['breadcrumbs'][] = ['label' => 'Questionnaire Statuses', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="questionnaire-status-create">
+<section class="flexbox-container">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+	<?= $this->render('_form', [
+		'model' => $model,
+		'rights' => $rights,
+	]) ?>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-    ]) ?>
+</section>
 
-</div>

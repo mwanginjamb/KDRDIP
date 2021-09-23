@@ -26,7 +26,16 @@ use yii\widgets\ActiveForm;
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(['id' => 'currentForm']); ?>
 			<?= $form->field($model, 'ProjectID')->hiddenInput()->label(false); ?>
+			<?= $form->field($model, 'MajorChallenge')->hiddenInput()->label(false); ?>
 	 
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ChallengeTypeID')->dropDownList($challengeTypes, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">				
+				</div>			
+			</div>
+			
 			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'Challenge')->textarea(['rows' => 6]) ?>
@@ -44,13 +53,22 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'AssignedTo')->dropDownList($employees, ['prompt'=>'Select']); ?>	
 				</div>			
 			</div>
+			
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectChallengeStatusID')->dropDownList($projectChallengeStatus, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">				
+				</div>			
+			</div>
 
 			<div class="form-group">
-				<?= Html::a('<i class="ft-x"></i> Close', null, ['class' => 'btn btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('project-challenges/index?pId=' . $model->ProjectID) . '", \'tab19\')']) ?>
-				<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl($model->isNewRecord ? 'project-challenges/create?1=1' : 'project-challenges/update?id=' . $model->ProjectChallengeID) . '",\'tab19\',\'currentForm\')']) ?>
+				<?= Html::a('<i class="ft-x"></i> Close', null, ['class' => 'btn btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('project-challenges/index?pId=' . $model->ProjectID . '&typeId=' . $model->ChallengeTypeID) . '", \'tab19\')']) ?>
+				<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['id' => 'saveBtn', 'class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl($model->isNewRecord ? 'project-challenges/create?typeId=' . $model->ChallengeTypeID : 'project-challenges/update?id=' . $model->ProjectChallengeID) . '",\'tab19\',\'currentForm\', \'saveBtn\')']) ?>
 			</div>
 
 			<?php ActiveForm::end(); ?>
 
-	 </div>
+		</div>
+	</div>
 </div>

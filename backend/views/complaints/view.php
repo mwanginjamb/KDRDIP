@@ -2,6 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\bootstrap\Modal;
+
+$baseUrl = Yii::$app->request->baseUrl;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Complaints */
@@ -10,7 +14,26 @@ $this->title = $model->ComplainantName;
 $this->params['breadcrumbs'][] = ['label' => 'Complaints', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+Modal::begin([
+	'header' => '<h4 class="modal-title">Document</h4>',
+	// 'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	'id' => 'pdf-viewer',
+	'size' => 'modal-lg',
+	]);
+
+Modal::end();
 ?>
+<style>
+	#ParameterTable .form-group {
+		margin-bottom: 0px !important;
+		margin-top: 0px !important;
+		/* padding: 4px !important; */
+	}
+	.modal-header {
+		display: block !important;
+	}
+</style>
 
 <section id="configuration">
 	<div class="row">
@@ -49,18 +72,19 @@ $this->params['breadcrumbs'][] = $this->title;
 							'attributes' => [
 								'ComplaintID',
 								'ComplainantName',
-								/* 'PostalAddress',
-								'PostalCode',
-								'Town', */
 								'countries.CountryName',
 								'counties.CountyName',
 								'subCounties.SubCountyName',
 								'wards.WardName',
-								'Village',
-								/* 'Telephone',
-								'Mobile', */
+								[
+									'attribute' => 'subLocations.SubLocationName',
+									'label' => 'Village'
+								],
 								'complaintTypes.ComplaintTypeName',
-								'IncidentDate',
+								[
+									'attribute' => 'IncidentDate',
+									'format' => ['date', 'php:d/m/Y'],
+								],
 								'projects.ProjectName',
 								'ComplaintSummary:ntext',
 								'ReliefSought:ntext',
@@ -68,25 +92,115 @@ $this->params['breadcrumbs'][] = $this->title;
 								'complaintTiers.ComplaintTierName',
 								'complaintChannels.ComplaintChannelName',
 								'complaintPriorities.ComplaintPriorityName',
-								'complaintStatus.ComplaintStatusName',								
+								'complaintStatus.ComplaintStatusName',
 								[
 									'attribute' => 'assignedUser.FullName',
 									'label' => 'Assigned User',
-								],								
+								],
 								'Resolution:ntext',
+								[
+									'attribute' => 'ClosedDate',
+									'format' => ['date', 'php:d/m/Y'],
+								],
 								[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
 								],
 								[
 									'label' => 'Created By',
-									'attribute' => 'users.fullName',									
+									'attribute' => 'users.fullName',
 								],
 							],
 						]) ?>
+						<h4 class="form-section">Notes</h4>
+						<?= GridView::widget([
+							'dataProvider' => $dataProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'columns' => [
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],
+								'Notes',
+								[
+									'attribute' => 'complaintStatus.ComplaintStatusName',
+									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],
+									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'label' => 'Created By',
+									'attribute' => 'users.fullName',
+									'headerOptions' => ['width' => '15%'],
+								],
+							],
+						]); ?>
+
+						<h4 class="form-section">Documents</h4>
+						<?= GridView::widget([
+							'dataProvider' => $documentProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'columns' => [
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],
+								'Description',
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],
+									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'label' => 'Created By',
+									'attribute' => 'users.fullName',
+									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'class' => 'yii\grid\ActionColumn',
+									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
+									'template' => '{photo} {delete}',
+									'buttons' => [
+										'photo' => function($url, $model) use ($baseUrl) {								
+											return '<a href="#pdf-viewer" data-toggle="modal" data-image="' . $model->Image . '" data-title="document"><img src="' . $baseUrl . '\images\pdf-icon.png" height="30" width="auto"></a>';
+										},
+										'delete' => function ($url, $model) use ($rights) {
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete-document', 'id' => $model->DocumentID], [
+												'class' => 'btn-sm btn-danger btn-xs',
+												'data' => [
+													'confirm' => 'Are you absolutely sure ? You will lose all the information with this action.',
+													'method' => 'post',
+												],
+											]) : '';
+										},
+									],
+								],
+							],
+						]); ?>
 					</div>
 				</div>
 			</div>																			
 		</div>
 	</div>
 </section>
+<script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+
+		$("#pdf-viewer").on("show.bs.modal", function(e) {
+			var image = $(e.relatedTarget).data('image');
+			var title = $(e.relatedTarget).data('title');
+			$(".modal-body").html('<iframe src="'+  image +'" height="700px" width="100%"></iframe>');
+			$(".modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">' + title + '</h4>');
+		});
+	});
+</script>

@@ -19,12 +19,19 @@ $(window).on("load", function(){
 	if (componentId == 1) {
 		$("#projectsectorid").show();
 		$("#organizations").hide();
+		$("#sectorinterventionid").hide();
+	} else if (componentId == 2) {
+		$("#projectsectorid").show();
+		$("#sectorinterventionid").show();		
+		$("#organizations").hide();
 	} else if (componentId == 3) {
 		$("#projectsectorid").hide();
 		$("#organizations").show();
+		$("#sectorinterventionid").hide();
 	} else {
 		$("#projectsectorid").hide();
 		$("#organizations").hide();
+		$("#sectorinterventionid").hide();
 	}
 });
 </script>

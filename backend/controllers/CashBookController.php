@@ -156,7 +156,8 @@ class CashBookController extends Controller
 			return $this->redirect(['bank-accounts/view', 'id' => $baid]);
 		}
 
-		$bankAccounts = ArrayHelper::map(BankAccounts::find()->where(['CountyID' => $model->CountyID, 'CommunityID' => $model->CommunityID])->all(), 'BankAccountID', 'AccountName');
+		// $bankAccounts = ArrayHelper::map(BankAccounts::find()->where(['CountyID' => $model->CountyID, 'CommunityID' => $model->CommunityID])->all(), 'BankAccountID', 'AccountName');
+		$bankAccounts = ArrayHelper::map(BankAccounts::find()->where(['CommunityID' => $model->CommunityID])->all(), 'BankAccountID', 'AccountName');
 		$projects = ArrayHelper::map(Projects::find()->where(['CountyID' => $model->CountyID, 'CommunityID' => $model->CommunityID])->all(), 'ProjectID', 'ProjectName');
 		$communities = ArrayHelper::map(Communities::find()->where(['CountyID' => $model->CountyID])->all(), 'CommunityID', 'CommunityName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
@@ -241,7 +242,8 @@ class CashBookController extends Controller
 
 	public function actionBankAccounts($communityId, $countyId)
 	{
-		$model = BankAccounts::find()->where(['CountyID' => $countyId, 'CommunityID' => $communityId])->all();
+		// $model = BankAccounts::find()->where(['CountyID' => $countyId, 'CommunityID' => $communityId])->all();
+		$model = BankAccounts::find()->where(['CommunityID' => $communityId])->all();
 			
 		if (!empty($model)) {
 			echo '<option value="0">Select...</option>';

@@ -7,12 +7,17 @@ function submittheform(form)
 	console.log($(form).submit());
 }
 
-function submitForm(url,destination,formName)
+function submitForm(url, destination, formName, btn)
 {
-	
+	console.log(formName);
+	// Disable Button
+	var bt = document.getElementById(btn);
+	if (bt) {
+		bt.setAttribute('onclick','');
+	}
+
 	var form = document.getElementById(formName);	
 	// Create a new FormData object.
-	console.log(form);
 	var formData = new FormData(form);
 
 	// Set up the request.
@@ -35,7 +40,7 @@ function submitForm(url,destination,formName)
 	  	}
 	};	
 	// Send the Data.
-	xhr.send(formData);		
+	xhr.send(formData);
 }
 
 function loadListPage(url,destination,loader)
@@ -72,10 +77,64 @@ function deleteItem(url,destination,loader)
 	if (!a) 
 	{ 
 		return false; 
-	}	
+	}
+
+	var xhttp = new XMLHttpRequest();
+	var currentPage = document.getElementById(dest).innerHTML;
+	xhttp.open("POST", url, true); 
+	// xhttp.setRequestHeader("Content-Type", "application/json");
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			// Response
+			var response = this.responseText;
+
+			if (this.status==405) {
+				console.log('Do Nothing');			
+				document.getElementById(destination).innerHTML=currentPage;
+			} else {
+				document.getElementById(destination).innerHTML=this.responseText;
+			}
+		}
+	};
+	var data = [];
+	xhttp.send(JSON.stringify(data));
 	
-	loadpage(url,destination,loader);
+	// loadpage(url,destination,loader);
 }
+
+function submitItem(url,destination,loader)
+{
+	msg = "Are you sure you want to send this item for approval";
+	var a = confirm(msg); 
+	if (!a) 
+	{ 
+		return false; 
+	}
+
+	var xhttp = new XMLHttpRequest();
+	var currentPage = document.getElementById(dest).innerHTML;
+	xhttp.open("POST", url, true); 
+	// xhttp.setRequestHeader("Content-Type", "application/json");
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			// Response
+			var response = this.responseText;
+
+			if (this.status==405) {
+				console.log('Do Nothing');			
+				document.getElementById(destination).innerHTML=currentPage;
+			} else {
+				document.getElementById(destination).innerHTML=this.responseText;
+			}
+		}
+	};
+	var data = [];
+	xhttp.send(JSON.stringify(data));
+	
+	// loadpage(url,destination,loader);
+}
+
+
 
 function loadcomplaints(url,destination,loader,op,ID)
 {
@@ -1347,6 +1406,7 @@ function loadpage(url,destination,loader)
 { 
 	// $('table').DataTable();
 	dest = destination;
+	currentPage = document.getElementById(destination).innerHTML;
 	Loader = loader;
 	xmlHttp4=GetXmlHttpObject()
 	if (xmlHttp4==null)
@@ -1365,11 +1425,19 @@ function loadpage(url,destination,loader)
 
 function contentpage() 
 { 
-	if (xmlHttp4.readyState==4 || xmlHttp4.readyState=="complete") { 
+	// console.log(xmlHttp4);
+	if (xmlHttp4.readyState==4 || xmlHttp4.readyState=="complete") {
+		
 		if (document.getElementById(Loader)) {
 			document.getElementById(dest).innerHTML= ""
 		}
-		document.getElementById(dest).innerHTML=xmlHttp4.responseText;
+		if (xmlHttp4.status==405) {
+			console.log('Do Nothing');			
+			document.getElementById(dest).innerHTML=currentPage;
+		} else {
+			document.getElementById(dest).innerHTML=xmlHttp4.responseText;
+		}
+		
 		$('table').DataTable();
  	} 
 }

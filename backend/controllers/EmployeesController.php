@@ -7,6 +7,7 @@ use app\models\Employees;
 use app\models\Search;
 use app\models\Departments;
 use app\models\Countries;
+use app\models\MessageTemplates;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -208,5 +209,43 @@ class EmployeesController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public static function sendEmailNotification($code, $employeeId)
+	{
+
+		$template = MessageTemplates::findone(['Code' => $code]);
+		if (!$template) {
+			return 'template not found';
+		}
+		
+		$user = Employees::findOne($employeeId);
+		if (!$user) {
+			return 'User not found';
+		}
+
+		$EmailArray = [];
+		if ($user) {
+			$EmailArray[] = ['Email' => $user['Email'], 'Name'=> $user['FirstName'] . ' ' . $user['LastName']];
+		}
+
+		if (!empty($template)) {
+			$subject = $template->Subject;
+			$message = $template->Message;
+		}
+		// print_r($EmailArray); exit;
+		if (count($EmailArray)!=0) {
+			$sent = SendMail($EmailArray, $subject, $message, null);
+			if ($sent==1) {
+				Yii::$app->session->setFlash('success', 'Saved Details Successfully');
+				return 'Saved Details Successfully';
+			} else {
+				Yii::$app->session->setFlash('error', 'Failed to send Mail');
+				return 'Failed to send Mail';
+			}
+		} else {
+			Yii::$app->session->setFlash('error', 'Failed to send Mail - No Email address');
+			return 'No Email address';
+		}
 	}
 }

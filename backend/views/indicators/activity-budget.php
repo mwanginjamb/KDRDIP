@@ -17,8 +17,7 @@ $this->title = 'Activity Budget'
 <thead>
 <tr>
 	<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
-	<td style="padding: 4px !important">Description</td>
-	<td style="padding: 4px !important" width="20%">Account</td>
+	<td style="padding: 4px !important">Sub Activity</td>
 	<td style="padding: 4px !important" width="15%">Amount</td>
 </tr>	
 </thead>
@@ -31,7 +30,6 @@ foreach ($budget as $x => $column) {
 			<?= $form->field($column, '[' . $x . ']ActivityBudgetID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?>
 		</td>
 		<td><?= $form->field($column, '[' . $x . ']Description')->textInput(['class' => 'form-control'])->label(false) ?></td>
-		<td><?= $form->field($column, '[' . $x . ']AccountID', ['template' => '{label}{input}'])->dropDownList($accounts, ['prompt'=>'','class'=>'form-control'])->label(false) ?></td>
 		<td><?= $form->field($column, '[' . $x . ']Amount')->textInput(['class' => 'form-control', 'type' => 'number'])->label(false) ?></td>					
 	</tr>
 	<?php

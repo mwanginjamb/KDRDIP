@@ -16,39 +16,57 @@ use Yii;
  */
 class DocumentTypes extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'documenttypes';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'documenttypes';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted'], 'integer'],
-            [['DocumentTypeName'], 'string', 'max' => 45],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'documenttypes.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'DocumentTypeID' => 'Document Type ID',
-            'DocumentTypeName' => 'Document Type Name',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['DocumentTypeName'], 'string', 'max' => 45],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'DocumentTypeID' => 'Document Type ID',
+			'DocumentTypeName' => 'Document Type Name',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
+
+	public function getUsers()
+	{
+		return $this->hasOne(Users::class, ['UserID' => 'CreatedBy']);
+	}
 }

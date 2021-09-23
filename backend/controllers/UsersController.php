@@ -21,6 +21,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+
 include_once 'includes/mailsender.php';
 
 /**
@@ -36,7 +37,7 @@ class UsersController extends Controller
 	{
 		$this->rights = RightsController::Permissions(60);
 
-		$rightsArray = []; 
+		$rightsArray = [];
 		if (isset($this->rights->View)) {
 			array_push($rightsArray, 'index', 'view');
 		}
@@ -51,7 +52,7 @@ class UsersController extends Controller
 		}
 		$rightsArray = array_unique($rightsArray);
 		
-		if (count($rightsArray) <= 0) { 
+		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
 		}
 		
@@ -59,7 +60,7 @@ class UsersController extends Controller
 		'access' => [
 			'class' => AccessControl::className(),
 			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [				
+			'rules' => [
 					// Guest Users
 					[
 						'allow' => true,
@@ -92,6 +93,7 @@ class UsersController extends Controller
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $dataProvider = Users::find()->joinWith('userstatus')->joinWith('usergroups'),
+            'pagination' => false,
 		]);
 		
 		return $this->render('index', [
@@ -132,7 +134,7 @@ class UsersController extends Controller
 		}
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => $dataProvider = UserGroupMembers::find()->where(['UserID' => $id]), 
+			'query' => $dataProvider = UserGroupMembers::find()->where(['UserID' => $id]),
 		]);
 		
 		$userGroups = ArrayHelper::map(UserGroups::find()->all(), 'UserGroupID', 'UserGroupName');
@@ -157,8 +159,7 @@ class UsersController extends Controller
 		$model = new Users();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 		
-		if (Yii::$app->request->post())
-		{
+		if (Yii::$app->request->post()) {
 			// $params = Yii::$app->request->post();
 			$password =  Yii::$app->request->post()['Users']['Password'];
 			$model->AuthKey = \Yii::$app->security->generateRandomString();
@@ -220,7 +221,6 @@ class UsersController extends Controller
 		]);
 	}
 
-	
 	public function actionChangePassword($id)
 	{
 		$user = Users::findOne($id);
@@ -236,11 +236,11 @@ class UsersController extends Controller
 			$profile->Password = $model->Password;
 			$profile->ConfirmPassword = $model->ConfirmPassword;
 			if ($profile->save()) {
-				Yii::$app->session->setFlash('success', "Password changed successfully.");
+				Yii::$app->session->setFlash('success', 'Password changed successfully.');
 				return $this->redirect(['index']);
 			} else {
 				// print_r($profile->getErrors()); exit;
-				Yii::$app->session->setFlash('error', "Failed to change password.");
+				Yii::$app->session->setFlash('error', 'Failed to change password.');
 			}
 		}
 
@@ -279,81 +279,51 @@ class UsersController extends Controller
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
 
-	public static function sendEmailNotification($FormID)
+	public static function sendEmailNotification($code, $userId=0)
 	{
-		$Code = '';
-		
-		switch ($FormID) {
-			case 26: // Quotations Approval
-				$Code = '001';
-				break;
-			case 13: // Purchases Approval
-				$Code = '002';
-				break;
-			case 12: // Requisition Approval
-				$Code = '003';
-				break;
-			case 14: // Stock Take Approval
-				$Code = '004';
-				break;
-			case 29: // Quotation Review
-				$Code = '005';
-				break;
-			case 28: // Purchase Review
-				$Code = '006';
-				break;
-			case 27: // Requisition Review
-				$Code = '007';
-				break;
-			case 30: // Stock Take Review
-				$Code = '008';
-				break;
+		$template = MessageTemplates::findone(['Code' => $code]);
+		if (!$template) {
+			return 'template not found';
 		}
 		
-		$template = MessageTemplates::findone(['Code' => $Code]);
-		
-		$sql = "SELECT users.UserID, users.FirstName, users.LastName, users.Email FROM usergrouprights 
-				JOIN users ON users.UserGroupID = usergrouprights.UserGroupID
-				WHERE PageID = $FormID AND Edit=1";
-		
-		$users = UserGroupRights::findBySql($sql)->asArray()->all();
+		$user = Users::findOne($userId);
+		if (!$user) {
+			return 'User not found';
+		}
+
 		$EmailArray = [];
-		foreach ($users as $key => $user) {
+		if ($user) {
 			$EmailArray[] = ['Email' => $user['Email'], 'Name'=> $user['FirstName'] . ' ' . $user['LastName']];
 		}
-		//print_r($EmailArray);
-		if (!empty($template))
-		{
+
+		if (!empty($template)) {
 			$subject = $template->Subject;
 			$message = $template->Message;
-			
-			//echo $message; exit;
 		}
-		if (count($EmailArray)!=0)
-		{
-			$sent = SendMail($EmailArray, $subject ,$message, null);			
-			if ($sent==1)
-			{
-				return "Saved Details Successfully";
-			} else
-			{
-				return "Failed to send Mail";
+		
+		if (count($EmailArray)!=0) {
+			$sent = SendMail($EmailArray, $subject, $message, null);
+			if ($sent==1) {
+				Yii::$app->session->setFlash('success', 'Saved Details Successfully');
+				return 'Saved Details Successfully';
+			} else {
+				Yii::$app->session->setFlash('error', 'Failed to send Mail');
+				return 'Failed to send Mail';
 			}
-		} else
-		{
-			return "No Email address";
-		}		
+		} else {
+			Yii::$app->session->setFlash('error', 'Failed to send Mail - No Email address');
+			return 'No Email address';
+		}
 	}
 	
 	public function actionTestemail()
 	{
-		$sent = SendMail('ngugi.joseph@gmail.com','Test Email' ,'Test Email', null);			
-		if ($sent==1)
-		{
-			return "Saved Details Successfully";
-		} else
-		{
-			return "Failed to send Mail";
+		$EmailArray[] = ['Email' => 'ngugi.joseph@gmail.com', 'Name'=> 'Joseph Ngugi'];
+		$sent = SendMail($EmailArray, 'Test Email', 'Test Email', null);
+		if ($sent==1) {
+			return 'Saved Details Successfully';
+		} else {
+			return 'Failed to send Mail';
 		}
 	}
 }

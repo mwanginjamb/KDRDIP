@@ -26,6 +26,19 @@ class Components extends \yii\db\ActiveRecord
 		return 'components';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'components.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -79,12 +92,15 @@ class Components extends \yii\db\ActiveRecord
 
 	public function getAmountSpent()
 	{
-		$total = Payments::find()->joinWith('invoices')
-										->joinWith('invoices.purchases')
-										->joinWith('invoices.purchases.projects')
-										->andWhere(['projects.ComponentID' => $this->ComponentID])
-										->sum('payments.Amount');
+		// $total = Payments::find()->joinWith('invoices')
+		// 								->joinWith('invoices.purchases')
+		// 								->joinWith('invoices.purchases.projects')
+		// 								->andWhere(['projects.ComponentID' => $this->ComponentID])
+		// 								->sum('payments.Amount');
+		$total = Payments::find()->joinWith('projects')->andWhere(['projects.ComponentID' => $this->ComponentID])->sum('Amount');
 		return isset($total) ? $total : 0;
+
+		
 	}
 
 	public function getCummulativeExpenditure()

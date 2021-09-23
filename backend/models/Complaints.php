@@ -16,10 +16,16 @@ use Yii;
  * @property int $CountyID
  * @property int $SubCountyID
  * @property int $WardID
+ * @property int $SubLocationID
  * @property string $Village
  * @property string $Telephone
  * @property string $Mobile
  * @property string $IncidentDate
+ * @property string $ClosedDate
+ * @property int $Closed
+ * @property int $ClosedBy
+ * @property string $ResolutionDate
+ * @property int $ResolvedBy
  * @property int $ProjectID
  * @property string $ComplaintSummary
  * @property string $ReliefSought
@@ -29,14 +35,18 @@ use Yii;
  * @property int $ComplaintTierID
  * @property int $ComplaintPriorityID
  * @property int $ComplaintChannelID
- * @property int $AssignedUserID
+ * @property int $AssignedTo
  * @property string $Resolution
  * @property int $CreatedBy
  * @property string $CreatedDate
  * @property int $Deleted
  */
+
 class Complaints extends \yii\db\ActiveRecord
 {
+	public $imageFile;
+	public $DocumentDescription;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -45,17 +55,31 @@ class Complaints extends \yii\db\ActiveRecord
 		return 'complaints';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'complaints.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['ProjectID', 'CountryID', 'CountyID', 'SubCountyID', 'WardID', 'ComplaintTypeID', 'ComplaintStatusID', 'ComplaintTierID', 'ComplaintPriorityID', 'ComplaintChannelID', 'AssignedUserID', 'CreatedBy', 'Deleted'], 'integer'],
-			[['IncidentDate', 'CreatedDate'], 'safe'],
-			[['ComplaintSummary', 'ReliefSought', 'OfficerJustification', 'Resolution'], 'string'],
+			[['ProjectID', 'CountryID', 'CountyID', 'SubCountyID', 'WardID', 'SubLocationID', 'ComplaintTypeID', 'ComplaintStatusID', 'ComplaintTierID', 'ComplaintPriorityID', 'ComplaintChannelID', 'AssignedTo', 'CreatedBy', 'Deleted', 'ClosedBy', 'ResolvedBy', 'Closed'], 'integer'],
+			[['IncidentDate', 'CreatedDate', 'ClosedDate', 'ResolutionDate'], 'safe'],
+			[['ComplaintSummary', 'ReliefSought', 'OfficerJustification', 'Resolution', 'DocumentDescription'], 'string'],
 			[['ComplainantName', 'PostalAddress', 'PostalCode', 'Town', 'Village', 'Telephone', 'Mobile'], 'string', 'max' => 45],
-			[['ComplainantName', 'ProjectID', 'CountyID', 'SubCountyID', 'WardID', 'ComplaintTypeID', 'ComplaintSummary', 'ReliefSought', 'IncidentDate', 'ComplaintPriorityID', 'ComplaintChannelID', 'ComplaintTierID'], 'required']
+			[['ComplainantName', 'ProjectID', 'CountyID', 'SubCountyID', 'WardID', 'ComplaintTypeID', 'ComplaintSummary', 'ReliefSought', 'IncidentDate', 'ComplaintPriorityID', 'ComplaintChannelID', 'ComplaintTierID'], 'required'],
+			[['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
 		];
 	}
 
@@ -74,10 +98,17 @@ class Complaints extends \yii\db\ActiveRecord
 			'CountyID' => 'County',
 			'SubCountyID' => 'Sub County',
 			'WardID' => 'Ward',
+			'SubLocationID' => 'Village',
 			'Village' => 'Village',
 			'Telephone' => 'Telephone',
 			'Mobile' => 'Mobile',
 			'IncidentDate' => 'Incident Date',
+			'ClosedDate' => 'Closed Date',
+			'ClosedBy' => 'Closed By',
+			'ResolvedBy' => 'Resolved By',
+			'Closed' => 'Closed',
+			'DocumentDescription' => 'Document Description',
+			'ResolutionDate' => 'Resolution Date',
 			'ProjectID' => 'Sub-Project',
 			'ComplaintSummary' => 'Complaint Summary',
 			'ReliefSought' => 'Relief Sought',
@@ -87,13 +118,19 @@ class Complaints extends \yii\db\ActiveRecord
 			'ComplaintTierID' => 'Complaint Tier',
 			'ComplaintPriorityID' => 'Complaint Priority',
 			'ComplaintChannelID' => 'Complaint Channel',
-			'AssignedUserID' => 'Assigned User',
+			'AssignedTo' => 'Assigned User',
 			'Resolution' => 'Resolution',
 			'CreatedBy' => 'Created By',
 			'CreatedDate' => 'Created Date',
 			'Deleted' => 'Deleted',
-
 		];
+	}
+
+	public function formatImage()
+	{
+		$tmpfile_contents = file_get_contents($this->imageFile->tempName);
+		$type = $this->imageFile->type;
+		return 'data:' . $type . ';base64,' . base64_encode($tmpfile_contents);
 	}
 
 	public function getUsers()
@@ -153,7 +190,31 @@ class Complaints extends \yii\db\ActiveRecord
 
 	public function getAssignedUser()
 	{
-		return $this->hasOne(Users::className(), ['UserID' => 'AssignedUserID'])->from(['origin' => users::tableName()]);
+		return $this->hasOne(Users::className(), ['UserID' => 'AssignedTo'])->from(['origin' => users::tableName()]);
 	}
 
+	public function getClosedBy()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'ClosedBy'])->from(['closedBy' => users::tableName()]);
+	}
+
+	public function getResolvedBy()
+	{
+		return $this->hasOne(Users::className(), ['UserID' => 'ResolvedBy'])->from(['resolvedby' => users::tableName()]);
+	}
+
+	public function getSubLocations()
+	{
+		return $this->hasOne(SubLocations::className(), ['SubLocationID' => 'SubLocationID']);
+	}
+
+		/**
+	* Gets query for [[ComplaintAge]].
+	*
+	* @return \yii\db\ActiveQuery
+	*/
+	public function getComplaintAge()
+	{
+		return round((time() - strtotime($this->CreatedDate)) / (60*60*24));
+	}
 }

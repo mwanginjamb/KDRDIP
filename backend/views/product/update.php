@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Product */
 
-$this->title = 'Update Product: ' . $model->ProductName;
+$this->title = 'Update Item: ' . $model->ProductName;
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">

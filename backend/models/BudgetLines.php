@@ -29,6 +29,19 @@ class BudgetLines extends \yii\db\ActiveRecord
 		return 'budgetlines';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'budgetlines.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

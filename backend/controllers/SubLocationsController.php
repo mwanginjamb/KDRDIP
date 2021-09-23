@@ -83,6 +83,7 @@ class SubLocationsController extends Controller
 	{
 		$dataProvider = new ActiveDataProvider([
 			'query' => SubLocations::find(),
+			'pagination' => false,
 		]);
 
 		return $this->render('index', [
@@ -115,8 +116,11 @@ class SubLocationsController extends Controller
 		$model = new SubLocations();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
-		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
-		$locations = [];
+		// $subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->all(), 'SubCountyID', 'SubCountyName');
+		// $wards = [];
+
+		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Locations::find()->orderBy('LocationName')->where(['SubCountyID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->SubLocationID]);
@@ -126,7 +130,7 @@ class SubLocationsController extends Controller
 			'model' => $model,
 			'counties' => $counties,
 			'subCounties' => $subCounties,
-			'locations' => $locations,
+			'wards' => $wards,
 			'rights' => $this->rights,
 		]);
 	}
@@ -146,7 +150,9 @@ class SubLocationsController extends Controller
 
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
-		$locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
+		// $locations = ArrayHelper::map(Locations::find()->where(['LocationID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
+		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
+		$wards = ArrayHelper::map(Locations::find()->orderBy('LocationName')->where(['SubCountyID' => $model->SubCountyID ])->all(), 'LocationID', 'LocationName');
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			return $this->redirect(['view', 'id' => $model->SubLocationID]);
@@ -156,7 +162,7 @@ class SubLocationsController extends Controller
 			'model' => $model,
 			'counties' => $counties,
 			'subCounties' => $subCounties,
-			'locations' => $locations,
+			'wards' => $wards,
 			'rights' => $this->rights,
 		]);
 	}

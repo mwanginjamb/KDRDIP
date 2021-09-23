@@ -101,10 +101,16 @@ use yii\widgets\ActiveForm;
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'WardID')->dropDownList($wards, ['prompt'=>'Select']); ?>
+					<?= $form->field($model, 'WardID')->dropDownList($wards, ['prompt' => 'Select...', 'class' => 'form-control',
+												'onchange' => '
+												$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-locations?id=') . '"+$(this).val(), function( data ) {
+
+													$( "select#youthplacement-sublocationid" ).html( data );
+												});
+											']) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'Village')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'SubLocationID')->dropDownList($subLocations, ['prompt'=>'Select']); ?>
 				</div>			
 			</div>
 

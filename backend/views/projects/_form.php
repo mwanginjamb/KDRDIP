@@ -62,9 +62,9 @@ function calculateValue(row)
 <!-- 				<li class="nav-item">
 					<a class="nav-link" id="base-tab5" data-toggle="tab" aria-controls="tab5" href="#tab5" aria-expanded="false">Safeguarding Policies</a>
 				</li> -->
-				<li class="nav-item">
+				<!-- <li class="nav-item">
 					<a class="nav-link" id="base-tab6" data-toggle="tab" aria-controls="tab16" href="#tab6" aria-expanded="false">Beneficiaries</a>
-				</li>															
+				</li>	 -->														
 				<li class="nav-item">
 					<a class="nav-link" id="base-tab7" data-toggle="tab" aria-controls="tab7" href="#tab7" aria-expanded="false">Project Team</a>
 				</li>
@@ -86,6 +86,11 @@ function calculateValue(row)
 							<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'Select', 'onchange' => '
 								var componentId = $(this).val();
 								if (componentId == 1) {
+									$("#projectsectorid").show();
+									// $("#sectorinterventionid").show();
+									$("#sectorinterventionid").hide();
+									$("#organizations").hide();
+								} elseif if (componentId == 2) {
 									$("#projectsectorid").show();
 									$("#sectorinterventionid").show();
 									$("#organizations").hide();
@@ -122,19 +127,10 @@ function calculateValue(row)
 
 					<div class="row">
 						<div class="col-md-6">
-							<?= $form->field($model, 'ProjectParentID')->dropDownList($projects, ['prompt'=>'Select']); ?>
+							<div id="projectsectorid"><?= $form->field($model, 'ProjectSectorID')->dropDownList($projectSectors, ['prompt'=>'Select']); ?></div>
 						</div>
 						<div class="col-md-6">							
-							<div id="projectsectorid"><?= $form->field($model, 'ProjectSectorID')->dropDownList($projectSectors, ['prompt'=>'Select']); ?></div>
-						</div>			
-					</div>
-
-					<div class="row">
-						<div class="col-md-6">
-							
-						</div>
-						<div class="col-md-6">
-							<div id="sectorinterventionid"><?= $form->field($model, 'SectorInterventionID')->dropDownList($projectSectorInterventions, ['prompt'=>'Select']);?> </div>
+						<div id="sectorinterventionid"><?= $form->field($model, 'SectorInterventionID')->dropDownList($projectSectorInterventions, ['prompt'=>'Select']);?> </div>
 						</div>			
 					</div>
 
@@ -178,10 +174,6 @@ function calculateValue(row)
 						<div class="col-md-6">
 							<?= $form->field($model, 'SubCountyID')->dropDownList($subCounties, ['prompt' => 'Select...', 'class' => 'form-control',
 												'onchange' => '
-												$.post( "' . Yii::$app->urlManager->createUrl('projects/locations?id=') . '"+$(this).val(), function( data ) {
-
-													$( "select#projects-locationid" ).html( data );
-												});
 												$.post( "' . Yii::$app->urlManager->createUrl('projects/wards?id=') . '"+$(this).val(), function( data ) {
 
 													$( "select#projects-wardid" ).html( data );
@@ -192,16 +184,16 @@ function calculateValue(row)
 
 					<div class="row">
 						<div class="col-md-6">
-							<?= $form->field($model, 'WardID')->dropDownList($wards, ['prompt'=>'Select']); ?>
-						</div>
-						<div class="col-md-6">
-							<?= $form->field($model, 'LocationID')->dropDownList($locations, ['prompt' => 'Select...', 'class' => 'form-control',
+							<?= $form->field($model, 'WardID')->dropDownList($wards, ['prompt' => 'Select...', 'class' => 'form-control',
 												'onchange' => '
 												$.post( "' . Yii::$app->urlManager->createUrl('projects/sub-locations?id=') . '"+$(this).val(), function( data ) {
 
 													$( "select#projects-sublocationid" ).html( data );
 												});
 											']) ?>	
+						</div>
+						<div class="col-md-6">
+							
 						</div>			
 					</div>
 
@@ -395,13 +387,13 @@ function calculateValue(row)
 						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
 						<td style="padding: 4px !important">County</td>
 						<td style="padding: 4px !important" width="20%">Sub County</td>
-						<td colspan="2" style="padding: 4px !important" width="15%">Host Population</td>
-						<td colspan="2" style="padding: 4px !important" width="15%">Refugee Population</td>
+						<td colspan="2" style="padding: 4px !important" width="15%" align="center">Host Population</td>
+						<td colspan="2" style="padding: 4px !important" width="15%" align="center">Refugee Population</td>
 					</tr>
 					<tr>
-						<td style="padding: 4px !important; text-align: center;" width="5%">#</td>
-						<td style="padding: 4px !important">County</td>
-						<td style="padding: 4px !important" width="20%">Sub County</td>
+						<td style="padding: 4px !important; text-align: center;" width="5%"></td>
+						<td style="padding: 4px !important"></td>
+						<td style="padding: 4px !important" width="20%"></td>
 						<td style="padding: 4px !important" width="15%">Male</td>
 						<td style="padding: 4px !important" width="15%">Female</td>
 						<td style="padding: 4px !important" width="15%">Male</td>

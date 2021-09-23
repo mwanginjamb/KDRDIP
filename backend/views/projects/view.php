@@ -5,6 +5,9 @@ use yii\widgets\DetailView;
 use yii\grid\GridView;
 use yii\bootstrap\Modal;
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+
+$url = Url::home(true);
 
 /* @var $this yii\web\View */
 /* @var $model app\models\projects */
@@ -42,6 +45,15 @@ Modal::begin([
 	]);
 
 Modal::end();
+
+Modal::begin([
+	'header' => '<h4 class="modal-title">Document</h4>',
+	// 'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	'id' => 'pdf-viewer',
+	'size' => 'modal-lg',
+	]);
+
+Modal::end();
 ?>
 <style>
 
@@ -66,9 +78,11 @@ Modal::end();
 <script>
 	$(document).ready(function() {
 
+		var activityId = null;
 		$("#activity-budget").on("show.bs.modal", function(e) {
-			var id = $(e.relatedTarget).data('activity-id')
-			$.get( "<?= $baseUrl; ?>/indicators/activity-budget?id=" + id, function( data ) {
+			var id = $(e.relatedTarget).data('activity-id');
+			activityId = (id) ? id : activityId;
+			$.get( "<?= $baseUrl; ?>/indicators/activity-budget?id=" + activityId, function( data ) {
 					$(".modal-body").html(data);
 			});
 		});
@@ -105,6 +119,13 @@ Modal::end();
 			$(".modal-body").html('<img src="'+ image +'" width=100%" height="auto">');
 			$(".modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">' + title + '</h4>');
 		});
+
+		$("#pdf-viewer").on("show.bs.modal", function(e) {
+			var image = $(e.relatedTarget).data('image');
+			var title = $(e.relatedTarget).data('title');
+			$(".modal-body").html('<iframe src="'+  image +'" height="700px" width="100%"></iframe>');
+			$(".modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">' + title + '</h4>');
+		});
 	});
 
 	function submitCurrentForm(id) {
@@ -133,6 +154,96 @@ Modal::end();
 					$(".modal-body").html(data);
 			});
 		});
+</script>
+
+<script>
+function addRow(ProcurementPlanID) 
+{
+	// var table = document.getElementById("ParameterTable");
+	var table = document.getElementById('ParameterTable');
+	var rows = table.getElementsByTagName("tr").length;
+	// var rowCount = $('#ParameterTable tbody tr').length;
+	// if (rowCount == 0) {
+	// 	jQuery("#ParameterTable tbody").append('<tr></tr>');
+	// }
+	var row = table.insertRow(rows);
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
+	var cell6 = row.insertCell(5);
+	var cell7 = row.insertCell(6);
+	var cell8 = row.insertCell(7);
+	
+	var fields = fetch_data1('<?= $url;?>/procurement-plan/getfields?id='+rows+'&ProcurementPlanID=' + ProcurementPlanID);
+	cell1.innerHTML = fields[0];
+	cell2.innerHTML = fields[1];
+	cell3.innerHTML = fields[2];
+	cell4.innerHTML = fields[3];
+	cell5.innerHTML = fields[4];
+	cell6.innerHTML = fields[5];
+	cell7.innerHTML = fields[6];
+	cell8.innerHTML = fields[7];
+	cell1.style.textAlign = 'center';
+
+	var rowNo = rows - 1;
+	// addValidation('procurementplanlines-' + rowNo + '-servicedescription', 'Service Description');
+	// addValidation('procurementplanlines-' + rowNo + '-unitofmeasureid', 'Unit of Measure');
+	// addValidation('procurementplanlines-' + rowNo + '-quantity', 'Quantity');
+	// addValidation('procurementplanlines-' + rowNo + '-procurementmethodid', 'Procurement Method');
+	// addValidation('procurementplanlines-' + rowNo + '-sourcesoffunds', 'Sources of Funds');
+	// addValidation('procurementplanlines-' + rowNo + '-estimatedcost', 'Estimated Cost');
+}
+
+function removeRow(i)
+{
+	var table = document.getElementById("ParameterTable");
+	table.deleteRow(i+1);
+}
+
+function removeOneRow(url, i)
+{
+	msg = "Are you sure you wish to delete this record";
+	var a = confirm(msg); 
+	if (!a) 
+	{ 
+		return false; 
+	}
+
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			if (this.responseText) {
+				removeRow(i);
+
+				// after removing row and it is the last one - add new row
+				var table = document.getElementById("ParameterTable");
+				var rows = table.getElementsByTagName("tr").length;
+				if (rows == 1) {
+					addRow();
+				}
+			}
+		}
+	};
+	xhttp.open("GET", url, true);
+	xhttp.send();
+}
+
+function addValidation(field, caption)
+{
+	// Add Client Side Validation for newly added fields
+	$('#currentForm').yiiActiveForm('add', {
+		id: field,
+		name: field,
+		container: '.field-' + field,
+		input: '#' + field,
+		error: '.help-block',
+		validate:  function (attribute, value, messages, deferred, $form) {
+			yii.validation.required(value, messages, {message: caption + " cannot be blank."});
+		}
+	});
+}
 </script>
 
 <section id="configuration">
@@ -191,10 +302,13 @@ Modal::end();
 											<a class="nav-link" id="base-tab5" data-toggle="tab" aria-controls="tab5" href="#tab5" aria-expanded="false">Safeguards</a>
 										</li>
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab6" data-toggle="tab" aria-controls="tab16" href="#tab6" aria-expanded="false">Beneficiaries</a>
+											<a class="nav-link" id="base-tab6" data-toggle="tab" aria-controls="tab6" href="#tab6" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('project-beneficiaries/index?pId=' . $model->ProjectID);?>', 'tab6')">Beneficiaries</a>
 										</li>															
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab7" data-toggle="tab" aria-controls="tab7" href="#tab7" aria-expanded="false">Project Team</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab12" data-toggle="tab" aria-controls="tab12" href="#tab12" aria-expanded="false">Reporting Periods</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab8" data-toggle="tab" aria-controls="tab8" href="#tab8" aria-expanded="false">Indicators</a>
@@ -207,18 +321,15 @@ Modal::end();
 										</li>
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab11" data-toggle="tab" aria-controls="tab11" href="#tab11" aria-expanded="false">Budget</a>
-										</li>
-										<li class="nav-item">
-											<a class="nav-link" id="base-tab12" data-toggle="tab" aria-controls="tab12" href="#tab12" aria-expanded="false">Reporting Periods</a>
-										</li>
+										</li>										
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab13" data-toggle="tab" aria-controls="tab13" href="#tab13" aria-expanded="false">Notes</a>
 										</li>	
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab14" data-toggle="tab" aria-controls="tab14" href="#tab14" aria-expanded="false">Gallery</a>
+											<a class="nav-link" id="base-tab14" data-toggle="tab" aria-controls="tab14" href="#tab14" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('project-gallery/index?pId=' . $model->ProjectID);?>', 'tab14')">Gallery</a>
 										</li>		
 										<li class="nav-item">
-											<a class="nav-link" id="base-tab15" data-toggle="tab" aria-controls="tab15" href="#tab15" aria-expanded="false">Documents</a>
+											<a class="nav-link" id="base-tab15" data-toggle="tab" aria-controls="tab15" href="#tab15" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('documents/index?pId=' . $model->ProjectID);?>', 'tab15')">Documents</a>
 										</li>		
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab16" data-toggle="tab" aria-controls="tab16" href="#tab16" aria-expanded="false">Complaints</a>
@@ -231,7 +342,22 @@ Modal::end();
 										</li>		
 										<li class="nav-item">
 											<a class="nav-link" id="base-tab19" data-toggle="tab" aria-controls="tab19" href="#tab19" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('project-challenges/index?pId=' . $model->ProjectID);?>', 'tab19')">Challenges</a>
-										</li>				
+										</li>	
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab20" data-toggle="tab" aria-controls="tab20" href="#tab20" aria-expanded="false">Implementation Questions</a>
+										</li>	
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab21" data-toggle="tab" aria-controls="tab21" href="#tab21" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('project-expenses/index?pId=' . $model->ProjectID);?>', 'tab21')">Project Expenses</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab22" data-toggle="tab" aria-controls="tab22" href="#tab22" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('procurement-plan/index?pId=' . $model->ProjectID);?>', 'tab22')">Procurement Plan</a>
+										</li>	
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab23" data-toggle="tab" aria-controls="tab23" href="#tab23" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('task-milestones/index?pId=' . $model->ProjectID);?>', 'tab23')">Taks Milestones</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link" id="base-tab24" data-toggle="tab" aria-controls="tab24" href="#tab24" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('tasks/index?pId=' . $model->ProjectID);?>', 'tab24')">Tasks</a>
+										</li>
 									</ul>
 									<div class="tab-content px-1 pt-1">
 										<div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -241,10 +367,10 @@ Modal::end();
 											'attributes' => [
 													'ProjectID',
 													'ProjectName',
-													[
+													/* [
 														'label' => 'Parent Project',
 														'attribute' => 'parentProject.ProjectName',
-													],
+													], */
 													'components.ComponentName',
 													'Objective:ntext',
 													'Justification:ntext',
@@ -268,14 +394,21 @@ Modal::end();
 													'counties.CountyName',
 													'subCounties.SubCountyName',
 													'wards.WardName',
-													'locations.LocationName',
-													'subLocations.SubLocationName',
+													/* [
+														'attribute' => 'locations.LocationName',
+														'label' => 'Ward',
+													], */
+													[
+														'attribute' => 'subLocations.SubLocationName',
+														'label' => 'Village',
+													],
 													'communities.CommunityName',
 													'Longitude',
 													'Latitude',
 													'enterpriseTypes.EnterpriseTypeName',
 													'organizationName',
 													'projectSectors.ProjectSectorName',
+													'projectSectorInterventions.SectorInterventionName',
 													'subComponents.SubComponentName',
 													'subComponentCategories.SubComponentCategoryName',
 													'projectSectorInterventions.SectorInterventionName',
@@ -286,8 +419,7 @@ Modal::end();
 													],
 													[
 														'attribute' => 'CreatedDate',
-														'format' => ['date', 'php:d/m/Y h:i a'],
-														
+														'format' => ['date', 'php:d/m/Y h:i a'],														
 													],
 													[
 														'label' => 'Created By',
@@ -425,63 +557,7 @@ Modal::end();
 										</div>
 										<div class="tab-pane" id="tab6" aria-labelledby="base-tab6">
 											<h4 class="form-section">Beneficiaries</h4>	 
-											<?= GridView::widget([
-												'dataProvider' => $projectBeneficiaries,
-												'showFooter' =>false,
-												'layout' => '{items}',
-												'tableOptions' => [
-													'class' => 'custom-table table-striped table-bordered',
-												],
-												'columns' => [
-
-													[
-														'class' => 'yii\grid\SerialColumn',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-													],
-													[
-														'label'=>'County',
-														'headerOptions' => ['style'=>'color:black; text-align:left'],
-														'format'=>'text',
-														'value' => 'counties.CountyName',
-														'contentOptions' => ['style' => 'text-align:left'],
-													],
-													[
-														'label'=>'Sub County',
-														'headerOptions' => ['width' => '30%', 'style'=>'color:black; text-align:left'],
-														'format'=>'text',
-														'value' => 'subCounties.SubCountyName',
-														'contentOptions' => ['style' => 'text-align:left'],
-													],
-													[
-														'label' => 'Host Male',
-														'attribute' => 'HostPopulationMale',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
-														'contentOptions' => ['style' => 'text-align:right'],
-														'format'=>'text',
-													],
-													[
-														'label' => 'Host Female',
-														'attribute'=>'HostPopulationFemale',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
-														'contentOptions' => ['style' => 'text-align:right'],
-														'format'=>'text',
-													],
-													[
-														'label' => 'Refugee Male',
-														'attribute'=>'RefugeePopulationMale',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
-														'contentOptions' => ['style' => 'text-align:right'],
-														'format'=>'text',
-													],
-													[
-														'label' => 'Refugee Female',
-														'attribute'=>'RefugeePopulationFemale',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:right'],
-														'contentOptions' => ['style' => 'text-align:right'],
-														'format'=>'text',
-													],
-												],
-											]); ?>
+											
 										</div>
 										<div class="tab-pane" id="tab7" aria-labelledby="base-tab7">
 											<h4 class="form-section">Project Team</h4>	 
@@ -590,7 +666,7 @@ Modal::end();
 															<?php
 															$activitiesList = isset($activities[$indicator->IndicatorID]) ? $activities[$indicator->IndicatorID] : [];
 															$grandTotal = 0;
-															foreach ($activitiesList as $akey => $activity) { 
+															foreach ($activitiesList as $akey => $activity) {
 																$total = isset($activityTotals[$activity->ActivityID]) ? $activityTotals[$activity->ActivityID]['Total'] : 0;
 																$grandTotal += $total;
 																?>
@@ -849,109 +925,12 @@ Modal::end();
 
 										<div class="tab-pane" id="tab14" aria-labelledby="base-tab14">
 											<h4 class="form-section">Gallery</h4>	
-											<div class="form-actions" style="margin-top:0px">
-												<?= Html::a('<i class="ft-plus"></i> New Image', ['/project-gallery/create', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
-											</div> 
-											<?= GridView::widget([
-												'dataProvider' => $projectGallery,
-												'showFooter' =>false,
-												'layout' => '{items}',
-												'tableOptions' => [
-													'class' => 'custom-table table-striped table-bordered',
-												],
-												'columns' => [
-													[
-														'class' => 'yii\grid\SerialColumn',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-													],
-													[
-
-														/* 'attribute' => 'Image',
-														'format' => ['image', ['height' => '60', 'width' => 'auto']],
-														'label' => 'Image', */
-
-														'attribute' => 'Image',
-														'label' => 'Image',
-														'format' => 'raw', //['image', ['height' => '60', 'width' => 'auto']],
-														'value' => function ($data) {
-															return '<a href="#image-gallery" data-toggle="modal" data-image="' . $data['Image'] . '" data-title="' . $data['Caption'] . '"><img src="' . $data['Image'] . '" height="60" width="auto"></a>';
-														},
-													],
-													[
-														'label'=>'Caption',
-														'headerOptions' => ['style'=>'color:black; text-align:left'],
-														'format'=>'text',
-														'value' => 'Caption',
-														'contentOptions' => ['style' => 'text-align:left'],
-													],
-													[
-														'attribute' => 'CreatedDate',
-														'format' => ['date', 'php:d/m/Y h:i a'],
-														'headerOptions' => ['width' => '15%'],
-													],
-													[
-														'label' => 'Created By',
-														'attribute' => 'users.fullName',
-														'headerOptions' => ['width' => '15%'],
-													],
-												],
-											]); ?>
+											
 										</div>
 
 										<div class="tab-pane" id="tab15" aria-labelledby="base-tab15">
 											<h4 class="form-section">Documents</h4>	
-											<div class="form-actions" style="margin-top:0px">
-												<?= Html::a('<i class="ft-plus"></i> New Document', ['/projects/documents', 'pid' => $model->ProjectID], ['class' => 'btn-sm btn-primary mr-1']) ?>	 
-											</div> 
-											<?= GridView::widget([
-												'dataProvider' => $projectDocuments,
-												'showFooter' =>false,
-												'layout' => '{items}',
-												'tableOptions' => [
-													'class' => 'custom-table table-striped table-bordered',
-												],
-												'columns' => [
-													[
-														'class' => 'yii\grid\SerialColumn',
-														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-													],
-													/* [
-
-														'attribute' => 'Image',										
-														'format' => ['image',['height'=>'50']],										
-														'label' => 'Image',							
-																							
-												  	], */
-													[
-														'label'=>'Description',
-														'headerOptions' => ['style'=>'color:black; text-align:left'],
-														'format'=>'text',
-														'value' => 'Description',
-														'contentOptions' => ['style' => 'text-align:left'],
-													],
-													[
-														'attribute' => 'CreatedDate',
-														'format' => ['date', 'php:d/m/Y h:i a'],
-														'headerOptions' => ['width' => '15%'],
-													],
-													[
-														'label' => 'Created By',
-														'attribute' => 'users.fullName',
-														'headerOptions' => ['width' => '15%'],
-													],
-													[
-														'class' => 'yii\grid\ActionColumn',
-														'headerOptions' => ['width' => '8%', 'style'=>'color:black; text-align:center'],
-														'template' => '{view}',
-														'buttons' => [
-					
-															'view' => function ($url, $model) use ($rights) {
-																return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view-document', 'id' => $model->DocumentID], ['class' => 'btn-sm btn-primary']) : '';
-															},
-														],
-													],
-												],
-											]); ?>
+											
 										</div>
 
 										<div class="tab-pane" id="tab16" aria-labelledby="base-tab16">
@@ -1056,6 +1035,54 @@ Modal::end();
 
 										<div class="tab-pane" id="tab19" aria-labelledby="base-tab19">
 											<h4 class="form-section">Challenges</h4>
+										</div>
+
+										<div class="tab-pane" id="tab20" aria-labelledby="base-tab20">
+											<h4 class="form-section">Implementation Questions</h4>	 
+											<?= GridView::widget([
+												'dataProvider' => $projectQuestionResponses,
+												'showFooter' =>false,
+												'layout' => '{items}',
+												'tableOptions' => [
+													'class' => 'custom-table table-striped table-bordered',
+												],
+												'columns' => [
+													[
+														'class' => 'yii\grid\SerialColumn',
+														'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+													],
+													[
+														'label'=>'Funding Source',
+														'headerOptions' => ['style'=>'color:black; text-align:left'],
+														'format'=>'text',
+														'value' => 'projectResultQuestions.ProjectResultQuestionName',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+													[
+														'label'=>'Response',
+														'headerOptions' => ['width' => '20%', 'style'=>'color:black; text-align:left'],
+														'format'=> 'text',
+														'value' => 'Response',
+														'contentOptions' => ['style' => 'text-align:left'],
+													],
+												],
+											]); ?>
+										</div>
+
+										<div class="tab-pane" id="tab21" aria-labelledby="base-tab21">
+											<h4 class="form-section">Expenses</h4>
+										</div>
+
+										<div class="tab-pane" id="tab22" aria-labelledby="base-tab22">
+											<h4 class="form-section">Procurment Plan</h4>
+										</div>
+
+										<div class="tab-pane" id="tab23" aria-labelledby="base-tab23">
+											<h4 class="form-section">Task Milestones</h4>
+										</div>
+
+										<div class="tab-pane" id="tab24" aria-labelledby="base-tab24">
+											<h4 class="form-section">Tasks</h4>
 										</div>
 
 									</div>

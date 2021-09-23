@@ -32,7 +32,16 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'Date')->textInput(['maxlength' => true, 'type' => 'date']) ?>
 				</div>
 				<div class="col-md-6">					
-					<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>	
+					<?= $form->field($model, 'PeriodID')->dropDownList($periods, ['prompt'=>'Select']); ?>	
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
+				</div>
+				<div class="col-md-6">					
+						
 				</div>			
 			</div>
 
@@ -47,7 +56,7 @@ use yii\widgets\ActiveForm;
 
 			<div class="form-group">
 				<?= Html::a('<i class="ft-x"></i> Close', null, ['class' => 'btn btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('implementation-status/index?pId=' . $model->ProjectID) . '", \'tab18\')']) ?>
-				<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl($model->isNewRecord ? 'implementation-status/create?1=1' : 'implementation-status/update?id=' . $model->ImplementationStatusID) . '",\'tab18\',\'currentForm\')']) ?>
+				<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['id' => 'saveBtn', 'class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl($model->isNewRecord ? 'implementation-status/create?1=1' : 'implementation-status/update?id=' . $model->ImplementationStatusID) . '",\'tab18\',\'currentForm\', \'saveBtn\')']) ?>
 			</div>
 
 			<?php ActiveForm::end(); ?>

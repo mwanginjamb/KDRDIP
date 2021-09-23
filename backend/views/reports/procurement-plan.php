@@ -7,15 +7,6 @@ use yii\grid\GridView;
 /* @var $model app\models\Product */
 
 $this->title = !empty($project) ? $project->ProjectName : '';
-$Total = 0;
-if (!empty($budgetProvider->getModels())) {
-	foreach ($budgetProvider->getModels() as $key => $val) {
-		//print_r($val);
-		$Total += $val['Amount'];
-	}
-}
-$Total = number_format($Total, 2);
-$model = $budgetProvider->getModels();
 ?>
 <p>Project: <?=  $this->title ?></p>
 
@@ -23,8 +14,19 @@ $model = $budgetProvider->getModels();
 <thead>
 	<tr>
 		<th width="5%">ID</th>
-		<th>Sub Activity</th>
-		<th width="15%" align="right">Amount</th>
+		<th>Description of Service</th>
+		<th width="5%">Unit</th>
+		<th width="5%">Quantity</th>
+		<th width="5%">Procurement Method</th>
+		<th width="5%">Source of Funds</th>
+		<th width="7%" align="right">Estimated Cost</th>
+		<th width="7%" align="right">Actual Cost</th>
+		<th width="10%">Time Process</th>
+		<th width="5%">Invitation to bid/quote/ REoI</th>
+		<th width="5%">Evaluation</th>
+		<th width="5%">Notification of Award</th>
+		<th width="5%">Contract Signing</th>
+		<th width="5%">Inspection and Acceptance</th>
 	</tr>
 </thead>	
 <tbody>
@@ -32,38 +34,51 @@ $model = $budgetProvider->getModels();
 	$activityId = 0;
 	$activityTotal = 0;
 	$grandTotal = 0;
-	foreach ($model as $key => $row) {
-		if ($activityId != $row->activities->ActivityID) { 
-			if ($activityId != 0) { ?>
-				<tr>
-					<th colspan="2" align="left">Activity Total</th>
-					<th align="right"><?= number_format($activityTotal, 2); ?></th>
-				</tr>
-				<?php
-			}	?>
-			<tr>
-				<td colspan="3">Activity: <?= $row->activities->ActivityName; ?></td>
-			</tr>
-			<?php
-			$activityId = $row->activities->ActivityID;
-			$activityTotal = 0;
-		} ?>
+	foreach ($procurementPlan as $key => $row) { 
+		$lineId = $row->ProcurementPlanLineID;
+		// $activityId = $row->ProcurementActivityID;
+		?>
 		<tr>
-			<td><?= $key+1; ?></td>
-			<td><?= $row->Description; ?></td>
-			<td align="right"><?= number_format($row['Amount'], 2); ?></td>
+			<td rowspan="4"><?= $key+1; ?></td>
+			<td rowspan="4"><?= $row->ServiceDescription; ?></td>
+			<td rowspan="4"><?= $row->unitsOfMeasure->UnitOfMeasureName; ?></td>
+			<td rowspan="4"><?= $row->Quantity; ?></td>
+			<td rowspan="4"><?= $row->procurementMethods->ProcurementMethodName; ?></td>
+			<td rowspan="4"><?= $row->SourcesOfFunds; ?></td>
+			<td rowspan="4" align="right"><?= number_format($row['EstimatedCost'], 2); ?></td>
+			<td rowspan="4" align="right"><?= number_format($row['ActualCost'], 2); ?></td>
+			<td>Planned Dates</td>			
+			<td><?= isset($activities[$lineId][1]) ? $activities[$lineId][1]['PlannedDate'] : '';?></td>		
+			<td><?= isset($activities[$lineId][2]) ? $activities[$lineId][2]['PlannedDate'] : '';?></td>		
+			<td><?= isset($activities[$lineId][3]) ? $activities[$lineId][3]['PlannedDate'] : '';?></td>		
+			<td><?= isset($activities[$lineId][4]) ? $activities[$lineId][4]['PlannedDate'] : '';?></td>		
+			<td><?= isset($activities[$lineId][5]) ? $activities[$lineId][5]['PlannedDate'] : '';?></td>	
+		</tr>
+		<tr>
+			<td>Planned Days</td>
+			<td><?= isset($activities[$lineId][1]) ? $activities[$lineId][1]['PlannedDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][2]) ? $activities[$lineId][2]['PlannedDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][3]) ? $activities[$lineId][3]['PlannedDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][4]) ? $activities[$lineId][4]['PlannedDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][5]) ? $activities[$lineId][5]['PlannedDays'] : '' ;?></td>
+		</tr>
+		<tr>
+			<td>Actual Dates</td>
+			<td><?= isset($activities[$lineId][1]) ? $activities[$lineId][1]['ActualStartDate'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][2]) ? $activities[$lineId][2]['ActualStartDate'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][3]) ? $activities[$lineId][3]['ActualStartDate'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][4]) ? $activities[$lineId][4]['ActualStartDate'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][5]) ? $activities[$lineId][5]['ActualStartDate'] : '' ;?></td>
+		</tr>
+		<tr>
+			<td>Actual Days</td>
+			<td><?= isset($activities[$lineId][1]) ? $activities[$lineId][1]['ActualDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][2]) ? $activities[$lineId][2]['ActualDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][3]) ? $activities[$lineId][3]['ActualDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][4]) ? $activities[$lineId][4]['ActualDays'] : '' ;?></td>
+			<td><?= isset($activities[$lineId][5]) ? $activities[$lineId][5]['ActualDays'] : '' ;?></td>
 		</tr>
 		<?php
-		$activityTotal += $row['Amount'];
-		$grandTotal += $row->Amount;
 	} ?>
-	<tr>
-		<th colspan="2" align="left">Activity Total</th>
-		<th align="right"><?= number_format($activityTotal, 2); ?></th>
-	</tr>
-	<tr>
-		<th colspan="2" align="left">Grand Total</th>
-		<th align="right"><?= number_format($grandTotal, 2); ?></th>
-	</tr>
 </tbody>
 </table>

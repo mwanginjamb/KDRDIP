@@ -8,6 +8,7 @@ use app\models\Countries;
 use app\models\Counties;
 use app\models\SubCounties;
 use app\models\Wards;
+use app\models\SubLocations;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -123,6 +124,7 @@ class BusinessesController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->WardID])->all(), 'SubLocationID', 'SubLocationName');
 		$countries = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
 
 		return $this->render('create', [
@@ -132,6 +134,7 @@ class BusinessesController extends Controller
 			'subCounties' => $subCounties,
 			'wards' => $wards,
 			'countries' => $countries,
+			'subLocations' => $subLocations,
 		]);
 	}
 
@@ -153,6 +156,7 @@ class BusinessesController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->WardID])->all(), 'SubLocationID', 'SubLocationName');
 		$countries = ArrayHelper::map(Countries::find()->all(), 'CountryID', 'CountryName');
 
 		return $this->render('update', [
@@ -162,6 +166,7 @@ class BusinessesController extends Controller
 			'subCounties' => $subCounties,
 			'wards' => $wards,
 			'countries' => $countries,
+			'subLocations' => $subLocations,
 		]);
 	}
 

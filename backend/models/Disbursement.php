@@ -30,7 +30,7 @@ class Disbursement extends \yii\db\ActiveRecord
 
 	public static function find()
 	{
-		return parent::find()->andWhere(['=', 'disbursement.deleted', 0]);
+		return parent::find()->andWhere(['=', 'disbursement.Deleted', 0]);
 	}
 
 	public function delete()

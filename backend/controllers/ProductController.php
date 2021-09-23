@@ -83,7 +83,7 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$searchfor = array (1=> 'ID', 2 => 'Product Name', 3 => 'Product Category');
+		$searchfor = array (1=> 'ID', 2 => 'Item Name', 3 => 'Item Category');
 			$search = new ProductSearch();
 		$params = Yii::$app->request->post();
 		if (!empty($params))

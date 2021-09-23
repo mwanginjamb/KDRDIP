@@ -106,24 +106,27 @@ class InvoiceApprovalsController extends Controller
 		$UserID = $identity->UserID;
 		$model = $this->findModel($id);
 		$model->submit = 1;
+		$purchases = [];
+		$deliveries = [];
 		
 		$params = Yii::$app->request->post();
 		$PurchaseID = $model->PurchaseID;
+		if ($PurchaseID) {
+			$sql ="select * from deliverylines
+					join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
+					join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
+					join product on product.ProductID = purchaselines.ProductID
+					WHERE deliveries.PurchaseID = $PurchaseID
+					ORDER BY deliveries.DeliveryID";
+			$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
 
-		$sql ="select * from deliverylines
-				join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
-				join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
-				join product on product.ProductID = purchaselines.ProductID
-				WHERE deliveries.PurchaseID = $PurchaseID
-				ORDER BY deliveries.DeliveryID";
-		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+			$sql ="select * from purchaselines
+			LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
+			LEFT JOIN product on product.ProductID = purchaselines.ProductID
+			WHERE purchases.PurchaseID = $PurchaseID";
 
-		$sql ="select * from purchaselines
-		LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
-		LEFT JOIN product on product.ProductID = purchaselines.ProductID
-		WHERE purchases.PurchaseID = $PurchaseID";
-
-		$purchases = Purchases::findBySql($sql)->asArray()->all();
+			$purchases = Purchases::findBySql($sql)->asArray()->all();
+		}
 
 		$notes = new ApprovalNotes();
 		if (Yii::$app->request->post()) {

@@ -11,26 +11,26 @@ use yii\base\Model;
 class ProductSearch extends Model
 {
 	public $searchfor;
-    public $searchstring;
-	
-	 /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
+	public $searchstring;
 
-        ];
-    }
-	
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'searchfor' => 'Search Option',
-            'searchstring' => 'Search',
-        ];
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'searchfor' => 'Search Option',
+			'searchstring' => 'Search',
+		];
+	}
 }

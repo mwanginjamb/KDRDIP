@@ -15,38 +15,51 @@ use Yii;
  */
 class Countries extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'countries';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'countries';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy'], 'integer'],
-            [['Deleted'], 'boolean'],
-            [['CountryName'], 'string', 'max' => 50],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'countries.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'CountryID' => 'Country ID',
-            'CountryName' => 'Country Name',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy'], 'integer'],
+			[['Deleted'], 'boolean'],
+			[['CountryName'], 'string', 'max' => 50],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'CountryID' => 'Country ID',
+			'CountryName' => 'Country Name',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

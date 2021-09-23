@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Productcategory */
 
-$this->title = 'Create Product Category';
+$this->title = 'Create Item Category';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section class="flexbox-container">

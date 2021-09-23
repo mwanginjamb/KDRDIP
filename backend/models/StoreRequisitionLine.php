@@ -31,6 +31,19 @@ class StoreRequisitionLine extends \yii\db\ActiveRecord
 		return 'storerequisitionline';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'storerequisitionline.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

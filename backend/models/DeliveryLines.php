@@ -14,40 +14,40 @@ use Yii;
  */
 class DeliveryLines extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'deliverylines';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['DeliveryID', 'PurchaseLineID'], 'integer'],
-			[['DeliveredQuantity',], 'number'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'DeliveryLineID' => 'Delivery Line ID',
-            'DeliveryID' => 'Delivery ID',
-            'DeliveredQuantity' => 'Delivered Quantity',
-            'PurchaseLineID' => 'Purchase Line ID',
-        ];
-    }
-	
-	public function getPurchaseLines() 
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
 	{
-        return $this->hasOne(PurchaseLines::className(), ['PurchaseLineID' => 'PurchaseLineID'])->from(PurchaseLines::tableName());
-    }
+		return 'deliverylines';
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
+	{
+		return [
+			[['DeliveryID', 'PurchaseLineID'], 'integer'],
+		[['DeliveredQuantity',], 'number'],
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'DeliveryLineID' => 'Delivery Line ID',
+			'DeliveryID' => 'Delivery ID',
+			'DeliveredQuantity' => 'Delivered Quantity',
+			'PurchaseLineID' => 'Purchase Line ID',
+		];
+	}
+
+public function getPurchaseLines() 
+{
+		return $this->hasOne(PurchaseLines::className(), ['PurchaseLineID' => 'PurchaseLineID'])->from(PurchaseLines::tableName());
+	}
 }

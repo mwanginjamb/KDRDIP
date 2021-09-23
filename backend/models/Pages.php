@@ -16,39 +16,52 @@ use Yii;
  */
 class Pages extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'pages';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'pages';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted'], 'integer'],
-            [['PageName'], 'string', 'max' => 50],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'pages.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'PageID' => 'Page ID',
-            'PageName' => 'Page Name',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['PageName'], 'string', 'max' => 50],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'PageID' => 'Page ID',
+			'PageName' => 'Page Name',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

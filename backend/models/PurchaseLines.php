@@ -19,59 +19,72 @@ use Yii;
  */
 class PurchaseLines extends \yii\db\ActiveRecord
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'purchaselines';
-    }
+	/**
+	 * @inheritdoc
+	 */
+	public static function tableName()
+	{
+		return 'purchaselines';
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            [['PurchaseID', 'UsageUnitID'], 'integer'],
-			[['SupplierCode'],'string'],
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted', 'ProductID'], 'integer'],
-            [['Quantity', 'UnitPrice'], 'number'],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'purchaselines.Deleted', 0]);
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'PurchaseLineID' => 'Purchase Line ID',
-            'PurchaseID' => 'Purchase ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-            'ProductID' => 'Product ID',
-            'Quantity' => 'Quantity',
-            'UnitPrice' => 'Unit Price',
-			'SupplierCode' => 'Supplier Code',
-			'UsageUnitID' => 'Usage Unit',
-        ];
-    }
-	
-	public function getProduct() 
+	public function delete()
 	{
-        return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(product::tableName());
-    }
-	
-	public function getUnit_Total()
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function rules()
 	{
-	   return $this->Quantity * $this->UnitPrice;
-	}	
-	
-	public function getUsageunit() 
+		return [
+			[['PurchaseID', 'UsageUnitID'], 'integer'],
+		[['SupplierCode'],'string'],
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted', 'ProductID'], 'integer'],
+			[['Quantity', 'UnitPrice'], 'number'],
+		];
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function attributeLabels()
 	{
-        return $this->hasOne(UsageUnit::className(), ['UsageUnitID' => 'UsageUnitID'])->from(usageunit::tableName());
-    }
+		return [
+			'PurchaseLineID' => 'Purchase Line ID',
+			'PurchaseID' => 'Purchase ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+			'ProductID' => 'Product ID',
+			'Quantity' => 'Quantity',
+			'UnitPrice' => 'Unit Price',
+		'SupplierCode' => 'Supplier Code',
+		'UsageUnitID' => 'Usage Unit',
+		];
+	}
+
+public function getProduct() 
+{
+		return $this->hasOne(Product::className(), ['ProductID' => 'ProductID'])->from(product::tableName());
+	}
+
+public function getUnit_Total()
+{
+	return $this->Quantity * $this->UnitPrice;
+}	
+
+public function getUsageunit() 
+{
+		return $this->hasOne(UsageUnit::className(), ['UsageUnitID' => 'UsageUnitID'])->from(usageunit::tableName());
+	}
 }

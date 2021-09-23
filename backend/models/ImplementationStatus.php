@@ -10,6 +10,7 @@ use Yii;
  * @property int $ImplementationStatusID
  * @property int $ProjectStatusID
  * @property int $ProjectID
+ * @property int $PeriodID
  * @property string $Notes
  * @property string $Date
  * @property string $CreatedDate
@@ -54,10 +55,10 @@ class ImplementationStatus extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectStatusID', 'ProjectID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['ProjectStatusID', 'ProjectID', 'CreatedBy', 'Deleted', 'PeriodID'], 'integer'],
 			[['Notes'], 'string'],
 			[['Date', 'CreatedDate'], 'safe'],
-			[['Date', 'ProjectStatusID'], 'required'],
+			[['Date', 'ProjectStatusID', 'PeriodID'], 'required'],
 		];
 	}
 
@@ -75,6 +76,7 @@ class ImplementationStatus extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'PeriodID' => 'Period',
 		];
 	}
 
@@ -86,5 +88,10 @@ class ImplementationStatus extends \yii\db\ActiveRecord
 	public function getProjectStatus()
 	{
 		return $this->hasOne(ProjectStatus::className(), ['ProjectStatusID' => 'ProjectStatusID']);
+	}
+
+	public function getPeriods()
+	{
+		return $this->hasOne(Periods::className(), ['PeriodID' => 'PeriodID']);
 	}
 }

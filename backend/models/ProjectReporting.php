@@ -20,43 +20,56 @@ use Yii;
  */
 class ProjectReporting extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'projectreporting';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'projectreporting';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['ProjectID', 'ProjectPeriodID', 'IndicatorID', 'CreatedBy', 'Deleted'], 'integer'],
-            [['Target', 'Actual'], 'number'],
-            [['CreatedDate'], 'safe'],
-            [['Period'], 'string', 'max' => 45],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'projectreporting.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'ProjectReportingID' => 'Project Reporting ID',
-            'ProjectID' => 'Project ID',
-            'Period' => 'Period',
-            'ProjectPeriodID' => 'Project Period ID',
-            'Target' => 'Target',
-            'Actual' => 'Actual',
-            'IndicatorID' => 'Indicator ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['ProjectID', 'ProjectPeriodID', 'IndicatorID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['Target', 'Actual'], 'number'],
+			[['CreatedDate'], 'safe'],
+			[['Period'], 'string', 'max' => 45],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'ProjectReportingID' => 'Project Reporting ID',
+			'ProjectID' => 'Project ID',
+			'Period' => 'Period',
+			'ProjectPeriodID' => 'Project Period ID',
+			'Target' => 'Target',
+			'Actual' => 'Actual',
+			'IndicatorID' => 'Indicator ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

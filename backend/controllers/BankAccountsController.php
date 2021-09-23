@@ -9,7 +9,9 @@ use app\models\Banks;
 use app\models\Counties;
 use app\models\Communities;
 use app\models\BankTypes;
+use app\models\Projects;
 use app\models\CashBook;
+use app\models\Organizations;
 use app\models\BankAccountFilter;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -146,7 +148,9 @@ class BankAccountsController extends Controller
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$communities = ArrayHelper::map(Communities::find()->all(), 'CommunityID', 'CommunityName');
+        $organizations = ArrayHelper::map(Organizations::find()->andWhere(['CountyID' => $model->CountyID])->all(), 'OrganizationID', 'OrganizationName');
 		$bankTypes = ArrayHelper::map(BankTypes::find()->all(), 'BankTypeID', 'BankTypeName');
+		$projects = ArrayHelper::map(Projects::find()->andWhere(['CountyID' => $model->CountyID])->all(), 'ProjectID', 'ProjectName');       
 
 		$bankBranches = [];
 		return $this->render('create', [
@@ -155,7 +159,9 @@ class BankAccountsController extends Controller
 			'bankBranches' => $bankBranches,
 			'counties' => $counties,
 			'communities' => $communities,
+            'organizations' => $organizations,
 			'bankTypes' => $bankTypes,
+            'projects' => $projects,
 			'rights' => $this->rights,
 		]);
 	}
@@ -179,6 +185,8 @@ class BankAccountsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$communities = ArrayHelper::map(Communities::find()->all(), 'CommunityID', 'CommunityName');
 		$bankTypes = ArrayHelper::map(BankTypes::find()->all(), 'BankTypeID', 'BankTypeName');
+        $organizations = ArrayHelper::map(Organizations::find()->andWhere(['CountyID' => $model->CountyID])->all(), 'OrganizationID', 'OrganizationName');
+        $projects = ArrayHelper::map(Projects::find()->andWhere(['CountyID' => $model->CountyID])->all(), 'ProjectID', 'ProjectName');
 
 		return $this->render('update', [
 			'model' => $model,
@@ -186,7 +194,9 @@ class BankAccountsController extends Controller
 			'bankBranches' => $bankBranches,
 			'counties' => $counties,
 			'communities' => $communities,
+            'organizations' => $organizations,
 			'bankTypes' => $bankTypes,
+            'projects' => $projects,
 			'rights' => $this->rights,
 		]);
 	}

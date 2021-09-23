@@ -33,6 +33,7 @@ class AppAsset extends AssetBundle
 		'app-assets/css/core/colors/material-palette-gradient.css',
 		'app-assets/vendors/css/tables/datatable/datatables.min.css',
 		'app-assets/css/plugins/forms/checkboxes-radios.css',
+		'app-assets/vendors/css/forms/selects/select2.min.css',
 
 		// BEGIN: Custom CSS
 		'assets/css/style.css'
@@ -40,6 +41,7 @@ class AppAsset extends AssetBundle
 	];
 	public $js = [
 		// BEGIN: Vendor JS-->
+		'app-assets/js/jquery.min.js',
 		'app-assets/vendors/js/material-vendors.min.js',
 		// BEGIN Vendor JS-->
 	
@@ -58,6 +60,7 @@ class AppAsset extends AssetBundle
 		// END: Theme JS-->
 	
 		// BEGIN: Page JS-->
+		
 		'app-assets/js/scripts/pages/material-app.js',
 		'app-assets/js/scripts/pages/dashboard-sales.js',
 
@@ -67,7 +70,9 @@ class AppAsset extends AssetBundle
 		'app-assets/vendors/js/tables/datatable/datatables.min.js',
 		'app-assets/vendors/js/forms/icheck/icheck.min.js',
 		'app-assets/js/scripts/forms/checkbox-radio.js',
-		'app-assets/js/scripts/scripts.js'
+		'app-assets/js/scripts/scripts.js',
+		
+		'app-assets/vendors/js/forms/select/select2.full.min.js',
 		// END: Page JS-->
 	];
 	public $depends = [

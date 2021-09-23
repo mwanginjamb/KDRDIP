@@ -33,6 +33,9 @@ use app\models\ProjectSectors;
 use app\models\Components;
 use app\models\SubComponentCategories;
 use app\models\EnterpriseTypes;
+use app\models\ProcurementPlan;
+use app\models\ProcurementPlanLines;
+use app\models\ProcurementActivityLines;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -708,6 +711,7 @@ class ReportsController extends Controller
 		$ProductCategoryID = 0;
 		$FilterString2 = '';
 		$SupplierID = 0;
+		$where = 'WHERE 1 = 1 ';
 		if (!empty($params)) {
 			$Year = isset($params['FilterData']['Year']) ? $params['FilterData']['Year'] : $Year = date('Y');
 			$Month = isset($params['FilterData']['Month']) ? $params['FilterData']['Month'] : $Month = date('m');
@@ -1166,14 +1170,27 @@ class ReportsController extends Controller
 		$components = ArrayHelper::map(Components::find()->all(), 'ComponentID', 'ComponentName');
 
 		$ProjectStatusID = 0;
+		$SubLocationID = 0;
+		$SubCountyID = 0;
+		$LocationID = 0;
+		$CountyID = 0;
+		$ProjectSectorID = 0;
+
 		$model = new FilterData();
 		$ComponentID = $cid;
 		if (Yii::$app->request->post() && $model->load(Yii::$app->request->post())) {
 			$params = Yii::$app->request->post()['FilterData'];
+			// print_r($params);
+			//  exit;
 			$ProjectStatusID = isset($params['ProjectStatusID']) && $params['ProjectStatusID'] != '' ? $params['ProjectStatusID'] : 0;
 			$ComponentID = isset($params['ComponentID']) && $params['ComponentID'] != '' ? $params['ComponentID'] : 0;
+			$SubLocationID = isset($params['SubLocationID']) && $params['SubLocationID'] != '' ? $params['SubLocationID'] : 0;
+			$SubCountyID = isset($params['SubCountyID']) && $params['SubCountyID'] != '' ? $params['SubCountyID'] : 0;
+			$LocationID = isset($params['LocationID']) && $params['LocationID'] != '' ? $params['LocationID'] : 0;
+			$CountyID = isset($params['CountyID']) && $params['CountyID'] != '' ? $params['CountyID'] : 0;
+			$ProjectSectorID = isset($params['ProjectSectorID']) && $params['ProjectSectorID'] != '' ? $params['ProjectSectorID'] : 0;
 		}
-
+		
 		$projectSectors = ArrayHelper::map(ProjectSectors::find()->all(), 'ProjectSectorID', 'ProjectSectorName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID ])->all(), 'SubCountyID', 'SubCountyName');
@@ -1181,20 +1198,45 @@ class ReportsController extends Controller
 		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->LocationID ])->all(), 'SubLocationID', 'SubLocationName');
 	
 		$projects = Projects::find()->joinWith('components')->joinWith('projectStatus');
-
+		$where = '';
 		if ($ProjectStatusID != 0) {
 			$projects->andWhere(['projects.ProjectStatusID' => $ProjectStatusID])->all();
+			$where .= " AND projects.ProjectStatusID = $ProjectStatusID ";
 		}
 		if ($ComponentID != 0) {
 			$projects->andWhere(['projects.ComponentID' => $ComponentID])->all();
+			$where .= " AND projects.ComponentID = $ComponentID ";
 		}
+		if ($SubLocationID != 0) {
+			$projects->andWhere(['projects.WardID' => $SubLocationID])->all();
+			$where .= " AND projects.WardID = $SubLocationID ";
+		}
+		if ($SubCountyID != 0) {
+			$projects->andWhere(['projects.SubCountyID' => $SubCountyID])->all();
+			$where .= " AND projects.SubCountyID = $SubCountyID ";
+		}
+		if ($LocationID != 0) {
+			$projects->andWhere(['projects.LocationID' => $LocationID])->all();
+			$where .= " AND projects.LocationID = $LocationID ";
+		}
+		if ($CountyID != 0) {
+			$projects->andWhere(['projects.CountyID' => $CountyID])->all();
+			$where .= " AND projects.CountyID = $CountyID ";
+		}
+		if ($ProjectSectorID != 0) {
+			$projects->andWhere(['projects.ProjectSectorID' => $ProjectSectorID])->all();
+			$where .= " AND projects.ProjectSectorID = $ProjectSectorID ";
+		}
+
 		$projects = $projects->OrderBy('componentID')->all();
 
 		$sql = 'select temp.Total, projectstatus.ProjectStatusID, ProjectStatusName, ColorCode FROM (
 					select ProjectStatusID, count(*) as Total from projects
+					where projects.Deleted = 0 ' . $where . '
 					GROUP BY ProjectStatusID
 					) temp
 					right JOIN projectstatus on projectstatus.ProjectStatusID = temp.ProjectStatusID';
+		// echo $sql; exit;
 
 		$statuses = ProjectStatus::findBySql($sql)->asArray()->all();
 
@@ -1289,6 +1331,8 @@ class ReportsController extends Controller
 		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
 		$ProjectStatusID = 0;
 		$componentId = 0;
+		$projectId = isset($params['FilterData']['ProjectID']) ? $params['FilterData']['ProjectID'] : 0;
+		$countyId = isset($params['FilterData']['CountyID']) ? $params['FilterData']['CountyID'] : 0;
 		
 		if ($cid == 0) {
 			$ProjectStatusID = isset($params['FilterData']['ProjectStatusID']) ? $params['FilterData']['ProjectStatusID'] : 0;
@@ -1300,7 +1344,15 @@ class ReportsController extends Controller
 			if ($ProjectStatusID != 0) {
 				$where['projects.ProjectStatusID'] = $ProjectStatusID;
 			}
-			// print_r($where); exit;
+
+			if ($projectId != 0) {
+				$where['projects.ProjectID'] = $projectId;
+			}
+
+			if ($countyId != 0) {
+				$where['projects.CountyID'] = $countyId;
+			}			
+
 			$projects = Projects::find()->joinWith('projectStatus')->where($where)->all();
 		} else {
 			if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
@@ -1363,18 +1415,27 @@ class ReportsController extends Controller
 		$productcategories = [];
 		$bankAccounts = [];
 		$model = new FilterData();
-		$model->ProjectID = 0;
+		$model->ProjectID = $projectId;
 		$model->ProjectStatusID = $ProjectStatusID;
 		$model->ComponentID = $componentId;
+		$model->CountyID = $countyId;
+		$projects = ArrayHelper::map(Projects::find()->andWhere(['ComponentID' => $model->ComponentID])->all(), 'ProjectID', 'ProjectName');
+		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		//$pdf->Output('test.pdf', 'F');
 		return $this->render('viewreport', [
-			'content' => $content, 'months' => $months, 'years' => $years,
-			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
+			'content' => $content,
+			'months' => $months,
+			'years' => $years,
+			'model' => $model,
+			'productcategories' => $productcategories,
+			'Filter' => true,
 			'CategoryFilterOnly' => true,
 			'projectStatus' => $projectStatus,
-			'projects' => [],
+			'projects' => $projects,
 			'bankAccounts' => $bankAccounts,
 			'components' => $components,
+			'counties' => $counties,
+			'report' => 'projects-finance',
 		]);
 	}
 
@@ -1465,12 +1526,13 @@ class ReportsController extends Controller
 		$model->ProjectStatusID = $ProjectStatusID;
 		$model->ComponentID = $componentId;
 		//$pdf->Output('test.pdf', 'F');
+		$projects = [];
 		return $this->render('viewreport', [
 			'content' => $content, 'months' => $months, 'years' => $years,
 			'model' => $model, 'productcategories' => $productcategories, 'Filter' => true,
 			'CategoryFilterOnly' => true,
 			'projectStatus' => $projectStatus,
-			'projects' => [],
+			'projects' => $projects,
 			'bankAccounts' => $bankAccounts,
 			'components' => $components,
 		]);
@@ -1786,9 +1848,17 @@ class ReportsController extends Controller
 			'query' => ActivityBudget::find()->joinWith('activities')
 													->joinWith('activities.indicators')
 													->where(['ProjectID' => $ProjectID])
+													->asArray()
 													->orderBy('activities.ActivityID'),
 			// 'sort'=> ['defaultOrder' => ['activities.ActivityID'=>SORT_DESC]],
 		]);
+
+		// $model = ActivityBudget::find()->joinWith('activities')
+		// ->joinWith('activities.indicators')
+		// ->where(['ProjectID' => $ProjectID])
+		// ->orderBy('activities.ActivityID')->asArray()->all();
+		// print('<pre>');
+		// print_r($model); exit;
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('budget', [
@@ -1842,9 +1912,10 @@ class ReportsController extends Controller
 		]);
 	}
 
-	public function actionProcurementPlan($cid = 0)
+	public function actionProcurementPlan($id)
 	{
 		$params = Yii::$app->request->post();
+		$cid = 0;
 		$projectsModel = $cid == 0 ? Projects::find()->all() : Projects::find()->where(['ComponentID' => $cid])->all();
 		$projects = ArrayHelper::map($projectsModel, 'ProjectID', 'ProjectName');
 
@@ -1856,16 +1927,37 @@ class ReportsController extends Controller
 		// echo $ProjectID; exit;
 		
 		$Title = 'Procurement Plan';
-		$budgetProvider = new ActiveDataProvider([
+		/* $budgetProvider = new ActiveDataProvider([
 			'query' => ActivityBudget::find()->joinWith('activities')
 													->joinWith('activities.indicators')
 													->where(['ProjectID' => $ProjectID, 'activities.ProcurementItem' => 1])
 													->orderBy('activities.ActivityID'),
-		]);
+		]); */
+
+		$procurementPlan = ProcurementPlanLines::find()
+			->joinWith('procurementActivityLines')
+			->joinWith('unitsOfMeasure')
+			->joinWith('procurementMethods')
+			->andWhere(['ProcurementPlanID' => $id])->all();
+
+		$activities = procurementActivityLines::find()
+			->joinWith('procurementPlanLines')
+			->andWhere(['ProcurementPlanID' => $id])
+			->select('*, DATEDIFF(`ActualClosingDate`, `ActualStartDate`) as ActualDays')
+			->asArray()
+			->all();
+
+		$activities = ArrayHelper::index($activities, 'ProcurementActivityID', [function ($element) {
+			return $element['ProcurementPlanLineID'];
+	  }]);
+
+	//   print('<pre>');
+	//   print_r($activities); exit;
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('procurement-plan', [
-																	'budgetProvider' => $budgetProvider,
+																	'procurementPlan' => $procurementPlan,
+																	'activities' => $activities,
 																	'project' => Projects::findOne($ProjectID),
 																]);
 		
@@ -1876,7 +1968,7 @@ class ReportsController extends Controller
 			// A4 paper format
 			'format' => Pdf::FORMAT_A4,
 			// portrait orientation
-			'orientation' => Pdf::ORIENT_PORTRAIT,
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
 			// stream to browser inline
 			'destination' => Pdf::DEST_STRING,
 			// your html content input
@@ -1886,7 +1978,7 @@ class ReportsController extends Controller
 			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
 			// any css to be embedded if required
 			// 'cssInline' => '.kv-heading-1{font-size:18px}',
-			'cssFile' => 'css/pdf.css',
+			'cssFile' => 'css/pdf-small.css',
 				// set mPDF properties on the fly
 			'options' => ['title' => $Title],
 				// call mPDF methods on the fly
@@ -2249,6 +2341,9 @@ class ReportsController extends Controller
 
 		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
 			// Validate something
+			$params = Yii::$app->request->post()['FilterData'];
+			$countyId = isset($params['CountyID']) ? $params['CountyID'] : 0;
+			$componentId = isset($params['ComponentID']) ? $params['ComponentID'] : 0;
 		}
 		
 		$Title = 'Component Finance Reports';
@@ -2302,12 +2397,97 @@ class ReportsController extends Controller
 		]);
 	}
 
-	public function actionWriteExcel($model = [], $filename = 'Excel File')
+	public function actionImplementationStatusReport()
 	{
-		return $this->WriteExcel($model, $filename, []);
+		$params = Yii::$app->request->post();
+		$model = new FilterData();
+		$model->StartDate = date('Y') . '-01-01';
+		$model->EndDate = date('Y-m-d');
+
+		$countyId = 0;
+		$componentId = 0;
+
+		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+			// Validate something
+			$params = Yii::$app->request->post()['FilterData'];
+			$countyId = isset($params['CountyID']) ? $params['CountyID'] : 0;
+			$componentId = isset($params['ComponentID']) ? $params['ComponentID'] : 0;
+		}
+
+		$where = '1=1';
+		$where .= ($countyId != 0) ? " AND CountyID = $countyId " : '';
+		$where .= ($componentId != 0) ? " AND ComponentID = $componentId " : '';
+		
+		$Title = 'KDRDIP Tool for Monitoring Implementation Status of the Approved Work Plans';
+
+		$dataProvider = new ActiveDataProvider([
+			'query' => Projects::find()->andWhere($where),
+			'pagination' => false,
+		]);
+
+		/* 
+			Project Statuses
+		*/
+		$statusProvider = new ActiveDataProvider([
+			'query' => ProjectStatus::find()->andWhere('ProjectStatusID > 1'),
+			'pagination' => false,
+		]);
+
+		// get your HTML raw content without any layouts or scripts
+		$content = $this->renderPartial('implementation-status', ['dataProvider' => $dataProvider, 'statusProvider' => $statusProvider]);
+		
+		// setup kartik\mpdf\Pdf component
+		$pdf = new Pdf([
+			// set to use core fonts only
+			'mode' => Pdf::MODE_CORE,
+			// A4 paper format
+			'format' => Pdf::FORMAT_A4,
+			// portrait orientation
+			'orientation' => Pdf::ORIENT_LANDSCAPE,
+			// stream to browser inline
+			'destination' => Pdf::DEST_STRING,
+			// your html content input
+			'content' => $content,
+			// format content from your own css file if needed or use the
+			// enhanced bootstrap css built by Krajee for mPDF formatting
+			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+			// any css to be embedded if required
+			// 'cssInline' => '.kv-heading-1{font-size:18px}',
+			'cssFile' => 'css/pdf-small.css',
+				// set mPDF properties on the fly
+			'options' => ['title' => $Title],
+				// call mPDF methods on the fly
+			'methods' => [
+				'SetHeader'=>[$Title],
+				'SetFooter'=>['{PAGENO}'],
+			]
+		]);
+		
+		// return the pdf output as per the destination setting
+		//return $pdf->render();
+		$content = $pdf->render('', 'S');
+		$content = chunk_split(base64_encode($content));
+
+		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
+		$components = ArrayHelper::map(Components::find()->orderBy('ComponentName')->all(), 'ComponentID', 'ComponentName');
+		
+		//$pdf->Output('test.pdf', 'F');
+		return $this->render('viewreport', [
+			'content' => $content,
+			'model' => $model,
+			'counties' => $counties,
+			'components' => $components,
+			'report' => 'implementation-status',
+			'Filter' => true,
+		]);
 	}
 
-	public static function WriteExcel($model = [], $filename = 'Excel File', $diplayFields = [])
+	public function actionWriteExcel($model = [], $filename = 'Excel File')
+	{
+		return $this->writeExcel($model, $filename, []);
+	}
+
+	public static function writeExcel($model = [], $filename = 'Excel File', $diplayFields = [])
 	{
 		require_once 'PHPExcel/PHPExcel/IOFactory.php';
 		$objPHPExcel = new \PHPExcel(); // Create new PHPExcel object

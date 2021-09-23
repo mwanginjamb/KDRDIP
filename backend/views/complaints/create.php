@@ -24,7 +24,9 @@ $this->params['breadcrumbs'][] = $this->title;
 		'projects' => $projects,
 		'subCounties' => $subCounties,
 		'wards' => $wards,
+		'subLocations' => $subLocations,
 		'users' => $users,
+		'documentProvider' => $documentProvider,
 	]) ?>
 
 </section>

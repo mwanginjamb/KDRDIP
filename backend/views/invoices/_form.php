@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 
 $baseModel = $model;
+$baseUrl = Yii::$app->request->baseUrl;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Invoices */
@@ -31,15 +32,30 @@ $baseModel = $model;
 	 		<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'SupplierID')->dropDownList($suppliers, ['prompt'=>'Select...', 
-					'onchange' => '
-					$.post( "' . Yii::$app->urlManager->createUrl('invoices/purchases?id=') . '"+$(this).val(), function( data ) {
+						'onchange' => '
+						$.post( "' . Yii::$app->urlManager->createUrl('invoices/purchases?id=') . '"+$(this).val(), function( data ) {
 
-						$( "select#invoices-purchaseid" ).html( data );
-					});
-				']) ?>
+							$( "select#invoices-purchaseid" ).html( data );
+						});
+					']) ?>
 				</div>
 				<div class="col-md-6">
 					<?= $form->field($model, 'PurchaseID')->dropDownList($purchases, ['prompt'=>'Select...']) ?>
+				</div>			
+			</div>
+
+			<div class="row">
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'Select...', 'class' => 'form-control select2',
+						'onchange' => '
+						$.post( "' . Yii::$app->urlManager->createUrl('invoices/procurement-plan-activities?id=') . '"+$(this).val(), function( data ) {
+
+							$( "select#invoices-procurementplanlineid" ).html( data );
+						});
+					']) ?>
+				</div>
+				<div class="col-md-6">
+					<?= $form->field($model, 'ProcurementPlanLineID')->dropDownList($procurementPlanLines, ['prompt'=>'Select...']) ?>
 				</div>			
 			</div>
 
@@ -144,3 +160,6 @@ $baseModel = $model;
 		</div>
 	 </div>
 </div>
+<script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script src="<?= $baseUrl; ?>/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
+<script> $(".select2").select2(); </script>

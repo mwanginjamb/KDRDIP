@@ -54,15 +54,7 @@ $FormID = 12;
 							'tableOptions' => [
 								'class' => 'custom-table table-striped table-bordered zero-configuration',
 							],
-							'columns' => [
-								/* [
-									'label'=>'ID',
-									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
-									'contentOptions' => ['style' => 'text-align:center'],
-									'format'=>'text',
-									'value' => 'PaymentID',
-									'contentOptions' => ['style' => 'text-align:left'],
-								], */	
+							'columns' => [	
 								[
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
@@ -76,7 +68,7 @@ $FormID = 12;
 									'label'=>'Supplier',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
-									'value' => 'suppliers.SupplierName',
+									'value' => 'Supplier',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[

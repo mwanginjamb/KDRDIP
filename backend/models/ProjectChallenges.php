@@ -12,7 +12,10 @@ use Yii;
  * @property string $Challenge
  * @property string $CorrectiveAction
  * @property int $AssignedTo
+ * @property int $ProjectChallengeStatusID
+ * @property int $ChallengeTypeID
  * @property string $AgreedDate
+ * @property int $MajorChallenge
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
@@ -55,9 +58,10 @@ class ProjectChallenges extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectID', 'AssignedTo', 'CreatedBy', 'Deleted'], 'integer'],
+			[['ProjectID', 'AssignedTo', 'CreatedBy', 'Deleted', 'ProjectChallengeStatusID', 'MajorChallenge', 'ChallengeTypeID'], 'integer'],
 			[['Challenge', 'CorrectiveAction'], 'string'],
 			[['AgreedDate', 'CreatedDate'], 'safe'],
+			[['AssignedTo', 'Challenge', 'CorrectiveAction', 'AgreedDate', 'ProjectChallengeStatusID', 'MajorChallenge'], 'required'],
 		];
 	}
 
@@ -73,9 +77,12 @@ class ProjectChallenges extends \yii\db\ActiveRecord
 			'CorrectiveAction' => 'Corrective Action',
 			'AssignedTo' => 'Assigned To',
 			'AgreedDate' => 'Agreed Date',
+			'ProjectChallengeStatusID' => 'Status',
+			'ChallengeTypeID' => 'Challenge Type',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+			'MajorChallenge' => 'Major Challenge',
 		];
 	}
 
@@ -87,5 +94,10 @@ class ProjectChallenges extends \yii\db\ActiveRecord
 	public function getEmployees()
 	{
 		return $this->hasOne(Employees::className(), ['EmployeeID' => 'AssignedTo']);
+	}
+
+	public function getProjectChallengeStatus()
+	{
+		return $this->hasOne(ProjectChallengeStatus::className(), ['ProjectChallengeStatusID' => 'ProjectChallengeStatusID']);
 	}
 }

@@ -24,6 +24,19 @@ class ComplaintPriorities extends \yii\db\ActiveRecord
 		return 'complaintpriorities';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'complaintpriorities.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -45,7 +58,7 @@ class ComplaintPriorities extends \yii\db\ActiveRecord
 	{
 		return [
 			'ComplaintPriorityID' => 'Complaint Priority ID',
-			'ComplaintPriorityName' => 'Complaint Priority Name',
+			'ComplaintPriorityName' => 'Complaint Priority',
 			'Notes' => 'Notes',
 			'CreatedBy' => 'Created By',
 			'CreatedDate' => 'Created Date',

@@ -84,7 +84,49 @@
 					</div>
 				</div>				
 				<?php
+			} elseif (isset($report) && $report == 'implementation-status') { ?>
+				<div class="row">
+					<div class="col-lg-3">
+						<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'All...']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...']); ?>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group" style="padding-top:15px">
+						<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						</div>
+					</div>
+				</div>
+				<?php
 			} elseif (isset($report) && $report == 'component-finance-report') { ?>
+				<?php
+			} elseif (isset($report) && $report == 'projects-finance') { ?>
+				<div class="row">
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'All...', 'class' => 'select2']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ComponentID')->dropDownList($components, ['prompt'=>'All...', 'class' => 'select2',
+							'onchange' => '
+							$.post( "' . Yii::$app->urlManager->createUrl('components/projects?id=') . '"+$(this).val(), function( data ) {
+
+								$( "select#filterdata-projectid" ).html( data );
+							});
+						']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt'=>'All...', 'class' => 'select2']); ?>
+					</div>
+					<div class="col-lg-3">
+						<?= $form->field($model, 'ProjectID')->dropDownList($projects, ['prompt'=>'All...', 'class' => 'select2']); ?>
+					</div>
+					<div class="col-lg-2">
+						<div class="form-group" style="padding-top:15px">
+						<?= Html::submitButton('<i class="ft-search"></i> Filter', ['class' => 'btn btn-primary']) ?>
+						</div>
+					</div>
+				</div>
 				<?php
 			} elseif (isset($report) && ($report == 'component1-report' || $report == 'component2-report' || $report == 'component3-report')) { ?>
 				<div class="row">
@@ -177,3 +219,7 @@
 		<iframe src="data:application/pdf;base64,<?= $content; ?>" height="700px" width="100%"></iframe>
 	</div>	
 </section>
+
+<script src="<?= Yii::$app->request->baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script src="<?= Yii::$app->request->baseUrl; ?>/app-assets/vendors/js/forms/select/select2.full.min.js"></script>
+<script> $(".select2").select2(); </script>

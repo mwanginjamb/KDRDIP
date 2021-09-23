@@ -118,7 +118,8 @@ class RequisitionController extends Controller
 		]);
 		$model = Requisition::find()->where(['RequisitionID'=> $id])->joinWith('approvalstatus')->one();
 		return $this->render('view', [
-			'model' => $model, 'dataProvider' => $dataProvider,
+			'model' => $model,
+			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
 		]);
 	}
@@ -309,7 +310,7 @@ class RequisitionController extends Controller
 		$model = $this->findModel($id);
 		$model->ApprovalStatusID = 1;
 		if ($model->save()) {
-			$result = UsersController::sendEmailNotification(27); 
+			$result = UsersController::sendEmailNotification(27, Yii::$app->user->identity->UserID); 
 			return $this->redirect(['view', 'id' => $model->RequisitionID]);
 		}
 	}

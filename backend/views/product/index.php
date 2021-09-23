@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Products';
+$this->title = 'Items';
 $this->params['breadcrumbs'][] = $this->title;
 
 $Rights = Yii::$app->params['rights'];
@@ -71,14 +71,14 @@ $FormID = 1;
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
-									'label'=>'Product Name',
+									'label'=>'Item Name',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'ProductName',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
-									'label'=>'Product Category',
+									'label'=>'Item Category',
 									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
 									'format'=>'text',
 									'value' => 'productcategory.ProductCategoryName',

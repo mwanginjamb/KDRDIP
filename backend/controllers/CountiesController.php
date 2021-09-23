@@ -4,6 +4,9 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Counties;
+use app\models\Projects;
+use app\models\Organizations;
+use app\models\BankAccounts;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -170,5 +173,58 @@ class CountiesController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public function actionProjects($id)
+	{
+		$model = Projects::find()->orderBy('ProjectName')->andWhere(['CountyID' => $id])->all();
+		
+		echo '<option value="">Select...</option>';
+		foreach ($model as $item) {
+			echo "<option value='" . $item->ProjectID . "'>" . $item->ProjectName . "</option>";
+		}
+	}
+
+    public function actionOrganizations($id)
+	{
+		$model = Organizations::find()->orderBy('OrganizationName')->andWhere(['CountyID' => $id])->all();
+		
+		echo '<option value="">Select...</option>';
+		foreach ($model as $item) {
+			echo "<option value='" . $item->OrganizationID . "'>" . $item->OrganizationName . "</option>";
+		}
+	}
+
+    public function actionBankAccounts($countyId, $disbursementTypeId, $categoryId)
+	{
+        // Categories 1 for source bank account and 2 for destination bank account
+        if ($categoryId == 1) {
+            if ($disbursementTypeId == 3) {
+                $bankTypeId = 1;
+            } elseif ($disbursementTypeId == 2)  {
+                $bankTypeId = 2;
+            } elseif ($disbursementTypeId == 1)  {
+                $bankTypeId = 2;
+            }        
+        } else {
+            if ($disbursementTypeId == 3) {
+                $bankTypeId = 2;
+            } elseif ($disbursementTypeId == 2)  {
+                $bankTypeId = 3;
+            } elseif ($disbursementTypeId == 1)  {
+                $bankTypeId = 4;
+            }    
+        }
+
+		if ($bankTypeId == 1) {
+            $model = BankAccounts::find()->orderBy('AccountName')->andWhere(['BankTypeID' => $bankTypeId])->all();
+        } else {
+		    $model = BankAccounts::find()->orderBy('AccountName')->andWhere(['CountyID' => $countyId, 'BankTypeID' => $bankTypeId])->all();
+        }
+		
+		echo '<option value="">Select...</option>';
+		foreach ($model as $item) {
+			echo "<option value='" . $item->BankAccountID . "'>" . $item->AccountName . "</option>";
+		}
 	}
 }

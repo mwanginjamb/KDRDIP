@@ -9,8 +9,6 @@ use yii\widgets\DetailView;
 $this->title = 'View Category :'.$model->ProductCategoryName;
 $this->params['breadcrumbs'][] = $this->title;
 
-$Rights = Yii::$app->params['rights'];
-$FormID = 4;
 ?>
 <section id="configuration">
 	<div class="row">

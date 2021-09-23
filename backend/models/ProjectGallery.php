@@ -30,6 +30,19 @@ class ProjectGallery extends \yii\db\ActiveRecord
 		return 'projectgallery';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'projectgallery.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -40,7 +53,7 @@ class ProjectGallery extends \yii\db\ActiveRecord
 			[['Image', 'type', 'extension'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['Caption'], 'string', 'max' => 45],
-			[['extension'],'required', 'message' => 'Select an image file'],
+			[['extension'], 'required', 'message' => 'Select an image file'],
 			['extension', 'fileValidation'],
 /* 			['extension', function ($attribute, $params) {
 				print_r($this->extension); exit;

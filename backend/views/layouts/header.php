@@ -25,7 +25,7 @@ $user = Yii::$app->user->identity;
 													<input class="round form-control" type="text" placeholder="Search Here"></a></div>
 									</a></li> -->
 							<li class="nav-item d-none d-lg-block d-none"><a class="nav-link nav-link-expand" href="#"><i class="ficon ft-maximize"></i></a></li>
-							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">KENYA DEVELOPMENT RESPONSE TO DISPLACEMENT IMPACTS PROJECT</a>
+							<li class="dropdown nav-item mega-dropdown d-lg-block d-none"><a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">Kenya Development Response to Displacement Impacts Project</a>
 					<!-- 				<ul class="mega-dropdown-menu dropdown-menu row">
 										<li class="col-md-2">
 											<h6 class="dropdown-menu-header text-uppercase mb-1"><i class="material-icons">list_alt</i> News</h6>

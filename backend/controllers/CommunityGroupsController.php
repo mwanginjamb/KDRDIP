@@ -6,6 +6,7 @@ use Yii;
 use app\models\CommunityGroups;
 use app\models\Counties;
 use app\models\SubCounties;
+use app\models\SubLocations;
 use app\models\Wards;
 use app\models\CommunityGroupStatus;
 use app\models\GroupMembers;
@@ -129,6 +130,7 @@ class CommunityGroupsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->WardID])->all(), 'SubLocationID', 'SubLocationName');
 		$communityGroupStatus = ArrayHelper::map(CommunityGroupStatus::find()->all(), 'CommunityGroupStatusID', 'CommunityGroupStatusName');
 
 		return $this->render('create', [
@@ -138,6 +140,7 @@ class CommunityGroupsController extends Controller
 			'subCounties' => $subCounties,
 			'wards' => $wards,
 			'communityGroupStatus' => $communityGroupStatus,
+			'subLocations' => $subLocations,
 		]);
 	}
 
@@ -159,6 +162,7 @@ class CommunityGroupsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->where(['CountyID' => $model->CountyID])->all(), 'SubCountyID', 'SubCountyName');
 		$wards = ArrayHelper::map(Wards::find()->where(['SubCountyID' => $model->SubCountyID])->all(), 'WardID', 'WardName');
+		$subLocations = ArrayHelper::map(SubLocations::find()->where(['LocationID' => $model->WardID])->all(), 'SubLocationID', 'SubLocationName');
 		$communityGroupStatus = ArrayHelper::map(CommunityGroupStatus::find()->all(), 'CommunityGroupStatusID', 'CommunityGroupStatusName');
 
 		return $this->render('update', [
@@ -168,6 +172,7 @@ class CommunityGroupsController extends Controller
 			'subCounties' => $subCounties,
 			'wards' => $wards,
 			'communityGroupStatus' => $communityGroupStatus,
+			'subLocations' => $subLocations,
 		]);
 	}
 

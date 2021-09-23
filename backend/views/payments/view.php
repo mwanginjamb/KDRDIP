@@ -2,6 +2,10 @@
 
 use yii\helpers\Html;
 use yii\widgets\DetailView;
+use yii\grid\GridView;
+use yii\bootstrap\Modal;
+
+$baseUrl = Yii::$app->request->baseUrl;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Payments */
@@ -10,6 +14,15 @@ $this->title = 'View Payment: ' . $model->PaymentID;
 $this->params['breadcrumbs'][] = ['label' => 'Payments', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
+
+Modal::begin([
+	'header' => '<h4 class="modal-title">Document</h4>',
+	// 'footer' => Html::submitButton(Yii::t('app', 'Save')),
+	'id' => 'pdf-viewer',
+	'size' => 'modal-lg',
+	]);
+
+Modal::end();
 ?>
 
 <section id="configuration">
@@ -75,13 +88,13 @@ $this->params['breadcrumbs'][] = $this->title;
 										'label' => 'PaymentDate',
 										'format' => ['date', 'php:d/m/Y'],
 									],
-									'suppliers.SupplierName',
+									'Supplier',
 									[
-										'attribute' => 'InvoiceID',
+										'attribute' => 'InvoiceNumber',
 										'label' => 'Invoice No.',
 									],
 									[
-										'attribute' => 'invoices.InvoiceDate',
+										'attribute' => 'InvoiceDate',
 										'label' => ' Invoice Date',
 										'format' => ['date', 'php:d/m/Y'],
 									],
@@ -89,10 +102,12 @@ $this->params['breadcrumbs'][] = $this->title;
 									'bankAccounts.AccountName',
 									'RefNumber',
 									'Description',
-									'invoices.purchases.projects.counties.CountyName',
-									'invoices.purchases.projects.subCounties.SubCountyName',
-									'invoices.purchases.projects.wards.WardName',
-									'invoices.purchases.projects.ProjectName',
+									'invoices.projects.ProjectName',
+									'invoices.procurementPlanLines.ServiceDescription',
+									'invoices.projects.counties.CountyName',
+									'invoices.projects.subCounties.SubCountyName',
+									'invoices.projects.wards.WardName',
+									'invoices.projects.ProjectName',
 									[
 										'attribute' => 'Amount',
 										'format' => ['decimal', 2]
@@ -190,9 +205,107 @@ $this->params['breadcrumbs'][] = $this->title;
 						</tbody>
 						</table>
 
+						<h4 class="form-section" style="margin-bottom: 0px">Notes</h4>
+						<?= GridView::widget([
+							'dataProvider' => $approvalNotesProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'showFooter' =>false,
+							'columns' => [
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],
+								[
+									'label'=>'Notes',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'Note',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Date',
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'contentOptions' => ['style' => 'text-align:center'],
+									'format' => ['date', 'php:d/m/Y h:i a'],
+									'value' => 'CreatedDate',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label'=>'Created By',
+									'headerOptions' => ['width' => '15%', 'style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'users.fullName',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],	
+							],
+						]); ?>
+
+						<h4 class="form-section" style="margin-bottom: 0px">Documents</h4>					
+						<?= GridView::widget([
+							'dataProvider' => $documentsProvider,
+							'layout' => '{items}',
+							'tableOptions' => [
+								'class' => 'custom-table table-striped table-bordered zero-configuration',
+							],
+							'columns' => [
+								[
+									'class' => 'yii\grid\SerialColumn',
+									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
+								],
+								[
+									'label'=>'Description',
+									'headerOptions' => ['style'=>'color:black; text-align:left'],
+									'format'=>'text',
+									'value' => 'Description',
+									'contentOptions' => ['style' => 'text-align:left'],
+								],
+								[
+									'label' => 'Document Type',
+									'attribute' => 'documentTypes.DocumentTypeName',
+									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],
+									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'class' => 'yii\grid\ActionColumn',
+									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
+									'template' => '{photo} {delete}',
+									'buttons' => [
+										'photo' => function($url, $model) use ($baseUrl) {								
+											return '<a href="#pdf-viewer" data-toggle="modal" data-image="' . $model->Image . '" data-title="document"><img src="' . $baseUrl . '\images\pdf-icon.png" height="30" width="auto"></a>';
+										},
+										'delete' => function ($url, $model) use ($rights) {
+											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', null, [
+												'class' => 'btn-sm btn-danger btn-xs',
+												'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('documents/delete?id=' . $model->DocumentID) . '", \'tab15\')',
+											]) : '';
+										},
+									],
+								],
+							],
+						]); ?>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+<script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
+<script>
+	$(document).ready(function() {
+
+		$("#pdf-viewer").on("show.bs.modal", function(e) {
+			var image = $(e.relatedTarget).data('image');
+			var title = $(e.relatedTarget).data('title');
+			$(".modal-body").html('<iframe src="'+  image +'" height="700px" width="100%"></iframe>');
+			$(".modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">' + title + '</h4>');
+		});
+	});
+</script>

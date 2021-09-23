@@ -28,6 +28,19 @@ class ProjectSafeguards extends \yii\db\ActiveRecord
 		return 'projectsafeguards';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'projectsafeguards.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

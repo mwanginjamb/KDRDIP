@@ -4,6 +4,8 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\Payments;
+use app\models\CashBook;
+use app\models\Documents;
 use app\models\DeliveryLines;
 use app\models\ApprovalNotes;
 use app\models\ApprovalStatus;
@@ -102,43 +104,66 @@ class PaymentsApprovalsController extends Controller
 	 * @return mixed
 	 */
 	public function actionView($id, $option)
-	{
-		
+	{		
 		$UserID = Yii::$app->user->identity->UserID;		
 		$model = $this->findModel($id);
-		$invoice = Invoices::findOne($model->InvoiceID);		
+		$invoice = Invoices::findOne($model->InvoiceID);
+		$PurchaseID = null;
+		if ($invoice) {
+			$PurchaseID = $invoice->PurchaseID;
+		} else {
+			$invoice = [];  
+		}	
 		
 		$params = Yii::$app->request->post();
-		$PurchaseID = $invoice->PurchaseID;
+		// $PurchaseID = $invoice->PurchaseID;
+		$purchases = [];
+		$deliveries = [];
+		if ($PurchaseID) {
+			$sql ="select * from deliverylines
+					join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
+					join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
+					join product on product.ProductID = purchaselines.ProductID
+					WHERE deliveries.PurchaseID = $PurchaseID
+					ORDER BY deliveries.DeliveryID";
+			$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
 
-		$sql ="select * from deliverylines
-				join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
-				join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
-				join product on product.ProductID = purchaselines.ProductID
-				WHERE deliveries.PurchaseID = $PurchaseID
-				ORDER BY deliveries.DeliveryID";
-		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+			$sql ="select * from purchaselines
+			LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
+			LEFT JOIN product on product.ProductID = purchaselines.ProductID
+			WHERE purchases.PurchaseID = $PurchaseID";
 
-		$sql ="select * from purchaselines
-		LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
-		LEFT JOIN product on product.ProductID = purchaselines.ProductID
-		WHERE purchases.PurchaseID = $PurchaseID";
-
-		$purchases = Purchases::findBySql($sql)->asArray()->all();
-
+			$purchases = Purchases::findBySql($sql)->asArray()->all();
+		}
+		
 		$notes = new ApprovalNotes();
 		if (Yii::$app->request->post()) {
 			if ($params['option']==1 && isset($params['Approve'])) {
-				$model->ApprovalStatusID = 2;
-			} elseif ($params['option']==2 && isset($params['Approve'])) {
-				$model->ApprovalStatusID = 3;
+                $model->ApprovalStatusID = 3;
+
+                $cashBook = new CashBook();
+				$cashBook->CreatedBy = Yii::$app->user->identity->UserID;
+				$cashBook->Date = $model['Date'];
+				$cashBook->TypeID = 1;
+				$cashBook->BankAccountID = $model['BankAccountID'];
+				$cashBook->AccountID = $model['BankAccountID'];
+				$cashBook->Description = $model['Description'];
+				$cashBook->DocumentReference = $model['RefNumber'];
+				$cashBook->ProjectID = $model['ProjectID'];
+				// $cashBook->OrganizationID = $model['OrganizationID'];
+				// $cashBook->CountyID = $model['CountyID'];
+				$cashBook->ProjectDisbursementID = 0;
+				$cashBook->Credit = $model['Amount'];
+				$cashBook->Amount = $model['Amount'];
+				if (!$cashBook->save()) {
+					// print_r($cashBook->getErrors()); exit;
+				}
 
 				$model->PostingDate = date('Y-m-d h:i:s');
 				$model->Posted = 1;
 				$model->ApprovedBy  = $UserID;
 				$model->ApprovalDate = date('Y-m-d h:i:s');
-			}
-			
+			}			
 			if (isset($params['Reject'])) {
 				$model->ApprovalStatusID = 4;
 			}
@@ -164,6 +189,15 @@ class PaymentsApprovalsController extends Controller
 		$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where('ApprovalStatusID > 1')->all(), 'ApprovalStatusID', 'ApprovalStatusName');
 		$detailmodel = Payments::find()->where(['PaymentID'=> $id])->joinWith('approvalstatus')->one();
 
+		$approvalNotesProvider = new ActiveDataProvider([
+			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 6]),
+		]);
+
+		
+		$documentsProvider = new ActiveDataProvider([
+			'query' => Documents::find()->andWhere(['RefNumber' => $id, 'DocumentCategoryID' => 8]),
+		]);
+
 		return $this->render('view', [
 			'model' => $model,
 			'detailmodel' => $detailmodel,
@@ -174,6 +208,8 @@ class PaymentsApprovalsController extends Controller
 			'purchases' => $purchases,
 			'invoice' => $invoice,
 			'rights' => $this->rights,
+			'approvalNotesProvider' => $approvalNotesProvider,
+			'documentsProvider' => $documentsProvider,
 		]);
 	}
 

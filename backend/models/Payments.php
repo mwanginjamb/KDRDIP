@@ -15,15 +15,23 @@ use Yii;
  * @property int $InvoiceID
  * @property int $PaymentMethodID
  * @property int $BankAccountID
+ * @property int $PaymentTypeID
+ * @property int $ProjectID
+ * @property int $ProcurementPlanLineID
  * @property string $Amount
  * @property string $RefNumber
  * @property string $Description
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property string $Supplier
+ * @property string $InvoiceNumber
+ * @property string $InvoiceDate
  */
 class Payments extends \yii\db\ActiveRecord
 {
+	public $imageFile;
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -32,19 +40,37 @@ class Payments extends \yii\db\ActiveRecord
 		return 'payments';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'payments.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['Date', 'CreatedDate'], 'safe'],
-			[['SupplierID', 'InvoiceID', 'PaymentMethodID', 'CreatedBy', 'Deleted', 'BankAccountID'], 'integer'],
+			[['Date', 'CreatedDate', 'InvoiceDate'], 'safe'],
+			[['SupplierID', 'InvoiceID', 'PaymentMethodID', 'CreatedBy', 'Deleted', 'BankAccountID', 'PaymentTypeID', 'ProcurementPlanLineID', 'ProjectID'], 'integer'],
 			[['Amount'], 'number'],
-			[['RefNumber'], 'string', 'max' => 45],
+			[['RefNumber', 'InvoiceNumber'], 'string', 'max' => 45],
+			[['Supplier'], 'string', 'max' => 300],
 			[['Description'], 'string', 'max' => 500],
-			[['SupplierID', 'InvoiceID', 'PaymentMethodID', 'Amount', 'Date', 'BankAccountID'], 'required'],
-			[['Amount'], 'validateAmount']
+			[[ 'PaymentMethodID', 'Amount', 'Date', 'BankAccountID', 'PaymentTypeID', 'ProcurementPlanLineID', 'ProjectID', 'InvoiceDate', 'InvoiceNumber', 'Supplier'], 'required'],
+			[['Amount'], 'validateAmount'],
+			[['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+		// 	[['SupplierID', 'InvoiceID',], 'required', 'when' => function($model) {
+		// 		return $model->PaymentTypeID == 1;
+		//   }]
 		];
 	}
 
@@ -59,6 +85,9 @@ class Payments extends \yii\db\ActiveRecord
 			'SupplierID' => 'Supplier',
 			'InvoiceID' => 'Invoice Number',
 			'PaymentMethodID' => 'Payment Method',
+			'PaymentTypeID' => 'Payment Type',
+			'ProcurementPlanLineID' => 'Procurement Plan Line',
+			'ProjectID' => 'Sub-Project',
 			'Amount' => 'Amount',
 			'RefNumber' => 'Ref Number',
 			'BankAccountID' => 'Bank Account',
@@ -66,7 +95,17 @@ class Payments extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
+            'Supplier' => 'Supplier',
+            'InvoiceNumber' => 'Invoice Number',
+            'InvoiceDate' => 'Invoice Date',
 		];
+	}
+
+	public function formatImage()
+	{
+		$tmpfile_contents = file_get_contents($this->imageFile->tempName);
+		$type = $this->imageFile->type;
+		return 'data:' . $type . ';base64,' . base64_encode($tmpfile_contents);
 	}
 
 	public function validateAmount($attribute, $params)
@@ -77,7 +116,7 @@ class Payments extends \yii\db\ActiveRecord
 			$invoiceAmount = Invoices::find()->where(['InvoiceID' => $this->InvoiceID])->sum('Amount');
 			$totalPayments = Payments::find()->where(['InvoiceID' => $this->InvoiceID])->sum('Amount');
 			if (($invoiceAmount - $totalPayments) < $this->Amount) {
-				$this->addError($attribute, 'The Amount is more than the invoice amount');
+				// $this->addError($attribute, 'The Amount is more than the invoice amount');
 			}
 		}
 	}
@@ -90,6 +129,11 @@ class Payments extends \yii\db\ActiveRecord
 	public function getSuppliers()
 	{
 		return $this->hasOne(Suppliers::className(), ['SupplierID' => 'SupplierID'])->from(suppliers::tableName());
+	}
+
+	public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
 	}
 
 	public function getInvoices()

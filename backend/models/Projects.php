@@ -7,6 +7,7 @@ use app\models\FundsRequisition;
 use app\models\Payments;
 
 use Yii;
+use yii\helpers\ArrayHelper;
 
 /**
  * This is the model class for table "projects".
@@ -54,6 +55,19 @@ class Projects extends \yii\db\ActiveRecord
 		return 'projects';
 	}
 
+/* 	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'projects.Deleted', 0]);
+	} */
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -68,8 +82,8 @@ class Projects extends \yii\db\ActiveRecord
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
 			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
-				'EndDate', 'ApprovalDate', 'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID',
-				'LocationID', 'SubLocationID', 'WardID'], 'required']
+				'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID',
+				'SubLocationID', 'WardID'], 'required']
 		];
 	}
 
@@ -83,8 +97,8 @@ class Projects extends \yii\db\ActiveRecord
 			'ProjectName' => 'Sub-Project',
 			'ProjectParentID' => 'Parent Project',
 			'Objective' => 'Objective',
-			'StartDate' => 'Date of Formation',
-			'EndDate' => 'Date Wound Up',
+			'StartDate' => 'Start Date',
+			'EndDate' => 'Expected End Date',
 			'ProjectCost' => 'Project Cost',
 			'ReportingPeriodID' => 'Reporting Period',
 			'ApprovalDate' => 'Approval Date',
@@ -97,12 +111,12 @@ class Projects extends \yii\db\ActiveRecord
 			'CurrencyID' => 'Currency',
 			'Longitude' => 'Longitude',
 			'Latitude' => 'Latitude',
-			'CommunityID' => 'Community',
+			'CommunityID' => 'Community / CPMC',
 			'CountyID' => 'County',
 			'SafeguardsRecommendedAction' => 'If there is at least one ‘Yes’, which course of action do you recommend?',
 			'SubCountyID'  => 'Sub County',
-			'LocationID'  => 'Location',
-			'SubLocationID'  => 'Sub Location',
+			'LocationID'  => 'Ward',
+			'SubLocationID'  => 'Village',
 			'WardID' => 'Ward',
 			'OrganizationID' => 'Organization',
 			'EnterpriseTypeID' => 'Enterprise Type',
@@ -176,19 +190,43 @@ class Projects extends \yii\db\ActiveRecord
 
 	public function getBudgetedAmount()
 	{
-		return ActivityBudget::find()->joinWith('activities')
-												->joinWith('activities.indicators')
-												->where(['indicators.ProjectID' => $this->ProjectID])->sum('activitybudget.Amount');
+		// return ActivityBudget::find()->joinWith('activities')
+		// 										->joinWith('activities.indicators')
+		// 										->where(['indicators.ProjectID' => $this->ProjectID])->sum('activitybudget.Amount');
+		return ProcurementPlanLines::find()->joinWith('procurementPlan')->where(['ProjectID' => $this->ProjectID])->sum('EstimatedCost');
 	}
 
 	public function getDisbursedAmount()
 	{
-		return FundsRequisition::find()->where(['ProjectID' => $this->ProjectID])->sum('Amount');
+		// return FundsRequisition::find()->where(['ProjectID' => $this->ProjectID])->sum('Amount');
+		$debit = CashBook::find()->where(['ProjectID' => $this->ProjectID])->sum('Debit');
+		// $credit = CashBook::find()->where(['ProjectID' => $this->ProjectID])->sum('Credit');
+		return $debit;
 	}
 
 	public function getAmountSpent()
 	{
-		return Payments::find()->joinWith('invoices')->joinWith('invoices.purchases')->where(['purchases.ProjectID' => $this->ProjectID])->sum('payments.Amount');
+		// $payments = Payments::find()->joinWith('invoices')->joinWith('invoices.purchases')->where(['purchases.ProjectID' => $this->ProjectID])->sum('payments.Amount');
+		// $expenses = ProjectExpenses::find()->andWhere(['ProjectID' => $this->ProjectID])->sum('Amount');
+		// return $payments + $expenses;
+
+		return Payments::find()->andWhere(['ProjectID' => $this->ProjectID])->sum('Amount');
+	}
+
+	public function getBalance()
+	{
+		return $this->getDisbursedAmount() - $this->getAmountSpent();
+	}
+
+	public function getMajorChallenge()
+	{
+		return ProjectChallenges::findOne(['ProjectID' => $this->ProjectID, 'MajorChallenge' => 1]);
+	}
+
+	public function getImplementationStatus()
+	{
+		// print_r(ImplementationStatus::find()->joinWith('projectStatus')->andWhere(['ProjectID' => $this->ProjectID])->asArray()->all()); exit;
+		return ArrayHelper::index(ImplementationStatus::find()->joinWith('projectStatus')->andWhere(['ProjectID' => $this->ProjectID])->asArray()->all(), 'PeriodID');
 	}
 
 	public function getCummulativeExpenditure()

@@ -24,6 +24,19 @@ class ActivityOutputs extends \yii\db\ActiveRecord
 		return 'activity_outputs';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'activity_outputs.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

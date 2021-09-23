@@ -70,19 +70,17 @@ $this->params['breadcrumbs'][] = $this->title;
 														'counties.CountyName',
 														'subCounties.SubCountyName',
 														'wards.WardName',
-														'Village',									
+														'subLocations.SubLocationName',
 														'communityGroupStatus.CommunityGroupStatusName',
 														'DateDisbanded',
 														'Notes:ntext',
 														[
 															'attribute' => 'CreatedDate',
-															'format' => ['date', 'php:d/m/Y h:i a'],
-															
+															'format' => ['date', 'php:d/m/Y h:i a'],															
 														],
 														[
 															'label' => 'Created By',
-															'attribute' => 'users.fullName',
-															
+															'attribute' => 'users.fullName',															
 														],
 												],
 											]) ?>

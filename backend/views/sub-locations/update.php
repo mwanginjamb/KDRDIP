@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\SubLocations */
 
-$this->title = 'Update Sub Locations: ' . $model->SubLocationName;
+$this->title = 'Update Village: ' . $model->SubLocationName;
 $this->params['breadcrumbs'][] = ['label' => 'Sub Locations', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->SubLocationID, 'url' => ['view', 'id' => $model->SubLocationID]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'model' => $model,
 		'counties' => $counties,
 		'subCounties' => $subCounties,
-		'locations' => $locations,
+		'wards' => $wards,
 		'rights' => $rights,
 	]) ?>
 

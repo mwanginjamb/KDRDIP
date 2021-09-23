@@ -33,18 +33,31 @@ class Businesses extends \yii\db\ActiveRecord
 		return 'businesses';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'businesses.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['CountryID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'WardID'], 'integer'],
+			[['CountryID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'WardID', 'SubLocationID'], 'integer'],
 			[['CreatedDate'], 'safe'],
 			[['BusinessName', 'TradingName'], 'string', 'max' => 200],
 			[['PostalAddress', 'PostalCode', 'Town', 'Telephone', 'Mobile', 'Village'], 'string', 'max' => 45],
 			[['PhysicalLocation', 'Email', 'Url'], 'string', 'max' => 300],
-			[['BusinessName', 'TradingName', 'Mobile', 'CountyID', 'SubCountyID', 'WardID'], 'required'],
+			[['BusinessName', 'TradingName', 'Mobile', 'CountyID', 'SubCountyID', 'WardID', 'SubLocationID'], 'required'],
 		];
 	}
 
@@ -70,6 +83,7 @@ class Businesses extends \yii\db\ActiveRecord
 			'SubCountyID' => 'Sub County',
 			'WardID' => 'Ward',
 			'Village' => 'Village',
+			'SubLocationID' => 'Village',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
@@ -99,5 +113,10 @@ class Businesses extends \yii\db\ActiveRecord
 	public function getWards()
 	{
 		return $this->hasOne(Wards::className(), ['WardID' => 'WardID'])->from(wards::tableName());
+	}
+
+	public function getSubLocations()
+	{
+		return $this->hasOne(SubLocations::className(), ['SubLocationID' => 'SubLocationID']);
 	}
 }

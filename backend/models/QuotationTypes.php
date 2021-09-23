@@ -16,39 +16,52 @@ use Yii;
  */
 class QuotationTypes extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'quotationtypes';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'quotationtypes';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted'], 'integer'],
-            [['QuotationTypeName'], 'string', 'max' => 45],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'quotationtypes.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'QuotationTypeID' => 'Quotation Type ID',
-            'QuotationTypeName' => 'Quotation Type Name',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['QuotationTypeName'], 'string', 'max' => 45],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'QuotationTypeID' => 'Quotation Type ID',
+			'QuotationTypeName' => 'Quotation Type Name',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

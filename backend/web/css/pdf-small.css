@@ -1,0 +1,125 @@
+
+.pdf-table {
+	background-color: #FFFFFF;
+	border: 0;
+	margin-bottom: 1rem;
+	max-width: 100%;
+	width: 100%;
+	border-collapse: collapse;
+	clear: both;
+	margin-top: 6px !important;
+	margin-bottom: 6px !important;
+	max-width: none !important;
+	border-collapse: separate !important;
+	border-spacing: 0;
+	border: 1px solid #000;
+}
+
+.pdf-table tbody td, .pdf-table tbody th {
+	font-size: 0.6rem;
+	font-weight: 400;
+	height: 2.0rem;
+	padding-top: 0 !important;
+	padding-bottom: 0 !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
+	border: 1px solid black;
+}
+
+.pdf-table thead td, .pdf-table thead th, .pdf-table tfoot td, .pdf-table tfoot th {
+	font-size: 0.6rem;
+	font-weight: bold !important;
+	height: 2.0rem;
+	padding-top: 3px !important;
+	padding-bottom: 3px !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
+	border: 1px solid black;
+	/* background-color: #d9d9d9; */
+	text-align: left;
+}
+
+.pdf-table tbody th {
+	background-color: #d9d9d9;
+}
+
+.pdf-table tbody tr:nth-child(even) {background: #F5F5F5}
+.pdf-table tbody tr:nth-child(odd) {background: #FFFFFF}
+
+.company-name {
+	margin: 3px;
+	font-weight: 900
+}
+
+.pdf-table .number-column {
+	text-align : right !important;
+}
+
+.pdf-signoff-table .underline {
+	border-bottom: 1px solid black;
+}
+
+.pdf-signoff-table td, .pdf-signoff-table th {
+	font-size: 1rem;
+	font-weight: 900;
+	height: 2rem;
+	padding-right: 5px !important;
+	padding-left: 5px !important;
+	vertical-align: bottom;
+}
+
+.pdf-signoff-table head th td {
+	text-align: left !important;
+}	
+
+.title {
+	text-align:center; 
+	text-decoration: underline; 
+	font-weight: 900;
+	font-size: 2rem;
+}
+
+.company-name {
+	text-align:center; 
+	font-weight: 900;
+	font-size: 1rem;
+}
+
+.supplier-name {
+	text-align:left; 
+	font-weight: 900;
+	font-size: 1rem;
+}
+
+.space {
+	height: 10px;
+}
+
+.table-bordered {
+	border-collapse:collapse;
+	border: 0.5px solid #000;
+}
+
+.pdf-key-table {
+	border-collapse:collapse;
+	border: 1px solid black;
+}
+
+.pdf-key-table tbody td, .pdf-tkey-table tbody th {
+	font-size: 1rem;
+	font-weight: 900;
+	height: 3rem;
+	padding-right: 5px !important;
+	padding-left: 5px !important;
+	vertical-align: bottom;
+	text-align: left;
+	border-collapse:collapse;
+	border: 1px solid black;
+	vertical-align: middle;
+}
+
+.pdf-key-table thead th, .pdf-key-table thead th {
+	text-align: left !important;
+	font-weight: bold;
+	border: 1px solid black;
+}	

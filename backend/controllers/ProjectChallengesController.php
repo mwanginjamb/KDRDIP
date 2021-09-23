@@ -4,7 +4,9 @@ namespace backend\controllers;
 
 use Yii;
 use app\models\ProjectChallenges;
+use app\models\ChallengeTypes;
 use app\models\Employees;
+use app\models\ProjectChallengeStatus;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -12,6 +14,9 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use backend\controllers\EmployeesController;
+
+include_once 'includes/mailsender.php';
 
 /**
  * ProjectChallengesController implements the CRUD actions for ProjectChallenges model.
@@ -69,7 +74,7 @@ class ProjectChallengesController extends Controller
 			'verbs' => [
 				'class' => VerbFilter::className(),
 				'actions' => [
-					'delete' => ['POST'],
+					'delete' => ['POST', 'GET'],
 				],
 			],
 		];
@@ -82,15 +87,33 @@ class ProjectChallengesController extends Controller
 	public function actionIndex()
 	{
 		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
+		$typeId = isset(Yii::$app->request->get()['typeId']) ? Yii::$app->request->get()['typeId'] : 0;
+
+		/*
+			Data provider for the project's major challenge. The major challenge can only be one
+		*/
+		$majorChallenge = new ActiveDataProvider([
+			'query' => ProjectChallenges::find()->andWhere(['ProjectID' => $pId, 'MajorChallenge' => 1]),
+		]);
+
+		/*
+			Data provider for the project's other challenges. Other challenges can be many
+		*/
+		$query = ProjectChallenges::find()->andWhere(['ProjectID' => $pId, 'MajorChallenge' => 0]);
+		if ($typeId != 0) {
+			$query->andWhere(['ChallengeTypeID' => $typeId]);
+		}
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => ProjectChallenges::find(),
+			'query' => $query
 		]);
 
 		return $this->renderPartial('index', [
 			'dataProvider' => $dataProvider,
+			'majorChallenge' => $majorChallenge,
 			'rights' => $this->rights,
 			'pId' => $pId,
+			'typeId' => $typeId,
 		]);
 	}
 
@@ -116,20 +139,31 @@ class ProjectChallengesController extends Controller
 	public function actionCreate()
 	{
 		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
+		$majorChallenge = isset(Yii::$app->request->get()['major']) ? Yii::$app->request->get()['major'] : 0;
+		$typeId = isset(Yii::$app->request->get()['typeId']) ? Yii::$app->request->get()['typeId'] : 0;
 
 		$model = new ProjectChallenges();
+		$model->ProjectID = $pId;
+		$model->MajorChallenge = $majorChallenge;
+		$model->ChallengeTypeID = $typeId;
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+			$x = EmployeesController::sendEmailNotification('002', $model->AssignedTo);
 			return $this->redirect(['index', 'pId' => $model->ProjectID]);
 		}
 
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
+		$challengeTypes = ArrayHelper::map(ChallengeTypes::find()->all(), 'ChallengeTypeID', 'ChallengeTypeName');
+		
+		$projectChallengeStatus = ArrayHelper::map(ProjectChallengeStatus::find()->all(), 'ProjectChallengeStatusID', 'ProjectChallengeStatusName');
 
 		return $this->renderPartial('create', [
 			'model' => $model,
 			'rights' => $this->rights,
 			'pId' => $pId,
 			'employees' => $employees,
+			'challengeTypes' => $challengeTypes,
+			'projectChallengeStatus' => $projectChallengeStatus,
 		]);
 	}
 
@@ -149,12 +183,16 @@ class ProjectChallengesController extends Controller
 		}
 
 		$employees = ArrayHelper::map(Employees::find()->all(), 'EmployeeID', 'EmployeeName');
+		$challengeTypes = ArrayHelper::map(ChallengeTypes::find()->all(), 'ChallengeTypeID', 'ChallengeTypeName');
+		$projectChallengeStatus = ArrayHelper::map(ProjectChallengeStatus::find()->all(), 'ProjectChallengeStatusID', 'ProjectChallengeStatusName');
 
 		return $this->renderPartial('update', [
 			'model' => $model,
 			'rights' => $this->rights,
 			'pId' => $model->ProjectID,
 			'employees' => $employees,
+			'challengeTypes' => $challengeTypes,
+			'projectChallengeStatus' => $projectChallengeStatus,
 		]);
 	}
 
@@ -167,9 +205,10 @@ class ProjectChallengesController extends Controller
 	 */
 	public function actionDelete($id)
 	{
+		$model = $this->findModel($id);
 		$this->findModel($id)->delete();
 
-		return $this->redirect(['index']);
+		return $this->redirect(['index', 'pId' => $model->ProjectID]);
 	}
 
 	/**

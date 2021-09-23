@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Sub Locations';
+$this->title = 'Village';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <section id="configuration">
@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								[
 									'attribute' => 'locations.LocationName',
 									'headerOptions' => ['width' => '15%'],
-									'label' => 'Location',
+									'label' => 'Ward',
 								],
 								[
 									'attribute' => 'locations.subCounties.SubCountyName',

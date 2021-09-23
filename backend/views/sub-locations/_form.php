@@ -51,7 +51,7 @@ use yii\widgets\ActiveForm;
 											']) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'LocationID')->dropDownList($locations, ['prompt' => 'Select...']) ?>
+					<?= $form->field($model, 'LocationID')->dropDownList($wards, ['prompt' => 'Select...']) ?>
 				</div>			
 			</div>
 

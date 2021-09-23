@@ -27,6 +27,19 @@ class Locations extends \yii\db\ActiveRecord
 		return 'locations';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'locations.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -47,8 +60,8 @@ class Locations extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'LocationID' => 'Location ID',
-			'LocationName' => 'Location Name',
+			'LocationID' => 'Ward ID',
+			'LocationName' => 'Ward',
 			'SubCountyID' => 'Sub County',
 			'CountyID' => 'County',
 			'Notes' => 'Notes',

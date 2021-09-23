@@ -88,6 +88,6 @@ $this->params['breadcrumbs'][] = $this->title;
 	]); ?>
 	<div class="form-group">
 		<?= Html::a('<i class="ft-x"></i> Reset', null, ['class' => 'btn btn-warning mr-1' , 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-payment-schedule/schedule?pId=' . $pId) . '", \'tab3\')']) ?>
-		<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl('lipw-payment-schedule/schedule?pId=' . $pId) . '",\'tab3\',\'currentForm\')']) ?>
+		<?= Html::a('<i class="la la-check-square-o"></i> Save', null, ['id' => 'saveBtn', 'class' => 'btn btn-primary mr-1', 'onclick' => 'submitForm("' . Yii::$app->urlManager->createUrl('lipw-payment-schedule/schedule?pId=' . $pId) . '",\'tab3\',\'currentForm\', \'saveBtn\')']) ?>
 	</div>
 <?php ActiveForm::end(); ?>

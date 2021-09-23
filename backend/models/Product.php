@@ -36,6 +36,19 @@ class Product extends \yii\db\ActiveRecord
 		return 'product';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'product.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * @inheritdoc
 	 */
@@ -58,14 +71,14 @@ class Product extends \yii\db\ActiveRecord
 	public function attributeLabels()
 	{
 		return [
-			'ProductID' => 'Product ID',
-			'ProductName' => 'Product Name',
+			'ProductID' => 'Item ID',
+			'ProductName' => 'Item Name',
 			'Deleted' => 'Deleted',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
-			'ProductCategoryID' => 'Product Category',
-			'ProductCategory2ID' => 'Product Category 2',
-			'ProductCategory3ID' => 'Product Category 3',
+			'ProductCategoryID' => 'Item Category',
+			'ProductCategory2ID' => 'Item Category 2',
+			'ProductCategory3ID' => 'Item Category 3',
 			'UsageUnitID' => 'Usage Unit',
 			'ReOrderLevel' => 'Re Order Level',
 			'UnitPrice' => 'Unit Price',

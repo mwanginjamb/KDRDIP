@@ -24,7 +24,7 @@ class MessagetemplatesController extends Controller
 	{
 		$this->rights = RightsController::Permissions(26);
 
-		$rightsArray = []; 
+		$rightsArray = [];
 		if (isset($this->rights->View)) {
 			array_push($rightsArray, 'index', 'view');
 		}
@@ -39,7 +39,7 @@ class MessagetemplatesController extends Controller
 		}
 		$rightsArray = array_unique($rightsArray);
 		
-		if (count($rightsArray) <= 0) { 
+		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
 		}
 		

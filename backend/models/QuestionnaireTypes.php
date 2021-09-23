@@ -16,39 +16,52 @@ use Yii;
  */
 class QuestionnaireTypes extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'questionnairetypes';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'questionnairetypes';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['Notes'], 'string'],
-            [['CreatedDate'], 'safe'],
-            [['CreatedBy', 'Deleted'], 'integer'],
-            [['QuestionnaireTypeName'], 'string', 'max' => 45],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'questionnairetypes.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'QuestionnaireTypeID' => 'Questionnaire Type ID',
-            'QuestionnaireTypeName' => 'Questionnaire Type Name',
-            'Notes' => 'Notes',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['Notes'], 'string'],
+			[['CreatedDate'], 'safe'],
+			[['CreatedBy', 'Deleted'], 'integer'],
+			[['QuestionnaireTypeName'], 'string', 'max' => 45],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'QuestionnaireTypeID' => 'Questionnaire Type ID',
+			'QuestionnaireTypeName' => 'Questionnaire Type Name',
+			'Notes' => 'Notes',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

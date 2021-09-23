@@ -16,37 +16,50 @@ use Yii;
  */
 class ProjectCounties extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'projectcounties';
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public static function tableName()
+	{
+		return 'projectcounties';
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rules()
-    {
-        return [
-            [['ProjectID', 'CountyID', 'CreatedBy', 'Deleted'], 'integer'],
-            [['CreatedDate'], 'safe'],
-        ];
-    }
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'projectcounties.Deleted', 0]);
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'ProjectCountyID' => 'Project County ID',
-            'ProjectID' => 'Project ID',
-            'CountyID' => 'County ID',
-            'CreatedDate' => 'Created Date',
-            'CreatedBy' => 'Created By',
-            'Deleted' => 'Deleted',
-        ];
-    }
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function rules()
+	{
+		return [
+			[['ProjectID', 'CountyID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['CreatedDate'], 'safe'],
+		];
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function attributeLabels()
+	{
+		return [
+			'ProjectCountyID' => 'Project County ID',
+			'ProjectID' => 'Project ID',
+			'CountyID' => 'County ID',
+			'CreatedDate' => 'Created Date',
+			'CreatedBy' => 'Created By',
+			'Deleted' => 'Deleted',
+		];
+	}
 }

@@ -39,13 +39,13 @@ class ComplaintTypesController extends Controller
 		}
 		$rightsArray = array_unique($rightsArray);
 		
-		if (count($rightsArray) <= 0) { 
+		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
 		}
 		
 		return [
 		'access' => [
-			'class' => AccessControl::className(),
+			'class' => AccessControl::class,
 			'only' => ['index', 'view', 'create', 'update', 'delete'],
 			'rules' => [				
 					// Guest Users
@@ -63,7 +63,7 @@ class ComplaintTypesController extends Controller
 				],
 			],
 			'verbs' => [
-				'class' => VerbFilter::className(),
+				'class' => VerbFilter::class,
 				'actions' => [
 					'delete' => ['POST'],
 				],

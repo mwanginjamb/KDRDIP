@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $ApprovalStatusID = $model->ApprovalStatusID;
 $ExpiryDate = $model->ExpiryDate;
-$Rights = Yii::$app->params['rights'];
-$FormID = 25;
 ?>
 <section id="configuration">
 	<div class="row">
@@ -192,15 +190,17 @@ $FormID = 25;
 									'template' => '{response} {view}',
 									'buttons' => [
 
-										'response' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID, $ExpiryDate) {
+										'response' => function ($url, $model) use ($ApprovalStatusID, $ExpiryDate) {
 											$baseUrl = Yii::$app->request->baseUrl;
-											return ($ApprovalStatusID == 3 && date('Y-m-d', strtotime($ExpiryDate)) <= date('Y-m-d')) ? Html::a('<i class="ft-eye"></i> Response', $baseUrl . '/quotation-response/create?qid=' . $model->QuotationID . '&sid='.$model->SupplierID, [
+											// echo "$ApprovalStatusID  $ExpiryDate"; exit;
+											// return ($ApprovalStatusID == 3 && date('Y-m-d', strtotime($ExpiryDate)) <= date('Y-m-d')) ? Html::a('<i class="ft-eye"></i> Response', $baseUrl . '/quotation-response/create?qid=' . $model->QuotationID . '&sid='.$model->SupplierID, [
+											return ($ApprovalStatusID == 3) ? Html::a('<i class="ft-eye"></i> Response', $baseUrl . '/quotation-response/create?qid=' . $model->QuotationID . '&sid='.$model->SupplierID, [
 												'title' => Yii::t('app', 'View'),
 												'class'=>'btn-sm btn-secondary btn-xs',
 												]) : '';
 										},
 
-										'view' => function ($url, $model) use ($Rights, $FormID, $ApprovalStatusID){
+										'view' => function ($url, $model) use ($ApprovalStatusID){
 											$baseUrl = Yii::$app->request->baseUrl;
 											return ($ApprovalStatusID == 3) ? Html::a('<i class="ft-eye"></i> View RFQ', $baseUrl.'/quotation/rfq?id='.$model->QuotationID.'&sid='.$model->SupplierID, [
 														'title' => Yii::t('app', 'View'),

@@ -47,19 +47,23 @@ $this->params['breadcrumbs'][] = $this->title;
 						<?= DetailView::widget([
 							'model' => $model,
 							'attributes' => [
-									'ComplaintStatusID',
-									'ComplaintStatusName',
-									'Notes:ntext',
-									[
-										'attribute' => 'CreatedDate',
-										'format' => ['date', 'php:d/m/Y h:i a'],
-										
-									],
-									[
-										'label' => 'Created By',
-										'attribute' => 'users.fullName',
-										
-									],
+								'ComplaintStatusID',
+								'ComplaintStatusName',
+								'Notes:ntext',
+								[
+									'attribute' => 'Closure',
+									'value' => function($model) {
+										return $model['Closure'] == 1 ? 'Yes' : 'No';
+									}
+								],
+								[
+									'attribute' => 'CreatedDate',
+									'format' => ['date', 'php:d/m/Y h:i a'],									
+								],
+								[
+									'label' => 'Created By',
+									'attribute' => 'users.fullName',										
+								],
 							],
 						]) ?>
 					</div>

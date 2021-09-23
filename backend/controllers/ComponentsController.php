@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use app\models\Components;
 use app\models\SubComponents;
+use app\models\Projects;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -221,5 +222,19 @@ class ComponentsController extends Controller
 		}
 
 		throw new NotFoundHttpException('The requested page does not exist.');
+	}
+
+	public function actionProjects($id)
+	{
+		$model = Projects::find()->where(['ComponentID' => $id])->all();
+			
+		if (!empty($model)) {
+			echo '<option value="0">Select...</option>';
+			foreach ($model as $item) {
+				echo "<option value='" . $item->ProjectID . "'>" . $item->ProjectName . "</option>";
+			}
+		} else {
+			echo '<option value="0">Select...</option>';
+		}
 	}
 }

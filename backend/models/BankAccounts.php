@@ -10,6 +10,8 @@ use Yii;
  * @property int $BankAccountID
  * @property int $BankID
  * @property int $BranchID
+ * @property int $OrganizationID
+ * @property int $ProjectID
  * @property string $AccountName
  * @property string $AccountNumber
  * @property int $BankTypeID
@@ -30,13 +32,26 @@ class BankAccounts extends \yii\db\ActiveRecord
 		return 'bankaccounts';
 	}
 
+	public static function find()
+	{
+		return parent::find(); //->andWhere(['=', 'bankaccounts.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
 	public function rules()
 	{
 		return [
-			[['BankID', 'BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted'], 'integer'],
+			[['BankID', 'BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted', 'OrganizationID', 'ProjectID'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['AccountName', 'AccountNumber'], 'string', 'max' => 45],
@@ -53,6 +68,8 @@ class BankAccounts extends \yii\db\ActiveRecord
 			'BankAccountID' => 'Bank Account ID',
 			'BankID' => 'Bank',
 			'BranchID' => 'Branch',
+            'OrganizationID' => 'Community Group',
+            'ProjectID' => 'Sub Project',
 			'AccountName' => 'Account Name',
 			'AccountNumber' => 'Account Number',
 			'BankTypeID' => 'Bank Type',
@@ -89,4 +106,29 @@ class BankAccounts extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
 	}
+
+    public function getOrganizations()
+	{
+		return $this->hasOne(Organizations::className(), ['OrganizationID' => 'OrganizationID']);
+	}
+
+    public function getProjects()
+	{
+		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID']);
+	}
+
+    public function getDescription() {
+        if ($this->BankTypeID == 1) {
+            
+        } elseif ($this->BankTypeID == 2) {
+            $model = Counties::findOne($this->CountyID);
+            return ($model) ? $model->CountyName : '';            
+        } elseif ($this->BankTypeID == 3) {
+            $model = Organizations::findOne($this->OrganizationID);
+            return ($model) ? $model->OrganizationName : '';
+        } elseif ($this->BankTypeID == 4) {
+            $model = Projects::findOne($this->ProjectID);
+            return ($model) ? $model->ProjectName : '';
+        }
+     }
 }

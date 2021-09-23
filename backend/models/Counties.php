@@ -24,6 +24,15 @@ class Counties extends \yii\db\ActiveRecord
 		return 'counties';
 	}
 
+    /**
+	 * Added by Joseph Ngugi
+	 * Filter Deleted Items
+	 */
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'counties.Active', 1]);
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */

@@ -24,6 +24,19 @@ class ComplaintTiers extends \yii\db\ActiveRecord
 		return 'complainttiers';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'complainttiers.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -45,7 +58,7 @@ class ComplaintTiers extends \yii\db\ActiveRecord
 	{
 		return [
 			'ComplaintTierID' => 'Complaint Tier ID',
-			'ComplaintTierName' => 'Complaint Tier Name',
+			'ComplaintTierName' => 'Complaint Tier',
 			'Notes' => 'Notes',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',

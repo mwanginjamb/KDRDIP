@@ -6,6 +6,8 @@ use Yii;
 use app\models\Invoices;
 use app\models\Suppliers;
 use app\models\Purchases;
+use app\models\ProcurementPlanLines;
+use app\models\Projects;
 use app\models\Documents;
 use app\models\DeliveryLines;
 use app\models\Search;
@@ -129,21 +131,25 @@ class InvoicesController extends Controller
 	public function actionView($id)
 	{
 		$model = $this->findModel($id);
+		$purchases = [];
+		$deliveries = [];
 		$PurchaseID = $model->PurchaseID;
-		$sql ="select * from deliverylines
-				join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
-				join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
-				join product on product.ProductID = purchaselines.ProductID
-				WHERE deliveries.PurchaseID = $PurchaseID
-				ORDER BY deliveries.DeliveryID";
-		$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
+		if ($PurchaseID) {
+			$sql ="select * from deliverylines
+					join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
+					join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
+					join product on product.ProductID = purchaselines.ProductID
+					WHERE deliveries.PurchaseID = $PurchaseID
+					ORDER BY deliveries.DeliveryID";
+			$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
 
-		$sql ="select * from purchaselines
-				LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
-				LEFT JOIN product on product.ProductID = purchaselines.ProductID
-				WHERE purchases.PurchaseID = $PurchaseID";
-		
-		$purchases = Purchases::findBySql($sql)->asArray()->all();
+			$sql ="select * from purchaselines
+					LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
+					LEFT JOIN product on product.ProductID = purchaselines.ProductID
+					WHERE purchases.PurchaseID = $PurchaseID";
+			
+			$purchases = Purchases::findBySql($sql)->asArray()->all();
+		}
 		$documents = Documents::find()->where(['RefNumber' => $id, 'DocumentTypeID' => 1])->all();
 
 		// Display Documents
@@ -187,9 +193,12 @@ class InvoicesController extends Controller
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
 		$purchases = []; // ArrayHelper::map(Purchases::find()->all(), 'PurchaseID', 'PurchaseID');
 
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$procurementPlanLines = ArrayHelper::map(ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $model->ProjectID])->all(), 'ProcurementPlanLineID', 'ServiceDescription');
+
 		// Display Documents
 		$documentProvider = new ActiveDataProvider([
-			'query' => Documents::find()->where(['RefNumber' => 0, 'DocumentTypeID' => 1]),
+			'query' => Documents::find()->where(['RefNumber' => 0, 'DocumentCategoryID' => 1]),
 			'pagination' => false,
 		]);
 
@@ -199,6 +208,8 @@ class InvoicesController extends Controller
 			'purchases' => $purchases,
 			'rights' => $this->rights,
 			'documentProvider' => $documentProvider,
+			'projects' => $projects,
+			'procurementPlanLines' => $procurementPlanLines,
 		]);
 	}
 
@@ -236,12 +247,17 @@ class InvoicesController extends Controller
 			'pagination' => false,
 		]);
 
+		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');
+		$procurementPlanLines = ArrayHelper::map(ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $model->ProjectID])->all(), 'ProcurementPlanLineID', 'ServiceDescription');
+
 		return $this->render('update', [
 			'model' => $model,
 			'suppliers' => $suppliers,
 			'purchases' => $purchases,
 			'rights' => $this->rights,
 			'documentProvider' => $documentProvider,
+			'projects' => $projects,
+			'procurementPlanLines' => $procurementPlanLines,
 		]);
 	}
 
@@ -283,13 +299,26 @@ class InvoicesController extends Controller
 						WHERE PurchaseID = purchases.PurchaseID) as Amount FROM `purchases` WHERE `SupplierID`= $id
 					) temp";
 		$model = Purchases::findBySql($sql)->asArray()->all();
-			
+		echo '<option value="0">-</option>';
 		if (!empty($model)) {
 			foreach ($model as $item) {
 				echo "<option value='" . $item['PurchaseID'] . "'>" . $item['PurchaseName'] . '</option>';
 			}
 		} else {
-			echo '<option>-</option>';
+			
+		}
+	}
+
+	public function actionProcurementPlanActivities($id)
+	{
+		$model = ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $id])->asArray()->all();
+		echo '<option value="0">-</option>';
+		if (!empty($model)) {
+			foreach ($model as $item) {
+				echo "<option value='" . $item['ProcurementPlanLineID'] . "'>" . $item['ServiceDescription'] . '</option>';
+			}
+		} else {
+			
 		}
 	}
 

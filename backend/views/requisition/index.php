@@ -8,9 +8,6 @@ use yii\grid\GridView;
 
 $this->title = 'Requisitions';
 $this->params['breadcrumbs'][] = $this->title;
-
-$Rights = Yii::$app->params['rights'];
-$FormID = 6;
 ?>
 <section id="configuration">
 	<div class="row">

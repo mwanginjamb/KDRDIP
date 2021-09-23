@@ -13,6 +13,7 @@ use Yii;
  * @property int $BankAccountID
  * @property int $AccountID
  * @property int $ProjectID
+ * @property int $OrganizationID
  * @property int $ProjectDisbursementID
  * @property string $DocumentReference
  * @property string $Description
@@ -36,6 +37,19 @@ class CashBook extends \yii\db\ActiveRecord
 		return 'cashbook';
 	}
 
+	public static function find()
+	{
+		return parent::find()->andWhere(['=', 'cashbook.Deleted', 0]);
+	}
+
+	public function delete()
+	{
+		$m = parent::findOne($this->getPrimaryKey());
+		$m->Deleted = 1;
+		// $m->deletedTime = time();
+		return $m->save();
+	}
+
 	/**
 	 * {@inheritdoc}
 	 */
@@ -43,11 +57,11 @@ class CashBook extends \yii\db\ActiveRecord
 	{
 		return [
 			[['Date', 'CreatedDate'], 'safe'],
-			[['TypeID', 'BankAccountID', 'AccountID', 'CreatedBy', 'Deleted', 'ProjectID', 'CommunityID', 'CountyID', 'ProjectDisbursementID'], 'integer'],
+			[['TypeID', 'BankAccountID', 'AccountID', 'CreatedBy', 'Deleted', 'ProjectID', 'CommunityID', 'CountyID', 'ProjectDisbursementID', 'OrganizationID'], 'integer'],
 			[['Description'], 'string'],
 			[['Debit', 'Credit', 'Amount'], 'number'],
 			[['DocumentReference'], 'string', 'max' => 45],
-			[['Amount', 'Date', 'DocumentReference', 'AccountID',  'ProjectID', 'CommunityID', 'CountyID', 'ProjectDisbursementID'], 'required'],
+			[['Amount', 'Date', 'DocumentReference', 'AccountID', 'ProjectDisbursementID'], 'required'],
 			['Amount', 'validateAmount'],
 		];
 	}
@@ -74,6 +88,7 @@ class CashBook extends \yii\db\ActiveRecord
 			'CountyID' => 'County',
 			'CommunityID' => 'Community',
 			'ProjectDisbursementID' => 'Disbursement',
+            'OrganizationID' => 'Community Group',
 		];
 	}
 
@@ -88,7 +103,7 @@ class CashBook extends \yii\db\ActiveRecord
 			$paid = $this->paidDisbursement($this->ProjectDisbursementID);
 			$expectedPaid = $paid + $this->Amount;
 			if ($expectedPaid > $total) {
-				$this->addError($attribute, 'Amount Exceeds Expected Disbursement');
+				// $this->addError($attribute, 'Amount Exceeds Expected Disbursement');
 			}
 		}
 	}
@@ -124,7 +139,6 @@ class CashBook extends \yii\db\ActiveRecord
 
 	public function getAccount()
 	{
-		return $this->hasOne(BankAccounts::className(), ['BankAccountID' => 'AccountID'])
-						->from(['account' => bankaccounts::tableName()]);
+		return $this->hasOne(BankAccounts::className(), ['bankaccounts.BankAccountID' => 'AccountID']);
 	}
 }
