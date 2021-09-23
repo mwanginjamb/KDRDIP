@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $UserGroupRightID
  * @property integer $UserGroupID
- * @property integer $FormID
+ * @property integer $PageID
  * @property integer $View
  * @property integer $Edit
  * @property integer $Insert
@@ -60,10 +60,10 @@ class UserGroupRights extends \yii\db\ActiveRecord
 			'UserGroupRightID' => 'User Group Right ID',
 			'UserGroupID' => 'User Group ID',
 			'PageID' => 'Page ID',
-			'View' => '',
-			'Edit' => '',
-			'Create' => '',
-			'Delete' => '',
+			'View' => 'View Permissions',
+			'Edit' => 'Update Permissions',
+			'Create' => 'Create Permissions',
+			'Delete' => 'Delete Permissions',
 			'PageName' => 'Page'
 		];
 	}

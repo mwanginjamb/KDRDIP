@@ -2,9 +2,12 @@
 
 namespace backend\controllers;
 
+use app\models\Pages;
+use app\models\UserGroups;
 use Yii;
 use app\models\UserGroupRights;
 use app\models\UserGroupRightsSearch;
+use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -72,6 +75,8 @@ class UserGroupRightsController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'userGroups' => ArrayHelper::map(UserGroups::find()->asArray()->all(),'UserGroupID','UserGroupName'),
+            'pages' => ArrayHelper::map(Pages::find()->asArray()->all(),'PageID','PageName'),
         ]);
     }
 
@@ -92,6 +97,8 @@ class UserGroupRightsController extends Controller
 
         return $this->render('update', [
             'model' => $model,
+            'userGroups' => ArrayHelper::map(UserGroups::find()->asArray()->all(),'UserGroupID','UserGroupName'),
+            'pages' => ArrayHelper::map(Pages::find()->asArray()->all(),'PageID','PageName'),
         ]);
     }
 

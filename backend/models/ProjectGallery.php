@@ -65,7 +65,14 @@ class ProjectGallery extends \yii\db\ActiveRecord
 		];
 	}
 
-	/**
+	public function scenarios()
+    {
+        $scenarios =  parent::scenarios();
+        $scenarios['delete'] = ['Deleted'];
+        return $scenarios;
+    }
+
+    /**
 	 * {@inheritdoc}
 	 */
 	public function attributeLabels()

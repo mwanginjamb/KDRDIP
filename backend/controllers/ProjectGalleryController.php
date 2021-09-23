@@ -26,7 +26,7 @@ class ProjectGalleryController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(36);
+		$this->rights = RightsController::Permissions(143);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -167,9 +167,21 @@ class ProjectGalleryController extends Controller
 	public function actionDelete($id)
 	{
 		$model = $this->findModel($id);
-		$this->findModel($id)->delete();
+		$model->scenario = 'delete';
+		$model->Deleted = 1;
 
-		return $this->redirect(['index', 'pId' => $model->ProjectID]);
+		//$this->findModel($id)->delete();
+
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        if($model->save())
+        {
+            return ['note' => '<div class="alert alert-success">Record Deleted Successfully. </div>' ];
+        }else{
+            return ['note' => $model->errors];
+        }
+
+
+		// return $this->redirect(['index', 'pId' => $model->ProjectID]);
 	}
 
 	/**

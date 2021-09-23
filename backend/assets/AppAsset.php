@@ -33,7 +33,8 @@ class AppAsset extends AssetBundle
 		'app-assets/css/core/colors/material-palette-gradient.css',
 		'app-assets/vendors/css/tables/datatable/datatables.min.css',
 		'app-assets/css/plugins/forms/checkboxes-radios.css',
-		'app-assets/vendors/css/forms/selects/select2.min.css',
+		//'app-assets/vendors/css/forms/selects/select2.min.css',
+        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css',
 
 		// BEGIN: Custom CSS
 		'assets/css/style.css'
@@ -72,7 +73,8 @@ class AppAsset extends AssetBundle
 		'app-assets/js/scripts/forms/checkbox-radio.js',
 		'app-assets/js/scripts/scripts.js',
 		
-		'app-assets/vendors/js/forms/select/select2.full.min.js',
+		//'app-assets/vendors/js/forms/select/select2.full.min.js',
+        'https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js'
 		// END: Page JS-->
 	];
 	public $depends = [

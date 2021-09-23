@@ -12,17 +12,17 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'UserGroupID')->textInput() ?>
+    <?= $form->field($model, 'UserGroupID')->dropDownList($userGroups, ['prompt' => 'Select ...']) ?>
 
-    <?= $form->field($model, 'PageID')->textInput() ?>
+    <?= $form->field($model, 'PageID')->dropDownList($pages,['prompt' => 'Select ...']) ?>
 
-    <?= $form->field($model, 'View')->textInput() ?>
+    <?= $form->field($model, 'View')->dropDownList(['No','Yes'],['prompt' => 'Select ...']) ?>
 
-    <?= $form->field($model, 'Edit')->textInput() ?>
+    <?= $form->field($model, 'Edit')->dropDownList(['No','Yes'],['prompt' => 'Select ...']) ?>
 
-    <?= $form->field($model, 'Create')->textInput() ?>
+    <?= $form->field($model, 'Create')->dropDownList(['No','Yes'],['prompt' => 'Select ...']) ?>
 
-    <?= $form->field($model, 'Delete')->textInput() ?>
+    <?= $form->field($model, 'Delete')->dropDownList(['No','Yes'],['prompt' => 'Select ...']) ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -31,3 +31,12 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php
+
+$script = <<<JS
+    $('#usergrouprights-pageid').select2();
+JS;
+
+$this->registerJs($script, \yii\web\View::POS_END);
+

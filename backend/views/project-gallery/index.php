@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 				'delete' => function ($url, $model) use ($rights) {
 					return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', null, [
-						'class' => 'btn-sm btn-danger btn-xs',
+						'class' => 'btn-sm btn-danger btn-xs delete',
 						'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('project-gallery/delete?id=' . $model->ProjectGalleryID) . '", \'tab14\')',
 					]) : '';
 				},
@@ -78,3 +78,6 @@ $this->params['breadcrumbs'][] = $this->title;
 	],
 ]); ?>
 </div>
+
+
+
