@@ -12,14 +12,14 @@ function SendMail($EmailArray, $Subject, $Message)
 	$mail->Port = 465;
 	//$mail->SMTPDebug = 3;
 	$mail->SMTPAuth = true;                  // enable SMTP authentication
-	$mail->Host = 'ssl://smtp.sendgrid.net'; // SMTP server
-	$mail->Username = 'apikey';
-	$mail->Password = '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';
+	$mail->Host = env('SMTP_HOST'); // SMTP server
+	$mail->Username = env('SMTP_USERNAME');
+	$mail->Password = env('SMTP_PASSWORD');
 
 	// $mail->Port = 25; // optional if you don't want to use the default
 			
-	$mail->From = 'ngugijmn@gmail.com';
-	$mail->FromName = 'System Admin';
+	$mail->From = env('SMTP_FROM');
+	$mail->FromName = env('SMTP_NAME');
 	$mail->Subject = $Subject;
 	$mail->AltBody = 'To view the message, please use an HTML compatible email viewer!'; // optional, comment out and test
 	//$mail->MsgHTML($issue . "<br /><br />" . $comment);
