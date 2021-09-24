@@ -7,7 +7,7 @@ function submittheform(form)
     console.log($(form).submit());
 }
 
-function submitForm(url, destination, formName, btn)
+async function submitForm(url, destination, formName, btn)
 {
     console.log(formName);
     // Disable Button
@@ -19,6 +19,29 @@ function submitForm(url, destination, formName, btn)
     var form = document.getElementById(formName);
     // Create a new FormData object.
     var formData = new FormData(form);
+
+    /*Update to fetch*/
+
+    const response = await fetch(url, {
+        method: 'POST',
+        mode: 'cors',
+        body: formData
+    });
+
+
+
+    const currentPage = window.location.href;
+   if(response.ok) {
+
+        window.location.replace(currentPage);
+
+    }else{
+       alert('Could not upload the image successfully. Try later.');
+       window.location.replace(currentPage);
+    }
+    return true;
+
+
 
     // Set up the request.
     var xhr = new XMLHttpRequest();
@@ -36,7 +59,8 @@ function submitForm(url, destination, formName, btn)
             // loadtab(url,destination,element,'Saved Successfully');
         } else
         {
-            document.getElementById('msg').innerHTML = 'Failed to save Record';
+
+           document.getElementById('msg').innerHTML = 'Failed to save Record';
         }
     };
     // Send the Data.
@@ -77,11 +101,12 @@ async function deleteItem(url,destination,loader)
             method: 'POST'
         });
 
-      console.log(result.ok);
       if(result.ok) {
           const currentPage = window.location.href;
-          window.location.href = currentPage;
+          window.location.replace(currentPage);
           //location.reload();
+      }else{
+          alert('Could not upload the image successfully. Try later.');
       }
     }
 

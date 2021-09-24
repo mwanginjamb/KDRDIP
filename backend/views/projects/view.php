@@ -245,6 +245,24 @@ function addValidation(field, caption)
 	});
 }
 </script>
+<?php
+
+if(Yii::$app->session->hasFlash('success')){
+        print ' <div class="alert alert-success alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-check"></i> Success!</h5>
+            ';
+            echo Yii::$app->session->getFlash('success');
+        print '</div>';
+}else if(Yii::$app->session->hasFlash('error')) {
+    print ' <div class="alert alert-danger alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-times"></i> Error!</h5>
+            ';
+    echo Yii::$app->session->getFlash('error');
+    print '</div>';
+}
+?>
 
 <section id="configuration">
 	<div class="row">

@@ -12,6 +12,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 use backend\controllers\EmployeesController;
+use yii\web\Response;
 use yii\web\UploadedFile;
 use yii\helpers\ArrayHelper;
 
@@ -28,7 +29,7 @@ class DocumentsController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(36);
+		$this->rights = RightsController::Permissions(144);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -117,29 +118,38 @@ class DocumentsController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
-		$model = new Documents();
-		$model->CreatedBy = Yii::$app->user->identity->UserID;
-		$model->DocumentCategoryID = 2;
-		$model->RefNumber = $pId;
+        $pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
-		if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
-			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-			if ($model->upload()) {
-				 // file is uploaded successfully
-				//if ($model->save()) {
-					return $this->redirect(['index', 'pId' => $pId]);
-				//}
-			}
-		}
+        $model = new Documents();
+        $model->CreatedBy = Yii::$app->user->identity->UserID;
+        $model->DocumentCategoryID = 2;
+        $model->RefNumber = $pId;
 
-		$documentTypes = ArrayHelper::map(DocumentTypes::find()->orderBy('DocumentTypeName')->all(), 'DocumentTypeID', 'DocumentTypeName');
-		
-		return $this->renderPartial('create', [
-			'model' => $model,
-			'documentTypes' => $documentTypes
-		]);
+        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+
+           // Yii::$app->response->format = Response::FORMAT_JSON;
+
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+           // return ['note' => $model->upload() ];
+            if ($model->upload() == true) {
+
+                // return $this->redirect(['index', 'pId' => $pId]);
+
+                Yii::$app->session->setFlash('success', 'Sub-project document uploaded successfully.');
+
+            }else {
+                Yii::$app->session->setFlash('error', 'Couldn\'t upload sub-project document successfully.');
+            }
+        }
+
+        $documentTypes = ArrayHelper::map(DocumentTypes::find()->orderBy('DocumentTypeName')->all(), 'DocumentTypeID', 'DocumentTypeName');
+
+        return $this->renderPartial('create', [
+            'model' => $model,
+            'documentTypes' => $documentTypes
+        ]);
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use yii\web\UploadedFile;
 
 use Yii;
 
@@ -27,6 +28,7 @@ class Documents extends \yii\db\ActiveRecord
 	public $imageFile;
 	public $type;
 	public $extension;
+	public $File;
 	/**
 	 * {@inheritdoc}
 	 */
@@ -54,7 +56,7 @@ class Documents extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['DocumentTypeID', 'RefNumber', 'CreatedBy', 'Deleted', 'DocumentCategoryID', 'DocumentSubCategoryID', 'ApprovalStatusID', 'ApprovedBy', 'Disclose'], 'integer'],
+			[['DocumentTypeID', 'RefNumber', 'CreatedBy', 'Deleted', 'DocumentCategoryID', 'DocumentSubCategoryID', 'ApprovalStatusID', 'ApprovedBy'], 'integer'],
 			[['CreatedDate', 'ApprovalDate'], 'safe'],
 			[['Description'], 'string', 'max' => 45],
 			[['FileName'], 'string', 'max' => 500],
@@ -81,7 +83,7 @@ class Documents extends \yii\db\ActiveRecord
 			'ApprovedBy' => 'Approved By',
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
-            'Disclose' => 'Disclose',
+
 			'Deleted' => 'Deleted',
 		];
 	}
@@ -89,16 +91,21 @@ class Documents extends \yii\db\ActiveRecord
 	public function upload()
 	{
 		if ($this->validate()) {
-			$filename = (string) time() . '_' . $this->imageFile->baseName . '.' . $this->imageFile->extension;
+			$filename = (string) time() . '_' . $this->imageFile->name;
 			$this->FileName = $filename;
-			if ($this->save()) {
-				$this->imageFile->saveAs('uploads/' . $filename);
+
+            if(!$this->imageFile->saveAs('uploads/' . $filename))
+            {
+               return $this->imageFile->error;
+            }
+
+			if ($this->save(false)) {
 				return true;
 			} else {
-				return false;
+				return $this->errors;
 			}
 		} else {
-			return false;
+			return $this->errors;
 		}
 	}
 
