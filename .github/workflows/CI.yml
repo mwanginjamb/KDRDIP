@@ -32,7 +32,7 @@ jobs:
       # Pull new changes
 
       - name: Pull new changes with git
-        run: git pull origin main
+        run: git pull origin master
         working-directory: C:\inetpub\wwwroot\mande
 
 
