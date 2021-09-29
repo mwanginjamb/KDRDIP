@@ -226,11 +226,13 @@ class Organizations extends \yii\db\ActiveRecord
 
     public function getFemalePercentage()
     {
-        return $this->FemaleMembers / ($this->FemaleMembers + $this->MaleMembers) * 100;
+        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1: ($this->FemaleMembers + $this->MaleMembers) ;
+        return $this->FemaleMembers / $divisor  * 100;
     }
 
     public function getMalePercentage()
     {
-        return $this->MaleMembers / ($this->FemaleMembers + $this->MaleMembers) * 100;
+        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1: ($this->FemaleMembers + $this->MaleMembers) ;
+        return $this->MaleMembers / $divisor * 100;
     }
 }

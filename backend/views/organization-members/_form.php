@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
 	<div class="card-content collapse show">
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(['id' => 'currentForm']); ?>
-			<?= $form->field($model, 'OrganizationID')->hiddenInput()->label(false); ?>
+			<?= $form->field($model, 'OrganizationID')->textInput(['readonly' =>  true]); ?>
 	 
 			<div class="row">
 				<div class="col-md-6">

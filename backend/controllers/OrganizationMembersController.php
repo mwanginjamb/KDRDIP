@@ -80,7 +80,7 @@ class OrganizationMembersController extends Controller
     public function actionIndex($oId)
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => OrganizationMembers::find(),
+            'query' => OrganizationMembers::find()->where(['OrganizationID' => $oId]),
         ]);
 
         return $this->renderPartial('index', [
