@@ -45,3 +45,7 @@ phpunit.phar
 
 *.sql
 .env
+
+.pdf
+.jpg
+.png

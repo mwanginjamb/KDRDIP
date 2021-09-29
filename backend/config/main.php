@@ -18,7 +18,7 @@ return [
 	'components' => [
 		'formatter' => [
 			'class' => 'yii\i18n\Formatter',
-			'timeZone' => 'Africa/Nairobi'
+			//'timeZone' => 'Africa/Nairobi'
 		],
 		'request' => [
 			'csrfParam' => '_csrf-backend',
