@@ -12,6 +12,7 @@ use app\models\Wards;
 use app\models\SubLocations;
 use app\models\OrganizationActivities;
 use yii\data\ActiveDataProvider;
+use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -85,13 +86,30 @@ class OrganizationsController extends Controller
      */
     public function actionIndex()
     {
+        $query = Organizations::find();
+        $countQuery = clone $query;
+        $pages = new Pagination(['totalCount' => $countQuery->count()]);
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Organizations::find(),
+            'query' => $query,
+            'pagination' =>  [
+                'pageSize' => $countQuery->count()
+            ],
+            'totalCount' => $countQuery->count(),
+            'sort' => [
+                'defaultOrder' => [
+                    'OrganizationID' => SORT_DESC,
+                    'OrganizationName' => SORT_ASC,
+                ],
+            ],
+
+
         ]);
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
             'rights' => $this->rights,
+
         ]);
     }
 
