@@ -79,7 +79,7 @@ class OrganizationMeetingsController extends Controller
     public function actionIndex($oId)
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => OrganizationMeetings::find(),
+            'query' => OrganizationMeetings::find()->where(['OrganizationID' => $oId]),
         ]);
 
         return $this->renderPartial('index', [
