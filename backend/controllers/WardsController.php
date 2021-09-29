@@ -80,8 +80,23 @@ class WardsController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+	    $query = Wards::find();
+        $countQuery = clone $query;
+        $modelCount = $countQuery->count();
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => Wards::find(),
+			'query' => $query,
+            'pagination' => [
+                'pageSize' => $modelCount
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'WardID' => SORT_DESC,
+                    'WardName' => SORT_ASC,
+                ],
+            ],
+
 		]);
 
 		return $this->render('index', [

@@ -88,7 +88,6 @@ class OrganizationsController extends Controller
     {
         $query = Organizations::find();
         $countQuery = clone $query;
-        $pages = new Pagination(['totalCount' => $countQuery->count()]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
