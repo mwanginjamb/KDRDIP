@@ -7,6 +7,7 @@ use app\models\UserGroups;
 use Yii;
 use app\models\UserGroupRights;
 use app\models\UserGroupRightsSearch;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -39,11 +40,36 @@ class UserGroupRightsController extends Controller
     public function actionIndex()
     {
         $searchModel = new UserGroupRightsSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+       //  $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $query = UserGroupRights::find();
+
+        //$Pages = Pages::findAll(['PageID' => 59]);
+
+        //print '<pre>';
+        //print_r($query[0]->page); exit;
+
+
+
+        $countQuery = clone $query;
+        $modelCount = $countQuery->count();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => $modelCount
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'UserGroupRightID' => SORT_DESC,
+
+                ],
+            ],
+
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
 

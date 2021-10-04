@@ -68,15 +68,20 @@ class UserGroupRights extends \yii\db\ActiveRecord
 		];
 	}
 
-	public function getPages()
+	public function getPage()
 	{
-		return $this->hasOne(Pages::className(), ['PageID' => 'PageID'])->from(pages::tableName());
+		return $this->hasOne(Pages::class,['PageID' => 'PageID']);
 	}
 
 	public function getUsers() 
 	{
 		return $this->hasOne(Users::className(), ['UserID' => 'CreatedBy'])->from(users::tableName());
 	}
+
+	public function getGroup()
+    {
+        return $this->hasOne(UserGroups::className(),['UserGroupID' => 'UserGroupID' ])->from(UserGroups::tableName());
+    }
 
 	public function getView_Name()
 	{

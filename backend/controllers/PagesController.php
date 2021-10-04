@@ -6,6 +6,7 @@ use app\models\PageCategories;
 use Yii;
 use app\models\Pages;
 use app\models\PagesSearch;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -38,7 +39,26 @@ class PagesController extends Controller
     public function actionIndex()
     {
         $searchModel = new PagesSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        // $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $query = Pages::find();
+        $countQuery = clone $query;
+        $modelCount = $countQuery->count();
+
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => $modelCount
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'PageID' => SORT_DESC,
+
+                ],
+            ],
+
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,

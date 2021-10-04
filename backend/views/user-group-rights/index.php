@@ -10,6 +10,17 @@ use yii\widgets\Pjax;
 $this->title = 'User Group Rights';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<script>
+
+    $(document).ready(function() {
+        $('#DataTables_Table_0_wrapper').DataTable( {
+            dexampleom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        } );
+    } );
+</script>
 <div class="user-group-rights-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
@@ -21,19 +32,32 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
+
+
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'layout' => '{items}',
+        'tableOptions' => [
+            'class' => 'custom-table table-striped table-bordered zero-configuration',
+        ],
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'UserGroupRightID',
-            'UserGroupID',
-            'PageID',
+            //'UserGroupRightID',
+            [
+                'attribute' => 'Group ID',
+                'value' => 'group.UserGroupName',
+            ],
+            [
+                'attribute' => 'Page',
+                'value' => 'page.PageName',
+            ],
             'View',
             'Edit',
-            //'Create',
-            //'Delete',
+            'Create',
+            'Delete',
             //'Post',
             //'CreatedBy',
             //'CreatedDate',

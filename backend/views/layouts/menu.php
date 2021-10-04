@@ -775,6 +775,17 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li <?= ($currentPage == 'usergroups') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/usergroups"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">User Groups</span></a>
 									</li>
 								<?php } ?>
+
+                                <?php if (in_array(145, $rights)) { ?>
+                                    <li <?= ($currentPage == 'pages') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/pages"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Module Pages</span></a>
+                                    </li>
+                                <?php } ?>
+
+                                <?php if (in_array(146, $rights)) { ?>
+                                    <li <?= ($currentPage == 'user-group-rights') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/user-group-rights"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">User Group Rights</span></a>
+                                    </li>
+                                <?php } ?>
+
 							</ul>
 						</li>
 					<?php } ?>
