@@ -79,9 +79,28 @@ class UsergroupsController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider = new ActiveDataProvider([
+		/*$dataProvider = new ActiveDataProvider([
 			'query' => UserGroups::find(),
-		]);
+		]);*/
+
+        $query = UserGroups::find();
+        $countQuery = clone $query;
+        $modelCount = $countQuery->count();
+
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => $modelCount
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'UserGroupID' => SORT_DESC,
+
+                ],
+            ],
+
+        ]);
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
