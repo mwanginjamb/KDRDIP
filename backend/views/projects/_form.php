@@ -518,3 +518,11 @@ function calculateValue(row)
 
 	 </div>
 </div>
+
+<?php
+
+$script = <<<JS
+    $('#projects-communityid').select2();
+JS;
+
+$this->registerJs($script, \yii\web\View::POS_END);
