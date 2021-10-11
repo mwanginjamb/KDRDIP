@@ -29,6 +29,7 @@ class Documents extends \yii\db\ActiveRecord
 	public $type;
 	public $extension;
 	public $File;
+	public $Disclose;
 	/**
 	 * {@inheritdoc}
 	 */
