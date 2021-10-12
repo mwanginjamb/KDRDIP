@@ -771,20 +771,34 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 									<li <?= ($currentPage == 'userstatus') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/userstatus"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">User Status</span></a>
 									</li>
 								<?php } ?>
-								<?php if (in_array(59, $rights)) { ?>
+								<?php if (in_array(5900, $rights)) { ?>
 									<li <?= ($currentPage == 'usergroups') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/usergroups"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">User Groups</span></a>
 									</li>
 								<?php } ?>
 
-                                <?php if (in_array(145, $rights)) { ?>
+                                <?php if (in_array(14500, $rights)) { ?>
                                     <li <?= ($currentPage == 'pages') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/pages"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Module Pages</span></a>
                                     </li>
                                 <?php } ?>
 
-                                <?php if (in_array(146, $rights)) { ?>
+                                <?php if (in_array(14600, $rights)) { ?>
                                     <li <?= ($currentPage == 'user-group-rights') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/user-group-rights"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">User Group Rights</span></a>
                                     </li>
                                 <?php } ?>
+
+                                <li <?= ($currentPage == 'auth-item') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/auth-item"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Permissions Setup</span></a>
+                                </li>
+
+                                <li <?= ($currentPage == 'auth-item-child') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/auth-item-child"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Role Permissions</span></a>
+                                </li>
+
+                                <li <?= ($currentPage == 'auth-item-type') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/auth-item-type"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Authentication Types Setup</span></a>
+                                </li>
+
+
+
+                                <li <?= ($currentPage == 'auth-assignment') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/auth-assignment"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Permissions Assignment</span></a>
+                                </li>
 
 							</ul>
 						</li>
