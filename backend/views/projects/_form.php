@@ -193,7 +193,7 @@ function calculateValue(row)
 											']) ?>	
 						</div>
 						<div class="col-md-6">
-							
+							<?= $form->field($model, 'financial_year')->dropDownList($fy,['prompt' => 'Select ... ']) ?>
 						</div>			
 					</div>
 

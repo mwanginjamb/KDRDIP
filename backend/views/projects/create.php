@@ -67,6 +67,7 @@ $(window).on("load", function(){
 		'subComponentCategories' => $subComponentCategories,
 		'subComponents' => $subComponents,
 		'enterpriseTypes' => $enterpriseTypes,
+        'fy' => $fy
 	]) ?>
 
 </section>

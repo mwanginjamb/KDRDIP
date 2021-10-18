@@ -44,6 +44,7 @@ use yii\helpers\ArrayHelper;
  * @property int $SubComponentID
  * @property int $SubComponentCategoryID
  * @property int $SectorInterventionID
+ * @property int $financial_year
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -83,7 +84,7 @@ class Projects extends \yii\db\ActiveRecord
 			[['ProjectName'], 'string', 'max' => 300],
 			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
 				'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID',
-				'SubLocationID', 'WardID'], 'required']
+				'SubLocationID', 'WardID','financial_year'], 'required']
 		];
 	}
 

@@ -396,10 +396,12 @@ if(Yii::$app->session->hasFlash('success')){
 														'attribute' => 'ApprovalDate',
 														'format' => ['date', 'php:d/m/Y'],
 													],
+                                                    'financial_year',
 													[
 														'attribute' => 'StartDate',
 														'format' => ['date', 'php:d/m/Y'],
 													],
+
 													[
 														'attribute' => 'EndDate',
 														'format' => ['date', 'php:d/m/Y'],

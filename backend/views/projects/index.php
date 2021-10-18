@@ -63,6 +63,7 @@ $(document).ready(function() {
 									'attribute' => 'projectSectors.ProjectSectorName',
 									'headerOptions' => ['width' => '25%'],
 								],
+								'financial_year',
 								[
 									'attribute' => 'StartDate',
 									'headerOptions' => ['width' => '10%'],

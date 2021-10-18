@@ -481,7 +481,9 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<?php } ?>
 								<?php if (count(array_intersect($rights, [22, 37, 47, 46, 35, 38, 57, 48, 12, 77, 104, 108, 109, 123])) > 0) { ?>
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
-										<ul class="menu-content">	
+										<ul class="menu-content">
+                                            <li <?= ($currentPage == 'financial-year') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/financial-year"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Financial Years Setup</span></a>
+                                            </li>
 											<?php if (in_array(22, $rights)) { ?>								
 												<li <?= ($currentPage == 'funding-sources') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/funding-sources"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Funding Sources</span></a>
 												</li>

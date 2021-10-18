@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use app\models\FinancialYear;
 use Yii;
 use app\models\Projects;
 use app\models\ActivityBudget;
@@ -536,6 +537,7 @@ class ProjectsController extends Controller
 			'subComponentCategories' => $subComponentCategories,
 			'subComponents' => $subComponents,
 			'enterpriseTypes' => $enterpriseTypes,
+            'fy' => ArrayHelper::map(FinancialYear::find()->all(), 'year', 'year' ),
 		]);
 	}
 
@@ -715,6 +717,7 @@ class ProjectsController extends Controller
 			'subComponentCategories' => $subComponentCategories,
 			'subComponents' => $subComponents,
 			'enterpriseTypes' => $enterpriseTypes,
+            'fy' => ArrayHelper::map(FinancialYear::find()->all(), 'year', 'year' ),
 		]);
 	}
 
