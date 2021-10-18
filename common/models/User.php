@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use app\models\AuthAssignment;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
@@ -22,12 +23,16 @@ use yii\web\IdentityInterface;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ * @property string $userRole
+ *
  */
 class User extends ActiveRecord implements IdentityInterface
 {
 	const STATUS_DELETED = 4;
 	const STATUS_INACTIVE = 1;
 	const STATUS_ACTIVE = 2;
+
+	public $userRole;
 
 
 	/**
@@ -56,6 +61,7 @@ class User extends ActiveRecord implements IdentityInterface
 		return [
 			['status', 'default', 'value' => self::STATUS_INACTIVE],
 			['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
+            ['userRole', 'string'],
 		];
 	}
 
@@ -199,6 +205,13 @@ class User extends ActiveRecord implements IdentityInterface
 	{
 		$this->ValidationCode = Yii::$app->security->generateRandomString() . '_' . time();
 	}
+
+	// Get an Assigned Auth Role
+
+    public function getAuthRole()
+    {
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'UserID']);
+    }
 
 	/**
 	 * Removes password reset token

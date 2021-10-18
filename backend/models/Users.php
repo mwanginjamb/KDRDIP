@@ -24,11 +24,13 @@ use Yii;
  * @property int $UserTypeID
  * @property int $CountyID
  * @property int $CommunityID
+ * @property int $userRole
  */
 class Users extends \yii\db\ActiveRecord
 {
 	public $Password;
 	public $ConfirmPassword;
+    public $userRole;
 
 	/**
 	 * {@inheritdoc}
@@ -74,6 +76,7 @@ class Users extends \yii\db\ActiveRecord
 				return ($model->UserTypeID == 3) ? true : false;
 			}],
 			['Password', 'compare', 'compareAttribute'=>'ConfirmPassword'],
+            ['userRole', 'string'],
 		];
 	}
 
@@ -144,4 +147,10 @@ class Users extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Communities::className(), ['CommunityID' => 'CommunityID'])->from(communities::tableName());
 	}
+    // Get an Assigned Auth Role
+
+    public function getRole()
+    {
+        return $this->hasOne(AuthAssignment::className(), ['user_id' => 'UserID'])->from(AuthAssignment::tableName());
+    }
 }

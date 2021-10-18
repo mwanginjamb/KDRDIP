@@ -72,7 +72,7 @@ $baseUrl = Yii::$app->request->baseUrl;
 
 			<div class="row">
 				<div class="col-md-6">					
-					<?= $form->field($model, 'UserGroupID')->dropDownList($usergroups, ['prompt'=>'Select']); ?>
+					<?= $form->field($model, 'userRole')->dropDownList($roles, ['prompt'=>'Select']); ?>
 				</div>
 				<div class="col-md-6">
 					<?= $form->field($model, 'UserStatusID')->dropDownList($userstatus, ['prompt'=>'Select']); ?>

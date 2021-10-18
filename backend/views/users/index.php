@@ -53,9 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
 								'Mobile',
 								'Email',
 								[
-									'label' => 'Group',
-									'attribute' => 'usergroups.UserGroupName'
-								],
+								        'label' => 'User Role',
+								        'attribute' => 'role.item_name',
+                                ],
 								[
 									'label' => 'Status',
 									'attribute' => 'userstatus.UserStatusName'

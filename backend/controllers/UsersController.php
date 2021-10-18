@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use app\models\AuthAssignment;
+use app\models\AuthItem;
 use Yii;
 use app\models\Users;
 use app\models\UserGroups;
@@ -14,6 +16,7 @@ use app\models\UserGroupRights;
 use app\models\PermissionForm;
 use app\models\UserGroupMembers;
 use app\models\ChangePassword;
+use yii\helpers\VarDumper;
 use yii\web\Controller;
 use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
@@ -166,8 +169,17 @@ class UsersController extends Controller
 			$model->PasswordHash = \Yii::$app->security->generatePasswordHash($password);
 		}
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		if ($model->load(Yii::$app->request->post()) ) {
 			// return $this->redirect(['view', 'id' => $model->UserID]);
+            if($model->save()) {
+                if($model->userRole)
+                {
+                    $roleModel = new AuthAssignment();
+                    $roleModel->user_id = $model->UserID;
+                    $roleModel->item_name = $model->userRole;
+                    $roleModel->save();
+                }
+            }
 			return $this->redirect(['index']);
 		}
 
@@ -185,6 +197,7 @@ class UsersController extends Controller
 			'communities' => $communities,
 			'userTypes' => $userTypes,
 			'rights' => $this->rights,
+            'roles' => ArrayHelper::map(AuthItem::findAll(['type' => 1]),'name' , 'name')
 		]);
 	}
 
@@ -199,8 +212,31 @@ class UsersController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		if ($model->load(Yii::$app->request->post()) ) {
 			// return $this->redirect(['view', 'id' => $model->UserID]);
+
+
+            if($model->save()) {
+                if($model->userRole)
+                {
+                    $roleModel = new AuthAssignment();
+                    //Check if user already has a role and update
+                    $Role = AuthAssignment::findOne(['user_id' => $model->UserID]);
+                    if($Role){
+                        $Role->user_id = $model->UserID;
+                        $Role->item_name = $model->userRole;
+                        $Role->save();
+                    }else{
+                        $roleModel->user_id = $model->UserID;
+                        $roleModel->item_name = $model->userRole;
+                        if(!$roleModel->save()){
+                            VarDumper::dumpAsString($roleModel->error); exit;
+                        }
+                    }
+
+                }
+            }
+
 			return $this->redirect(['index']);
 		}
 
@@ -218,6 +254,7 @@ class UsersController extends Controller
 			'communities' => $communities,
 			'userTypes' => $userTypes,
 			'rights' => $this->rights,
+            'roles' =>  ArrayHelper::map(AuthItem::findAll(['type' => 1]),'name' , 'name')
 		]);
 	}
 
