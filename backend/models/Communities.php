@@ -49,6 +49,7 @@ class Communities extends \yii\db\ActiveRecord
 			[['CreatedBy', 'Deleted', 'CountyID'], 'integer'],
 			[['CommunityName'], 'string', 'max' => 200],
 			[['CountyID', 'CommunityName'], 'required'],
+            ['CommunityName', 'unique']
 		];
 	}
 

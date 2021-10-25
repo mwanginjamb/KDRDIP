@@ -2,16 +2,23 @@
 
 namespace backend\controllers;
 
+use app\models\CpmcUpload;
 use Yii;
 use app\models\Communities;
 use app\models\Counties;
 use yii\data\ActiveDataProvider;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use yii\web\UploadedFile;
+
 
 /**
  * CommunitiesController implements the CRUD actions for Communities model.
@@ -48,7 +55,7 @@ class CommunitiesController extends Controller
 		return [
 		'access' => [
 			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
+			'only' => ['index', 'view', 'create', 'update', 'delete','download'],
 			'rules' => [				
 					// Guest Users
 					[
@@ -62,6 +69,11 @@ class CommunitiesController extends Controller
 						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
+                [
+                    'allow' => true,
+                    'actions' => ['download'],
+                    'roles' => ['@'],
+                ],
 				],
 			],
 			'verbs' => [
@@ -177,4 +189,103 @@ class CommunitiesController extends Controller
 
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
+
+	public function actionExcelImport()
+    {
+        $model = new  CpmcUpload();
+        return $this->render('excelImport',['model' => $model]);
+    }
+
+	public function actionImport()
+    {
+        $model = new CpmcUpload();
+        if($model->load(Yii::$app->request->post()))
+        {
+            $excelUpload = UploadedFile::getInstance($model, 'excel_doc');
+            $model->excel_doc = $excelUpload;
+            if($uploadedFile = $model->upload())
+            {
+                // Extract data from  uploaded file
+                $sheetData = $this->extractData($uploadedFile);
+                // save the data
+                $this->saveData($sheetData);
+            }else{
+                $this->redirect(['excel-import']);
+            }
+
+        }else{
+            $this->redirect(['excel-import']);
+        }
+    }
+
+	private function extractData($file)
+    {
+        $spreadsheet = IOFactory::load($file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        return $sheetData;
+    }
+
+    private function saveData($sheetData)
+    {
+
+       /* print '<pre>';
+        print_r($sheetData);
+        exit;*/
+
+       foreach($sheetData as $key => $data)
+       {
+           // Read from 3rd row
+           if($key >= 3)
+           {
+               if(trim($data['A']) !== '')
+               {
+                   $model = new Communities();
+                   $model->CommunityName = $data['A'];
+                   $model->CountyID = $this->getCounty($data['B']);
+
+                   $model->save();
+
+               }
+           }
+       }
+
+       return $this->redirect('index');
+    }
+
+    private function getCounty($countyName)
+    {
+        if(empty($countyName)) {
+           return 0; // county not found
+        }
+        $model = Counties::findOne(['CountyName' => $countyName]);
+        if($model)
+        {
+            return $model->CountyID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+    public function downloadFile($fullpath){
+        if(!empty($fullpath)){
+            header("Content-type:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"); //for excel file
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($fullpath).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($fullpath));
+            flush(); // Flush system output buffer
+
+            Yii::$app->end();
+        }
+    }
+
+    public function actionDownload()
+    {
+        $path = Url::home(true)."templates/cpmc_template.xlsx";
+       $this->downloadFile($path);
+    }
 }
