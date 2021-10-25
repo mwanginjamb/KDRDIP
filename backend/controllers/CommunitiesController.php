@@ -242,6 +242,7 @@ class CommunitiesController extends Controller
                    $model = new Communities();
                    $model->CommunityName = $data['A'];
                    $model->CountyID = $this->getCounty($data['B']);
+                   $model->CreatedBy = Yii::$app->user->identity->UserID;
 
                    $model->save();
 
