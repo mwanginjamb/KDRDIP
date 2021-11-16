@@ -2,7 +2,11 @@
 
 namespace backend\controllers;
 
+use app\models\Countries;
+use app\models\Currencies;
 use app\models\FinancialYear;
+use app\models\ImportProjects;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
 use app\models\Projects;
 use app\models\ActivityBudget;
@@ -750,8 +754,287 @@ class ProjectsController extends Controller
 
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
-	
-	public function actionSafeguards($id, $op)
+
+
+    public function actionExcelImport()
+    {
+        $model = new  ImportProjects();
+        return $this->render('excelImport',['model' => $model]);
+    }
+
+    public function actionImport()
+    {
+        $model = new ImportProjects();
+        if($model->load(Yii::$app->request->post()))
+        {
+            $excelUpload = UploadedFile::getInstance($model, 'excel_doc');
+            $model->excel_doc = $excelUpload;
+            if($uploadedFile = $model->upload())
+            {
+                // Extract data from  uploaded file
+                $sheetData = $this->extractData($uploadedFile);
+                // save the data
+                $this->saveData($sheetData);
+            }else{
+                $this->redirect(['excel-import']);
+            }
+
+        }else{
+            $this->redirect(['excel-import']);
+        }
+    }
+
+    private function extractData($file)
+    {
+        $spreadsheet = IOFactory::load($file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        return $sheetData;
+    }
+
+    private function saveData($sheetData)
+    {
+
+        /*print '<pre>';
+         print_r($sheetData);
+         exit;*/
+        $today = date('Y-m-d');
+        foreach($sheetData as $key => $data)
+        {
+            // Read from 3rd row
+            if($key >= 3)
+            {
+                if(trim($data['B']) !== '')
+                {
+                    $model = new Projects();
+                    $model->ProjectName = $data['B'];
+                    $model->ComponentID = 2;
+                    $model->SubComponentID =  (trim($data['D']) !== '' && $this->getSubComponent($data['D']))? $this->getSubComponent($data['D']): 0 ;
+                    $model->SubComponentCategoryID = (trim($data['E']) !== '' && $this->getSubComponentCategory($data['E']))? $this->getSubComponentCategory($data['E']): 0 ;
+                    $model->ProjectSectorID =  (trim($data['F']) !== '' && $this->getProjectSector($data['F']))? $this->getProjectSector($data['F']): 0 ;
+                    $model->Objective = (trim($data['G']) !== '')?$data['G']: 'Not Set' ;
+                    $model->Justification = (trim($data['H']) !== '')?$data['H']: 'Not Set' ;
+                    $model->ProjectCost  = (trim($data['I']) !== '')?$data['I']:0 ;
+                    $model->ApprovalDate = (trim($data['L']) !== '')?date('Y-m-d',strtotime($data['L'])):'' ;
+                    $model->StartDate = (trim($data['M']) !== '')?date('Y-m-d',strtotime($data['M'])): $today ;
+                    $model->EndDate = (trim($data['N']) !== '')?date('Y-m-d',strtotime($data['N'])): $today ;
+                    $model->CountyID = (trim($data['O']) !== '')? $this->getCounty($data['O']): 1 ;
+                    $model->SubCountyID = (trim($data['P']) !== '')? $this->getSubCounty($data['P']): 1 ;
+                    $model->WardID = (trim($data['Q']) !== '' && $this->getWard($data['Q']))? $this->getWard($data['Q']): 0 ;
+                    $model->financial_year = (trim($data['R']) !== '' && $this->getFinancialYear($data['R']))? $this->getFinancialYear($data['R']): 1 ; // @todo - write a fxn to get financial yr ID
+                    $model->SubLocationID = (trim($data['S']) !== '' && $this->getSublocation($data['S']))? $this->getSublocation($data['S']): 1 ;
+                    $model->CommunityID = (trim($data['T']) !== '' && $this->getCPMC($data['T']))? $this->getCPMC($data['T']):0 ; // "todo - write fxn to get countryid"
+                    $model->Latitude = (trim($data['U']) !== '')?$data['U']: 0000 ;
+                    $model->Longitude = (trim($data['V']) !== '')?$data['V']:0000 ;
+                    $model->CurrencyID = (trim($data['W']) !== '')? $this->getCurrency($data['W']): 0 ;
+                    $model->ProjectStatusID = (trim($data['X']) !== '' && $this->getStatus($data['X']))? $this->getStatus($data['X']): 0 ;
+
+
+
+
+
+                    $model->CreatedBy = Yii::$app->user->identity->UserID;
+                    $model->CreatedDate = $today;
+
+
+                    if(!$model->save())
+                    {
+
+                        foreach($model->errors as $k => $v)
+                        {
+                            Yii::$app->session->setFlash('error',$v[0].' Got value: '.$model->$k.' On Sub-Project: '.$data['B']);
+
+                        }
+
+                    }else {
+                        Yii::$app->session->setFlash('success','Congratulations, all valid records are completely imported into MIS.');
+                    }
+
+                }
+            }
+        }
+
+        return $this->redirect('index');
+    }
+
+    // Data Getter Functions- assist in data import
+
+    private function getSubComponent($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = SubComponents::find()->where(['like',  'SubComponentName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->SubComponentID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+    private function getSubComponentCategory($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = SubComponentCategories::find()->where(['like','SubComponentCategoryName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->SubComponentCategoryID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+    private function getProjectSector($name)
+    {
+        if(empty($name)) {
+            return 0; // sector not found
+        }
+        $model = ProjectSectors::find()->where(['like',  'ProjectSectorName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->ProjectSectorID;
+        }else{
+            return 0; // sector not found
+        }
+
+    }
+
+    private function getCounty($countyName)
+    {
+        if(empty($countyName)) {
+            return 0; // county not found
+        }
+        $model = Counties::findOne(['CountyName' => $countyName]);
+        if($model)
+        {
+            return $model->CountyID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+    private function getCountry($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = Countries::findOne(['CountryName' => $name]);
+        if($model)
+        {
+            return $model->CountryID;
+        }else{
+            return 0; // country not found
+        }
+    }
+
+    private function getSubCounty($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = SubCounties::findOne(['SubCountyName' => $name]);
+        if($model)
+        {
+            return $model->SubCountyID;
+        }else{
+            return 0; // SubCounty not found
+        }
+    }
+
+    private function getWard($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = Wards::findOne(['WardName' => $name]);
+        if($model)
+        {
+            return $model->WardID;
+        }else{
+            return 0; // ward not found
+        }
+    }
+
+    // same as villages
+    private function  getSublocation($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = SubLocations::findOne(['SubLocationName' => $name]);
+        if($model)
+        {
+            return $model->SubLocationID;
+        }else{
+            return 0; // sublocation not found
+        }
+    }
+
+    public function getFinancialYear($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = FinancialYear::findOne(['year' => $name]);
+        if($model)
+        {
+            return $model->id;
+        }else{
+            return 0; // year not found
+        }
+    }
+
+    public function getCPMC($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = Communities::findOne(['CommunityName' => $name]);
+        if($model)
+        {
+            return $model->CommunityID;
+        }else{
+            return 0; // COMMUNITY/CPMC not found
+        }
+    }
+
+    public function getCurrency($name)
+    {
+        if(empty($name)) {
+            return 0; //Not found
+        }
+        $model = Currencies::findOne(['CurrencyName' => $name]);
+        if($model)
+        {
+            return $model->CurrencyID;
+        }else{
+            return 0; // Currency not found
+        }
+    }
+
+    public function getStatus($name)
+    {
+        if(empty($name)) {
+            return 0; //Not found
+        }
+        $model = ProjectStatus::findOne(['ProjectStatusName' => $name]);
+        if($model)
+        {
+            return $model->ProjectStatusID;
+        }else{
+            return 0; // Proj Status not found
+        }
+    }
+
+
+
+
+    public function actionSafeguards($id, $op)
 	{
 		$model = $this->findModel($id);
 
@@ -1133,7 +1416,7 @@ class ProjectsController extends Controller
 		return $this->redirect(['projects/view', 'id' => $model->RefNumber]);		
 	}
 
-	public function actionImport()
+	public function actionAPIImport()
 	{
 		// echo strtotime('2020-04-05T14:45:41.953+03:00');
 		// exit;
@@ -1392,7 +1675,7 @@ class ProjectsController extends Controller
 		return 1;
 	}
 
-	public static function extractData($array, $key)
+	public static function extractDataAPI($array, $key)
 	{
 		return isset($array[$key]) ? $array[$key] : null;
 	}

@@ -42,9 +42,12 @@ $(document).ready(function() {
 					<div class="card-body card-dashboard">
 						<div class="form-actions" style="margin-top:0px">	
 							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-primary mr-1']) : '' ?>
-							<?= Html::a('<i class="ft-download"></i> Export', ['export', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-secondary mr-1']) ?>
-							<?= Html::a('<i class="ft-upload"></i> Import Projects', ['import', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-secondary mr-1']) ?>
-						</div>
+							<?php Html::a('<i class="ft-download"></i> Export', ['export', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-secondary mr-1']) ?>
+							<?php Html::a('<i class="ft-upload"></i> Import Projects', ['import', 'cid' => $cid, 'etid' => $etid], ['class' => 'btn btn-secondary mr-1']) ?>
+                            <?= Html::a('<i class="fa fa-file-excel"></i> Excel Import', ['excel-import'], ['class' => 'btn btn-success mr-1','title' =>  'Do a batch upload of sub-project via an Excel Sheet. '])?>
+                            <?= Html::a('<i class="fa fa-download"></i> Download Template', \yii\helpers\Url::home(true)."templates/sub-projects.xlsx", ['class' => 'btn btn-info mr-1','title' => 'Get data import sample excel template here.'])?>
+
+                        </div>
 						<?= GridView::widget([
 							'dataProvider' => $dataProvider,
 							'layout' => '{items}',							
