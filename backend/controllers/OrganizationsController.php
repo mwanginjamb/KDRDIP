@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use app\models\ImportOrganizations;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
 use app\models\Organizations;
 use app\models\Counties;
@@ -19,6 +21,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use yii\web\UploadedFile;
 
 /**
  * OrganizationsController implements the CRUD actions for Organizations model.
@@ -221,6 +224,196 @@ class OrganizationsController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    public function actionExcelImport()
+    {
+        $model = new  ImportOrganizations();
+        return $this->render('excelImport',['model' => $model]);
+    }
+
+    public function actionImport()
+    {
+        $model = new ImportOrganizations();
+        if($model->load(Yii::$app->request->post()))
+        {
+            $excelUpload = UploadedFile::getInstance($model, 'excel_doc');
+            $model->excel_doc = $excelUpload;
+            if($uploadedFile = $model->upload())
+            {
+                // Extract data from  uploaded file
+                $sheetData = $this->extractData($uploadedFile);
+                // save the data
+                $this->saveData($sheetData);
+            }else{
+                $this->redirect(['excel-import']);
+            }
+
+        }else{
+            $this->redirect(['excel-import']);
+        }
+    }
+
+    private function extractData($file)
+    {
+        $spreadsheet = IOFactory::load($file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        return $sheetData;
+    }
+
+    private function saveData($sheetData)
+    {
+
+        /*print '<pre>';
+         print_r($sheetData);
+         exit;*/
+        $today = date('Y-m-d');
+        foreach($sheetData as $key => $data)
+        {
+            // Read from 4th row
+            if($key >= 4)
+            {
+                if(trim($data['B']) !== '')
+                {
+                    $model = new Organizations();
+                    $model->OrganizationName = $data['B'];
+                    $model->TradingName = $data['C'];
+                    $model->RegistrationDate =  date('Y-m-d',strtotime($data['D']));
+                    $model->LivelihoodActivityID = $this->getLivelihoodActivityID($data['E']);
+                    $model->MaleMembers = (trim($data['F']) !== '')?$data['F']:0 ;
+                    $model->FemaleMembers = (trim($data['G']) !== '')?$data['G']:0 ;
+                    $model->PWDMembers = (trim($data['H']) !== '')?$data['H']:0 ;
+                    $model->TotalAmountRequired = (trim($data['I']) !== '')?$data['I']:0 ;
+                    $model->CommunityContribution = (trim($data['J']) !== '')?$data['J']:0 ;
+                    $model->CountyContribution = (trim($data['K']) !== '')?$data['K']:0 ;
+                    $model->BalanceRequired = (trim($data['L']) !== '')?$data['L']:0 ;
+                    $model->PostalAddress = (trim($data['M']) !== '')?$data['M']: 'Not Set' ;
+                    $model->PostalCode = (trim($data['N']) !== '')?$data['N']: 'Not Set' ;
+                    $model->Town = (trim($data['O']) !== '')?$data['O']:'Not Set' ;
+                    $model->CountryID = (trim($data['P']) !== '')? $this->getCountry($data['P']):1 ; // "todo - write fxn to get countryid"
+                    $model->PhysicalLocation = (trim($data['Q']) !== '')?$data['Q']: 'Not Set' ;
+                    $model->Telephone = (trim($data['R']) !== '')?$data['R']:'Not Set' ;
+                    $model->Mobile = (trim($data['S']) !== '')?$data['S']:'Not Set' ;
+                    $model->Email = (trim($data['T']) !== '')?$data['T']:'Not Set' ;
+                    $model->Url = (trim($data['U']) !== '')?$data['U']:'Not Set' ;
+                    $model->CountyID = (trim($data['V']) !== '')? $this->getCounty($data['V']): 0 ;
+                    $model->SubCountyID = (trim($data['W']) !== '')? $this->getSubCounty($data['W']): 0 ; // @todo - write fxn to get subcounty id
+                    $model->WardID = (trim($data['X']) !== '' && $this->getWard($data['X']))? $this->getWard($data['X']): 1 ; // @todo - write a fxn to get wardID
+                    $model->SubLocationID = (trim($data['Y']) !== '' && $this->getSublocation($data['Y']))? $this->getSublocation($data['Y']): 1 ; //@todo - write a fxn to get sublocID
+
+
+
+
+                    $model->CreatedBy = Yii::$app->user->identity->UserID;
+                    $model->CreatedDate = $today;
+
+
+                    if(!$model->save())
+                    {
+
+                        foreach($model->errors as $k => $v)
+                        {
+                            Yii::$app->session->setFlash('error',$v[0].' Got value: '.$model->$k.' On Group: '.$data['B']);
+
+                        }
+
+                    }else {
+                        Yii::$app->session->setFlash('success','Congratulations, all valid records are completely imported into MIS.');
+                    }
+
+                }
+            }
+        }
+
+        return $this->redirect('index');
+    }
+
+
+    // get Livelihood activity
+    private function getLivelihoodActivityID($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        // 'LivelihoodActivityID', 'LivelihoodActivityName'
+        $model = LivelihoodActivities::findOne(['LivelihoodActivityName' => $name]);
+        if($model)
+        {
+            return $model->LivelihoodActivityID;
+        }else{
+            return 0; // Activity not found
+        }
+    }
+
+    private function getCounty($countyName)
+    {
+        if(empty($countyName)) {
+            return 0; // county not found
+        }
+        $model = Counties::findOne(['CountyName' => $countyName]);
+        if($model)
+        {
+            return $model->CountyID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+    private function getCountry($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = Countries::findOne(['CountryName' => $name]);
+        if($model)
+        {
+            return $model->CountryID;
+        }else{
+            return 0; // country not found
+        }
+    }
+
+    private function getSubCounty($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = SubCounties::findOne(['SubCountyName' => $name]);
+        if($model)
+        {
+            return $model->SubCountyID;
+        }else{
+            return 0; // SubCounty not found
+        }
+    }
+
+    private function getWard($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = Wards::findOne(['WardName' => $name]);
+        if($model)
+        {
+            return $model->WardID;
+        }else{
+            return 0; // ward not found
+        }
+    }
+
+    private function  getSublocation($name)
+    {
+        if(empty($name)) {
+            return 0; // county not found
+        }
+        $model = SubLocations::findOne(['SubLocationName' => $name]);
+        if($model)
+        {
+            return $model->SubLocationID;
+        }else{
+            return 0; // sublocation not found
+        }
     }
 
     public function actionSubCounties($id)

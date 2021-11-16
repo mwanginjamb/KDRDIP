@@ -76,6 +76,7 @@ class Organizations extends \yii\db\ActiveRecord
             [['SubCountyID'], 'exist', 'skipOnError' => true, 'targetClass' => Subcounties::className(), 'targetAttribute' => ['SubCountyID' => 'SubCountyID']],
             [['SubLocationID'], 'exist', 'skipOnError' => true, 'targetClass' => Sublocations::className(), 'targetAttribute' => ['SubLocationID' => 'SubLocationID']],
             [['WardID'], 'exist', 'skipOnError' => true, 'targetClass' => Wards::className(), 'targetAttribute' => ['WardID' => 'WardID']],
+            ['OrganizationName', 'unique']
         ];
     }
 
