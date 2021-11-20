@@ -77,8 +77,8 @@ class Projects extends \yii\db\ActiveRecord
 		return [
 			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID',
-				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID', 'SubComponentID', 'SubComponentCategoryID'], 'integer'],
-			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID', 'SectorInterventionID'], 'string'],
+				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID', 'SubComponentID', 'SubComponentCategoryID','SectorInterventionID'], 'integer'],
+			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],

@@ -794,10 +794,23 @@ class ProjectsController extends Controller
     private function saveData($sheetData)
     {
 
-        /*print '<pre>';
+         /*print '<pre>';
          print_r($sheetData);
          exit;*/
         $today = date('Y-m-d');
+        $component = $sheetData[1]['C'];
+        if(!isset($component) || !$component)
+        {
+                Yii::$app->session->setFlash('error', 'Ensure you excel data import template has a valid component number (Either 1 or 2)');
+                return $this->redirect(['index']);
+
+
+        }
+        elseif ($component > 2)
+        {
+            Yii::$app->session->setFlash('error', 'Ensure you excel data import template has a valid component number (Either 1 or 2)');
+            return $this->redirect(['index']);
+        }
         foreach($sheetData as $key => $data)
         {
             // Read from 3rd row
@@ -807,26 +820,27 @@ class ProjectsController extends Controller
                 {
                     $model = new Projects();
                     $model->ProjectName = $data['B'];
-                    $model->ComponentID = 2;
-                    $model->SubComponentID =  (trim($data['D']) !== '' && $this->getSubComponent($data['D']))? $this->getSubComponent($data['D']): 0 ;
-                    $model->SubComponentCategoryID = (trim($data['E']) !== '' && $this->getSubComponentCategory($data['E']))? $this->getSubComponentCategory($data['E']): 0 ;
-                    $model->ProjectSectorID =  (trim($data['F']) !== '' && $this->getProjectSector($data['F']))? $this->getProjectSector($data['F']): 0 ;
-                    $model->Objective = (trim($data['G']) !== '')?$data['G']: 'Not Set' ;
-                    $model->Justification = (trim($data['H']) !== '')?$data['H']: 'Not Set' ;
-                    $model->ProjectCost  = (trim($data['I']) !== '')?$data['I']:0 ;
-                    $model->ApprovalDate = (trim($data['L']) !== '')?date('Y-m-d',strtotime($data['L'])):'' ;
-                    $model->StartDate = (trim($data['M']) !== '')?date('Y-m-d',strtotime($data['M'])): $today ;
-                    $model->EndDate = (trim($data['N']) !== '')?date('Y-m-d',strtotime($data['N'])): $today ;
-                    $model->CountyID = (trim($data['O']) !== '')? $this->getCounty($data['O']): 1 ;
-                    $model->SubCountyID = (trim($data['P']) !== '')? $this->getSubCounty($data['P']): 1 ;
-                    $model->WardID = (trim($data['Q']) !== '' && $this->getWard($data['Q']))? $this->getWard($data['Q']): 0 ;
-                    $model->financial_year = (trim($data['R']) !== '' && $this->getFinancialYear($data['R']))? $this->getFinancialYear($data['R']): 1 ; // @todo - write a fxn to get financial yr ID
-                    $model->SubLocationID = (trim($data['S']) !== '' && $this->getSublocation($data['S']))? $this->getSublocation($data['S']): 1 ;
-                    $model->CommunityID = (trim($data['T']) !== '' && $this->getCPMC($data['T']))? $this->getCPMC($data['T']):0 ; // "todo - write fxn to get countryid"
-                    $model->Latitude = (trim($data['U']) !== '')?$data['U']: 0000 ;
-                    $model->Longitude = (trim($data['V']) !== '')?$data['V']:0000 ;
-                    $model->CurrencyID = (trim($data['W']) !== '')? $this->getCurrency($data['W']): 0 ;
-                    $model->ProjectStatusID = (trim($data['X']) !== '' && $this->getStatus($data['X']))? $this->getStatus($data['X']): 0 ;
+                    $model->ComponentID = $component;
+                    $model->SubComponentID =  (trim($data['D']) !== '' && $this->getSubComponent($data['D']))? $this->getSubComponent($data['D']): 'Sub-Component Not Found' ;
+                    $model->SubComponentCategoryID = (trim($data['E'])  !== '' && $this->getSubComponentCategory($data['E']))? $this->getSubComponentCategory($data['E']): 'Sub component Category Not Found' ;
+                    $model->ProjectSectorID =  (trim($data['F']) !== '' && $this->getProjectSector($data['F']))? $this->getProjectSector($data['F']): 'Project Sector Not Found' ;
+                    $model->SectorInterventionID = (trim($data['G']) !== '' && $this->getProjectSectorIntervention($data['G']))? $this->getProjectSectorIntervention($data['G']): 'Sector Intervention Not Found' ;
+                    $model->Objective = (trim($data['H']) !== '')?$data['H']: 'Not Set' ;
+                    $model->Justification = (trim($data['I']) !== '')?$data['I']: 'Not Set' ;
+                    $model->ProjectCost  = (trim($data['J']) !== '')?$data['J']:0 ;
+                    $model->ApprovalDate = (trim($data['K']) !== '')?date('Y-m-d',strtotime($data['K'])):'' ;
+                    $model->StartDate = (trim($data['L']) !== '')?date('Y-m-d',strtotime($data['L'])): $today ;
+                    $model->EndDate = (trim($data['M']) !== '')?date('Y-m-d',strtotime($data['M'])): $today ;
+                    $model->CountyID = (trim($data['N']) !== '')? $this->getCounty($data['N']): 'County Not Found' ;
+                    $model->SubCountyID = (trim($data['O']) !== '')? $this->getSubCounty($data['O']): 'Sub County Not Found' ;
+                    $model->WardID = (trim($data['P']) !== '' && $this->getWard($data['P']))? $this->getWard($data['P']): 'Ward Not Found' ;
+                    $model->financial_year = (trim($data['Q']) !== '' && $this->getFinancialYear($data['Q']))? $this->getFinancialYear($data['Q']): 1 ; // @todo - write a fxn to get financial yr ID
+                    $model->SubLocationID = (trim($data['R']) !== '' && $this->getSublocation($data['R']))? $this->getSublocation($data['R']): 1 ;
+                    $model->CommunityID = (trim($data['S']) !== '' && $this->getCPMC($data['S']))? $this->getCPMC($data['S']): 'CPMC Not Found' ; // "todo - write fxn to get countryid"
+                    $model->Latitude = (trim($data['T']) !== '')?$data['T']: 0000 ;
+                    $model->Longitude = (trim($data['U']) !== '')?$data['U']:0000 ;
+                    $model->CurrencyID = (trim($data['V']) !== '')? $this->getCurrency($data['V']): '' ;
+                    $model->ProjectStatusID = (trim($data['W']) !== '' && $this->getStatus($data['W']))? $this->getStatus($data['W']): 'Project Status Not Found' ;
 
 
 
@@ -835,13 +849,30 @@ class ProjectsController extends Controller
                     $model->CreatedBy = Yii::$app->user->identity->UserID;
                     $model->CreatedDate = $today;
 
+                    // Validate Look ups - use index 1
+
+                   /* if($data['A'] == 1)
+                    {
+                        print($model->ProjectName).'</br>';
+                        print($model->ProjectSectorID).'</br>';
+                        print($model->SectorInterventionID).'</br>';
+                        print($model->ComponentID).'</br>';
+                        print($model->SubComponentID).'</br>';
+                        print($model->SubComponentCategoryID).'</br>';
+                        print($model->CountyID).'</br>';
+                        print($model->SubCountyID).'</br>';
+                        print($model->CommunityID).'</br>';
+                        print($model->ProjectStatusID).'</br>';
+                        exit;
+                    }*/
+
 
                     if(!$model->save())
                     {
 
                         foreach($model->errors as $k => $v)
                         {
-                            Yii::$app->session->setFlash('error',$v[0].' Got value: '.$model->$k.' On Sub-Project: '.$data['B']);
+                            Yii::$app->session->setFlash('error',$v[0].' <b>Got value</b>: <i><u>'.$model->$k.'</u></i> On Sub-Project: '.$data['B'].' <b>- On Row:</b>  '.$data['A']);
 
                         }
 
@@ -902,6 +933,24 @@ class ProjectsController extends Controller
         }
 
     }
+
+    // Get Sector Intervention
+
+    private function getProjectSectorIntervention($name)
+    {
+        if(empty($name)) {
+            return 0; // sector not found
+        }
+        $model = ProjectSectorInterventions::find()->where(['like',  'SectorInterventionName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->SectorInterventionID;
+        }else{
+            return 0; // sector not found
+        }
+
+    }
+
 
     private function getCounty($countyName)
     {
