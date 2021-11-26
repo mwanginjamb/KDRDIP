@@ -66,7 +66,11 @@ $(document).ready(function() {
 									'attribute' => 'projectSectors.ProjectSectorName',
 									'headerOptions' => ['width' => '25%'],
 								],
-								'financial_year',
+								[
+								      'label' => 'Financial Year',
+                                      'attribute' => 'financial_year',
+                                      'value' => 'financialyear.year'
+                                ],
 								[
 									'attribute' => 'StartDate',
 									'headerOptions' => ['width' => '10%'],

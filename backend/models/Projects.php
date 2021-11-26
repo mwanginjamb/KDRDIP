@@ -284,4 +284,9 @@ class Projects extends \yii\db\ActiveRecord
 		}
 		return (!empty($organization)) ? $organization['OrganizationName'] : '';
 	}
+
+	public function getFinancialyear()
+    {
+        return $this->hasOne(FinancialYear::className(),['id' => 'financial_year']);
+    }
 }

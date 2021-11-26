@@ -801,7 +801,7 @@ class ProjectsController extends Controller
         $component = $sheetData[1]['C'];
         if(!isset($component) || !$component)
         {
-                Yii::$app->session->setFlash('error', 'Ensure you excel data import template has a valid component number (Either 1 or 2)');
+                Yii::$app->session->setFlash('error', 'Ensure you excel data import template has a valid component number (Either 1 or 2) Picked :'.$component);
                 return $this->redirect(['index']);
 
 
@@ -821,26 +821,26 @@ class ProjectsController extends Controller
                     $model = new Projects();
                     $model->ProjectName = $data['B'];
                     $model->ComponentID = $component;
-                    $model->SubComponentID =  (trim($data['D']) !== '' && $this->getSubComponent($data['D']))? $this->getSubComponent($data['D']): 'Sub-Component Not Found' ;
-                    $model->SubComponentCategoryID = (trim($data['E'])  !== '' && $this->getSubComponentCategory($data['E']))? $this->getSubComponentCategory($data['E']): 'Sub component Category Not Found' ;
-                    $model->ProjectSectorID =  (trim($data['F']) !== '' && $this->getProjectSector($data['F']))? $this->getProjectSector($data['F']): 'Project Sector Not Found' ;
-                    $model->SectorInterventionID = (trim($data['G']) !== '' && $this->getProjectSectorIntervention($data['G']))? $this->getProjectSectorIntervention($data['G']): 'Sector Intervention Not Found' ;
+                    $model->SubComponentID =  (trim($data['D']) !== '' && $this->getSubComponent($data['D']))? $this->getSubComponent($data['D']): 1 ;
+                    $model->SubComponentCategoryID = (trim($data['E'])  !== '' && $this->getSubComponentCategory($data['E']))? $this->getSubComponentCategory($data['E']): 1 ;
+                    $model->ProjectSectorID =  (trim($data['F']) !== '' && $this->getProjectSector($data['F']))? $this->getProjectSector($data['F']): 1 ;
+                    $model->SectorInterventionID = (trim($data['G']) !== '' && $this->getProjectSectorIntervention($data['G']))? $this->getProjectSectorIntervention($data['G']): 1 ;
                     $model->Objective = (trim($data['H']) !== '')?$data['H']: 'Not Set' ;
                     $model->Justification = (trim($data['I']) !== '')?$data['I']: 'Not Set' ;
                     $model->ProjectCost  = (trim($data['J']) !== '')?$data['J']:0 ;
                     $model->ApprovalDate = (trim($data['K']) !== '')?date('Y-m-d',strtotime($data['K'])):'' ;
                     $model->StartDate = (trim($data['L']) !== '')?date('Y-m-d',strtotime($data['L'])): $today ;
                     $model->EndDate = (trim($data['M']) !== '')?date('Y-m-d',strtotime($data['M'])): $today ;
-                    $model->CountyID = (trim($data['N']) !== '')? $this->getCounty($data['N']): 'County Not Found' ;
-                    $model->SubCountyID = (trim($data['O']) !== '')? $this->getSubCounty($data['O']): 'Sub County Not Found' ;
-                    $model->WardID = (trim($data['P']) !== '' && $this->getWard($data['P']))? $this->getWard($data['P']): 'Ward Not Found' ;
+                    $model->CountyID = (trim($data['N']) !== '')? $this->getCounty($data['N']): 1 ;
+                    $model->SubCountyID = (trim($data['O']) !== '')? $this->getSubCounty($data['O']): 1 ;
+                    $model->WardID = (trim($data['P']) !== '' && $this->getWard($data['P']))? $this->getWard($data['P']): 1 ;
                     $model->financial_year = (trim($data['Q']) !== '' && $this->getFinancialYear($data['Q']))? $this->getFinancialYear($data['Q']): 1 ; // @todo - write a fxn to get financial yr ID
                     $model->SubLocationID = (trim($data['R']) !== '' && $this->getSublocation($data['R']))? $this->getSublocation($data['R']): 1 ;
-                    $model->CommunityID = (trim($data['S']) !== '' && $this->getCPMC($data['S']))? $this->getCPMC($data['S']): 'CPMC Not Found' ; // "todo - write fxn to get countryid"
+                    $model->CommunityID = (trim($data['S']) !== '' && $this->getCPMC($data['S']))? $this->getCPMC($data['S']): 0 ; // "todo - write fxn to get countryid"
                     $model->Latitude = (trim($data['T']) !== '')?$data['T']: 0000 ;
                     $model->Longitude = (trim($data['U']) !== '')?$data['U']:0000 ;
-                    $model->CurrencyID = (trim($data['V']) !== '')? $this->getCurrency($data['V']): '' ;
-                    $model->ProjectStatusID = (trim($data['W']) !== '' && $this->getStatus($data['W']))? $this->getStatus($data['W']): 'Project Status Not Found' ;
+                    $model->CurrencyID = (trim($data['V']) !== '')? $this->getCurrency($data['V']): 1 ;
+                    $model->ProjectStatusID = (trim($data['W']) !== '' && $this->getStatus($data['W']))? $this->getStatus($data['W']): 0 ;
 
 
 
@@ -884,7 +884,12 @@ class ProjectsController extends Controller
             }
         }
 
-        return $this->redirect('index');
+        if(!empty($component) && $component)
+        {
+            return $this->redirect(['index','cid' => $component]);
+        }
+        return $this->redirect(['index']);
+
     }
 
     // Data Getter Functions- assist in data import
