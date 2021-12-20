@@ -54,11 +54,14 @@ class BankAccounts extends \yii\db\ActiveRecord
 			[['BankID', 'BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted', 'OrganizationID', 'ProjectID'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
+            ['AccountNumber', 'unique'],
 			[['AccountName', 'AccountNumber'], 'string', 'max' => 45],
-			[['AccountName', 'AccountNumber', 'BankID', 'BranchID', 'BankTypeID' ], 'required']
-		];
+			[['AccountName', 'AccountNumber', 'BankID', 'BranchID', 'BankTypeID' ], 'required'],
+            ['BankID', 'exist', 'targetClass' => Banks::class, 'targetAttribute' => ['BankID' => 'BankID']],
+            ['BranchID', 'exist',  'targetClass' => BankBranches::class, 'targetAttribute' => ['BranchID' => 'BankBranchID']],
+            ['BankTypeID', 'exist', 'targetClass' => BankTypes::class, 'targetAttribute' => ['BankTypeID' => 'BankTypeID']],
+        ];
 	}
-
 	/**
 	 * {@inheritdoc}
 	 */

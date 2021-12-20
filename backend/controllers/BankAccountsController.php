@@ -2,6 +2,8 @@
 
 namespace backend\controllers;
 
+use app\models\ImportBankAccounts;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 use Yii;
 use app\models\BankAccounts;
 use app\models\BankBranches;
@@ -20,6 +22,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use yii\web\UploadedFile;
 
 /**
  * BankAccountsController implements the CRUD actions for BankAccounts model.
@@ -243,4 +246,125 @@ class BankAccountsController extends Controller
 			echo '<option>-</option>';
 		}
 	}
+
+	// Batch Data Import
+
+    public function actionExcelImport()
+    {
+        $model = new  ImportBankAccounts();
+        return $this->render('excelImport',['model' => $model]);
+    }
+
+    public function actionImport()
+    {
+        $model = new ImportBankAccounts();
+        if($model->load(Yii::$app->request->post()))
+        {
+            $excelUpload = UploadedFile::getInstance($model, 'excel_doc');
+            $model->excel_doc = $excelUpload;
+            if($uploadedFile = $model->upload())
+            {
+                // Extract data from  uploaded file
+                $sheetData = $this->extractData($uploadedFile);
+                // save the data
+                $this->saveData($sheetData);
+            }else{
+                $this->redirect(['excel-import']);
+            }
+
+        }else{
+            $this->redirect(['excel-import']);
+        }
+    }
+
+    private function extractData($file)
+    {
+        $spreadsheet = IOFactory::load($file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        return $sheetData;
+    }
+
+    private function saveData($sheetData)
+    {
+
+        /*print '<pre>';
+        print_r($sheetData);
+        exit;*/
+        $today = date('Y-m-d');
+
+        foreach($sheetData as $key => $data)
+        {
+            // Read from 3rd row
+            if($key >= 3)
+            {
+                if(trim($data['C']) !== '')
+                {
+                    $model = new BankAccounts();
+                    $model->AccountName = $data['D'];
+                    $model->AccountNumber =  $data['C'];
+                    $model->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
+                    $model->BranchID =  (trim($data['F']) !== '' && $this->getBranchID($data['F']))? $this->getBranchID($data['F']): 0 ;
+                    $model->BankTypeID = (trim($data['G']) !== '' && $this->getBankTypeID($data['G']))? $this->getBankTypeID($data['G']): 0 ;
+                    $model->Notes = (trim($data['H']) !== '')?$data['H']: '' ;
+
+                    $model->CreatedBy = Yii::$app->user->identity->UserID;
+                    $model->CreatedDate = $today;
+
+                    if(!$model->save())
+                    {
+                        foreach($model->errors as $k => $v)
+                        {
+                            Yii::$app->session->setFlash('error',$v[0].' <b>Got value</b>: <i><u>'.$model->$k.'</u> <b>for Account Name:'.$data['C'].'</b> - On Row:</b>  '.$key);
+
+                        }
+
+                    }else {
+                        Yii::$app->session->setFlash('success','Congratulations, all valid records are completely imported into MIS.');
+                    }
+
+                }
+            }
+        }
+
+
+        return $this->redirect(['index']);
+
+    }
+
+    /* Get Setup Data*/
+
+    public function getBankID($name)
+    {
+        $result = Banks::findOne(['BankName' => $name]);
+        if(is_object($result))
+        {
+            return $result->BankID;
+        }
+
+        return false;
+
+    }
+
+    public function getBranchID($name)
+    {
+        $result = BankBranches::findOne(['BankBranchName' => $name]);
+        if(is_object($result))
+        {
+            return $result->BankBranchID;
+        }
+
+        return false;
+    }
+
+    public function getBankTypeID($name)
+    {
+        $result = BankTypes::findOne(['BankTypeName' => $name]);
+        if(is_object($result))
+        {
+            return $result->BankTypeID;
+        }
+
+        return false;
+
+    }
 }
