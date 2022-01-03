@@ -100,8 +100,21 @@ class BankAccountsController extends Controller
 				$where .= ' AND CommunityID = ' . $model->CommunityID;
 			}
 		}
+
+		$query = BankAccounts::find()->where($where);
+        $countQuery = clone $query;
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => BankAccounts::find()->where($where),
+			'query' => $query,
+            'pagination' =>  [
+                'pageSize' => $countQuery->count()
+            ],
+            'totalCount' => $countQuery->count(),
+            'sort' => [
+                'defaultOrder' => [
+                    'BankAccountID' => SORT_DESC
+                ],
+            ],
 		]);
 
 		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
