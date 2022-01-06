@@ -51,7 +51,7 @@ class BankAccounts extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['BankID', 'BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted', 'OrganizationID', 'ProjectID'], 'integer'],
+			[['BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted', 'OrganizationID', 'ProjectID'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate','AccountNumber'], 'safe'],
             ['AccountNumber', 'unique'],
