@@ -69,6 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
 								'bankBranches.BankBranchName',
 								'AccountName',
 								'AccountNumber',
+								'type.BankTypeName',
 								'counties.CountyName',
 								// 'organizations.OrganizationName',
 		/* 						[

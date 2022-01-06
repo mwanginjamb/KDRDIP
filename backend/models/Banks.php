@@ -47,7 +47,8 @@ class Banks extends \yii\db\ActiveRecord
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['CreatedBy', 'Deleted'], 'integer'],
-			[['BankCode', 'BankName'], 'string', 'max' => 45],
+			[['BankCode'], 'string', 'max' => 45],
+            ['BankName', 'string', 'max' => 150],
 		];
 	}
 

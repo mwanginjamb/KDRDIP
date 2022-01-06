@@ -304,7 +304,7 @@ class BankAccountsController extends Controller
         print_r($sheetData);
         exit;*/
         $today = date('Y-m-d');
-
+        $rowOffset = 2;
         foreach($sheetData as $key => $data)
         {
             // Read from 3rd row
@@ -313,21 +313,54 @@ class BankAccountsController extends Controller
                 if(trim($data['C']) !== '')
                 {
                     $model = new BankAccounts();
-                    $model->AccountName = $data['D'];
-                    $model->AccountNumber =  $data['C'];
-                    $model->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
-                    $model->BranchID =  (trim($data['F']) !== '' && $this->getBranchID($data['F']))? $this->getBranchID($data['F']): 0 ;
-                    $model->BankTypeID = (trim($data['G']) !== '' && $this->getBankTypeID($data['G']))? $this->getBankTypeID($data['G']): 0 ;
-                    $model->Notes = (trim($data['H']) !== '')?$data['H']: '' ;
 
-                    $model->CreatedBy = Yii::$app->user->identity->UserID;
-                    $model->CreatedDate = $today;
+                    // Try find an existing model for Update
+
+                    $accountModel = BankAccounts::findOne(['AccountNumber' => $data['C'] ]);
+
+                    if($accountModel && $accountModel->AccountNumber == $data['C'] )
+                    {
+                        $model->AccountName = $data['D'];
+                        $model->AccountNumber =  $data['C'];
+                        $model->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
+                        $model->BranchID =  (trim($data['F']) !== '' && $this->getBranchID($data['F']))? $this->getBranchID($data['F']): 0 ;
+                        $model->BankTypeID = (trim($data['G']) !== '' && $this->getBankTypeID($data['G']))? $this->getBankTypeID($data['G']): 0 ;
+                        $model->Notes = (trim($data['H']) !== '')?$data['H']: '' ;
+                        $model->CountyID = (trim($data['I']) !== '' && $this->getCountyID($data['I']))? $this->getCountyID($data['I']): 0 ;
+                        $model->CommunityID = (trim($data['J']) !== '' && $this->getCommunityID($data['J']))? $this->getCommunityID($data['J']): 0 ;
+                        $model->ProjectID = (trim($data['K']) !== '' && $this->getProjectID($data['K']))? $this->getProjectID($data['K']): 0 ;
+                        $model->CreatedBy = Yii::$app->user->identity->UserID;
+                        $model->CreatedDate = $today;
+                        if(!$model->save(false))
+                        {
+                            foreach($model->errors as $k => $v)
+                            {
+                                Yii::$app->session->setFlash('error',$v[0].' <b>Got value</b>: <i><u>'.$model->$k.'</u> <b>for Account Name:'.$data['C'].'</b> - On Row:</b>  '.($key - $rowOffset));
+
+                            }
+
+                        }else {
+                            Yii::$app->session->setFlash('success','Congratulations, all valid records are completely updated into MIS.');
+                        }
+                    }else{
+                        $model->AccountName = $data['D'];
+                        $model->AccountNumber =  $data['C'];
+                        $model->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
+                        $model->BranchID =  (trim($data['F']) !== '' && $this->getBranchID($data['F']))? $this->getBranchID($data['F']): 0 ;
+                        $model->BankTypeID = (trim($data['G']) !== '' && $this->getBankTypeID($data['G']))? $this->getBankTypeID($data['G']): 0 ;
+                        $model->Notes = (trim($data['H']) !== '')?$data['H']: '' ;
+                        $model->CountyID = (trim($data['I']) !== '' && $this->getCountyID($data['I']))? $this->getCountyID($data['I']): 0 ;
+                        $model->CommunityID = (trim($data['J']) !== '' && $this->getCommunityID($data['J']))? $this->getCommunityID($data['J']): 0 ;
+                        $model->ProjectID = (trim($data['K']) !== '' && $this->getProjectID($data['K']))? $this->getProjectID($data['K']): 0 ;
+                        $model->CreatedBy = Yii::$app->user->identity->UserID;
+                        $model->CreatedDate = $today;
+                    }
 
                     if(!$model->save())
                     {
                         foreach($model->errors as $k => $v)
                         {
-                            Yii::$app->session->setFlash('error',$v[0].' <b>Got value</b>: <i><u>'.$model->$k.'</u> <b>for Account Name:'.$data['C'].'</b> - On Row:</b>  '.$key);
+                            Yii::$app->session->setFlash('error',$v[0].' <b>Got value</b>: <i><u>'.$model->$k.'</u> <b>for Account Name:'.$data['C'].'</b> - On Row:</b>  '.($key - $rowOffset));
 
                         }
 
@@ -346,9 +379,48 @@ class BankAccountsController extends Controller
 
     /* Get Setup Data*/
 
+    private function getCountyID($name)
+    {
+        $model = Counties::find()->where(['like',  'CountyName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->CountyID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+
+    private function getCommunityID($name)
+    {
+        $model = Communities::find()->where(['like',  'CommunityName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->CommunityID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+    private function getProjectID($name)
+    {
+        $model = Projects::find()->where(['like',  'ProjectName',$name])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->CommunityID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
     public function getBankID($name)
     {
-        $result = Banks::findOne(['BankName' => $name]);
+        $name = trim($name);
+        $result = Banks::find()->where(['like',  'BankName',$name])->one();
+
         if(is_object($result))
         {
             return $result->BankID;

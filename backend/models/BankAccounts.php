@@ -53,9 +53,9 @@ class BankAccounts extends \yii\db\ActiveRecord
 		return [
 			[['BankID', 'BranchID', 'BankTypeID', 'CountyID', 'CommunityID', 'CreatedBy', 'Deleted', 'OrganizationID', 'ProjectID'], 'integer'],
 			[['Notes'], 'string'],
-			[['CreatedDate'], 'safe'],
+			[['CreatedDate','AccountNumber'], 'safe'],
             ['AccountNumber', 'unique'],
-			[['AccountName', 'AccountNumber'], 'string', 'max' => 45],
+			[['AccountName'], 'string', 'max' => 150],
 			[['AccountName', 'AccountNumber', 'BankID', 'BranchID', 'BankTypeID' ], 'required'],
             ['BankID', 'exist', 'targetClass' => Banks::class, 'targetAttribute' => ['BankID' => 'BankID']],
             ['BranchID', 'exist',  'targetClass' => BankBranches::class, 'targetAttribute' => ['BranchID' => 'BankBranchID']],
@@ -109,6 +109,11 @@ class BankAccounts extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(Counties::className(), ['CountyID' => 'CountyID'])->from(counties::tableName());
 	}
+
+	public function getType()
+    {
+        return $this->hasOne(BankTypes::className(),['BankTypeID' => 'BankTypeID']);
+    }
 
     public function getOrganizations()
 	{
