@@ -300,6 +300,10 @@ class BankAccountsController extends Controller
     private function saveData($sheetData)
     {
 
+
+
+        $ImportedAccounts = BankAccounts::find()->select(['AccountNumber'])->AsArray()->all();
+
         /*print '<pre>';
         print_r($sheetData);
         exit;*/
@@ -318,31 +322,43 @@ class BankAccountsController extends Controller
 
                     $accountModel = BankAccounts::findOne(['AccountNumber' => $data['C'] ]);
 
+
                     if($accountModel && $accountModel->AccountNumber == $data['C'] )
                     {
-                        $model->AccountName = $data['D'];
-                        $model->AccountNumber =  $data['C'];
-                        $model->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
-                        $model->BranchID =  (trim($data['F']) !== '' && $this->getBranchID($data['F']))? $this->getBranchID($data['F']): 0 ;
-                        $model->BankTypeID = (trim($data['G']) !== '' && $this->getBankTypeID($data['G']))? $this->getBankTypeID($data['G']): 0 ;
-                        $model->Notes = (trim($data['H']) !== '')?$data['H']: '' ;
-                        $model->CountyID = (trim($data['I']) !== '' && $this->getCountyID($data['I']))? $this->getCountyID($data['I']): 0 ;
-                        $model->CommunityID = (trim($data['J']) !== '' && $this->getCommunityID($data['J']))? $this->getCommunityID($data['J']): 0 ;
-                        $model->ProjectID = (trim($data['K']) !== '' && $this->getProjectID($data['K']))? $this->getProjectID($data['K']): 0 ;
-                        $model->CreatedBy = Yii::$app->user->identity->UserID;
-                        $model->CreatedDate = $today;
-                        if(!$model->save(false))
+
+
+
+                        $accountModel->AccountName = $data['D'];
+                        $accountModel->AccountNumber =  $data['C'];
+                        $accountModel->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
+                        $accountModel->BranchID =  (trim($data['F']) !== '' && $this->getBranchID($data['F']))? $this->getBranchID($data['F']): 0 ;
+                        $accountModel->BankTypeID = (trim($data['G']) !== '' && $this->getBankTypeID($data['G']))? $this->getBankTypeID($data['G']): 0 ;
+                        $accountModel->Notes = (trim($data['H']) !== '')?$data['H']: '' ;
+                        $accountModel->CountyID = (trim($data['I']) !== '' && $this->getCountyID($data['I']))? $this->getCountyID($data['I']): 0 ;
+                        $accountModel->CommunityID = (trim($data['J']) !== '' && $this->getCommunityID($data['J']))? $this->getCommunityID($data['J']): 0 ;
+                        $accountModel->ProjectID = (trim($data['K']) !== '' && $this->getProjectID($data['K']))? $this->getProjectID($data['K']): 0 ;
+                        $accountModel->CreatedBy = Yii::$app->user->identity->UserID;
+                        $accountModel->CreatedDate = $today;
+
+                        if(!$accountModel->save())
                         {
-                            foreach($model->errors as $k => $v)
+                            foreach($accountModel->errors as $k => $v)
                             {
-                                Yii::$app->session->setFlash('error',$v[0].' <b>Got value</b>: <i><u>'.$model->$k.'</u> <b>for Account Name:'.$data['C'].'</b> - On Row:</b>  '.($key - $rowOffset));
+                                Yii::$app->session->setFlash('error',$v[0].' <b>Update Error :Got value</b>: <i><u>'.$accountModel->$k.'</u> <b>for Account Name:'.$data['C'].'</b> - On Row:</b>  '.($key - $rowOffset));
 
                             }
 
                         }else {
-                            Yii::$app->session->setFlash('success','Congratulations, all valid records are completely updated into MIS.');
+                            Yii::$app->session->setFlash('success','Congratulations, all valid records are completely updated .');
                         }
+
                     }else{
+
+                        if(in_array($data['C'], $ImportedAccounts))
+                        {
+                            continue;
+                        }
+
                         $model->AccountName = $data['D'];
                         $model->AccountNumber =  $data['C'];
                         $model->BankID = (trim($data['E'])  !== '' && $this->getBankID($data['E']))? $this->getBankID($data['E']): 0 ;
