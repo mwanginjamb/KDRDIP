@@ -122,8 +122,20 @@ class PaymentsController extends Controller
 			return $this->export($where);
 		}
 
+        $query = Payments::find()->where($where);
+        $countQuery = clone $query;
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => Payments::find()->where($where),
+			'query' => $query,
+            'pagination' =>  [
+                'pageSize' => $countQuery->count()
+            ],
+            'totalCount' => $countQuery->count(),
+            'sort' => [
+                'defaultOrder' => [
+                    'PaymentID' => SORT_DESC
+                ],
+            ],
 		]);
 
 		return $this->render('index', [
