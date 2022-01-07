@@ -93,12 +93,7 @@ class CashDisbursementsController extends Controller
         $query = CashDisbursements::find();
         $countQuery = clone $query;
 		$dataProvider = new ActiveDataProvider([
-			'query' => $query
-		]);
-
-		return $this->render('index', [
-			'dataProvider' => $dataProvider,
-			'rights' => $this->rights,
+			'query' => $query,
             'pagination' =>  [
                 'pageSize' => $countQuery->count()
             ],
@@ -108,6 +103,12 @@ class CashDisbursementsController extends Controller
                     'CashDisbursementID' => SORT_DESC
                 ],
             ],
+		]);
+
+		return $this->render('index', [
+			'dataProvider' => $dataProvider,
+			'rights' => $this->rights,
+
 		]);
 	}
 
