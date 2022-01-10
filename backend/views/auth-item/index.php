@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel frontend\models\AuthItemSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Auth Items';
+$this->title = 'Roles and Permissions (Auth Items)';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-item-index">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Auth Item', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Role/Permission', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return (1==1) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->id], ['class' => 'btn-sm btn-primary']) : '';
                     },
                     'edit' => function ($url, $model)  {
-                        return (1==1) ? Html::a('<i class="ft-edit"></i> View', ['update', 'id' => $model->id], ['class' => 'btn-sm btn-primary']) : '';
+                        return (1==1) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->id], ['class' => 'btn-sm btn-primary']) : '';
                     },
                     'delete' => function ($url, $model)  {
                         return (1 == 1 ) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->id], [
