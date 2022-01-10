@@ -221,6 +221,8 @@ Modal::end();
         } else {
             $( "#optionrow" ).hide();
         }
+
+        $('#cashdisbursements-destinationaccountid').select2();
         
 	});
 </script>

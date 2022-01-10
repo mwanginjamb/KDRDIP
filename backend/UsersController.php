@@ -287,7 +287,11 @@ class UsersController extends Controller
 			}
 			if ($model->load($params) && $model->save()) {
 				return $this->redirect(['view', 'id' => $model->UserID]);
-			}
+			}else{
+			    print '<pre>';
+			    print_r($model->errors);
+			    exit;
+            }
 		}
 		$facilities = [];
 		if ($model->UserTypeID == 2) {
