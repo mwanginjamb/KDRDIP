@@ -8,6 +8,7 @@ use yii\helpers\Html;
 $this->title = 'Create Cash Disbursements';
 $this->params['breadcrumbs'][] = ['label' => 'Cash Disbursements', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+$model->DisbursementTypeID = 0;
 ?>
 <section class="flexbox-container">
 

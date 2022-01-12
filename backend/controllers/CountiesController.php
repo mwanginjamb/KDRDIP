@@ -178,6 +178,8 @@ class CountiesController extends Controller
 	public function actionProjects($id)
 	{
 		$model = Projects::find()->orderBy('ProjectName')->andWhere(['CountyID' => $id])->all();
+
+        //$model = Projects::findAll(['CountyID' => $id]);
 		
 		echo '<option value="">Select...</option>';
 		foreach ($model as $item) {

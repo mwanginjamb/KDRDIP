@@ -58,7 +58,7 @@ Modal::end();
                                 $( "#optionrow" ).show();
                                 $( "#organizationid" ).hide();
                                 $( "#projectid" ).show();
-                                $.post( "' . Yii::$app->urlManager->createUrl('counties/projects?id=') . '"+countyid, function( data ) {
+                                $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/projects?id=') . '"+countyid, function( data ) {
                                     $( "select#cashdisbursements-projectid" ).html( data );
                                 });
                             } else if ($(this).val() == 2){
@@ -85,7 +85,7 @@ Modal::end();
                             let type = $( "select#cashdisbursements-disbursementtypeid" ).val();
                             console.log(type);
                             if (type == 1) {
-                                $.post( "' . Yii::$app->urlManager->createUrl('counties/projects?id=') . '"+$(this).val(), function( data ) {
+                                $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/projects?countyID=') . '"+$(this).val(), function( data ) {
                                     $( "select#cashdisbursements-projectid" ).html( data );
                                 });
                             } else if (type == 2) {

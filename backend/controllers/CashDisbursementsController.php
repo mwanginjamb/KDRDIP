@@ -340,4 +340,41 @@ class CashDisbursementsController extends Controller
 
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
+
+
+	//Data Dependent Drop Down Functions
+
+    public function actionProjects($countyID= '')
+    {
+        if(!empty($countyID))
+        {
+            $data = Projects::find()->where(['CountyID' => $countyID])->orderBy(['ProjectName' => SORT_ASC])->all();
+        }else
+        {
+            $data = Projects::find()->orderBy(['ProjectName' => SORT_ASC])->all();
+        }
+
+        if(count($data))
+        {
+            foreach($data  as $k  => $record )
+            {
+                if(empty($record['ProjectID']) || empty($record['ProjectName'])){
+                    continue;
+                }
+                ob_start();
+                echo "<option value=".$record['ProjectID'].">".$record['ProjectName']."</option>";
+                $listData = ob_get_contents();
+
+            }
+            ob_end_clean();
+            echo $listData;
+        }else{
+            echo "<option value=''>No data Available</option>";
+        }
+        return true;
+
+
+    }
+
+
 }
