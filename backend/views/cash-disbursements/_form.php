@@ -55,6 +55,7 @@ Modal::end();
                             'onchange' => '
                             let countyid = $( "select#cashdisbursements-countyid" ).val();
                             if ($(this).val() == 1) {
+                                 bankTypeID = 4; //SUB PROJECTS
                                 $( "#optionrow" ).show();
                                 $( "#organizationid" ).hide();
                                 $( "#projectid" ).show();
@@ -62,19 +63,20 @@ Modal::end();
                                     $( "select#cashdisbursements-projectid" ).html( data );
                                 });
                             } else if ($(this).val() == 2){
+                                 bankTypeID = 3; //Community
                                 $( "#projectid" ).show();
                                 $( "#projectid" ).hide();
                                 $( "#organizationid" ).show();
-                                $.post( "' . Yii::$app->urlManager->createUrl('counties/organizations?id=') . '"+countyid, function( data ) {
+                                $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/organizations?CountyID=') . '"+countyid, function( data ) {
                                     $( "select#cashdisbursements-organizationid" ).html( data );
                                 });
                             } else {
                                 $( "#optionrow" ).hide();
                             }
-                            $.post( "' . Yii::$app->urlManager->createUrl('counties/bank-accounts?countyId=') . '"+countyid + "&disbursementTypeId="+$(this).val() + "&categoryId=1", function( data ) {
+                            $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/source-accounts?CountyId=') . '"+countyid + "&disbursementTypeId="+$(this).val() + "&categoryId=1", function( data ) {
                                 $( "select#cashdisbursements-sourceaccountid" ).html( data );
                             });
-                            $.post( "' . Yii::$app->urlManager->createUrl('counties/bank-accounts?countyId=') . '"+countyid + "&disbursementTypeId="+$(this).val() + "&categoryId=2", function( data ) {
+                            $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/destination-accounts?CountyID=') . '"+countyid + "&DisbursementType="+bankTypeID + "&categoryId=2", function( data ) {
                                 $( "select#cashdisbursements-destinationaccountid" ).html( data );
                             });
                         ']) ?>
@@ -83,20 +85,25 @@ Modal::end();
                         <?= $form->field($model, 'CountyID')->dropDownList($counties, ['prompt' => 'Select...', 'class' => 'form-control select2',
                             'onchange' => '
                             let type = $( "select#cashdisbursements-disbursementtypeid" ).val();
+                            let bankTypeID = null;
                             console.log(type);
                             if (type == 1) {
+                                bankTypeID = 4; //SUB PROJECTS
                                 $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/projects?countyID=') . '"+$(this).val(), function( data ) {
                                     $( "select#cashdisbursements-projectid" ).html( data );
                                 });
                             } else if (type == 2) {
-                                $.post( "' . Yii::$app->urlManager->createUrl('counties/organizations?id=') . '"+$(this).val(), function( data ) {
+                                bankTypeID = 3; //Community
+                                $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/organizations?CountyID=') . '"+$(this).val(), function( data ) {
                                     $( "select#cashdisbursements-organizationid" ).html( data );
                                 });
                             }
-                            $.post( "' . Yii::$app->urlManager->createUrl('counties/bank-accounts?countyId=') . '"+$(this).val() + "&disbursementTypeId="+type + "&categoryId=1", function( data ) {
+                            
+                            $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/source-accounts?CountyId=') . '"+$(this).val()+ "&disbursementTypeId="+$(this).val() + "&categoryId=1", function( data ) {
                                 $( "select#cashdisbursements-sourceaccountid" ).html( data );
                             });
-                            $.post( "' . Yii::$app->urlManager->createUrl('counties/bank-accounts?countyId=') . '"+$(this).val() + "&disbursementTypeId="+type + "&categoryId=2", function( data ) {
+                            
+                            $.post( "' . Yii::$app->urlManager->createUrl('cash-disbursements/destination-accounts?CountyID=') . '"+$(this).val() + "&DisbursementType="+bankTypeID + "&categoryId=2", function( data ) {
                                 $( "select#cashdisbursements-destinationaccountid" ).html( data );
                             });
                         ']) ?>
@@ -223,6 +230,8 @@ Modal::end();
         }
 
         $('#cashdisbursements-destinationaccountid').select2();
+
+        $('#cashdisbursements-sourceaccountid').select2();
         
 	});
 </script>

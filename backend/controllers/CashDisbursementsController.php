@@ -377,4 +377,98 @@ class CashDisbursementsController extends Controller
     }
 
 
+    public function actionDestinationAccounts($DisbursementType = '', $CountyID='')
+    {
+        if(!empty($DisbursementType) && !empty($CountyID))
+        {
+            $data = BankAccounts::find()->where(['BankTypeID' => $DisbursementType, 'CountyID' => $CountyID])->orderBy(['AccountName' => SORT_ASC])->all();
+        }else
+        {
+            $data = BankAccounts::find()->orderBy(['AccountName' => SORT_ASC])->all();
+        }
+
+        if(count($data))
+        {
+            foreach($data  as $k  => $record )
+            {
+                if(empty($record['BankAccountID']) || empty($record['AccountName'])){
+                    continue;
+                }
+                ob_start();
+                echo "<option value=".$record['BankAccountID'].">".$record['AccountName']."</option>";
+                $listData = ob_get_contents();
+
+            }
+            ob_end_clean();
+            echo $listData;
+        }else{
+            echo "<option value=''>No data Available</option>";
+        }
+        return true;
+
+
+    }
+
+    public function actionOrganizations($CountyID)
+    {
+        if(!empty($CountyID) )
+        {
+            $data = Organizations::find()->where(['CountyID' => $CountyID])->orderBy(['OrganizationName' => SORT_ASC])->all();
+        }else
+        {
+            $data = Organizations::find()->orderBy(['OrganizationName' => SORT_ASC])->all();
+        }
+
+        if(count($data))
+        {
+            foreach($data  as $k  => $record )
+            {
+                if(empty($record['OrganizationID']) || empty($record['OrganizationName'])){
+                    continue;
+                }
+                ob_start();
+                echo "<option value=".$record['OrganizationID'].">".$record['OrganizationName']."</option>";
+                $listData = ob_get_contents();
+
+            }
+            ob_end_clean();
+            echo $listData;
+        }else{
+            echo "<option value=''>No data Available</option>";
+        }
+        return true;
+    }
+
+    /*Should only be NPIU OR CPIU accounts -  lET THE USER SEARCH THIS*/
+    public function actionSourceAccounts($CountyID='')
+    {
+        if(!empty($CountyID))
+        {
+            $data = BankAccounts::find()->where(['in',['BankTypeID'],[1,2]])->andWhere(['CountyID' => $CountyID])->orderBy(['AccountName' => SORT_ASC])->all();
+        }else
+        {
+            $data = BankAccounts::find()->where(['in',['BankTypeID'],[1,2]])->orderBy(['AccountName' => SORT_ASC])->all();
+        }
+
+        if(count($data))
+        {
+            foreach($data  as $k  => $record )
+            {
+                if(empty($record['BankAccountID']) || empty($record['AccountName'])){
+                    continue;
+                }
+                ob_start();
+                echo "<option value=".$record['BankAccountID'].">".$record['AccountName']."</option>";
+                $listData = ob_get_contents();
+
+            }
+            ob_end_clean();
+            echo $listData;
+        }else{
+            echo "<option value=''>No data Available</option>";
+        }
+        return true;
+    }
+
+
 }
