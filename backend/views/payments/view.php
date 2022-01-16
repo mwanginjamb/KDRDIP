@@ -225,7 +225,7 @@ Modal::end();
 
                         <?php if($document): ?>
 
-                        <iframe src="<?= $document ?>" height="700px" width="100%"></iframe>
+                                 <iframe src="<?= $document ?>" height="700px" width="100%"></iframe>
 
                         <?php else: ?>
                             <p class="text">No Document to Preview</p>

@@ -50,3 +50,6 @@ phpunit.phar
 .jpg
 .png
 .xlsx
+
+
+/uploads
