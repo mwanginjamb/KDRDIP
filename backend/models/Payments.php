@@ -133,6 +133,11 @@ class Payments extends \yii\db\ActiveRecord
     }
 
     public function read(){
+
+	    if(empty($this->filePath))
+        {
+            return false;
+        }
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $content = file_get_contents($this->filePath); //read file into a string or get a file handle resource from fs
         $mimetype = $finfo->buffer($content); //get mime type
