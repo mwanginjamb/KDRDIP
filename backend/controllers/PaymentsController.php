@@ -178,6 +178,7 @@ class PaymentsController extends Controller
 			'rights' => $this->rights,
 			'documentsProvider' => $documentsProvider,
 			'approvalNotesProvider' => $approvalNotesProvider,
+            'document' => $model->read()
 		]);
 	}
 
@@ -193,34 +194,13 @@ class PaymentsController extends Controller
 		$model->PaymentTypeID = 1;
 		$model->Date = date('Y-m-d');
 
-		if (Yii::$app->request->post()) {
-			if (Yii::$app->request->post()['Payments']['PaymentTypeID'] == 1) {
-				// get the ProcurementPlanLineID
-                if (isset(Yii::$app->request->post()['Payments']['InvoiceID'])) {
-                    $invoice = Invoices::findOne(Yii::$app->request->post()['Payments']['InvoiceID']);
-                    if ($invoice) {
-                        $model->ProcurementPlanLineID = $invoice->ProcurementPlanLineID;
-                    }
-                }
-			}
-		}
 
-		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+
+		if ($model->load(Yii::$app->request->post())) {
+            $model->imageFile = UploadedFile::getInstanceByName('attachment');
+            $model->upload();
 			if ($model->save()) {
-				if ($model->imageFile) {
-					$document = new Documents();
-					$document->Description = 'Disbursement';
-					$document->DocumentTypeID = 6;
-					$document->DocumentCategoryID = 8;
-					$document->RefNumber = $model->PaymentID;
-					$document->Image = $model->formatImage();
-					$document->imageFile = $model->imageFile;
-					$document->CreatedBy = Yii::$app->user->identity->UserID;
-					if (!$document->save()) {
-						// print_r($document->getErrors()); exit;
-					}
-				}
+
 				return $this->redirect(['view', 'id' => $model->PaymentID]);
 			}
 		}
@@ -262,24 +242,12 @@ class PaymentsController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-			if ($model->save()) {
-				if ($model->imageFile) {
-					$document = new Documents();
-					$document->Description = 'Disbursement';
-					$document->DocumentTypeID = 6;
-					$document->DocumentCategoryID = 8;
-					$document->RefNumber = $model->PaymentID;
-					$document->Image = $model->formatImage();
-					$document->imageFile = $model->imageFile;
-					$document->CreatedBy = Yii::$app->user->identity->UserID;
-					if (!$document->save()) {
-						// print_r($document->getErrors()); exit;
-					}
-				}
-				return $this->redirect(['view', 'id' => $model->PaymentID]);
-			}
+		if ($model->load(Yii::$app->request->post()) ) {
+            $model->imageFile = UploadedFile::getInstanceByName('attachment');
+            $model->upload();
+            if ($model->save()) {
+                return $this->redirect(['view', 'id' => $model->PaymentID]);
+            }
 		}
 
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
@@ -353,13 +321,16 @@ class PaymentsController extends Controller
 
 	public function actionSubmit($id)
 	{
-		$model = $this->findModel($id);
+		// $model = $this->findModel($id);
+        $model = Payments::find()->where(['PaymentID' => $id])->one();
 		$model->ApprovalStatusID = 1;
-		if ($model->save() && $model) {
-			$result = UsersController::sendEmailNotification(29);
+		if ($model->save(false) && $model) {
+            Yii::$app->session->setFlash('success','Document sent for approval successfully.');
+			// $result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->PaymentID]);
 		} else {
-			// print_r($model->getErrors()); exit;
+		    Yii::$app->session->setFlash('error','Could not send this document for approval. ');
+			return $this->redirect(['index']);
 		}
 	}
 
@@ -550,7 +521,7 @@ class PaymentsController extends Controller
 					}
 					break;
 			default:
-					$baseUnit = pow(1000, floor(log($number, 1000)));
+					$baseUnit = pow(1000, ior(log($number, 1000)));
 					$numBaseUnits = (int) ($number / $baseUnit);
 					$remainder = $number % $baseUnit;
 					$string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
@@ -572,4 +543,6 @@ class PaymentsController extends Controller
 
 		return $string;
 	}
+
+
 }

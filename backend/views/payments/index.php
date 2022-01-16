@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'label'=>'Supplier',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',
-									'value' => 'suppliers.SupplierName',
+									'value' => 'Supplier',
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[

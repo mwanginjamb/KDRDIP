@@ -5,6 +5,7 @@ namespace app\models;
 use app\models\Invoices;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "payments".
@@ -27,6 +28,7 @@ use Yii;
  * @property string $Supplier
  * @property string $InvoiceNumber
  * @property string $InvoiceDate
+ * @property string $filePath
  */
 class Payments extends \yii\db\ActiveRecord
 {
@@ -67,7 +69,10 @@ class Payments extends \yii\db\ActiveRecord
 			[['Description'], 'string', 'max' => 500],
 			[[ 'PaymentMethodID', 'Amount', 'Date', 'BankAccountID', 'PaymentTypeID', 'ProcurementPlanLineID', 'ProjectID', 'InvoiceDate', 'InvoiceNumber', 'Supplier'], 'required'],
 			[['Amount'], 'validateAmount'],
-			[['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+			['filePath','string','max' => 100],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
+            ['imageFile', 'file','skipOnEmpty' => false,'mimeTypes' => ['application/pdf']],
+            ['imageFile', 'file','skipOnEmpty' => false,'maxSize' => 5*1024*1024]
 		// 	[['SupplierID', 'InvoiceID',], 'required', 'when' => function($model) {
 		// 		return $model->PaymentTypeID == 1;
 		//   }]
@@ -98,15 +103,11 @@ class Payments extends \yii\db\ActiveRecord
             'Supplier' => 'Supplier',
             'InvoiceNumber' => 'Invoice Number',
             'InvoiceDate' => 'Invoice Date',
+            'imageFile' => 'Payment Attachment'
 		];
 	}
 
-	public function formatImage()
-	{
-		$tmpfile_contents = file_get_contents($this->imageFile->tempName);
-		$type = $this->imageFile->type;
-		return 'data:' . $type . ';base64,' . base64_encode($tmpfile_contents);
-	}
+
 
 	public function validateAmount($attribute, $params)
 	{
@@ -120,6 +121,30 @@ class Payments extends \yii\db\ActiveRecord
 			}
 		}
 	}
+
+	// upload file
+
+    public function upload()
+    {
+        $destName = Yii::$app->security->generateRandomString(6);
+        $this->imageFile->saveAs('./uploads/'.$destName.'.'.$this->imageFile->extension,false);
+        $this->filePath = Url::home(true).'uploads/'.$destName.'.'.$this->imageFile->extension;
+        return true;
+    }
+
+    public function read(){
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $content = file_get_contents($this->filePath); //read file into a string or get a file handle resource from fs
+        $mimetype = $finfo->buffer($content); //get mime type
+
+        if($content)
+        {
+            return 'data:'.$mimetype.';base64,'.base64_encode($content);
+        }
+
+        return $content; // should be false if read was unsuccessful
+
+    }
 
 	public function getPaymentMethods()
 	{

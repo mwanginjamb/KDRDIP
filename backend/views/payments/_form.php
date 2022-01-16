@@ -11,14 +11,7 @@ $baseUrl = Yii::$app->request->baseUrl;
 /* @var $model app\models\Payments */
 /* @var $form yii\widgets\ActiveForm */
 
-Modal::begin([
-	'header' => '<h4 class="modal-title">Document</h4>',
-	// 'footer' => Html::submitButton(Yii::t('app', 'Save')),
-	'id' => 'pdf-viewer',
-	'size' => 'modal-lg',
-	]);
 
-Modal::end();
 ?>
 
 <div class="card">
@@ -37,7 +30,12 @@ Modal::end();
 	</div>
 	<div class="card-content collapse show">
 		<div class="card-body">
-			<?php $form = ActiveForm::begin(); ?>
+			<?php $form = ActiveForm::begin([
+                    'errorSummaryCssClass' => 'help-block',
+                   ],
+                ['options' => ['enctype' => 'multipart/form-data']]); ?>
+
+            <?= $form->errorSummary($model) ?>
 				 
 			<div class="row">
 				<div class="col-md-6">
@@ -116,7 +114,7 @@ Modal::end();
 
 			<div class="row">
 				<div class="col-md-6">
-					<?= $form->field($model, 'imageFile')->fileInput() ?>
+					<?= $form->field($model, 'imageFile')->fileInput(['name' => 'attachment']) ?>
 				</div>
 				<div class="col-md-6">
 				</div>			
@@ -189,6 +187,11 @@ Modal::end();
 			$(".modal-body").html('<iframe src="'+  image +'" height="700px" width="100%"></iframe>');
 			$(".modal-header").html('<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">' + title + '</h4>');
 		});
+
+
+		$('#payments-bankaccountid').select2();
+
+
 	});
 </script>
 <script src="<?= $baseUrl; ?>/app-assets/vendors/js/forms/select/select2.full.min.js"></script>

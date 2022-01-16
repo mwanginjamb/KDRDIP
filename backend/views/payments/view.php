@@ -127,83 +127,10 @@ Modal::end();
 								],
 						]) ?>
 
-						<h4 class="form-section" style="margin-bottom: 0px">Invoice</h4>
-						<?= DetailView::widget([
-							'model' => $invoice,
-								'attributes' => [
-									'InvoiceID',
-									[
-										'attribute' => 'InvoiceDate',
-										'label' => 'Invoice Date',
-										'format' => ['date', 'php:d/m/Y'],
-									],
-									'InvoiceNumber',
-									[
-										'attribute' => 'Amount',
-										'format' => ['decimal', 2]
-									],
-								],
-						]) ?>
 
-						<h4 class="form-section" style="margin-bottom: 0px">Purchase Order</h4>
-						<table class="custom-table table-striped table-bordered zero-configuration dataTable no-footer">
-						<tbody>
-						<?php
-							$DID = 0;
-							foreach ($purchases as $key => $purchase) {
-								if ($DID != $purchase['PurchaseID']) { ?>
-									<tr role="row">
-										<td colspan="3"><?= 'PO. No. ' . $purchase['PurchaseID'] ;?>  <?= 'PO. Date:' . date('d/m/Y', strtotime($purchase['CreatedDate'])); ?></td>
-									</tr>
-									<!-- <thead> -->
-										<tr role="row">
-											<td width="5%">ID</td>
-											<td>Product</td>
-											<td width="15%" style="text-align: right">Quantity Ordered</td>
-										</tr>
-									<!-- </thead> -->
-									<?php
-								}
-								?>
-								<tr role="row">
-									<td width="5%"><?= $key+1; ?></td>
-									<td><?= $purchase['ProductName']; ?></td>
-									<td width="15%" style="text-align: right"><?= $purchase['Quantity']; ?></td>
-								</tr>
-							<?php
-						}?>
-						</tbody>
-						</table>
 
-						<h4 class="form-section" style="margin-bottom: 0px">GRNs</h4>
-						<table class="custom-table table-striped table-bordered zero-configuration dataTable no-footer">
-						<tbody>
-						<?php
-							$DID = 0;
-							foreach ($deliveries as $key => $delivery) {
-								if ($DID != $delivery['DeliveryID']) { ?>
-									<tr role="row">
-										<td colspan="3"><?= 'Delivery Note No. ' . $delivery['DeliveryID'] ;?>  <?= 'Delivery Date:' . date('d/m/Y', strtotime($delivery['CreatedDate'])); ?></td>
-									</tr>
-									<!-- <thead> -->
-										<tr role="row">
-											<td width="5%">ID</td>
-											<td>Product</td>
-											<td width="15%" style="text-align: right">Quantity Delivered</td>
-										</tr>
-									<!-- </thead> -->
-									<?php
-								}
-								?>
-								<tr role="row">
-									<td width="5%"><?= $key+1; ?></td>
-									<td><?= $delivery['ProductName']; ?></td>
-									<td width="15%" style="text-align: right"><?= $delivery['DeliveredQuantity']; ?></td>
-								</tr>
-							<?php
-						}?>
-						</tbody>
-						</table>
+
+
 
 						<h4 class="form-section" style="margin-bottom: 0px">Notes</h4>
 						<?= GridView::widget([
@@ -243,8 +170,8 @@ Modal::end();
 							],
 						]); ?>
 
-						<h4 class="form-section" style="margin-bottom: 0px">Documents</h4>					
-						<?= GridView::widget([
+						<!--<h4 class="form-section" style="margin-bottom: 0px">Documents</h4>	-->
+						<?php GridView::widget([
 							'dataProvider' => $documentsProvider,
 							'layout' => '{items}',
 							'tableOptions' => [
@@ -291,12 +218,26 @@ Modal::end();
 							],
 						]); ?>
 
+
+                        <!-- Document Upload Preview   -->
+
+                        <h4 class="form-section" style="margin-bottom: 0px">Document Uploads Preview</h4>
+
+                        <?php if($document): ?>
+
+                        <iframe src="<?= $document ?>" height="700px" width="100%"></iframe>
+
+                        <?php else: ?>
+                            <p class="text">No Document to Preview</p>
+                        <?php endif; ?>
+
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
 <script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
 <script>
 	$(document).ready(function() {
