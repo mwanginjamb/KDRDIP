@@ -45,13 +45,13 @@ class Payments extends \yii\db\ActiveRecord
 		return parent::find()->andWhere(['=', 'payments.Deleted', 0]);
 	}
 
-	public function delete()
+	/*public function delete()
 	{
 		$m = parent::findOne($this->getPrimaryKey());
 		$m->Deleted = 1;
 		// $m->deletedTime = time();
 		return $m->save();
-	}
+	}*/
 
 	/**
 	 * {@inheritdoc}

@@ -38,27 +38,7 @@ class PaymentsController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(30);
 
-		$rightsArray = []; 
-		if (isset($this->rights->View)) {
-			array_push($rightsArray, 'index', 'view');
-		}
-		if (isset($this->rights->Create)) {
-			array_push($rightsArray, 'view', 'create');
-		}
-		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
-		}
-		if (isset($this->rights->Delete)) {
-			array_push($rightsArray, 'delete');
-		}
-		$rightsArray = array_unique($rightsArray);
-		
-		if (count($rightsArray) <= 0) { 
-			$rightsArray = ['none'];
-		}
-		
 		return [
 		'access' => [
 			'class' => AccessControl::className(),
@@ -73,7 +53,7 @@ class PaymentsController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
 				],
@@ -153,13 +133,15 @@ class PaymentsController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$model = $this->findModel($id);
+		//$model = $this->findModel($id);
+        $model = Payments::find()->where(['PaymentID' => $id])->one();
+
 		$invoice = Invoices::findOne($model->InvoiceID);
 		$PurchaseID = null;
 		if ($invoice) {
 			$PurchaseID = $invoice->PurchaseID;
 		} else {
-			$invoice = [];  
+			$invoice = [];
 		}
 		$purchases = [];
 		$deliveries = [];
@@ -189,7 +171,7 @@ class PaymentsController extends Controller
 		]);
 
 		return $this->render('view', [
-			'model' => $this->findModel($id),
+			'model' => $model,
 			'purchases' => $purchases,
 			'deliveries' => $deliveries,
 			'invoice' => $invoice,
@@ -339,7 +321,15 @@ class PaymentsController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->findModel($id)->delete();
+		// $this->findModel($id)->delete();
+		$model = $model = Payments::find()->where(['PaymentID' => $id])->one();
+
+		if($model->delete()) {
+            Yii::$app->session->setFlash('success', 'Record Purged Successfully.', true);
+        }else{
+            Yii::$app->session->setFlash('error', 'Sorry, Could not delete the record at this time.', true);
+
+        }
 
 		return $this->redirect(['index']);
 	}
@@ -347,13 +337,14 @@ class PaymentsController extends Controller
 	/**
 	 * Finds the Payments model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
-	 * @param integer $id
+	 * @param integer $idionView
+     *
 	 * @return Payments the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
 	protected function findModel($id)
 	{
-		if (($model = Payments::findOne($id)) !== null) {
+		if ($model = Payments::findOne($id)) {
 			return $model;
 		}
 
