@@ -38,7 +38,11 @@ Modal::end();
 	<div class="card-content collapse show">
 		<div class="card-body">
 
-    		<?php $form = ActiveForm::begin(); ?>
+    		<?php $form = ActiveForm::begin([
+                'errorSummaryCssClass' => 'help-block',
+                ],
+                ['options' => ['enctype' => 'multipart/form-data']]
+                ); ?>
 
 				<div class="row">
 					<div class="col-md-6">
@@ -147,7 +151,7 @@ Modal::end();
 						<?= $form->field($model, 'Description')->textarea(['rows' => 4]) ?>					
 					</div>
 					<div class="col-md-6">
-						<?= $form->field($model, 'imageFile')->fileInput() ?>
+						<?= $form->field($model, 'imageFile')->fileInput(['name' => 'attachment']) ?>
 					</div>			
 				</div>
 

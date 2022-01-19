@@ -120,6 +120,7 @@ class CashDisbursementsController extends Controller
 	 */
 	public function actionView($id)
 	{
+	    $model = CashDisbursements::find()->where(['CashDisbursementID' => $id])->one();
 		$approvalNotesProvider = new ActiveDataProvider([
 			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 10]),
 		]);
@@ -129,10 +130,11 @@ class CashDisbursementsController extends Controller
 		]);
 
 		return $this->render('view', [
-			'model' => $this->findModel($id),
+			'model' => $model,
 			'rights' => $this->rights,
 			'approvalNotesProvider' => $approvalNotesProvider,
 			'documentsProvider' => $documentsProvider,
+            'document' => $model->read()
 		]);
 	}
 
@@ -148,9 +150,10 @@ class CashDisbursementsController extends Controller
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
         $model->DisbursementTypeID = 1;
 
-		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+		if ($model->load(Yii::$app->request->post()) ) {
             
-			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			$model->imageFile = UploadedFile::getInstanceByName('attachment');
+			$model->upload();
 			if ($model->save()) {
 				if ($model->imageFile) {
 					$document = new Documents();
@@ -158,8 +161,8 @@ class CashDisbursementsController extends Controller
 					$document->DocumentTypeID = 5;
 					$document->DocumentCategoryID = 7;
 					$document->RefNumber = $model->CashDisbursementID;
-					$document->Image = $model->formatImage();
-					$document->imageFile = $model->imageFile;
+					//$document->Image = $model->formatImage();
+					//$document->imageFile = $model->imageFile;
 					$document->CreatedBy = Yii::$app->user->identity->UserID;
 					if (!$document->save()) {
 						// print_r($document->getErrors()); exit;
@@ -230,8 +233,9 @@ class CashDisbursementsController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+		if ($model->load(Yii::$app->request->post()) ) {
+			$model->imageFile = UploadedFile::getInstanceByName( 'attachment');
+			$model->upload();
 			if ($model->save()) {
 				if ($model->imageFile) {
 					$document = new Documents();
@@ -315,13 +319,17 @@ class CashDisbursementsController extends Controller
 
 	public function actionSubmit($id)
 	{
-		$model = $this->findModel($id);
+		//$model = $this->findModel($id);
+        $model = CashDisbursements::find()->where(['CashDisbursementID' => $id])->one();
 		$model->ApprovalStatusID = 1;
-		if ($model->save()) {
+		if ($model->save(false)) {
+            Yii::$app->session->setFlash('success','Document sent for approval successfully.');
 			// $result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->CashDisbursementID]);
 		} else {
-			// print_r($model->getErrors()); exit;
+			//print_r($model->getErrors()); exit;
+            Yii::$app->session->setFlash('error','Could not send this document for approval. ');
+            return $this->redirect(['index']);
 		}
 	}
 

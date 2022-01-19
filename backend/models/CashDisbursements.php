@@ -3,6 +3,7 @@
 namespace app\models;
 
 use Yii;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "cash_disbursements".
@@ -27,6 +28,7 @@ use Yii;
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property string $filePath
 
  */
 class CashDisbursements extends \yii\db\ActiveRecord
@@ -58,6 +60,11 @@ class CashDisbursements extends \yii\db\ActiveRecord
 			[['Description'], 'string'],
 			[['Amount'], 'number'],
 			[['SerialNumber'], 'string', 'max' => 45],
+
+            ['filePath','string','max' => 100],
+            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
+            ['imageFile', 'file','skipOnEmpty' => false,'mimeTypes' => ['application/pdf']],
+            ['imageFile', 'file','skipOnEmpty' => false,'maxSize' => (35*1024*1024)]
 		];
 	}
 
@@ -89,6 +96,35 @@ class CashDisbursements extends \yii\db\ActiveRecord
 			'Deleted' => 'Deleted',
 		];
 	}
+
+    // upload file
+
+    public function upload()
+    {
+        $destName = Yii::$app->security->generateRandomString(6);
+        $this->imageFile->saveAs('./uploads/'.$destName.'.'.$this->imageFile->extension,false); // Life saver
+        $this->filePath = Url::home(true).'uploads/'.$destName.'.'.$this->imageFile->extension;
+        return true;
+    }
+
+    public function read(){
+
+        if(empty($this->filePath))
+        {
+            return false;
+        }
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $content = file_get_contents($this->filePath); //read file into a string or get a file handle resource from fs
+        $mimetype = $finfo->buffer($content); //get mime type
+
+        if($content)
+        {
+            return 'data:'.$mimetype.';base64,'.base64_encode($content);
+        }
+
+        return $content; // should be false if read was unsuccessful
+
+    }
 
 	public function formatImage()
 	{

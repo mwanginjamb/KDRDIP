@@ -72,7 +72,7 @@ class Payments extends \yii\db\ActiveRecord
 			['filePath','string','max' => 100],
             [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
             ['imageFile', 'file','skipOnEmpty' => false,'mimeTypes' => ['application/pdf']],
-            ['imageFile', 'file','skipOnEmpty' => false,'maxSize' => 5*1024*1024]
+            ['imageFile', 'file','skipOnEmpty' => false,'maxSize' => (35*1024*1024)]
 		// 	[['SupplierID', 'InvoiceID',], 'required', 'when' => function($model) {
 		// 		return $model->PaymentTypeID == 1;
 		//   }]
@@ -127,7 +127,7 @@ class Payments extends \yii\db\ActiveRecord
     public function upload()
     {
         $destName = Yii::$app->security->generateRandomString(6);
-        $this->imageFile->saveAs('./uploads/'.$destName.'.'.$this->imageFile->extension,false);
+        $this->imageFile->saveAs('./uploads/'.$destName.'.'.$this->imageFile->extension,false); // Life saver
         $this->filePath = Url::home(true).'uploads/'.$destName.'.'.$this->imageFile->extension;
         return true;
     }

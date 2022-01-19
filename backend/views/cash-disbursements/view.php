@@ -152,8 +152,8 @@ Modal::end();
 							],
 						]); ?>
 
-						<h4 class="form-section" style="margin-bottom: 0px">Documents</h4>					
-						<?= GridView::widget([
+<!--						<h4 class="form-section" style="margin-bottom: 0px">Documents</h4>					-->
+						<?php GridView::widget([
 							'dataProvider' => $documentsProvider,
 							'layout' => '{items}',
 							'tableOptions' => [
@@ -199,6 +199,25 @@ Modal::end();
 								],
 							],
 						]); ?>
+
+
+
+
+                        <!-- Document Upload Preview   -->
+
+                        <h4 class="form-section" style="margin-bottom: 0px">Document Uploads Preview</h4>
+
+                        <?php if($document): ?>
+
+                            <iframe src="<?= $document ?>" height="700px" width="100%"></iframe>
+
+                        <?php else: ?>
+                            <p class="text">No Document to Preview</p>
+                        <?php endif; ?>
+
+
+
+
 					</div>
 				</div>
 			</div>
