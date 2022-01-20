@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use app\models\AuthAssignment;
 use app\models\AuthItem;
+use common\models\User;
 use Yii;
 use app\models\Users;
 use app\models\UserGroups;
@@ -280,7 +281,14 @@ class UsersController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->findModel($id)->delete();
+		//$this->findModel($id)->delete();
+        $model = Users::find()->where(['UserID' => $id])->one();
+        if($model->delete())
+        {
+            Yii::$app->session->setFlash('success','User Deleted Successfully.');
+        }else{
+            Yii::$app->session->setFlash('error','User Deleted Successfully.');
+        }
 
 		return $this->redirect(['index']);
 	}
