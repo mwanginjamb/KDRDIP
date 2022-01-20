@@ -287,7 +287,7 @@ class UsersController extends Controller
         {
             Yii::$app->session->setFlash('success','User Deleted Successfully.');
         }else{
-            Yii::$app->session->setFlash('error','User Deleted Successfully.');
+            Yii::$app->session->setFlash('error','Unable to delete user Successfully.');
         }
 
 		return $this->redirect(['index']);
