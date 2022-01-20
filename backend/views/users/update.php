@@ -19,7 +19,7 @@ $this->params['breadcrumbs'][] = 'Update';
 		'counties' => $counties,
 		'communities' => $communities,
 		'userTypes' => $userTypes,
-		'rights' => $rights,
+		'rights' => [],
         'roles' => $roles
 	]) ?>
 

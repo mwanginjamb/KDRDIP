@@ -32,32 +32,13 @@ include_once 'includes/mailsender.php';
  */
 class UsersController extends Controller
 {
-	public $rights;
+
 	/**
 	 * @inheritdoc
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(60);
 
-		$rightsArray = [];
-		if (isset($this->rights->View)) {
-			array_push($rightsArray, 'index', 'view');
-		}
-		if (isset($this->rights->Create)) {
-			array_push($rightsArray, 'view', 'create');
-		}
-		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
-		}
-		if (isset($this->rights->Delete)) {
-			array_push($rightsArray, 'delete');
-		}
-		$rightsArray = array_unique($rightsArray);
-		
-		if (count($rightsArray) <= 0) {
-			$rightsArray = ['none'];
-		}
 		
 		return [
 		'access' => [
@@ -73,7 +54,7 @@ class UsersController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
 				],
@@ -93,15 +74,16 @@ class UsersController extends Controller
 	 */
 	public function actionIndex()
 	{
-
+        //$dataProvider = Users::find()->joinWith('userstatus')->joinWith('usergroups');
+        $dataProvider = Users::find()->joinWith('userstatus');
 		$dataProvider = new ActiveDataProvider([
-			'query' => $dataProvider = Users::find()->joinWith('userstatus')->joinWith('usergroups'),
+			'query' => $dataProvider,
             'pagination' => false,
 		]);
 		
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
-			'rights' => $this->rights,
+			'rights' => [],
 		]);
 	}
 
@@ -148,7 +130,7 @@ class UsersController extends Controller
 			'permissionForm' => $permissionForm,
 			'userGroups' => $userGroups,
 			'activeTab' => $activeTab,
-			'rights' => $this->rights,
+			'rights' => []
 		]);
 	}
 
@@ -179,8 +161,12 @@ class UsersController extends Controller
                     $roleModel->item_name = $model->userRole;
                     $roleModel->save();
                 }
+                return $this->redirect(['index']);
             }
-			return $this->redirect(['index']);
+            else{
+                //print_r($model->errors); exit;
+            }
+
 		}
 
 		$usergroups = ArrayHelper::map(UserGroups::find()->all(), 'UserGroupID', 'UserGroupName');
@@ -196,7 +182,6 @@ class UsersController extends Controller
 			'counties' => $counties,
 			'communities' => $communities,
 			'userTypes' => $userTypes,
-			'rights' => $this->rights,
             'roles' => ArrayHelper::map(AuthItem::findAll(['type' => 1]),'name' , 'name')
 		]);
 	}
@@ -253,7 +238,7 @@ class UsersController extends Controller
 			'counties' => $counties,
 			'communities' => $communities,
 			'userTypes' => $userTypes,
-			'rights' => $this->rights,
+			'rights' => [],
             'roles' =>  ArrayHelper::map(AuthItem::findAll(['type' => 1]),'name' , 'name')
 		]);
 	}

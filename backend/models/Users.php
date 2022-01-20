@@ -69,12 +69,12 @@ class Users extends \yii\db\ActiveRecord
 			[['Password', 'ConfirmPassword'],'required', 'when' => function ($model) {
 				return $model->isNewRecord;
 			}],
-			[['CountyID'],'required', 'when' => function ($model) {
+			/*[['CountyID'],'required', 'when' => function ($model) {
 				return ($model->UserTypeID == 2 ||  $model->UserTypeID == 3) ? true : false;
 			}],
 			[['CommunityID'],'required', 'when' => function ($model) {
 				return ($model->UserTypeID == 3) ? true : false;
-			}],
+			}],*/
 			['Password', 'compare', 'compareAttribute'=>'ConfirmPassword'],
             ['userRole', 'string'],
 		];

@@ -50,7 +50,10 @@ $baseUrl = Yii::$app->request->baseUrl;
 	<div class="card-content collapse show">
 		<div class="card-body">
 
-		<?php $form = ActiveForm::begin(); ?>
+		<?php $form = ActiveForm::begin(['errorSummaryCssClass' => 'help-block']); ?>
+
+            <?= $form->errorSummary($model) ?>
+
 		<div class="form-body">
 			<div class="row">
 				<div class="col-md-6">					
@@ -66,7 +69,7 @@ $baseUrl = Yii::$app->request->baseUrl;
 					<?= $form->field($model, 'Mobile')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
-					<?= $form->field($model, 'Email')->textInput(['maxlength' => true]) ?>
+					<?= $form->field($model, 'Email')->textInput(['maxlength' => true,'type' => 'email']) ?>
 				</div>
 			</div>
 
