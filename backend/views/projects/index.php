@@ -76,6 +76,12 @@ $(document).ready(function() {
 									'headerOptions' => ['width' => '10%'],
 									'format' => ['date', 'php:d/m/Y'],
 								],
+                                [
+                                    'attribute' => 'County',
+                                    'headerOptions' => ['width' => '10%'],
+                                    'value' => 'counties.CountyName',
+                                ],
+
 								[
 									'attribute' => 'projectStatus.ProjectStatusName',
 									'label' => 'Status',

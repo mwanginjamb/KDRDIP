@@ -1328,7 +1328,8 @@ class ReportsController extends Controller
 		$params = Yii::$app->request->post();
 		$Title = 'Project Finance Report';
 
-		$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+		//$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
+        $projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID',   'ProjectStatusName');
 		$ProjectStatusID = 0;
 		$componentId = 0;
 		$projectId = isset($params['FilterData']['ProjectID']) ? $params['FilterData']['ProjectID'] : 0;
