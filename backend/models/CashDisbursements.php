@@ -76,7 +76,7 @@ class CashDisbursements extends \yii\db\ActiveRecord
 		return [
 			'CashDisbursementID' => 'Cash Disbursement ID',
 			'DisbursementDate' => 'Date',
-			'SerialNumber' => 'Serial Number',
+			'SerialNumber' => 'Cheque No.',
 			'CountyID' => 'County',
 			'CommunityID' => 'Community',
             'OrganizationID' => 'Organization',
