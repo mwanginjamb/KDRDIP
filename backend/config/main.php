@@ -27,12 +27,13 @@ return [
 		],
 		'user' => [
 			'identityClass' => 'common\models\User',
-			'enableAutoLogin' => true,
+			'enableAutoLogin' => false,
 			'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
 		],
 		'session' => [
 			// this is the name of the session cookie used for login on the backend
 			'name' => 'advanced-backend',
+            'timeout' => 10*60, // If user is inactive for 10 min , log them out
 		],
 		'log' => [
 			'traceLevel' => YII_DEBUG ? 3 : 0,
