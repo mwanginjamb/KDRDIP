@@ -31,26 +31,7 @@ class CommunitiesController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(12);
 
-		$rightsArray = []; 
-		if (isset($this->rights->View)) {
-			array_push($rightsArray, 'index', 'view');
-		}
-		if (isset($this->rights->Create)) {
-			array_push($rightsArray, 'view', 'create');
-		}
-		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
-		}
-		if (isset($this->rights->Delete)) {
-			array_push($rightsArray, 'delete');
-		}
-		$rightsArray = array_unique($rightsArray);
-		
-		if (count($rightsArray) <= 0) { 
-			$rightsArray = ['none'];
-		}
 		
 		return [
 		'access' => [
@@ -66,7 +47,7 @@ class CommunitiesController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
                 [
@@ -91,8 +72,21 @@ class CommunitiesController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+	    $query = Communities::find();
+        $countQuery = clone $query;
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => Communities::find(),
+			'query' => $query,
+            'pagination' =>  [
+                'pageSize' => $countQuery->count()
+            ],
+            'totalCount' => $countQuery->count(),
+            'sort' => [
+                'defaultOrder' => [
+                    'CommunityID' => SORT_DESC
+                ],
+            ]
 		]);
 
 		return $this->render('index', [
