@@ -227,12 +227,16 @@ class ComponentsController extends Controller
 	public function actionProjects($id)
 	{
 		$model = Projects::find()->where(['ComponentID' => $id])->all();
-			
 		if (!empty($model)) {
+
 			echo '<option value="0">Select...</option>';
 			foreach ($model as $item) {
+                ob_start();
 				echo "<option value='" . $item->ProjectID . "'>" . $item->ProjectName . "</option>";
+                $listData = ob_get_contents();
 			}
+			ob_end_clean();
+			echo $listData;
 		} else {
 			echo '<option value="0">Select...</option>';
 		}

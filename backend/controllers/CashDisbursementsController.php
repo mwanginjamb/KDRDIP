@@ -405,7 +405,6 @@ class CashDisbursementsController extends Controller
                 ob_start();
                 echo "<option value=".$record['BankAccountID'].">".$record['AccountName']."</option>";
                 $listData = ob_get_contents();
-
             }
             ob_end_clean();
             echo $listData;
