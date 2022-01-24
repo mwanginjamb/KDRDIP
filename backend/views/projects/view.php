@@ -396,7 +396,14 @@ if(Yii::$app->session->hasFlash('success')){
 														'attribute' => 'ApprovalDate',
 														'format' => ['date', 'php:d/m/Y'],
 													],
-                                                    'financial_year',
+                                                    [
+                                                            'label' => 'Financial Year',
+                                                            'attribute' => 'financial_year',
+                                                            'value' => function($model)
+                                                            {
+                                                                return $model->fy->year;
+                                                            }
+                                                    ],
 													[
 														'attribute' => 'StartDate',
 														'format' => ['date', 'php:d/m/Y'],

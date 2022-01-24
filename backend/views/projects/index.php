@@ -69,7 +69,7 @@ $(document).ready(function() {
 								[
 								      'label' => 'Financial Year',
                                       'attribute' => 'financial_year',
-                                      'value' => 'financialyear.year'
+                                      'value' => 'fy.year'
                                 ],
 								[
 									'attribute' => 'StartDate',
