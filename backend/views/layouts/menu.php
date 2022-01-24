@@ -56,8 +56,8 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Finance</span></a>
 						<ul class="menu-content">
 							<?php if (in_array(1, $rights)) { ?>
-								<li <?= ($currentPage == 'accounts') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/accounts"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Chart of Accounts</span></a>
-								</li>
+								<!--<li <?php /*($currentPage == 'accounts') ? 'class="active"' : ''; */?>><a class="menu-item" href="<?/*= $baseUrl;*/?>/accounts"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Chart of Accounts</span></a>
+								</li>-->
 							<?php } ?>
 							<?php if (in_array(5, $rights)) { ?>
 								<li <?= ($currentPage == 'bank-accounts') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/bank-accounts"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Bank Accounts</span></a>
