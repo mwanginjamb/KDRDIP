@@ -71,7 +71,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								'AccountNumber',
 								'type.BankTypeName',
 								'counties.CountyName',
-								// 'organizations.OrganizationName',
+								[
+								        'label' => 'Group',
+								        'value' => 'organizations.OrganizationName',
+                                ],
+                                [
+                                    'label' => 'Sub Project',
+                                    'value' => 'projects.ProjectName',
+                                ],
 		/* 						[
 									'attribute' => 'CreatedDate',
 									'format' => ['date', 'php:d/m/Y h:i a'],
