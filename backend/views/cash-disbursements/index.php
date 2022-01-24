@@ -67,6 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
+								        'label' => 'County',
+                                        'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
+                                        'value' => 'counties.CountyName'
+                                ],
+								[
 									'label'=>'Approved Date',
 									'headerOptions' => ['width' => '12%','style'=>'color:black; text-align:left'],
 									'format'=>'date',
