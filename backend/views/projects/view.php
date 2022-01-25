@@ -401,7 +401,7 @@ if(Yii::$app->session->hasFlash('success')){
                                                             'attribute' => 'financial_year',
                                                             'value' => function($model)
                                                             {
-                                                                return $model->fy->year;
+                                                                return $model->fy->year ?? 'Not Set';
                                                             }
                                                     ],
 													[

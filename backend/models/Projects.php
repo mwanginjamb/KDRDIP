@@ -45,6 +45,7 @@ use yii\helpers\ArrayHelper;
  * @property int $SubComponentCategoryID
  * @property int $SectorInterventionID
  * @property int $financial_year
+ *
  */
 class Projects extends \yii\db\ActiveRecord
 {
@@ -68,6 +69,16 @@ class Projects extends \yii\db\ActiveRecord
 		// $m->deletedTime = time();
 		return $m->save();
 	}
+
+    // Get Disbursements
+
+    public function getTotals()
+    {
+        $command = Yii::$app->db->createCommand("SELECT sum(amount) FROM billing");
+
+        return yii\db\Query::sum($command);
+
+    }
 
 	/**
 	 * {@inheritdoc}
@@ -204,6 +215,7 @@ class Projects extends \yii\db\ActiveRecord
 		// $credit = CashBook::find()->where(['ProjectID' => $this->ProjectID])->sum('Credit');
 		return $debit;
 	}
+
 
 	public function getAmountSpent()
 	{

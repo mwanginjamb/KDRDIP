@@ -1328,6 +1328,8 @@ class ReportsController extends Controller
 		$params = Yii::$app->request->post();
 		$Title = 'Project Finance Report';
 
+		// $subprojects = Projects::find()->joinWith('disbursements')->all();
+
 		//$projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID', 'ProjectStatusName');
         $projectStatus = ArrayHelper::map(ProjectStatus::find()->all(), 'ProjectStatusID',   'ProjectStatusName');
 		$ProjectStatusID = 0;
@@ -1373,6 +1375,8 @@ class ReportsController extends Controller
 		} else {
 			$components = [];
 		}
+
+
 
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('projects-finance', [
@@ -1423,6 +1427,8 @@ class ReportsController extends Controller
 		$projects = ArrayHelper::map(Projects::find()->andWhere(['ComponentID' => $model->ComponentID])->all(), 'ProjectID', 'ProjectName');
 		$counties = ArrayHelper::map(Counties::find()->all(), 'CountyID', 'CountyName');
 		//$pdf->Output('test.pdf', 'F');
+
+
 		return $this->render('viewreport', [
 			'content' => $content,
 			'months' => $months,

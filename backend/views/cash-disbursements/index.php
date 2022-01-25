@@ -45,6 +45,17 @@ $this->params['breadcrumbs'][] = $this->title;
 									'class' => 'yii\grid\SerialColumn',
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
+								[
+								        'label' => 'Destination Account',
+                                        'value' => 'DestinationAccountID'
+                                ],
+								[
+								        'label' => 'Bank Account Name',
+                                        'value' => function($model)
+                                        {
+                                            return $model->destinationBankAccount->AccountName;
+                                        }
+                                ],
 								'recipientName',
 								[
 									'label'=>'Date',

@@ -26,6 +26,7 @@ $Total = number_format($Total, 2); */
 	<th width="9%">End Date</th>
 	<th width="12%" align="right">Budgeted Amount</th>
 	<th width="12%" align="right">Disbursed Amount</th>
+	<th width="12%" align="right">Disbursed Recalc Amount</th>
 	<th width="12%" align="right">Amount Spent</th>
 	<th width="12%" align="right">Balance</th>
 	<th width="10%">Status</th>
@@ -34,6 +35,7 @@ $Total = number_format($Total, 2); */
 	<tbody>
 	<?php
 	foreach ($projects as $key => $project) {
+
 		?>
 		<tr>
 			<td style="text-align:center"><?= $key + 1; ?></td>
