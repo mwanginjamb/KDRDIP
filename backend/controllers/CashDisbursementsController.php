@@ -153,7 +153,11 @@ class CashDisbursementsController extends Controller
 		if ($model->load(Yii::$app->request->post()) ) {
             
 			$model->imageFile = UploadedFile::getInstanceByName('attachment');
-			$model->upload();
+			if($model->imageFile)
+            {
+                $model->upload();
+            }
+
 			if ($model->save()) {
 				if ($model->imageFile) {
 					$document = new Documents();

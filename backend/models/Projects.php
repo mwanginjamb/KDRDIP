@@ -70,15 +70,8 @@ class Projects extends \yii\db\ActiveRecord
 		return $m->save();
 	}
 
-    // Get Disbursements
 
-    public function getTotals()
-    {
-        $command = Yii::$app->db->createCommand("SELECT sum(amount) FROM billing");
 
-        return yii\db\Query::sum($command);
-
-    }
 
 	/**
 	 * {@inheritdoc}
@@ -216,6 +209,19 @@ class Projects extends \yii\db\ActiveRecord
 		return $debit;
 	}
 
+	public function getDisbursements()
+    {
+        //return $this->hasMany(CashDisbursements::class,['ProjectID' => 'ProjectID']);
+        return CashDisbursements::find()->Where(['ProjectID' => $this->ProjectID ])->sum('Amount');
+    }
+
+    public function getFinancialyear()
+    {
+        $query = FinancialYear::find()->where(['id' => 'financial_year' ])->one();
+        return $query->year ?? null;
+        //$this->hasOne(FinancialYear::class,['id' => 'financial_year']);
+    }
+
 
 	public function getAmountSpent()
 	{
@@ -235,6 +241,8 @@ class Projects extends \yii\db\ActiveRecord
 	{
 		return ProjectChallenges::findOne(['ProjectID' => $this->ProjectID, 'MajorChallenge' => 1]);
 	}
+
+
 
 	public function getImplementationStatus()
 	{

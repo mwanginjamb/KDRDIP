@@ -62,9 +62,9 @@ class CashDisbursements extends \yii\db\ActiveRecord
 			[['SerialNumber'], 'string', 'max' => 45],
 
             ['filePath','string','max' => 100],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
-            ['imageFile', 'file','skipOnEmpty' => false,'mimeTypes' => ['application/pdf']],
-            ['imageFile', 'file','skipOnEmpty' => false,'maxSize' => (35*1024*1024)]
+            [['imageFile'], 'file', 'skipOnEmpty' => true, 'extensions' => 'pdf'],
+            ['imageFile', 'file','skipOnEmpty' => true,'mimeTypes' => ['application/pdf']],
+            ['imageFile', 'file','skipOnEmpty' => true,'maxSize' => (35*1024*1024)]
 		];
 	}
 

@@ -22,11 +22,11 @@ $Total = number_format($Total, 2); */
 <tr>
 	<th width="5%" style="color:black; text-align:center;">ID</th>
 	<th style="color:black; text-align:left">Project</th>
-	<th width="9%">Start Date</th>
-	<th width="9%">End Date</th>
+	<th style="color:black; text-align:left">Financial Year</th>
+
 	<th width="12%" align="right">Budgeted Amount</th>
 	<th width="12%" align="right">Disbursed Amount</th>
-	<th width="12%" align="right">Disbursed Recalc Amount</th>
+	<th width="12%" align="right">Disbursed (New Formula) Amount</th>
 	<th width="12%" align="right">Amount Spent</th>
 	<th width="12%" align="right">Balance</th>
 	<th width="10%">Status</th>
@@ -40,10 +40,11 @@ $Total = number_format($Total, 2); */
 		<tr>
 			<td style="text-align:center"><?= $key + 1; ?></td>
 			<td style="text-align:left"><?= $project['ProjectName']; ?></td>
-			<td><?= date('d/m/Y', strtotime($project['StartDate'])); ?></td>
-			<td><?= date('d/m/Y', strtotime($project['EndDate'])); ?></td>
+			<td style="text-align:left"><?= $project->financialyear; ?></td>
+
 			<td align="right"><?= number_format($project->BudgetedAmount,2); ?></td>
 			<td align="right"><?= number_format($project->DisbursedAmount,2); ?></td>
+			<td align="right"><?= number_format($project->disbursements,2); ?></td>
 			<td align="right"><?= number_format($project->AmountSpent,2); ?></td>
 			<td align="right"><?= number_format($project->Balance,2); ?></td>
 			<td><?= $project['projectStatus']['ProjectStatusName'] ?></td>

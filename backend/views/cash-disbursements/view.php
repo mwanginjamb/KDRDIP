@@ -77,6 +77,7 @@ Modal::end();
 								'counties.CountyName',
 								'organizations.OrganizationName',
 								'projects.ProjectName',
+								'projects.ProjectID',
 								'Description:ntext',
 								[
 									'attribute' => 'sourceBankAccount.AccountName',
