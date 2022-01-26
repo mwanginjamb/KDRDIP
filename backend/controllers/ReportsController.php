@@ -1356,15 +1356,29 @@ class ReportsController extends Controller
 				$where['projects.CountyID'] = $countyId;
 			}			
 
-			$projects = Projects::find()->joinWith('projectStatus')->where($where)->all();
+			$projects = Projects::find()
+                ->joinWith('projectStatus')
+                ->joinWith('fy')
+                ->joinWith('counties')
+                ->where($where)->all();
 		} else {
 			if (!empty($params) && isset($params['FilterData']['ProjectStatusID']) && $params['FilterData']['ProjectStatusID'] != 0) {
 				$ProjectStatusID = $params['FilterData']['ProjectStatusID'];
-				$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all();
+				$projects = Projects::find()
+                    ->joinWith('projectStatus')
+                    ->joinWith('fy')
+                    ->joinWith('counties')
+                    ->where(['ComponentID' => $cid, 'projects.ProjectStatusID' => $ProjectStatusID])->all();
 			} else {
-				$projects = Projects::find()->joinWith('projectStatus')->where(['ComponentID' => $cid])->all();
+				$projects = Projects::find()
+                    ->joinWith('projectStatus')
+                    ->joinWith('fy')
+                    ->joinWith('counties')
+                    ->where(['ComponentID' => $cid])->all();
 			}
 		}
+
+
 
 		$pStatus = ProjectStatus::findOne($ProjectStatusID);
 

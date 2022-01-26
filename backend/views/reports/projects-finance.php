@@ -23,6 +23,7 @@ $Total = number_format($Total, 2); */
 	<th width="5%" style="color:black; text-align:center;">ID</th>
 	<th style="color:black; text-align:left">Project</th>
 	<th style="color:black; text-align:left">Financial Year</th>
+	<th style="color:black; text-align:left">County</th>
 
 	<th width="12%" align="right">Budgeted Amount</th>
 	<th width="12%" align="right">Disbursed Amount</th>
@@ -40,7 +41,8 @@ $Total = number_format($Total, 2); */
 		<tr>
 			<td style="text-align:center"><?= $key + 1; ?></td>
 			<td style="text-align:left"><?= $project['ProjectName']; ?></td>
-			<td style="text-align:left"><?= $project->financialyear; ?></td>
+			<td style="text-align:left"><?= $project['fy']['year']?? ''; ?></td>
+			<td style="text-align:left"><?= $project['counties']['CountyName']?? ''; ?></td>
 
 			<td align="right"><?= number_format($project->BudgetedAmount,2); ?></td>
 			<td align="right"><?= number_format($project->DisbursedAmount,2); ?></td>

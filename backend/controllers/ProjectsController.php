@@ -541,7 +541,7 @@ class ProjectsController extends Controller
 			'subComponentCategories' => $subComponentCategories,
 			'subComponents' => $subComponents,
 			'enterpriseTypes' => $enterpriseTypes,
-            'fy' => ArrayHelper::map(FinancialYear::find()->all(), 'year', 'year' ),
+            'fy' => ArrayHelper::map(FinancialYear::find()->all(), 'id', 'year' ),
 		]);
 	}
 
@@ -721,7 +721,7 @@ class ProjectsController extends Controller
 			'subComponentCategories' => $subComponentCategories,
 			'subComponents' => $subComponents,
 			'enterpriseTypes' => $enterpriseTypes,
-            'fy' => ArrayHelper::map(FinancialYear::find()->all(), 'year', 'year' ),
+            'fy' => ArrayHelper::map(FinancialYear::find()->all(), 'id', 'year' ),
 		]);
 	}
 
