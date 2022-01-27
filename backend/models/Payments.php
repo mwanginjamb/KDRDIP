@@ -68,7 +68,7 @@ class Payments extends \yii\db\ActiveRecord
 			[['Supplier'], 'string', 'max' => 300],
 			[['Description'], 'string', 'max' => 500],
 			[[ 'PaymentMethodID', 'Amount', 'Date', 'BankAccountID', 'PaymentTypeID', 'ProcurementPlanLineID', 'ProjectID', 'InvoiceDate', 'InvoiceNumber', 'Supplier'], 'required'],
-			[['Amount'], 'validateAmount'],
+			//[['Amount'], 'validateAmount'],
 			['filePath','string','max' => 100],
             [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
             ['imageFile', 'file','skipOnEmpty' => false,'mimeTypes' => ['application/pdf']],
@@ -111,6 +111,7 @@ class Payments extends \yii\db\ActiveRecord
 
 	public function validateAmount($attribute, $params)
 	{
+	    // Client - KDRDIP, Removed this validation
 		// print_r($this->ApprovalStatusID); exit;
 		if ($this->ApprovalStatusID < 1) {
 			// no real check at the moment to be sure that the error is triggered

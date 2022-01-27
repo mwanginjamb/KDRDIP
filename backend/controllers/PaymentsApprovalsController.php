@@ -106,7 +106,8 @@ class PaymentsApprovalsController extends Controller
 	public function actionView($id, $option)
 	{		
 		$UserID = Yii::$app->user->identity->UserID;		
-		$model = $this->findModel($id);
+		// $model = $this->findModel($id);
+        $model = Payments::find()->where(['PaymentID' => $id])->one();
 		$invoice = Invoices::findOne($model->InvoiceID);
 		$PurchaseID = null;
 		if ($invoice) {
@@ -116,6 +117,14 @@ class PaymentsApprovalsController extends Controller
 		}	
 		
 		$params = Yii::$app->request->post();
+		/*if(Yii::$app->request->post())
+        {
+            print '<pre>';
+            print_r($params);
+
+            print_r($model);
+            exit;
+        }*/
 		// $PurchaseID = $invoice->PurchaseID;
 		$purchases = [];
 		$deliveries = [];
@@ -167,9 +176,19 @@ class PaymentsApprovalsController extends Controller
 			if (isset($params['Reject'])) {
 				$model->ApprovalStatusID = 4;
 			}
+			/*if($model->save()){
+                print '<pre>';
+                print_r('Saved Model.........');
+                print_r($model);
+            }else{
+                print_r('Error.........');
+                print_r($model->errors);
+            }
+
+			exit;*/
 		}
 
-		if (Yii::$app->request->post() && $model->save()) {
+		if (Yii::$app->request->post() && $model->save(false)) {
 			$params = Yii::$app->request->post();
 			
 			// Add Notes to the notes table
