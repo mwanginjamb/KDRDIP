@@ -195,8 +195,9 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 											</li>
 										<?php } ?>	
 										<?php if (in_array(28, $rights)) { ?>
-											<li <?= ($currentPage == 'payment-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payment-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Methods</span></a>
-											</li>	
+                                            <li <?= ($currentPage == 'payment-methods') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payment-methods"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Methods</span></a></li>
+											<li <?= ($currentPage == 'payment-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/payment-types"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Payment Types</span></a>
+											</li>
 										<?php } ?>	
 										<?php if (in_array(17, $rights)) { ?>
 											<li <?= ($currentPage == 'currencies') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/currencies"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Currencies</span></a>

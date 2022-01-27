@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Payment Types', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create a Payment Type', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
 
@@ -23,11 +23,14 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'PaymentTypeID',
+            //'PaymentTypeID',
             'PaymentTypeName',
             'Notes:ntext',
             'CreatedDate',
-            'CreatedBy',
+            [
+                    'attribute' => 'CreatedBy',
+                    'value' => 'user.FirstName'
+            ],
             //'Deleted',
 
             ['class' => 'yii\grid\ActionColumn'],

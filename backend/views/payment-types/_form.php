@@ -14,13 +14,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'PaymentTypeName')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'Notes')->textarea(['rows' => 2]) ?>
 
-    <?= $form->field($model, 'CreatedDate')->textInput() ?>
+    <?php $form->field($model, 'CreatedDate')->textInput() ?>
 
-    <?= $form->field($model, 'CreatedBy')->textInput() ?>
+    <?php $form->field($model, 'CreatedBy')->textInput() ?>
 
-    <?= $form->field($model, 'Deleted')->textInput() ?>
+    <?php $form->field($model, 'Deleted')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -2,7 +2,10 @@
 
 namespace app\models;
 
+use common\models\User;
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "payment_types".
@@ -22,6 +25,24 @@ class PaymentTypes extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'payment_types';
+    }
+
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => BlameableBehavior::class,
+                'createdByAttribute' => 'CreatedBy',
+                'updatedByAttribute' => false
+
+            ],
+            /*[
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'CreatedDate',
+                'updatedAtAttribute' => false
+            ]*/
+        ];
     }
 
     /**
@@ -50,5 +71,10 @@ class PaymentTypes extends \yii\db\ActiveRecord
             'CreatedBy' => 'Created By',
             'Deleted' => 'Deleted',
         ];
+    }
+
+    public function getUser()
+    {
+        return $this->hasOne(User::class,['UserID' => 'CreatedBy']);
     }
 }
