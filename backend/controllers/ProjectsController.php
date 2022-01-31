@@ -1333,7 +1333,8 @@ class ProjectsController extends Controller
 
 	public function actionLocations($id)
 	{
-		$model = Locations::find()->orderBy('SubCountyName')->where(['SubCountyID' => $id])->all();
+		//$model = Locations::find()->orderBy('SubCountyName')->where(['SubCountyID' => $id])->all();
+		$model = Locations::find()->where(['SubCountyID' => $id])->all();
 			
 		if (!empty($model)) {
 			echo '<option value="0">Select...</option>';

@@ -185,7 +185,14 @@ class LipwBeneficiariesController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->findModel($id)->delete();
+		//$this->findModel($id)->delete();
+		$model = 	LipwBeneficiaries::findOne(['BeneficiaryID' => $id]);
+		if($model->delete())
+		{
+			Yii::$app->session->setFlash('success', 'Record Deleted Successfully.');
+		}else{
+			Yii::$app->session->setFlash('error', 'Error deleting record.');
+		}
 
 		return $this->redirect(['index']);
 	}

@@ -29,7 +29,7 @@ return [
 			'identityClass' => 'common\models\User',
 			'enableAutoLogin' => false,
 			'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
-            'authTimeout' => 60*20 // If user is inactive for 10 min , log them out
+            'authTimeout' => 60*60 // If user is inactive for 10 min , log them out
 		],
 		'session' => [
 			// this is the name of the session cookie used for login on the backend
@@ -58,6 +58,15 @@ return [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             'defaultRoles' => ['guest']
+        ],
+		'assetManager' => [
+            'bundles' => [
+                'yii\web\JqueryAsset' => [
+                    'sourcePath' => null,
+                    'js' => ['/app-assets/js/jquery.min.js'],
+                ]
+            ],
+            'appendTimestamp' => true,
         ],
 		
 	],

@@ -22,7 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 <h4 class="form-section">Beneficiaries</h4>
 <p>
-	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/create?hId=' . $hId) . '", \'tab2\')']) : '' ?>	
+	<?= Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/create?hId=' . $hId) . '", \'tab2\')']) ?>	
+		
 </p>
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
@@ -76,11 +77,11 @@ $this->params['breadcrumbs'][] = $this->title;
 			'template' => '{view} {delete}',
 			'buttons' => [
 
-				'view' => function ($url, $model) use ($rights) {
-					return (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Edit', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/update?id=' . $model->BeneficiaryID) . '", \'tab2\')']) : '';
+				'view' => function ($url, $model) {
+					return (1==1) ? Html::a('<i class="ft-edit"></i> Edit', null, ['class' => 'btn-sm btn-primary', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/update?id=' . $model->BeneficiaryID) . '", \'tab2\')']) : '';
 				},
-				'delete' => function ($url, $model) use ($rights) {
-					return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', null, [
+				'delete' => function ($url, $model)  {
+					return (1 == 1) ? Html::a('<i class="ft-trash"></i> Delete', null, [
 						'class' => 'btn-sm btn-danger btn-xs',
 						'onclick' => 'deleteItem("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/delete?id=' . $model->BeneficiaryID) . '", \'tab2\')',
 					]) : '';
@@ -89,3 +90,6 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 	],
 ]); ?>
+
+
+
