@@ -234,7 +234,8 @@ class Projects extends \yii\db\ActiveRecord
 
 	public function getBalance()
 	{
-		return $this->getDisbursedAmount() - $this->getAmountSpent();
+		//return $this->getDisbursedAmount() - $this->getAmountSpent();
+		return $this->getDisbursements() - $this->getAmountSpent();
 	}
 
 	public function getMajorChallenge()

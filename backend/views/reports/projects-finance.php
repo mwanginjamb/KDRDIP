@@ -24,10 +24,9 @@ $Total = number_format($Total, 2); */
 	<th style="color:black; text-align:left">Project</th>
 	<th style="color:black; text-align:left">Financial Year</th>
 	<th style="color:black; text-align:left">County</th>
-
 	<th width="12%" align="right">Budgeted Amount</th>
+	<!-- <th width="12%" align="right">OLD Disbursed Amount</th> -->
 	<th width="12%" align="right">Disbursed Amount</th>
-	<th width="12%" align="right">Disbursed (New Formula) Amount</th>
 	<th width="12%" align="right">Amount Spent</th>
 	<th width="12%" align="right">Balance</th>
 	<th width="10%">Status</th>
@@ -43,9 +42,8 @@ $Total = number_format($Total, 2); */
 			<td style="text-align:left"><?= $project['ProjectName']; ?></td>
 			<td style="text-align:left"><?= $project['fy']['year']?? ''; ?></td>
 			<td style="text-align:left"><?= $project['counties']['CountyName']?? ''; ?></td>
-
 			<td align="right"><?= number_format($project->BudgetedAmount,2); ?></td>
-			<td align="right"><?= number_format($project->DisbursedAmount,2); ?></td>
+			<!-- <td align="right"><?php number_format($project->DisbursedAmount,2); ?></td> -->
 			<td align="right"><?= number_format($project->disbursements,2); ?></td>
 			<td align="right"><?= number_format($project->AmountSpent,2); ?></td>
 			<td align="right"><?= number_format($project->Balance,2); ?></td>

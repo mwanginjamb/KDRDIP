@@ -9,6 +9,7 @@ use yii\grid\GridView;
 $this->title = 'Lipw Work Registers';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+
 <style>
 	.btn-primary {
 		border-color: #512E90 !important;
@@ -87,3 +88,4 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 	],
 ]); ?>
+

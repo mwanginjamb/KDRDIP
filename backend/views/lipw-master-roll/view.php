@@ -1,5 +1,6 @@
 <?php
 
+use PHPUnit\Util\Log\JSON;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
@@ -14,6 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 // Attempt to initialize Data Tables
 $this->registerJs(' $(document).ready( function () {
 	$("table").DataTable();
+	
 } )');
 ?>
 <style>
@@ -108,3 +110,27 @@ $this->registerJs(' $(document).ready( function () {
 		</div>
 	</div>
 </section>
+
+<?php 
+$script = <<<JS
+	$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+		var target = $(e.target).attr("href") // activated tab
+		//alert(target);
+		
+		if(target === '#tab3')
+		{
+			changeSelect();
+			console.log('Invoked....');
+		}
+			
+		
+		function changeSelect() {
+			$("select").select2({
+			tags: true
+		});
+		}
+		
+	});
+JS;
+
+$this->registerJs($script);
