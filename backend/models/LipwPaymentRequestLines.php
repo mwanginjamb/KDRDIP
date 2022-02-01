@@ -19,6 +19,8 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 {
 	public $BeneficiaryID;
 	public $Total;
+	public $Name;
+	public $Days;
 	/**
 	 * {@inheritdoc}
 	 */
@@ -92,4 +94,12 @@ class LipwPaymentRequestLines extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(LipwWorkRegister::className(), ['WorkRegisterID' => 'WorkRegisterID']);
 	}
+
+	public function getBeneficiary()
+	{
+		return $this->hasOne(LipwBeneficiaries::class,['BeneficiaryID' => 'BeneficaryID']);
+	}
+
+	
+
 }

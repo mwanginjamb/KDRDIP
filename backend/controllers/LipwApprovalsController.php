@@ -177,6 +177,19 @@ class LipwApprovalsController extends Controller
 		$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where('ApprovalStatusID > 1')->all(), 'ApprovalStatusID', 'ApprovalStatusName');
 		$detailmodel = LipwPaymentRequest::find()->where(['PaymentRequestID'=> $id])->one();
 
+		$sql_payroll = "select lprl.PaymentRequestID,lprl.WorkRegisterID, lwr.BeneficiaryID, concat(lb.FirstName,' ',lb.MiddleName,' ',lb.LastName) as Name,
+		count(lwr.WorkRegisterID) as Days, sum(lwr.Amount) as Total,
+		lmr.MasterRollName
+		from lipw_payment_request_lines lprl
+		left join lipw_work_register lwr on lwr.WorkRegisterID = lprl.WorkRegisterID 
+		left join lipw_beneficiaries lb on lwr.BeneficiaryID = lb.BeneficiaryID
+		left join lipw_master_roll lmr on lmr.MasterRollID = lwr.MasterRollID 
+		where lmr.MasterRollID = ".$model->lipwMasterRoll->MasterRollID."
+		group by lwr.BeneficiaryID ";
+
+		$payroll = LipwPaymentRequestLines::findBySql($sql_payroll)
+		->all();
+
 		return $this->render('view', [
 			'model' => $model,
 			'detailmodel' => $detailmodel,
@@ -185,6 +198,7 @@ class LipwApprovalsController extends Controller
 			'option' => $option,
 			'requestLines' => $requestLines,
 			'rights' => $this->rights,
+			'payroll' => $payroll
 		]);
 	}
 

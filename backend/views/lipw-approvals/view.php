@@ -72,6 +72,7 @@ $FormID = 12;
 							'attributes' => [
 								'PaymentRequestID',
 								'lipwMasterRoll.MasterRollName',
+								'lipwMasterRoll.MasterRollID',
 								[
 									'attribute' => 'StartDate',
 									'format' => ['date', 'php:d/m/Y'],
@@ -143,6 +144,32 @@ $FormID = 12;
 								],
 							],
 						]); ?>
+
+							<h4 class="form-section" style="margin-bottom: 0px">Payroll</h4>
+							
+							<table class="table" id="payroll">
+								<thead>
+									<td class="text-bold">#</td>
+									<td class="text-bold">Beneficiary</td>
+									<td class="text-bold">Days Worked</td>
+									<td class="text-bold">Total Amount</td>
+								</thead>
+								<tbody>
+								<?php
+
+								/*print '<pre>';
+								print_r($payroll); exit;*/	
+								$count = 0;
+								 foreach($payroll as $p): $count++ ?>
+									<tr>
+										<td><?= $count ?></td>
+										<td><?= $p->Name ?></td>
+										<td><?= $p->Days ?></td>
+										<td><?= $p->Total ?></td>
+									</tr>								
+								<?php endforeach ?>
+								</tbody>
+							</table>
 					</div>
 				</div>
 			</div>
