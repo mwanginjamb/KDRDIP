@@ -9,6 +9,7 @@ function submittheform(form)
 
 async function submitForm(url, destination, formName, btn)
 {
+    
     console.log(formName);
     // Disable Button
     var bt = document.getElementById(btn);
@@ -21,11 +22,14 @@ async function submitForm(url, destination, formName, btn)
     var formData = new FormData(form);
 
     /*Update to fetch*/
-
+try{
     const response = await fetch(url, {
         method: 'POST',
         mode: 'cors',
-        body: formData
+        body: formData,
+        headers: {
+            Accept: 'application/json',
+          }
     });
 
 
@@ -33,12 +37,25 @@ async function submitForm(url, destination, formName, btn)
     const currentPage = window.location.href;
    if(response.ok) {
 
-        window.location.replace(currentPage);
+        const res = await response.json();
+               
+        console.table(res);
+        if(res.errors)
+        {
+            alert(res.errors);
+            location.reload(true);
+        }else{
 
-    }else{
-       alert('Could not upload the image successfully. Try later.');
-       window.location.replace(currentPage);
+            window.location.replace(currentPage);
+        }
+       
+
     }
+}catch(e)
+{
+        console.log(e.error.message);
+}
+  
     return true;
 
 

@@ -155,8 +155,24 @@ class LipwBeneficiariesController extends Controller
 		// echo $id; exit;
 		$model = $this->findModel($id);
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'hId' => $model->HouseholdID]);
+		if ($model->load(Yii::$app->request->post()) ) {
+
+			Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+			if($model->save()){
+				//return $this->redirect(['index', 'hId' => $model->HouseholdID]);
+				Yii::$app->session->setFlash('success', 'Record Saved Successfully.', true);
+				return ['success' => 'Record Saved Successfully'];
+
+			}else{
+				
+				if(count($model->errors))
+				{
+					//Yii::$app->session->setFlash('error', $model->FirstError, true);
+					return ['errors' => $model->getErrorSummary(true)];
+					
+				}
+				
+			}
 		}
 
 		$banks = ArrayHelper::map(Banks::find()->all(), 'BankID', 'BankName');

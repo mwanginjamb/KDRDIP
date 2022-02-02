@@ -69,9 +69,18 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted', 'BeneficiaryTypeID', 'Principal'], 'integer'],
 			[['FirstName', 'MiddleName', 'LastName', 'IDNumber', 'Mobile', 'BankAccountNumber', 'BankAccountName'], 'string', 'max' => 45],
 			[['Gender'], 'string', 'max' => 1],
+			['IDNumber', 'is8NumbersOnly'],
 			[['FirstName', 'LastName', 'IDNumber', 'Mobile', 'DateOfBirth', 'Gender'], 'required'],
 			['BeneficiaryTypeID', 'validateBeneficiatyType'],
 		];
+	}
+
+
+	public function is8NumbersOnly($attribute)
+	{
+		if (!preg_match('/^[0-9]{8}$/', $this->$attribute)) {
+			$this->addError($attribute, 'must contain exactly 8 digits.');
+		}
 	}
 
 	/**
