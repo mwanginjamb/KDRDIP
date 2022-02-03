@@ -587,97 +587,95 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 						</li>
 					<?php } ?>
 
-					<?php if (count(array_intersect($rights, [130, 131, 136, 137, 138])) > 0) { ?>
+					<?php if (Yii::$app->user->can('access-safeguards')) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Safeguards</span></a>
 							<ul class="menu-content">
-								<?php if (in_array(131, $rights)) { ?>
+								
 									<li <?= ($currentPage == 'safeguards-dashboard') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/safeguards-dashboard"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Dashboard</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(130, $rights)) { ?>
+								
 									<li <?= ($currentPage == 'project-safeguards') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/project-safeguards"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Safeguards</span></a>
 									</li>
-								<?php } ?>
-								<?php if (count(array_intersect($rights, [136])) > 0) { ?>
+								
+								
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 									<ul class="menu-content">
-										<?php if (in_array(24, $rights)) { ?>									
+																			
 											<li <?= ($currentPage == 'document-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Documents</span></a>
 											</li>
-										<?php } ?>										
+																		
 									</ul>
 								</li>
-								<?php } ?>
-								<?php if (count(array_intersect($rights, [137])) > 0) { ?>
+								
+								
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
 										<ul class="menu-content">	
-											<?php if (in_array(24, $rights)) { ?>								
+																		
 												<li <?= ($currentPage == 'document-approvals' && $option == 2) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-approvals?option=2"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Documents</span></a>
 												</li>
-											<?php } ?>														
+																									
 										</ul>
 									</li>
-								<?php } ?>
-								<?php if (count(array_intersect($rights, [138])) > 0) { ?>
+								
+								
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Rejected</span></a>
 										<ul class="menu-content">	
-											<?php if (in_array(24, $rights)) { ?>								
+																			
 												<li <?= ($currentPage == 'document-approvals' && $option == 4) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/document-approvals?option=4"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Documents</span></a>
 												</li>
-											<?php } ?>					
+																
 										</ul>
 									</li>
-								<?php } ?>
+								
 								
 							</ul>
 						</li>
 					<?php } ?>
 
-					<?php if (count(array_intersect($rights, [80, 82, 83, 84, 85, 127,128, 129])) > 0) { ?>
+					<?php if (Yii::$app->user->can('access-complaints')) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Complaints</span></a>
 							<ul class="menu-content">
-								<?php if (in_array(20, $rights)) { ?>
+								
 									<li <?= ($currentPage == 'complaints') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Complaints</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(127, $rights)) { ?>
+								
+								
 									<li <?= ($currentPage == 'complaints-assigned') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints-assigned"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Assigned Complaints</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(128, $rights)) { ?>
+								
+								
 									<li <?= ($currentPage == 'complaints-resolved') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints-resolved"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Resolved Complaints</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(128, $rights)) { ?>
+								
+								
 									<li <?= ($currentPage == 'complaints-closed') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaints-closed"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Closed Complaints</span></a>
 									</li>
-								<?php } ?>
-								<?php if (count(array_intersect($rights, [81, 82, 83, 84, 85])) > 0) { ?>
+								
+								
 									<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Setup</span></a>
 										<ul class="menu-content">	
-											<?php if (in_array(81, $rights)) { ?>								
+																		
 												<li <?= ($currentPage == 'complaint-types') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-types"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Types</span></a>
 												</li>
-											<?php } ?>
-											<?php if (in_array(82, $rights)) { ?>
+											
+											
 												<li <?= ($currentPage == 'complaint-tiers') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-tiers"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Tiers</span></a>
 												</li>
-											<?php } ?>
-											<?php if (in_array(83, $rights)) { ?>
+											
+											
 												<li <?= ($currentPage == 'complaint-status') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-status"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Status</span></a>
 												</li>
-											<?php } ?>
-											<?php if (in_array(84, $rights)) { ?>
+											
+											
 												<li <?= ($currentPage == 'complaint-priorities') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-priorities"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Priorities</span></a>
 												</li>
-											<?php } ?>
-											<?php if (in_array(85, $rights)) { ?>
+											
+											
 												<li <?= ($currentPage == 'complaint-channels') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/complaint-channels"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Complaint Channels</span></a>
-												</li>
-											<?php } ?>															
+												</li>														
 										</ul>
 									</li>
-								<?php } ?>
+								
 							</ul>
 						</li>
 					<?php } ?>
