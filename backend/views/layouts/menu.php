@@ -705,21 +705,21 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							</ul>
 						</li>
 					<?php } ?>
-					<?php if (count(array_intersect($rights, [117, 118, 119])) > 0) { ?>
+					<?php if (Yii::$app->user->can('access-monitoring')) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">grid_on</i><span class="menu-title" data-i18n="nav.project.main">Monitoring</span></a>
 							<ul class="menu-content">
-								<?php if (in_array(118, $rights)) { ?>
+								
 									<li <?= ($currentRoute == 'result-indicators') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/result-indicators"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Result Indicators</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(117, $rights)) { ?>
+								
+								
 									<li <?= ($currentRoute == 'reports/implementation-status-report') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/implementation-status-report"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Implementation Status</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(119, $rights)) { ?>
+								
+								
 									<li <?= ($currentRoute == 'reports/result-framework') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/result-framework"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Result Framework</span></a>
 									</li>
-								<?php } ?>
+								
 							</ul>
 						</li>
 					<?php } ?>	
