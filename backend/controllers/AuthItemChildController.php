@@ -68,8 +68,23 @@ class AuthItemChildController extends Controller
     {
         $model = new AuthItemChild();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        // By Default Assign all roles, let admin remove unwanted ones
+
+        $model->permissions = ArrayHelper::map(AuthItem::find()->where(['type' => 2])->all(),'name', 'name');
+
+
+        if ($model->load(Yii::$app->request->post())  ) {
+
+            foreach($model->permissions as $key => $v)
+            {
+                $m = new AuthItemChild();
+                $m->parent = $model->parent;
+                $m->child = $v;
+                $m->save();
+            }
+
+
+            return $this->redirect(['index']);
         }
 
         return $this->render('create', [
@@ -90,8 +105,32 @@ class AuthItemChildController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+         // Get Assigned permissions
+         $assigned = AuthItemChild::find()->where(['parent' => $model->parent])->asArray()->all();
+         $model->permissions = ArrayHelper::map($assigned,'child','child');
+
+
+
+        if ($model->load(Yii::$app->request->post()) ) {
+
+            /*print '<pre>';
+            print_r($model->permissions);
+            exit;*/
+            // save permissions
+            foreach($model->permissions as $key => $v)
+            {
+                
+                $m = new AuthItemChild();
+                $m->parent = $model->parent;
+                $m->child = $v;
+                $m->save();
+                
+                
+            }
+            
+            
+
+           // return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [

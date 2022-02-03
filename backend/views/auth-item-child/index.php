@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return (1==1) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->id], ['class' => 'btn-sm btn-primary']) : '';
                     },
                     'edit' => function ($url, $model)  {
-                        return (1==1) ? Html::a('<i class="ft-edit"></i> View', ['update', 'id' => $model->id], ['class' => 'btn-sm btn-primary']) : '';
+                        return (1==1) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->id], ['class' => 'btn-sm btn-primary']) : '';
                     },
                     'delete' => function ($url, $model)  {
                         return (1 == 1 ) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->id], [

@@ -16,6 +16,7 @@ use yii\behaviors\TimestampBehavior;
  */
 class AuthItemChild extends \yii\db\ActiveRecord
 {
+    public $permissions;
     /**
      * {@inheritdoc}
      */
@@ -32,7 +33,8 @@ class AuthItemChild extends \yii\db\ActiveRecord
         return [
             [['created_at', 'updated_at'], 'integer'],
             [['parent', 'child'], 'string', 'max' => 255],
-            ['child', 'validateChild']
+            ['child', 'validateChild'],
+            ['permissions', 'safe']
         ];
     }
 

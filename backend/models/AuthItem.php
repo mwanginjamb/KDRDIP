@@ -72,4 +72,9 @@ class AuthItem extends \yii\db\ActiveRecord
     {
         return new \app\models\query\AuthItemQuery(get_called_class());
     }
+
+    public function getItemType()
+    {
+        return $this->hasOne(AuthItemType::class,['id' => 'type']);
+    }
 }

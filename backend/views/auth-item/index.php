@@ -12,9 +12,14 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="auth-item-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="card-title"><?= Html::encode($this->title) ?></h1>
+        </div>
+        <div class="card-content collapse show">
 
-    <p>
+            <div class="card-body card-dashboard">
+            <p>
         <?= Html::a('Create Role/Permission', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
@@ -32,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             // 'id',
             'name',
-            'type',
+            'itemType.type',
             'description:ntext',
             'rule_name',
             //'data:ntext',
@@ -66,5 +71,12 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
     <?php Pjax::end(); ?>
+            </div>
+                
+    
+        </div>
+    </div>
+    
+
 
 </div>

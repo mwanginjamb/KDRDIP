@@ -14,11 +14,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'parent')->dropDownList($parents, ['prompt' => 'Select ...'])?>
 
-    <?= $form->field($model, 'child')->dropDownList($authItems, ['prompt' => 'Select ...']) ?>
+    <?php $form->field($model, 'child')->dropDownList($authItems, ['prompt' => 'Select ...']) ?>
 
     <?php $form->field($model, 'created_at')->textInput() ?>
 
     <?php $form->field($model, 'updated_at')->textInput() ?>
+
+    <?= $form->field($model,'permissions')->checkboxList($authItems); ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -29,6 +31,22 @@ use yii\widgets\ActiveForm;
 </div>
 
 <?php
+
+$style = <<<CSS
+    label{
+        margin-bottom: 10px;
+        font-weight: bolder; 
+    }
+
+    #authitemchild-permissions {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+
+    }
+CSS;
+
+$this->registerCss($style);
 
 $script = <<<JS
     $('#authitemchild-child').select2();
