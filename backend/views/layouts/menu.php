@@ -50,9 +50,11 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 		</div>
 		<div class="main-menu-content">
 			<ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
+					<?php if(Yii::$app->user->can('view-dashboard')){ ?>
 					<li <?= ($currentPage == 'site') ? 'class="active"' : ''; ?> class=" nav-item"><a href="<?= $baseUrl;?>/site"><i class="material-icons">settings_input_svideo</i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
 					</li>
-					<?php if (count(array_intersect($rights, [1, 5, 21, 25, 30, 24, 29, 64, 65, 66, 67, 68, 7, 2, 28, 17, 8, 100, 132, 133, 134])) > 0) { ?>
+					<?php } ?>
+					<?php if (Yii::$app->user->can('view-finance')) { ?>
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Finance</span></a>
 						<ul class="menu-content">
 							<?php if (in_array(1, $rights)) { ?>
