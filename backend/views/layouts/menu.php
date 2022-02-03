@@ -54,7 +54,7 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 					<li <?= ($currentPage == 'site') ? 'class="active"' : ''; ?> class=" nav-item"><a href="<?= $baseUrl;?>/site"><i class="material-icons">settings_input_svideo</i><span class="menu-title" data-i18n="nav.dash.main">Dashboard</span></a>
 					</li>
 					<?php } ?>
-					<?php if (Yii::$app->user->can('view-finance')) { ?>
+					<?php if (Yii::$app->user->can('access-finance')) { ?>
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Finance</span></a>
 						<ul class="menu-content">
 							<?php if (in_array(1, $rights)) { ?>
@@ -214,76 +214,72 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							<?php } ?>						
 						</ul>
 					</li>
-					<?php } ?>
-					<?php if (count(array_intersect($rights, [33, 56, 45, 41, 18, 39, 50, 40, 27, 49, 69, 70, 53, 52, 51, 50, 71, 72, 73, 74, 75, 76, 32, 55, 58, 31, 110])) > 0) { ?>
+					
+					
 					<li class=" nav-item"><a href="#"><i class="material-icons">account_balance</i><span class="menu-title" data-i18n="nav.project.main">Procurement</span></a>
 						<ul class="menu-content">
-							<?php if (in_array(33, $rights)) { ?>
+							
 								<li <?= ($currentPage == 'product') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/product"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Items</span></a>
 								</li>	
-							<?php } ?>
-							<?php if (in_array(56, $rights)) { ?>						
+							
+													
 								<li <?= ($currentPage == 'suppliers') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/suppliers"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Suppliers</span></a>
 								</li>	
-							<?php } ?>
-							<?php if (in_array(45, $rights)) { ?>						
+							
+												
 								<li <?= ($currentPage == 'requisition') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/requisition"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisition</span></a>
 								</li>
-							<?php } ?>
-							<?php if (in_array(41, $rights)) { ?>
+							
+							
 								<li <?= ($currentPage == 'quotation') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/quotation"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotation</span></a>
 								</li>
-							<?php } ?>
-							<?php if (in_array(39, $rights)) { ?>
+							
+							
 								<li <?= ($currentPage == 'purchases') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/purchases"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases</span></a>
 								</li>	
-							<?php } ?>
-							<?php if (in_array(18, $rights)) { ?>
+							
+							
 								<li <?= ($currentPage == 'deliveries') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/deliveries"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Deliveries</span></a>
 								</li>	
-							<?php } ?>
-							<?php if (in_array(50, $rights)) { ?>	
+							
+							
 								<li <?= ($currentPage == 'stocktake') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
 								</li>		
-							<?php } ?>
-							<?php if (in_array(110, $rights)) { ?>	
+							
+							
 								<li <?= ($currentRoute == 'reports/procurement-plan') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/reports/procurement-plan"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan</span></a>
 								</li>		
-							<?php } ?>
-							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70, 125, 126])) > 0) { ?>		
+							
+							
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 									<ul class="menu-content">
-										<?php if (in_array(125, $rights)) { ?>
+										
 											<li <?= ($currentPage == 'procurement-plan-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-plan-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan</span></a>
 											</li>	
-										<?php } ?>
-										<?php if (in_array(126, $rights)) { ?>
+										
+										
 											<li <?= ($currentPage == 'procurement-line-approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/procurement-line-approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Procurement Plan Activity</span></a>
 											</li>	
-										<?php } ?>
-										<?php if (in_array(40, $rights)) { ?>										
+										
+																		
 											<li <?= ($currentPage == 'qapprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/qapprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Quotations</span></a>
 											</li>
-										<?php } ?>
-										<?php if (in_array(27, $rights)) { ?>
+										
 											<li <?= ($currentPage == 'papprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/papprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Purchases</span></a>
 											</li>
-										<?php if (in_array(69, $rights)) { ?>
-										<?php } ?>
+									
 											<li <?= ($currentPage == 'approvals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/approvals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Requisitions</span></a>
 											</li>
-										<?php if (in_array(49, $rights)) { ?>
-										<?php } ?>
+										
 											<li <?= ($currentRoute == 'srapprovals' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/srapprovals?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Store Requisitions</span></a>
 											</li>	
-										<?php if (in_array(70, $rights)) { ?>
-										<?php } ?>
+										
 											<li <?= ($currentRoute == 'stocktake/approvallist' && $option == 1) ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/stocktake/approvallist?option=1"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Stock Take</span></a>
 											</li>
-										<?php } ?>								
+																	
 									</ul>
 								</li>
-							<?php } ?>
+							
 							<?php if (count(array_intersect($rights, [40, 27, 49, 69, 70, 125, 126])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Approvals</span></a>
 									<ul class="menu-content">		
