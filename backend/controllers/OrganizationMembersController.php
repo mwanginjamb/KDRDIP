@@ -24,7 +24,8 @@ class OrganizationMembersController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(139);
+		/*
+        $this->rights = RightsController::Permissions(139);
 
 		$rightsArray = [];
 		if (isset($this->rights->View)) {
@@ -43,7 +44,7 @@ class OrganizationMembersController extends Controller
 		
 		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
-		}
+		}*/
 		
 		return [
 		'access' => [
@@ -59,7 +60,7 @@ class OrganizationMembersController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
 				],
@@ -115,8 +116,17 @@ class OrganizationMembersController extends Controller
         $model->OrganizationID = $oId;
         $model->CreatedBy = Yii::$app->user->identity->UserID;
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index', 'oId' => $model->OrganizationID]);
+        if ($model->load(Yii::$app->request->post()) ) {
+
+            Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+            if( $model->save())
+            {
+                Yii::$app->session->setFlash('success', 'Record Saved Successfully.', true);
+				return ['success' => 'Record Saved Successfully'];
+            }else{
+                return ['errors' => $model->getErrorSummary(true)];
+            }
+            //return $this->redirect(['index', 'oId' => $model->OrganizationID]);
         }
 
         $gender = ['M' => 'Male', 'F' => 'Female'];

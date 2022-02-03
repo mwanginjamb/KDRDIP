@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
 </style>
 <h4 class="form-section">Members</h4>
 <p>
-	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('organization-members/create?oId=' . $oId) . '", \'tab2\')']) : '' ?>	
+	<?=  Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('organization-members/create?oId=' . $oId) . '", \'tab2\')']) ?>	
 </p>
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
