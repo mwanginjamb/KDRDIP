@@ -60,11 +60,14 @@ $this->params['breadcrumbs'][] = $this->title;
 								[
 									'class' => 'yii\grid\ActionColumn',
 									'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
-									'template' => '{view} {delete}',
+									'template' => '{view} {update} {delete}',
 									'buttons' => [
 
 										'view' => function ($url, $model) use ($rights) {
 											return (isset($rights->View)) ? Html::a('<i class="ft-eye"></i> View', ['view', 'id' => $model->ProjectStatusID], ['class' => 'btn-sm btn-primary']) : '';
+										},
+										'update' => function ($url, $model) use ($rights) {
+											return (isset($rights->View)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->ProjectStatusID], ['class' => 'btn-sm btn-primary']) : '';
 										},
 										'delete' => function ($url, $model) use ($rights) {
 											return (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->ProjectStatusID], [
