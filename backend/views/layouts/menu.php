@@ -759,31 +759,31 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 							</ul>
 						</li>
 					<?php } ?>
-					<?php if (count(array_intersect($rights, [60, 61, 59])) > 0) { ?>
+					<?php if (Yii::$app->user->can('access-security')) { ?>
 						<li class=" nav-item"><a href="#"><i class="material-icons">person_outline</i><span class="menu-title" data-i18n="nav.project.main">Security & Admin</span></a>
 							<ul class="menu-content">
-								<?php if (in_array(60, $rights)) { ?>
+								
 									<li <?= ($currentPage == 'users') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/users"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Users</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(61, $rights)) { ?>
+								
+								
 									<li <?= ($currentPage == 'userstatus') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/userstatus"><i class="material-icons"></i><span data-i18n="nav.project.project_tasks">User Status</span></a>
 									</li>
-								<?php } ?>
-								<?php if (in_array(5900, $rights)) { ?>
+								
+								
 									<li <?= ($currentPage == 'usergroups') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/usergroups"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">User Groups</span></a>
 									</li>
-								<?php } ?>
+								
 
-                                <?php if (in_array(14500, $rights)) { ?>
+                                
                                     <li <?= ($currentPage == 'pages') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/pages"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Module Pages</span></a>
                                     </li>
-                                <?php } ?>
+                               
 
-                                <?php if (in_array(14600, $rights)) { ?>
+                               
                                     <li <?= ($currentPage == 'user-group-rights') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/user-group-rights"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">User Group Rights</span></a>
                                     </li>
-                                <?php } ?>
+                               
 
                                 <li <?= ($currentPage == 'auth-item') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/auth-item"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Permissions Setup</span></a>
                                 </li>
