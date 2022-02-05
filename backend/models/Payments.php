@@ -135,7 +135,7 @@ class Payments extends \yii\db\ActiveRecord
 
     public function read(){
 
-	    if(empty($this->filePath))
+	    if(empty($this->filePath) || !file_exists($this->filePath))
         {
             return false;
         }

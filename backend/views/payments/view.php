@@ -74,7 +74,7 @@ Modal::end();
 							<?php 
 							// echo $model->ApprovalStatusID; exit;
 							if ($model->ApprovalStatusID == 3) { 
-								echo Html::a('<i class="ft-printer"></i> Payment Voucher', ['payment-voucher', 'id' => $model->PaymentID], ['class' => 'btn btn-primary mr-1']);
+								//echo Html::a('<i class="ft-printer"></i> Payment Voucher', ['payment-voucher', 'id' => $model->PaymentID], ['class' => 'btn btn-primary mr-1']);
 							}
 							?>	
 						</p>

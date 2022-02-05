@@ -389,10 +389,13 @@ class PaymentsController extends Controller
 	public function actionPaymentVoucher($id)
 	{
 		$model = Payments::find()->where(['PaymentID' => $id])
-										->joinWith('suppliers')
+										//->joinWith('suppliers')
 										->joinWith('bankAccounts')
 										->joinWith('paymentMethods')
 										->one();
+										 
+										// print '<pre>';
+										// print_r($model); exit;
 		$Title = 'Payment Voucher';
 		$amountWords = $this->convert_number_to_words($model->Amount);
 
