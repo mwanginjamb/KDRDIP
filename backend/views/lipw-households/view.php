@@ -33,8 +33,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
 						<p>
 							<?= Html::a('<i class="ft-x"></i> Close', ['index'], ['class' => 'btn btn-warning mr-1']) ?>
-							<?= (isset($rights->Edit)) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->HouseholdID], ['class' => 'btn btn-primary']) : '';?>
-							<?= (isset($rights->Delete)) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->HouseholdID], [
+							<?= (1==1) ? Html::a('<i class="ft-edit"></i> Update', ['update', 'id' => $model->HouseholdID], ['class' => 'btn btn-primary']) : '';?>
+							<?= (1==1) ? Html::a('<i class="ft-trash"></i> Delete', ['delete', 'id' => $model->HouseholdID], [
 									'class' => 'btn btn-danger',
 									'data' => [
 										'confirm' => 'Are you sure you want to delete this item?',
@@ -65,6 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 										'subLocations.locations.LocationName',
 										'subLocations.locations.subCounties.SubCountyName',
 										'subLocations.locations.subCounties.counties.CountyName',
+										'mpesa_account_no',
 										'Notes:ntext',
 										[
 											'attribute' => 'CreatedDate',

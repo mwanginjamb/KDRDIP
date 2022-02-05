@@ -397,7 +397,7 @@ class ProjectsController extends Controller
 			}
 		}
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		if ($model->load(Yii::$app->request->post()) ) {
 			$this->saveProjectSafeguards(Yii::$app->request->post()['ProjectSafeguards'], $model);
 			$this->saveProjectFunding(Yii::$app->request->post()['ProjectFunding'], $model);
 			$this->saveProjectRisk(Yii::$app->request->post()['ProjectRisk'], $model);
@@ -407,6 +407,20 @@ class ProjectsController extends Controller
 			$this->saveprojectNotes(Yii::$app->request->post()['ProjectNotes'], $model);
 			$this->saveprojectTeams(Yii::$app->request->post()['ProjectTeams'], $model);
 			$this->saveReportingPeriods(Yii::$app->request->post()['ReportingPeriods'], $model);
+
+			Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+			if($model->save())
+			{
+				Yii::$app->session->setFlash('success', 'Record Saved Successfully.', true);
+				//return ['success' => 'Record Saved Successfully'];
+			}else{
+				if(count($model->errors))
+				{
+					Yii::$app->session->setFlash('error', $model->getErrorSummary(true), true);
+					//return ['errors' => $model->getErrorSummary(true)];
+					
+				}
+			}
 
 			return $this->redirect(['view', 'id' => $model->ProjectID]);
 		}
@@ -564,7 +578,7 @@ class ProjectsController extends Controller
 		$projectTeams = ProjectTeams::find()->where(['ProjectID' => $id])->all();
 		$reportingPeriods = ReportingPeriods::find()->where(['ProjectID' => $id])->all();
 
-		if ($model->load(Yii::$app->request->post()) && $model->save()) {
+		if ($model->load(Yii::$app->request->post()) ) {
 			// print('<pre>');
 			// print_r(Yii::$app->request->post()); exit;
 			$this->saveProjectSafeguards(Yii::$app->request->post()['ProjectSafeguards'], $model);
@@ -577,6 +591,20 @@ class ProjectsController extends Controller
 			$this->saveprojectTeams(Yii::$app->request->post()['ProjectTeams'], $model);
 			$this->saveReportingPeriods(Yii::$app->request->post()['ReportingPeriods'], $model);
 			
+
+			//Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+			if($model->save())
+			{
+				Yii::$app->session->setFlash('success', 'Record Saved Successfully.', true);
+				//return ['success' => 'Record Saved Successfully'];
+			}else{
+				if(count($model->errors))
+				{
+					Yii::$app->session->setFlash('error', $model->getErrorSummary(true), true);
+					//return ['errors' => $model->getErrorSummary(true)];
+					
+				}
+			}
 			return $this->redirect(['view', 'id' => $model->ProjectID]);
 		}
 

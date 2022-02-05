@@ -25,6 +25,8 @@ use yii\widgets\ActiveForm;
 	<div class="card-content collapse show">
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(); ?>
+
+			<?= $form->errorSummary($model) ?>
 	 
 			<div class="row">
 				<div class="col-md-6">
@@ -69,13 +71,14 @@ use yii\widgets\ActiveForm;
 					<?= $form->field($model, 'TotalBeneficiaries')->textInput(['type' => 'number']) ?>				
 				</div>			
 			</div>
-
+			
 			<div class="row">
 				<div class="col-md-6">
 					<?= $form->field($model, 'Notes')->textarea(['rows' => 6]) ?>
 				</div>
 				<div class="col-md-6">
-						
+					<?= $form->field($model, 'mpesa_account_no')->textInput(['type' => 'number']) ?>				
+					
 				</div>			
 			</div>
 

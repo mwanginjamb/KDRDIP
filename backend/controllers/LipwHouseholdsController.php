@@ -27,26 +27,8 @@ class LipwHouseholdsController extends Controller
 	 */
 	public function behaviors()
 	{
-		$this->rights = RightsController::Permissions(97);
-
-		$rightsArray = [];
-		if (isset($this->rights->View)) {
-			array_push($rightsArray, 'index', 'view');
-		}
-		if (isset($this->rights->Create)) {
-			array_push($rightsArray, 'view', 'create');
-		}
-		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
-		}
-		if (isset($this->rights->Delete)) {
-			array_push($rightsArray, 'delete');
-		}
-		$rightsArray = array_unique($rightsArray);
+		// $this->rights = RightsController::Permissions(97);
 		
-		if (count($rightsArray) <= 0) {
-			$rightsArray = ['none'];
-		}
 		
 		return [
 		'access' => [
@@ -62,7 +44,7 @@ class LipwHouseholdsController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
 				],

@@ -15,6 +15,7 @@ use Yii;
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property int $mpesa_account_no
  */
 class LipwHouseholds extends \yii\db\ActiveRecord
 {
@@ -59,12 +60,20 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['SubLocationID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'LocationID', 'TotalBeneficiaries'], 'integer'],
+			[['SubLocationID', 'CreatedBy', 'Deleted', 'CountyID', 'SubCountyID', 'LocationID', 'TotalBeneficiaries','mpesa_account_no'], 'integer'],
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['HouseholdName'], 'string', 'max' => 45],
 			[['SubLocationID', 'HouseholdName', 'CountyID', 'SubCountyID', 'LocationID', 'TotalBeneficiaries'], 'required'],
+			['mpesa_account_no', 'validateMpesa'],
 		];
+	}
+
+	public function validateMpesa($attribute)
+	{
+		if (!preg_match('/^[0-9]{10}$/', $this->$attribute)) {
+			$this->addError($attribute, $attribute.' must contain exactly 10 digits.');
+		}
 	}
 
 	/**
