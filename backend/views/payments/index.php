@@ -81,6 +81,13 @@ $this->params['breadcrumbs'][] = $this->title;
 									'contentOptions' => ['style' => 'text-align:left'],
 								],
 								[
+										'attribute' => 'Sub Project',
+										'value' => function($model)
+										{
+											return $model->projects->ProjectName;
+										}
+								],
+								[
 									'label'=>'Payment Method',
 									'headerOptions' => ['style'=>'color:black; text-align:left'],
 									'format'=>'text',

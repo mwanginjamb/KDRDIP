@@ -102,12 +102,13 @@ Modal::end();
 									'bankAccounts.AccountName',
 									'RefNumber',
 									'Description',
-									'invoices.projects.ProjectName',
+									'ProjectID',
+									'projects.ProjectName',
 									'invoices.procurementPlanLines.ServiceDescription',
-									'invoices.projects.counties.CountyName',
-									'invoices.projects.subCounties.SubCountyName',
-									'invoices.projects.wards.WardName',
-									'invoices.projects.ProjectName',
+									'projects.counties.CountyName',
+									'projects.subCounties.SubCountyName',
+									'projects.wards.WardName',
+									'projects.ProjectName',
 									[
 										'attribute' => 'Amount',
 										'format' => ['decimal', 2]

@@ -164,7 +164,7 @@ class Payments extends \yii\db\ActiveRecord
 
 	public function getProjects()
 	{
-		return $this->hasOne(Projects::className(), ['ProjectID' => 'ProjectID'])->from(projects::tableName());
+		return $this->hasOne(Projects::class, ['ProjectID' => 'ProjectID']);
 	}
 
 	public function getInvoices()
