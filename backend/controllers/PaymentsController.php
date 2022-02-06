@@ -528,7 +528,7 @@ class PaymentsController extends Controller
 					}
 					break;
 			default:
-					$baseUnit = pow(1000, ior(log($number, 1000)));
+					$baseUnit = pow(1000, (log($number, 1000)));
 					$numBaseUnits = (int) ($number / $baseUnit);
 					$remainder = $number % $baseUnit;
 					$string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];

@@ -14,7 +14,11 @@ return [
 							'log',
 							'backend\controllers\Rights',
 						],
-	'modules' => [],
+	'modules' => [
+		'api' => [
+			'class' => 'backend\modules\api\Module'
+		]
+	],
 	'components' => [
 		'formatter' => [
 			'class' => 'yii\i18n\Formatter',
@@ -24,6 +28,9 @@ return [
 			'csrfParam' => '_csrf-backend',
 			// 'csrfParam' => '_backendCSRF',
 			'enableCsrfValidation' => false,
+			'parsers' => [
+                'application/json' => \yii\web\JsonParser::class
+            ]
 		],
 		'user' => [
 			'identityClass' => 'common\models\User',
@@ -53,7 +60,13 @@ return [
 			'enablePrettyUrl' => true,
 			'showScriptName' => false,
 			'rules' => [
-			],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => [
+                        'api/projects'
+                    ]
+                ],
+            ],
 		],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
