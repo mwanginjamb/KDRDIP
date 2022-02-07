@@ -173,8 +173,12 @@ class OrganizationsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->OrganizationID]);
+        if ($model->load(Yii::$app->request->post()) ) {
+            if($model->save())
+            {
+
+                return $this->redirect(['view', 'id' => $model->OrganizationID]);
+            }
         }
 
         $livelihoodActivities = ArrayHelper::map(LivelihoodActivities::find()->orderBy('LivelihoodActivityID')->all(), 'LivelihoodActivityID', 'LivelihoodActivityName');

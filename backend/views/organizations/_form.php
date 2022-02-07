@@ -24,6 +24,8 @@ use yii\widgets\ActiveForm;
 	<div class="card-content collapse show">
 		<div class="card-body">
 			<?php $form = ActiveForm::begin(); ?>
+
+			<?= $form->errorSummary($model) ?>
 	 
 			<div class="row">
 				<div class="col-md-6">
@@ -79,14 +81,14 @@ use yii\widgets\ActiveForm;
 				</div>			
 			</div>           
 
-            <div class="row">
+            <!--<div class="row">
 				<div class="col-md-6">
                     <?= $form->field($model, 'PostalAddress')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
                     <?= $form->field($model, 'PostalCode')->textInput(['maxlength' => true]) ?>
 				</div>			
-			</div>
+			</div>-->
 
             <div class="row">
 				<div class="col-md-6">
@@ -97,14 +99,14 @@ use yii\widgets\ActiveForm;
 				</div>			
 			</div>
 
-            <div class="row">
+            <!--<div class="row">
 				<div class="col-md-6">
                     <?= $form->field($model, 'PhysicalLocation')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
 						
 				</div>			
-			</div>
+			</div>-->
 
             <div class="row">
 				<div class="col-md-6">
@@ -115,14 +117,14 @@ use yii\widgets\ActiveForm;
 				</div>			
 			</div>
 
-            <div class="row">
+            <!--<div class="row">
 				<div class="col-md-6">
                     <?= $form->field($model, 'Email')->textInput(['maxlength' => true]) ?>
 				</div>
 				<div class="col-md-6">
                     <?= $form->field($model, 'Url')->textInput(['maxlength' => true]) ?>	
 				</div>			
-			</div>
+			</div>-->
 
             <div class="row">
                 <div class="col-md-6">

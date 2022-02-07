@@ -72,7 +72,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                     'attributes' => [
                                         'OrganizationID',
                                         'OrganizationName',
-                                        'TradingName',
+                                       // 'TradingName',
                                         [
                                             'attribute' => 'RegistrationDate',
                                             'format' => ['date', 'php:d/m/Y'],
@@ -86,10 +86,10 @@ $this->params['breadcrumbs'][] = $this->title;
                                             'attribute' => 'CommunityContribution',
                                             'format' => ['decimal', 2],
                                         ],
-                                        [
+                                        /*[
                                             'attribute' => 'CountyContribution',
                                             'format' => ['decimal', 2],
-                                        ],
+                                        ],*/
                                         [
                                             'attribute' => 'BalanceRequired',
                                             'format' => ['decimal', 2],
@@ -110,15 +110,15 @@ $this->params['breadcrumbs'][] = $this->title;
                                                 return number_format($model->malePercentage, 2) . ' %';
                                             }
                                         ], 
-                                        'PostalAddress',
-                                        'PostalCode',
+                                       // 'PostalAddress',
+                                       // 'PostalCode',
                                         'Town',
                                         'country.CountryName',
-                                        'PhysicalLocation',
-                                        'Telephone',
+                                        //'PhysicalLocation',
+                                        //'Telephone',
                                         'Mobile',
-                                        'Email:email',
-                                        'Url:url',
+                                        //'Email:email',
+                                        //'Url:url',
                                         'county.CountyName',
                                         'subCounty.SubCountyName',
                                         'ward.WardName',

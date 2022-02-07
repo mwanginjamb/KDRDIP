@@ -46,7 +46,9 @@ $this->params['breadcrumbs'][] = $this->title;
 								],
 								'OrganizationName',
                                 [
+									'label' => 'Livelihood Activity',
 									'attribute' => 'Activities',
+									'value' => 'livelihoodActivity.LivelihoodActivityName',
 									'headerOptions' => ['width' => '20%'],
 								],
 								[
@@ -54,9 +56,18 @@ $this->params['breadcrumbs'][] = $this->title;
 									'format' => ['date', 'php:d/m/Y'],
 									'headerOptions' => ['width' => '15%'],
 								],
+								'county.CountyName',
 								[
 									'attribute' => 'subCounty.SubCountyName',
 									'headerOptions' => ['width' => '15%'],
+								],
+								[
+									'label' => 'Ward',
+									'value' => 'ward.WardName'
+								],
+								[
+									'label' => 'Village',
+									'value' => 'subLocation.SubLocationName'
 								],
 								[
 									'class' => 'yii\grid\ActionColumn',
