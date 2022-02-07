@@ -597,15 +597,15 @@ class ProjectsController extends Controller
 			{
 				Yii::$app->session->setFlash('success', 'Record Saved Successfully.', true);
 				//return ['success' => 'Record Saved Successfully'];
+				return $this->redirect(['view', 'id' => $model->ProjectID]);
 			}else{
 				if(count($model->errors))
 				{
-					Yii::$app->session->setFlash('error', $model->getErrorSummary(true), true);
-					//return ['errors' => $model->getErrorSummary(true)];
+					Yii::$app->session->setFlash('error', $model->getErrorSummary(true)[0], true);
 					
 				}
 			}
-			return $this->redirect(['view', 'id' => $model->ProjectID]);
+			
 		}
 
 		$projects = ArrayHelper::map(Projects::find()->all(), 'ProjectID', 'ProjectName');

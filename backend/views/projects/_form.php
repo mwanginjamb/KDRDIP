@@ -43,7 +43,9 @@ function calculateValue(row)
 	</div>
 	<div class="card-content collapse show">
 		<div class="card-body">
-			<?php $form = ActiveForm::begin(); ?>			
+			<?php $form = ActiveForm::begin(); ?>
+			
+			<?= $form->ErrorSummary($model) ?>
 			
 			<!-- <p>Use <code>.nav-top-border.no-hover-bg</code> class for top bordered active type. </p> -->
 			<ul class="nav nav-tabs nav-top-border no-hover-bg">
@@ -226,6 +228,18 @@ function calculateValue(row)
 							<?= $form->field($model, 'ProjectStatusID')->dropDownList($projectStatus, ['prompt'=>'Select']); ?>
 						</div>			
 					</div>
+
+					<?php if($model->ComponentID == 2){ ?>
+					<div class="row">
+						<div class="col-md-6">
+							<?= $form->field($model, 'Labour')->textInput(['type'=>'number']); ?>
+						</div>
+						<div class="col-md-6">
+							<?= $form->field($model, 'Non_Wage')->textInput(['type'=>'number']); ?>
+						</div>			
+					</div>
+
+					<?php } ?>
 
 					<h4 class="form-section">Safeguards</h4>												
 					<table width="100%" class="custom-table table-striped table-bordered" id="ParameterTable" >

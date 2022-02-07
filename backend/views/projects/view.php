@@ -417,6 +417,14 @@ if(Yii::$app->session->hasFlash('success')){
 														'attribute' => 'ProjectCost',
 														'format' => ['decimal', 2],
 													],
+													[
+														'attribute' => 'Labour',
+														'format' => ['decimal', 2],
+													],
+													[
+														'attribute' => 'Non_Wage',
+														'format' => ['decimal', 2],
+													],
 													'currencies.CurrencyName',
 													'counties.CountyName',
 													'subCounties.SubCountyName',
