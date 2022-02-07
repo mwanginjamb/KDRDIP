@@ -51,6 +51,8 @@ use yii\helpers\ArrayHelper;
  */
 class Projects extends \yii\db\ActiveRecord
 {
+
+
 	/**
 	 * {@inheritdoc}
 	 */

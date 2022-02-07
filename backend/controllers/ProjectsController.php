@@ -339,7 +339,7 @@ class ProjectsController extends Controller
 			$projectQuestionnaire[$key]->QuestionnaireSubCategoryID = $questions['QuestionnaireSubCategoryID'];
 		}
 		$questionnaireStatus = ArrayHelper::map(QuestionnaireStatus::find()->orderBy('QuestionnaireStatusName')->all(), 'QuestionnaireStatusID', 'QuestionnaireStatusName');		
-
+		
 		return $this->render('view', [
 			'model' => $this->findModel($id),
 			'projectFunding' => $projectFunding,

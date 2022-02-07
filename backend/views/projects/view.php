@@ -413,6 +413,7 @@ if(Yii::$app->session->hasFlash('success')){
 														'attribute' => 'EndDate',
 														'format' => ['date', 'php:d/m/Y'],
 													],
+													'ComponentID',
 													[
 														'attribute' => 'ProjectCost',
 														'format' => ['decimal', 2],
@@ -420,10 +421,12 @@ if(Yii::$app->session->hasFlash('success')){
 													[
 														'attribute' => 'Labour',
 														'format' => ['decimal', 2],
+														'visible' => $model->ComponentID == 2
 													],
 													[
 														'attribute' => 'Non_Wage',
 														'format' => ['decimal', 2],
+														'visible' => $model->ComponentID == 2
 													],
 													'currencies.CurrencyName',
 													'counties.CountyName',
