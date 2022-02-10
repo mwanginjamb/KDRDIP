@@ -31,24 +31,7 @@ class DocumentsController extends Controller
 	{
 		$this->rights = RightsController::Permissions(144);
 
-		$rightsArray = [];
-		if (isset($this->rights->View)) {
-			array_push($rightsArray, 'index', 'view');
-		}
-		if (isset($this->rights->Create)) {
-			array_push($rightsArray, 'view', 'create');
-		}
-		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
-		}
-		if (isset($this->rights->Delete)) {
-			array_push($rightsArray, 'delete');
-		}
-		$rightsArray = array_unique($rightsArray);
 		
-		if (count($rightsArray) <= 0) {
-			$rightsArray = ['none'];
-		}
 		
 		return [
 		'access' => [
@@ -64,7 +47,7 @@ class DocumentsController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
 				],

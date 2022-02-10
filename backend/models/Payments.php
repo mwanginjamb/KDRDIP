@@ -135,17 +135,18 @@ class Payments extends \yii\db\ActiveRecord
 
     public function read(){
 
-	    if(empty($this->filePath) || !file_exists($this->filePath))
+	    if(empty($this->filePath) )
         {
             return false;
         }
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $content = file_get_contents($this->filePath); //read file into a string or get a file handle resource from fs
+		$content = chunk_split(base64_encode($content));
         $mimetype = $finfo->buffer($content); //get mime type
 
         if($content)
         {
-            return 'data:'.$mimetype.';base64,'.base64_encode($content);
+            return 'data:'.$mimetype.';base64,'.$content;
         }
 
         return $content; // should be false if read was unsuccessful

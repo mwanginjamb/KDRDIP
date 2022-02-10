@@ -226,8 +226,15 @@ Modal::end();
 
                         <?php if($document): ?>
 
-                                 <iframe src="<?= $document ?>" height="700px" width="100%"></iframe>
+                                 <!-- <iframe src="<?= $document ?>" height="700px" width="100%"></iframe> -->
 
+								 <?php
+								
+									echo \lesha724\documentviewer\ViewerJsDocumentViewer::widget([
+									'url' => $model->filePath, //url на ваш документ или http://example.com/test.odt
+									'width'=>'100%',
+									'height'=>'1000px',
+									]);?>
                         <?php else: ?>
                             <p class="text">No Document to Preview</p>
                         <?php endif; ?>
