@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									'headerOptions' => ['width' => '5%', 'style'=>'color:black; text-align:left'],
 								],
 								[
-								        'label' => 'Destination Account',
+								        'label' => 'Destination Account No',
                                         'value' => 'DestinationAccountID'
                                 ],
 								[

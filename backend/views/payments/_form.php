@@ -31,7 +31,7 @@ $baseUrl = Yii::$app->request->baseUrl;
 	<div class="card-content collapse show">
 		<div class="card-body">
 			<?php $form = ActiveForm::begin([
-                    'errorSummaryCssClass' => 'help-block',
+        
                    ],
                 ['options' => ['enctype' => 'multipart/form-data']]); ?>
 
