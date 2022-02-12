@@ -50,7 +50,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                         'value' => 'DestinationAccountID'
                                 ],
 								[
-								        'label' => 'Bank Account Name',
+								        'label' => 'Destination Bank Account',
                                         'value' => 'destinationBankAccount.AccountName'
                                 ],
 								'recipientName',
