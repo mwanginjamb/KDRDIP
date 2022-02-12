@@ -51,10 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ],
 								[
 								        'label' => 'Bank Account Name',
-                                        'value' => function($model)
-                                        {
-                                            return $model->destinationBankAccount->AccountName;
-                                        }
+                                        'value' => 'destinationBankAccount.AccountName'
                                 ],
 								'recipientName',
 								[
