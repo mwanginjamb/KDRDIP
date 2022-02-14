@@ -64,7 +64,7 @@ class CashDisbursementApprovalsController extends Controller
 					// Authenticated Users
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
+						'actions' => ['index', 'view', 'create', 'update', 'delete'],
 						'roles' => ['@'],
 					],
 				],
@@ -85,8 +85,22 @@ class CashDisbursementApprovalsController extends Controller
 	public function actionIndex($option)
 	{
 		$StatusID = $option; //==1 ? 1 : 2;
+
+
+		 $query = CashDisbursements::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]);
+        $countQuery = clone $query;
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => CashDisbursements::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
+			'query' => $query ,
+			'pagination' =>  [
+                'pageSize' => $countQuery->count()
+            ],
+            'totalCount' => $countQuery->count(),
+            'sort' => [
+                'defaultOrder' => [
+                    'CashDisbursementID' => SORT_DESC
+                ],
+            ],
 		]);
 
 		return $this->render('index', [
