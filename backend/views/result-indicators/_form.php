@@ -67,6 +67,9 @@ use yii\widgets\ActiveForm;
 					<td style="text-align: center;"><?= $x+1; ?><?= $form->field($line, '[' . $x . ']ResultIndicatorTargetID', ['template' => '{label}{input}'])->hiddenInput()->label(false);?></td>
 					<td><?= $form->field($line, '[' . $x . ']Year', ['template' => '{label}{input}'])->textInput(['class'=>'form-control', 'type' => 'number'])->label(false) ?></td>
 					<td><?= $form->field($line, '[' . $x . ']Target', ['template' => '{label}{input}'])->textInput(['class'=>'form-control', 'type' => 'number', 'step' => '0.01'])->label(false) ?></td>
+					<td><?= Html::a('<i class="fa fa-edit mx-1"></i> Quarterly Targets',['./quarterly-targets','targetID'=> $line->ResultIndicatorTargetID],['class' => 'btn btn-success']) ?></td>
+
+					
 				</tr>
 				<?php
 			} ?>			

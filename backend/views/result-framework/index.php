@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
 									<td align="right"><?= $resultIndicators['Baseline']; ?></td>
 									<?php for ($x = 0; $x <= 4; $x++) {
 										for ($y = 1; $y <= 4; $y++) { ?>
-											<th style="text-align: right"><?= number_format(0, 2); ?></th>
+											<th style="text-align: right"><?= number_format(300, 2); ?></th>
 											<?php
 										} ?>
 										<th style="text-align: right"><?= number_format(isset($resultIndicators['resultIndicatorTargets'][$x]) ? $resultIndicators['resultIndicatorTargets'][$x]['Target'] : 0, 2); ?></th>

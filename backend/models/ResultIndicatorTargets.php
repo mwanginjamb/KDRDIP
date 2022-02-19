@@ -52,4 +52,9 @@ class ResultIndicatorTargets extends \yii\db\ActiveRecord
 			'Deleted' => 'Deleted',
 		];
 	}
+
+	public function getQuarterlyTargets()
+	{
+		return $this->hasOne(QuarterlyTargets::class, ['targetID' => 'ResultIndicatorTargetID']);
+	}
 }

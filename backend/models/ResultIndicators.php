@@ -87,6 +87,8 @@ class ResultIndicators extends \yii\db\ActiveRecord
 		return $this->hasMany(ResultIndicatorTargets::class, ['ResultIndicatorID' => 'ResultIndicatorID']);
 	}
 
+	
+
 	public function getUnitsOfMeasure()
 	{
 		return $this->hasOne(UnitsOfMeasure::class, ['UnitOfMeasureID' => 'UnitOfMeasureID']);
