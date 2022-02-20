@@ -9,4 +9,11 @@ class ProjectResource extends Projects
     {
         return ['ProjectID', 'ProjectName', 'CountyID', 'SubCountyID', 'WardID'];
     }
+
+    public function extraFields()
+    {
+        return [
+            'fy'
+        ];
+    }
 }
