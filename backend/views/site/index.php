@@ -2,10 +2,11 @@
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 $baseUrl = Yii::$app->request->baseUrl;
-$this->title = 'Monitoring $ Evaluation';
+$this->title = 'KDRDIP - Monitoring & Evaluation MIS';
 ?>
 <script src="<?= $baseUrl; ?>/app-assets/js/jquery.min.js"></script>
 <script>
@@ -198,7 +199,7 @@ $(window).on("load", function(){
 				<a class="heading-elements-toggle"><i class="la la-ellipsis-v font-medium-3"></i></a>
 				<div class="heading-elements">
 					<ul class="list-inline mb-0">
-						<li><a class="btn btn-sm btn-danger box-shadow-2 round btn-min-width pull-right" href="invoice-summary.html" target="_blank">View all</a></li>
+						<li><a class="btn btn-sm btn-danger box-shadow-2 round btn-min-width pull-right" href="<?= Url::home(true).'reports/projects-finance?cid=0'?>" target="_blank">View all</a></li>
 					</ul>
 				</div>
 			</div>

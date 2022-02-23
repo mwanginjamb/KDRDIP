@@ -79,8 +79,21 @@ class ProjectSectorInterventionsController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+		$query = ProjectSectorInterventions::find();
+        $countQuery = clone $query;
+        $modelCount = $countQuery->count();
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => ProjectSectorInterventions::find(),
+			'query' => $query,
+			'pagination' => [
+                'pageSize' => $modelCount
+            ],
+            'sort' => [
+                'defaultOrder' => [
+                    'SectorInterventionID' => SORT_DESC,
+                ],
+            ],
 		]);
 
 		return $this->render('index', [

@@ -77,8 +77,21 @@ class DocumentTypesController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+		$query = DocumentTypes::find();
+		$countQuery = clone $query;
+        $modelCount = $countQuery->count();
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => DocumentTypes::find(),
+			'query' => $query,
+			'pagination' => [
+                'pageSize' => $modelCount
+            ],
+			'sort' => [
+                'defaultOrder' => [
+                    'DocumentTypeID' => SORT_DESC,
+                ],
+            ],
 		]);
 
 		return $this->render('index', [
