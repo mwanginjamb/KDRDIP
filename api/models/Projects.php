@@ -77,7 +77,8 @@ class Projects extends \yii\db\ActiveRecord
 	 */
 	public static function find()
 	{
-		return parent::find()->andWhere(['=', 'projects.Deleted', 0]);
+		return parent::find()
+		->andWhere(['=', 'projects.Deleted', 0]);
 	}
 
 	/**

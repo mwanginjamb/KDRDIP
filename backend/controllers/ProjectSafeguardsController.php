@@ -78,8 +78,13 @@ class ProjectSafeguardsController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$query = Projects::find()->andWhere([
+			'<>',
+			'ComponentID',
+			3
+		]);
 		$dataProvider = new ActiveDataProvider([
-			'query' => Projects::find(),
+			'query' => $query,
 			'pagination' => false,
 		]);
 

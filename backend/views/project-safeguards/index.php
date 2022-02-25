@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 $(document).ready(function() {
     $('#DataTables_Table_0_wrapper').DataTable( {
-        dexampleom: 'Bfrtip',
+        dom: 'Bfrtip',
         buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
         ]
