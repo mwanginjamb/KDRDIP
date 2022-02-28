@@ -63,7 +63,8 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => [
-                        'api/projects'
+                        'api/projects',
+                        'api/groups'
                     ]
                 ],
             ],
