@@ -57,4 +57,9 @@ class ResultIndicatorTargets extends \yii\db\ActiveRecord
 	{
 		return $this->hasOne(QuarterlyTargets::class, ['targetID' => 'ResultIndicatorTargetID']);
 	}
+
+	public static function find()
+	{
+		return parent::find()->joinWith('quarterlyTargets');
+	}
 }

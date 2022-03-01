@@ -179,6 +179,12 @@ class ResultIndicatorsController extends Controller
 		]);
 	}
 
+	public function actionQuarters($id)
+	{
+		$model = $this->findModel($id);
+		return $this->render('quarter', ['model' => $model]);
+	}
+
 	/**
 	 * Deletes an existing ResultIndicators model.
 	 * If deletion is successful, the browser will be redirected to the 'index' page.

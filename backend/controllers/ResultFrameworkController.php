@@ -80,11 +80,20 @@ class ResultFrameworkController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$model = IndicatorTypes::find()->andWhere(['IN', 'IndicatorTypeID', [3, 4]])
+		/*$model = IndicatorTypes::find()->andWhere(['IN', 'IndicatorTypeID', [3, 4]])
 														->with(['resultIndicators', 'resultIndicators.resultIndicatorTargets','resultIndicators.resultIndicatorTargets.quarterlyTargets'])
-														->all();
-		//print('<pre>');
-		//print_r($model); exit;
+														->asArray()
+														->all();*/
+
+		$model = ResultIndicators::find()
+		->joinWith('indicatorTypes')
+		->joinWith('resultIndicatorTargets')
+		->andWhere(['IN', 'result_indicators.IndicatorTypeID', [3, 4]])
+		->asArray()
+		->all();
+
+		/*print('<pre>');
+		print_r($model); exit;*/
 
 		return $this->render('index', [
 			'model' => $model,

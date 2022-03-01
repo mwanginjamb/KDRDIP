@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
 					<table class="custom-table table-striped table-bordered" id="mytable">
 						<thead>					
 						<?php
-						foreach ($model as $x => $indicatorTypes) { ?>
+						foreach ($model as $x => $indicator) { ?>
 							<tr>
-								<td colspan="28"><?= $indicatorTypes['IndicatorTypeName']; ?></td>
+								<td colspan="28"><?= $indicator['indicatorTypes']['IndicatorTypeName']; ?></td>
 							</tr>
 							<tr>
 								<th width="50px">#</th>
@@ -57,10 +57,23 @@ $this->params['breadcrumbs'][] = $this->title;
 							</tr>
 							</thead>
 							<tbody>
-							<?php					
-							foreach ($indicatorTypes['resultIndicators'] as  $resultIndicators) { ?>
+							<?php	
+							$count = 0;				
+							foreach ($model as $k =>  $resultIndicators) { $count++; ?>
+							
+									<?php //print '<pre>'; print_r($resultIndicators); ?>
 								<tr>
-									<?php print '<pre>'; print_r($resultIndicators); ?>
+									<td><?= $count ?></td>
+									<td><?= $resultIndicators['ResultIndicatorName'] ?></td>
+									<td><?= $resultIndicators['Baseline'] ?></td>
+									<?php for ($x = 0; $x <= 4; $x++) {
+									for ($y = 1; $y <= 4; $y++) { ?>
+										<th width="150px" style="text-align: right"><?= (count($resultIndicators['resultIndicatorTargets']) && is_array($resultIndicators['resultIndicatorTargets'][$x]))? (is_array($resultIndicators['resultIndicatorTargets'][$x]['quarterlyTargets'])?$resultIndicators['resultIndicatorTargets'][$x]['quarterlyTargets']['Q'.$y]:0 ): 'No'  ?></th>
+										<?php
+									} ?>
+									<td  width="150px" style="text-align: right; font-weight:bolder"><?= (count($resultIndicators['resultIndicatorTargets']) > 0 )?$resultIndicators['resultIndicatorTargets'][$x]['Target']:0 ?></td>
+									<?php
+								} ?>
 								</tr>
 								<?php
 							}
