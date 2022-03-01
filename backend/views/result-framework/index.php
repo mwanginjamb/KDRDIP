@@ -68,10 +68,10 @@ $this->params['breadcrumbs'][] = $this->title;
 									<td><?= $resultIndicators['Baseline'] ?></td>
 									<?php for ($x = 0; $x <= 4; $x++) {
 									for ($y = 1; $y <= 4; $y++) { ?>
-										<th width="150px" style="text-align: right"><?= (count($resultIndicators['resultIndicatorTargets']) && is_array($resultIndicators['resultIndicatorTargets'][$x]))? (is_array($resultIndicators['resultIndicatorTargets'][$x]['quarterlyTargets'])?$resultIndicators['resultIndicatorTargets'][$x]['quarterlyTargets']['Q'.$y]:0 ): 'No'  ?></th>
+										<th width="150px" style="text-align: right"><?= (count($resultIndicators['resultIndicatorTargets']) && is_array($resultIndicators['resultIndicatorTargets'][$x]))? (is_array($resultIndicators['resultIndicatorTargets'][$x]['quarterlyTargets'])?number_format($resultIndicators['resultIndicatorTargets'][$x]['quarterlyTargets']['Q'.$y]):0 ): 'No'  ?></th>
 										<?php
 									} ?>
-									<td  width="150px" style="text-align: right; font-weight:bolder"><?= (count($resultIndicators['resultIndicatorTargets']) > 0 )?$resultIndicators['resultIndicatorTargets'][$x]['Target']:0 ?></td>
+									<td  width="150px" style="text-align: right; font-weight:bolder"><?= (count($resultIndicators['resultIndicatorTargets']) > 0 )?number_format($resultIndicators['resultIndicatorTargets'][$x]['Target']):0 ?></td>
 									<?php
 								} ?>
 								</tr>
