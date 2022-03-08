@@ -10,7 +10,7 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 
-class ImportOrganizations extends  Model
+class ImportHouseHolds extends  Model
 {
     public $excel_doc;
 

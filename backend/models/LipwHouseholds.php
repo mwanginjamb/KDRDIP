@@ -64,6 +64,7 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 			[['Notes'], 'string'],
 			[['CreatedDate'], 'safe'],
 			[['HouseholdName'], 'string', 'max' => 45],
+			[['HouseholdName', 'mpesa_account_no'], 'unique'],
 			[['SubLocationID', 'HouseholdName', 'CountyID', 'SubCountyID', 'LocationID', 'TotalBeneficiaries'], 'required'],
 			['mpesa_account_no', 'validateMpesa'],
 		];
@@ -87,7 +88,7 @@ class LipwHouseholds extends \yii\db\ActiveRecord
 			'SubLocationID' => 'Village',
 			'CountyID' => 'County',
 			'SubCountyID' => 'Sub County',
-			'LocationID' => 'Location',
+			'LocationID' => 'Ward',
 			'Notes' => 'Notes',
 			'TotalBeneficiaries' => 'Total Beneficiaries',
 			'CreatedDate' => 'Created Date',

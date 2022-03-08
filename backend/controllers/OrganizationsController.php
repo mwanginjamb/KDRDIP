@@ -303,7 +303,7 @@ class OrganizationsController extends Controller
                     $model->CountyID = (trim($data['V']) !== '')? $this->getCounty($data['V']): 0 ;
                     $model->SubCountyID = (trim($data['W']) !== '')? $this->getSubCounty($data['W']): 0 ; // @todo - write fxn to get subcounty id
                     $model->WardID = (trim($data['X']) !== '' && $this->getWard($data['X']))? $this->getWard($data['X']): 1 ; // @todo - write a fxn to get wardID
-                    $model->SubLocationID = (trim($data['Y']) !== '' && $this->getSublocation($data['Y']))? $this->getSublocation($data['Y']): 1 ; //@todo - write a fxn to get sublocID
+                    $model->SubLocationID = (trim($data['Y']) !== '' && $this->getSublocation($data['Y']))? $this->getSublocation($data['Y']): 1 ; //@todo - write a fxn to get sublocID/ Village
 
 
 

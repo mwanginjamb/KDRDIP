@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
 				<div class="card-content collapse show">
 					<div class="card-body card-dashboard">
 						<div class="form-actions" style="margin-top:0px">
-							<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) : '' ?>
+							<?= Html::a('<i class="ft-plus"></i> Add', ['create'], ['class' => 'btn btn-primary mr-1']) ?>
                             <?= Html::a('<i class="fa fa-file-excel"></i> Excel Import', ['excel-import'], ['class' => 'btn btn-success mr-1'])?>
                             <?= Html::a('<i class="fa fa-download"></i> Download Template', \yii\helpers\Url::home(true)."templates/community-groups.xlsx", ['class' => 'btn btn-info mr-1','title' => 'Get data import sample excel template here.'])?>
                         </div>
