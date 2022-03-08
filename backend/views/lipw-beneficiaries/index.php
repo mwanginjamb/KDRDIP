@@ -23,7 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
 <h4 class="form-section">Beneficiaries</h4>
 <p>
 	<?= Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('lipw-beneficiaries/create?hId=' . $hId) . '", \'tab2\')']) ?>	
-		
+	<?= Html::a('<i class="fa fa-file-excel"></i> Excel Import', ['excel-import'], ['class' => 'btn btn-success mr-1'])?>
+	<?= Html::a('<i class="fa fa-download"></i> Download Template', \yii\helpers\Url::home(true)."templates/community-groups.xlsx", ['class' => 'btn btn-info mr-1','title' => 'Get data import sample excel template here.'])?>	
 </p>
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,

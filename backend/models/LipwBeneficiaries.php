@@ -67,11 +67,15 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 		return [
 			[['DateOfBirth', 'CreatedDate'], 'safe'],
 			[['AlternativeID', 'HouseholdID', 'BankID', 'BankBranchID', 'CreatedBy', 'Deleted', 'BeneficiaryTypeID', 'Principal'], 'integer'],
-			[['FirstName', 'MiddleName', 'LastName', 'IDNumber', 'Mobile', 'BankAccountNumber', 'BankAccountName'], 'string', 'max' => 45],
+			[['FirstName', 'MiddleName', 'LastName', 'Mobile','BankAccountName'], 'string', 'max' => 45],
 			[['Gender'], 'string', 'max' => 1],
+			[['BankAccountNumber','IDNumber'],'safe'],
 			['IDNumber', 'is8NumbersOnly'],
 			[['FirstName', 'LastName', 'IDNumber', 'Mobile', 'DateOfBirth', 'Gender'], 'required'],
 			['BeneficiaryTypeID', 'validateBeneficiatyType'],
+			['Mobile','unique'],
+			['Mobile','isMobile'],
+
 		];
 	}
 
@@ -80,6 +84,13 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	{
 		if (!preg_match('/^[0-9]{8}$/', $this->$attribute)) {
 			$this->addError($attribute, 'must contain exactly 8 digits.');
+		}
+	}
+
+	public function isMobile($attribute)
+	{
+		if (!preg_match('/^[0-9]{10}$/', $this->$attribute)) {
+			$this->addError($attribute, $attribute.'must contain exactly 10 digits.');
 		}
 	}
 
@@ -97,7 +108,7 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 			'Mobile' => 'Mobile',
 			'Gender' => 'Gender',
 			'DateOfBirth' => 'Date Of Birth',
-			'AlternativeID' => 'Alternative',
+			'AlternativeID' => 'Alternate Beneficiary',
 			'HouseholdID' => 'Household',
 			'BankAccountNumber' => 'Bank Account Number',
 			'BankAccountName' => 'Bank Account Name',

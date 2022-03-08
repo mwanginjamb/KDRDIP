@@ -7,6 +7,7 @@ use app\models\LipwBeneficiaries;
 use app\models\BankBranches;
 use app\models\LipwBeneficiaryTypes;
 use app\models\Banks;
+use app\models\ImportBeneficiaries;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -14,6 +15,8 @@ use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use yii\web\UploadedFile;
 
 /**
  * LipwBeneficiariesController implements the CRUD actions for LipwBeneficiaries model.
@@ -242,4 +245,165 @@ class LipwBeneficiariesController extends Controller
 
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
+
+
+	public function actionExcelImport()
+    {
+        $model = new  ImportBeneficiaries();
+        return $this->render('excelImport',['model' => $model]);
+    }
+
+    public function actionImport()
+    {
+        $model = new ImportBeneficiaries();
+        if($model->load(Yii::$app->request->post()))
+        {
+            $excelUpload = UploadedFile::getInstance($model, 'excel_doc');
+            $model->excel_doc = $excelUpload;
+            if($uploadedFile = $model->upload())
+            {
+                // Extract data from  uploaded file
+                $sheetData = $this->extractData($uploadedFile);
+                // save the data
+                $this->saveData($sheetData);
+            }else{
+                $this->redirect(['excel-import']);
+            }
+
+        }else{
+            $this->redirect(['excel-import']);
+        }
+    }
+
+    private function extractData($file)
+    {
+        $spreadsheet = IOFactory::load($file);
+        $sheetData = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+        return $sheetData;
+    }
+
+    private function saveData($sheetData)
+    {
+
+        /*print '<pre>';
+         print_r($sheetData);
+         exit;*/
+        $today = date('Y-m-d');
+        foreach($sheetData as $key => $data)
+        {
+
+
+            // Read from 2nd row
+            if($key >= 2)
+            {
+
+
+					$BeneficiaryType = $Principle = $Gender = 0;
+					if(trim($data['E']) == 'Eligible')
+					{
+						$BeneficiaryType = 1;
+					}elseif(trim($data['E']) == 'Dependant') {
+						$BeneficiaryType = 2;
+					}
+
+					if(trim($data['F']) == 'Yes')
+					{
+						$Principle = 1;
+					}elseif(trim($data['F']) == 'No') {
+						$Principle = 2;
+					}
+
+					if(trim($data['G']) == 'Male')
+					{
+						$Gender = 'M';
+					}elseif(trim($data['G']) == 'Female') {
+						$Gender = 'F';
+					}
+
+                if(trim($data['A']) !== '')
+                {
+                    $model = new LipwBeneficiaries();
+                    $model->FirstName = trim($data['A']);
+                    $model->MiddleName = trim($data['B']);
+					$model->LastName = trim($data['C']);
+					$model->DateOfBirth = date('Y-m-d', strtotime(trim($data['D'])));
+					$model->BeneficiaryTypeID = $BeneficiaryType;
+                    $model->Principal = $Principle ;
+                    $model->Gender = $Gender ; // @todo - write fxn to get subcounty id
+                    $model->IDNumber = (trim($data['H']) !== '')? $data['H']: '' ;
+                    $model->Mobile = (trim($data['I']) !== '' )? $data['I']: 1 ;
+                    $model->AlternativeID = (trim($data['J']) !== '' && $this->getAlternate($data['J']))? $this->getAlternate($data['J']): 0 ; //@todo - write a fxn to get sublocID/ Village
+                    $model->BankAccountNumber = (trim($data['K']) !== '' )? $data['K']: '' ; 
+                    $model->BankAccountName = (trim($data['L']) !== '' )? $data['L']: '' ; 
+                    $model->BankID = (trim($data['M']) !== '' && $this->getBankID($data['M']))? $this->getBankID($data['M']): 1 ; //@todo - write a fxn to get sublocID/ Village
+                    $model->BankBranchID = (trim($data['N']) !== '' && $this->getBranchID($this->getBankID($data['M']),$data['N']))? $this->getBranchID($this->getBankID($data['M']),$data['N']): '' ; //@todo - write a fxn to get sublocID/ Village
+					
+
+
+
+
+                    $model->CreatedBy = Yii::$app->user->identity->UserID;
+                    $model->CreatedDate = $today;
+
+
+                    if(!$model->save())
+                    {
+
+                        foreach($model->errors as $k => $v)
+                        {
+                            Yii::$app->session->setFlash('error',$v[0].' Got value: '.$model->$k.' On Row: '.$key);
+
+                        }
+
+                    }else {
+                        Yii::$app->session->setFlash('success','Congratulations, all valid records are completely imported into MIS.');
+                    }
+
+                }
+            }
+        }
+
+        return $this->redirect(['./lipw-households/index']);
+    }
+
+	// gET Alternate Beneficiary ID
+
+	private function getAlternate($FirstName)
+    {
+        $model = LipwBeneficiaries::find()->where(['like',  'FirstName',$FirstName])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->BeneficiaryID;
+        }else{
+            return 0; // county not found
+        }
+
+    }
+
+	public function getBankID($name)
+    {
+        $name = trim($name);
+        $result = Banks::find()->where(['like',  'BankName',$name])->one();
+
+        if(is_object($result))
+        {
+            return $result->BankID;
+        }
+
+        return false;
+
+    }
+
+	public function getBranchID($BankID, $BranchName)
+    {
+		
+        $result = BankBranches::findOne(['BankBranchName' => $BranchName,'BankID' => $BankID]);
+        if(is_object($result))
+        {
+            return $result->BankBranchID;
+        }
+
+        return false;
+    }
+
 }
