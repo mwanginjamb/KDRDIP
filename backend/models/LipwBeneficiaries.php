@@ -83,14 +83,14 @@ class LipwBeneficiaries extends \yii\db\ActiveRecord
 	public function is8NumbersOnly($attribute)
 	{
 		if (!preg_match('/^[0-9]{8}$/', $this->$attribute)) {
-			$this->addError($attribute, 'must contain exactly 8 digits.');
+			$this->addError($attribute, $attribute.' must contain exactly 8 digits.');
 		}
 	}
 
 	public function isMobile($attribute)
 	{
 		if (!preg_match('/^[0-9]{10}$/', $this->$attribute)) {
-			$this->addError($attribute, $attribute.'must contain exactly 10 digits.');
+			$this->addError($attribute, $attribute.' must contain exactly 10 digits.');
 		}
 	}
 

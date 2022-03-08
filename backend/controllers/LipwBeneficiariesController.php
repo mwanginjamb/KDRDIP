@@ -8,6 +8,7 @@ use app\models\BankBranches;
 use app\models\LipwBeneficiaryTypes;
 use app\models\Banks;
 use app\models\ImportBeneficiaries;
+use app\models\LipwHouseholds;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -287,16 +288,18 @@ class LipwBeneficiariesController extends Controller
 
         /*print '<pre>';
          print_r($sheetData);
+		 print_r($sheetData[2]['E']);
          exit;*/
+		$HouseholdName = $sheetData[2]['E'];
         $today = date('Y-m-d');
         foreach($sheetData as $key => $data)
         {
 
 
-            // Read from 2nd row
-            if($key >= 2)
+            // Read from 3rd row
+            if($key >= 3)
             {
-
+					
 
 					$BeneficiaryType = $Principle = $Gender = 0;
 					if(trim($data['E']) == 'Eligible')
@@ -337,13 +340,17 @@ class LipwBeneficiariesController extends Controller
                     $model->BankAccountName = (trim($data['L']) !== '' )? $data['L']: '' ; 
                     $model->BankID = (trim($data['M']) !== '' && $this->getBankID($data['M']))? $this->getBankID($data['M']): 1 ; //@todo - write a fxn to get sublocID/ Village
                     $model->BankBranchID = (trim($data['N']) !== '' && $this->getBranchID($this->getBankID($data['M']),$data['N']))? $this->getBranchID($this->getBankID($data['M']),$data['N']): '' ; //@todo - write a fxn to get sublocID/ Village
-					
+					$model->HouseholdID = $this->getHouseHoldID($HouseholdName);
 
 
 
 
                     $model->CreatedBy = Yii::$app->user->identity->UserID;
                     $model->CreatedDate = $today;
+
+					/*print '<pre>';
+					print_r($model);
+					exit;*/
 
 
                     if(!$model->save())
@@ -365,6 +372,21 @@ class LipwBeneficiariesController extends Controller
 
         return $this->redirect(['./lipw-households/index']);
     }
+
+	// Get House Hold ID
+
+	private function getHouseHoldID($HouseHoldName)
+    {
+        $model = LipwHouseholds::find()->where(['like','HouseholdName',$HouseHoldName])->one();                                                                                                                                                                                                              ;
+        if($model)
+        {
+            return $model->HouseholdID;
+        }else{
+            return 0; // House Hold Not Found
+        }
+
+    }
+
 
 	// gET Alternate Beneficiary ID
 
