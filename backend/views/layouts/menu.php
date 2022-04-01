@@ -81,10 +81,13 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 								<li <?= ($currentPage == 'cash-disbursements') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/cash-disbursements"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Cash Disbursements</span></a>
 								</li>
 							<?php } ?>
-							<?php if (in_array(100, $rights)) { ?>
+
 								<li <?= ($currentPage == 'lipw-payment-schedule') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/lipw-payment-schedule"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">LIPW Payments</span></a>
 								</li>
-							<?php } ?>
+
+                                <li <?= ($currentPage == 'finance-workplan') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl;?>/finance-workplan"><i class="material-icons"></i><span data-i18n="nav.project.project_summary">Finance Workplans</span></a>
+                                </li>
+
 							<?php if (count(array_intersect($rights, [24, 29, 103, 133])) > 0) { ?>
 								<li class=" nav-item"><a href="#"><span class="menu-title" data-i18n="nav.project.main">Reviews</span></a>
 									<ul class="menu-content">
