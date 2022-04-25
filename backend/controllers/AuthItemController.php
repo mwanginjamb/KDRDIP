@@ -6,6 +6,7 @@ use app\models\AuthItemType;
 use Yii;
 use app\models\AuthItem;
 use app\models\AuthItemSearch;
+use yii\data\ActiveDataProvider;
 use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -39,12 +40,31 @@ class AuthItemController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new AuthItemSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        //$searchModel = new AuthItemSearch();
+        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+
+        $query = AuthItem::find();
+        $countQuery = clone $query;
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' =>  [
+                'pageSize' => $countQuery->count()
+            ],
+            'totalCount' => $countQuery->count(),
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                    // 'OrganizationName' => SORT_ASC,
+                ],
+            ],
+
+
+        ]);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+            'dataProvider' => $dataProvider
         ]);
     }
 
@@ -77,7 +97,7 @@ class AuthItemController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'types' => ArrayHelper::map(AuthItemType::find()->all(),'id','type'),
+            'types' => ArrayHelper::map(AuthItemType::find()->all(), 'id', 'type'),
         ]);
     }
 
@@ -98,7 +118,7 @@ class AuthItemController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'types' => ArrayHelper::map(AuthItemType::find()->all(),'id','type'),
+            'types' => ArrayHelper::map(AuthItemType::find()->all(), 'id', 'type'),
         ]);
     }
 
