@@ -68,7 +68,7 @@ class Organizations extends \yii\db\ActiveRecord
             [['RegistrationDate', 'CreatedDate'], 'safe'],
             [['LivelihoodActivityID', 'MaleMembers', 'FemaleMembers', 'PWDMembers', 'CountryID', 'CountyID', 'SubCountyID', 'WardID', 'SubLocationID', 'CreatedBy', 'Deleted'], 'integer'],
             [['OrganizationName', 'TradingName'], 'string', 'max' => 200],
-            [['GrantAmount', 'TotalAmountRequired', 'CommunityContribution', 'CountyContribution', 'BalanceRequired'], 'number'],            
+            [['GrantAmount', 'TotalAmountRequired', 'CommunityContribution', 'CountyContribution', 'BalanceRequired'], 'number'],
             [['PostalAddress', 'PostalCode', 'Town', 'Telephone', 'Mobile'], 'string', 'max' => 45],
             [['PhysicalLocation', 'Email', 'Url'], 'string', 'max' => 300],
             [['CountyID'], 'exist', 'skipOnError' => true, 'targetClass' => Counties::className(), 'targetAttribute' => ['CountyID' => 'CountyID']],
@@ -107,14 +107,14 @@ class Organizations extends \yii\db\ActiveRecord
             'CountyID' => 'County',
             'SubCountyID' => 'Sub County',
             'WardID' => 'Ward',
-            'SubLocationID' => 'Sub Location',
+            'SubLocationID' => 'Village',
             'CreatedDate' => 'Created Date',
             'CreatedBy' => 'Created By',
             'Deleted' => 'Deleted',
             'totalMembers' => 'No. of Members',
-            'TotalAmountRequired' => 'Total Amount Required', 
-            'CommunityContribution' => 'Community Contribution', 
-            'CountyContribution' => 'County Contribution', 
+            'TotalAmountRequired' => 'Total Amount Required',
+            'CommunityContribution' => 'Community Contribution',
+            'CountyContribution' => 'County Contribution',
             'BalanceRequired' => 'Balance Required'
         ];
     }
@@ -149,7 +149,7 @@ class Organizations extends \yii\db\ActiveRecord
         return $this->hasMany(FundingYears::className(), ['FundingYearID' => 'FundingYearID'])->viaTable('organization_fuding_years', ['OrganizationID' => 'OrganizationID']);
     }
 
-   
+
     /**
      * Gets query for [[County]].
      *
@@ -199,7 +199,7 @@ class Organizations extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Sublocations::className(), ['SubLocationID' => 'SubLocationID']);
     }
-    
+
     /**
      * Gets query for [[SubLocation]].
      *
@@ -227,13 +227,27 @@ class Organizations extends \yii\db\ActiveRecord
 
     public function getFemalePercentage()
     {
-        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1: ($this->FemaleMembers + $this->MaleMembers) ;
+        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1 : ($this->FemaleMembers + $this->MaleMembers);
         return $this->FemaleMembers / $divisor  * 100;
     }
 
     public function getMalePercentage()
     {
-        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1: ($this->FemaleMembers + $this->MaleMembers) ;
+        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1 : ($this->FemaleMembers + $this->MaleMembers);
         return $this->MaleMembers / $divisor * 100;
+    }
+
+    // Calculate Actual Gender Clustering
+
+    public function getMales()
+    {
+        $count  = OrganizationMembers::find()->where(['Gender' => 'M', 'OrganizationMemberID' => $this->OrganizationID])->count();
+        return $count;
+    }
+
+    public function getFemales()
+    {
+        $count  = OrganizationMembers::find()->where(['Gender' => 'F', 'OrganizationMemberID' => $this->OrganizationID])->count();
+        return $count;
     }
 }
