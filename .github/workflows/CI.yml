@@ -46,5 +46,5 @@ jobs:
       - name: Install dependancies via composer
         run: |
            echo Installing dependancies
-            composer install 
+            composer update 
             working-directory: C:\inetpub\wwwroot\mande
