@@ -112,11 +112,29 @@ class ProjectsController extends Controller
 						'actions' => ['none'],
 						'roles' => ['?'],
 					],
-					// Authenticated Users
+
 					[
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
-						'roles' => ['@'],
+						'actions' => ['create'],
+						'roles' => ['create-project'],
+					],
+
+					[
+						'allow' => true,
+						'actions' => ['view', 'index'],
+						'roles' => ['view-project'],
+					],
+
+					[
+						'allow' => true,
+						'actions' => ['update'],
+						'roles' => ['update-project'],
+					],
+
+					[
+						'allow' => true,
+						'actions' => ['delete'],
+						'roles' => ['delete-project'],
 					],
 				],
 			],
