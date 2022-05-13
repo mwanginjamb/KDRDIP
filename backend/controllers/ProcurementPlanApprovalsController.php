@@ -31,7 +31,7 @@ class ProcurementPlanApprovalsController extends Controller
 	{
 		$this->rights = RightsController::Permissions(125);
 
-		$rightsArray = []; 
+		$rightsArray = [];
 		if (isset($this->rights->View)) {
 			array_push($rightsArray, 'index', 'view');
 		}
@@ -45,16 +45,16 @@ class ProcurementPlanApprovalsController extends Controller
 			array_push($rightsArray, 'delete');
 		}
 		$rightsArray = array_unique($rightsArray);
-		
-		if (count($rightsArray) <= 0) { 
+
+		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
 		}
-		
+
 		return [
-		'access' => [
-			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [				
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => ['index', 'view', 'create', 'update', 'delete'],
+				'rules' => [
 					// Guest Users
 					[
 						'allow' => true,
@@ -84,9 +84,23 @@ class ProcurementPlanApprovalsController extends Controller
 	 */
 	public function actionIndex($option)
 	{
-	$StatusID = $option==1 ? 1 : 2;
+		$StatusID = $option == 1 ? 1 : 2;
+
+		$query = ProcurementPlan::find()->joinWith('users')->where(['ApprovalStatusID' => $StatusID]);
+		$countQuery = clone $query;
+
 		$dataProvider = new ActiveDataProvider([
-			'query' => ProcurementPlan::find()->joinWith('users')->where(['ApprovalStatusID'=>$StatusID]),
+			'query' => $query,
+			'pagination' =>  [
+				'pageSize' => $countQuery->count()
+			],
+			'totalCount' => $countQuery->count(),
+			'sort' => [
+				'defaultOrder' => [
+					'ProcurementPlanID' => SORT_DESC,
+					//'OrganizationName' => SORT_ASC,
+				],
+			],
 		]);
 
 		return $this->render('index', [
@@ -101,38 +115,35 @@ class ProcurementPlanApprovalsController extends Controller
 	 * @return mixed
 	 */
 	public function actionView($id, $option)
-	{	
+	{
 		$identity = Yii::$app->user->identity;
 		$UserID = $identity->UserID;
 		$params = Yii::$app->request->post();
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => ProcurementPlanLines::find()->andWhere(['ProcurementPlanID'=> $id]),
+			'query' => ProcurementPlanLines::find()->andWhere(['ProcurementPlanID' => $id]),
 		]);
 
 		$approvalNotesProvider = new ActiveDataProvider([
-			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 8]),
+			'query' => ApprovalNotes::find()->where(['ApprovalID' => $id, 'ApprovalTypeID' => 8]),
 		]);
-		
+
 		$model = $this->findModel($id);
-		
+
 		$notes = new ApprovalNotes();
-		
-		if (Yii::$app->request->post())
-		{
-			if ($params['option']==1 && isset($params['Approve']))
-			{
+
+		if (Yii::$app->request->post()) {
+			if ($params['option'] == 1 && isset($params['Approve'])) {
 				$model->ApprovalStatusID = 3;
 				$model->ApprovedBy  = $UserID;
 				$model->ApprovalDate = date('Y-m-d h:i:s');
-			}			
-			if (isset($params['Reject']))
-			{
+			}
+			if (isset($params['Reject'])) {
 				$model->ApprovalStatusID = 4;
 			}
 		}
-		
-		if (Yii::$app->request->post() && $model->save()) {			
+
+		if (Yii::$app->request->post() && $model->save()) {
 			$params = Yii::$app->request->post();
 			$option = $params['option'];
 			//print_r($params); exit;
@@ -141,21 +152,20 @@ class ProcurementPlanApprovalsController extends Controller
 			$notes->ApprovalTypeID = 8;
 			$notes->ApprovalID = $id;
 			$notes->CreatedBy = $UserID;
-			
-			$notes->save();	
-			
-			if ($model->ApprovalStatusID == 2)
-			{
-				$result = UsersController::sendEmailNotification(26); 
+
+			$notes->save();
+
+			if ($model->ApprovalStatusID == 2) {
+				$result = UsersController::sendEmailNotification(26);
 			}
-			return $this->redirect(['index', 'option'=> $option]);
+			return $this->redirect(['index', 'option' => $option]);
 		} else {
 			//print_r($model->getErrors()); exit;
 			$approvalstatus = ArrayHelper::map(ApprovalStatus::find()->where("ApprovalStatusID > 1")->all(), 'ApprovalStatusID', 'ApprovalStatusName');
-			$detailmodel = ProcurementPlan::find()->where(['ProcurementPlanID'=> $id])->joinWith('approvalstatus')->one();
+			$detailmodel = ProcurementPlan::find()->where(['ProcurementPlanID' => $id])->joinWith('approvalstatus')->one();
 			return $this->render('view', [
-				'model' => $model,'detailmodel' => $detailmodel, 
-				'dataProvider' => $dataProvider, 'approvalstatus' => $approvalstatus, 
+				'model' => $model, 'detailmodel' => $detailmodel,
+				'dataProvider' => $dataProvider, 'approvalstatus' => $approvalstatus,
 				'notes' => $notes, 'option' => $option,
 				'approvalNotesProvider' => $approvalNotesProvider,
 				'rights' => $this->rights,
@@ -170,23 +180,19 @@ class ProcurementPlanApprovalsController extends Controller
 	 * @return mixed
 	 */
 	public function actionUpdate($id)
-	{	
+	{
 		$model = $this->findModel($id);
 		$lines = QuotationProducts::find()->where(['QuotationID' => $id])->all();
-		
-		if ($model->load(Yii::$app->request->post()) && $model->save()) 
-		{
+
+		if ($model->load(Yii::$app->request->post()) && $model->save()) {
 			$params = Yii::$app->request->post();
 			$lines = $params['QuotationProducts'];
-			
-			foreach ($lines as $key => $line)
-			{
+
+			foreach ($lines as $key => $line) {
 				//print_r($lines);exit;
-					
-				if ($line['RequisitionLineID'] == '')
-				{				
-					if ($line['ProductID'] != '')
-					{
+
+				if ($line['RequisitionLineID'] == '') {
+					if ($line['ProductID'] != '') {
 						$_line = new QuotationProducts();
 						$_line->QuotationID = $id;
 						$_line->ProductID = $line['ProductID'];
@@ -204,15 +210,15 @@ class ProcurementPlanApprovalsController extends Controller
 					$_line->save();
 				}
 			}
-		
+
 			return $this->redirect(['view', 'id' => $model->QuotationID]);
 		} else {
 			$products = ArrayHelper::map(Product::find()->all(), 'ProductID', 'ProductName');
 			$modelcount = count($lines);
-			for ($x = $modelcount; $x <= 9; $x++) { 
+			for ($x = $modelcount; $x <= 9; $x++) {
 				$lines[$x] = new QuotationProducts();
 			}
-		
+
 			return $this->render('update', [
 				'model' => $model, 'lines' => $lines, 'products' => $products,
 				'rights' => $this->rights,
