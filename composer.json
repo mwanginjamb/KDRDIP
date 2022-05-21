@@ -22,7 +22,8 @@
 		  "kartik-v/yii2-mpdf": "dev-master",
         "yiithings/yii2-dotenv": "*",
         "phpoffice/phpspreadsheet": "^1.18",
-        "lesha724/yii2-document-viewer": "*"
+        "lesha724/yii2-document-viewer": "*",
+        "yiisoft/yii2-httpclient": "^2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

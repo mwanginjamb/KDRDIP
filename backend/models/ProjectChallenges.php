@@ -19,6 +19,7 @@ use Yii;
  * @property string $CreatedDate
  * @property int $CreatedBy
  * @property int $Deleted
+ * @property string $challenge_description
  */
 class ProjectChallenges extends \yii\db\ActiveRecord
 {
@@ -59,9 +60,9 @@ class ProjectChallenges extends \yii\db\ActiveRecord
 	{
 		return [
 			[['ProjectID', 'AssignedTo', 'CreatedBy', 'Deleted', 'ProjectChallengeStatusID', 'MajorChallenge', 'ChallengeTypeID'], 'integer'],
-			[['Challenge', 'CorrectiveAction'], 'string'],
+			[['Challenge', 'CorrectiveAction', 'challenge_description'], 'string'],
 			[['AgreedDate', 'CreatedDate'], 'safe'],
-			[['AssignedTo', 'Challenge', 'CorrectiveAction', 'AgreedDate', 'ProjectChallengeStatusID', 'MajorChallenge'], 'required'],
+			//	[['AssignedTo', 'Challenge', 'CorrectiveAction', 'AgreedDate', 'ProjectChallengeStatusID', 'MajorChallenge'], 'required'],
 		];
 	}
 
