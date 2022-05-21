@@ -1,8 +1,11 @@
 <?php
 
-namespace app\models;
+namespace console\models;
 
 use Yii;
+use app\models\Users;
+use app\models\Employees;
+use app\models\ProjectChallengeStatus;
 
 /**
  * This is the model class for table "project_challenges".
@@ -62,6 +65,7 @@ class ProjectChallenges extends \yii\db\ActiveRecord
 			[['ProjectID', 'AssignedTo', 'CreatedBy', 'Deleted', 'ProjectChallengeStatusID', 'MajorChallenge', 'ChallengeTypeID'], 'integer'],
 			[['Challenge', 'CorrectiveAction', 'challenge_description'], 'string'],
 			[['AgreedDate', 'CreatedDate'], 'safe'],
+			['ProjectID', 'required'],
 			//	[['AssignedTo', 'Challenge', 'CorrectiveAction', 'AgreedDate', 'ProjectChallengeStatusID', 'MajorChallenge'], 'required'],
 		];
 	}

@@ -11,19 +11,19 @@ $this->params['breadcrumbs'][] = $this->title;
 // if (!empty($majorChallenge->getModels())) {
 ?>
 <style>
-.btn-primary {
-	border-color: #512E90 !important;
-	background-color: #6BA342 !important;
-	color: #FFFFFF !important;
-}
+	.btn-primary {
+		border-color: #512E90 !important;
+		background-color: #6BA342 !important;
+		color: #FFFFFF !important;
+	}
 
-.btn-danger {
-	color: #FFFFFF !important;
-}
+	.btn-danger {
+		color: #FFFFFF !important;
+	}
 </style>
 <h4 class="form-section">Major Challenge</h4>
 <p>
-	<?= (isset($rights->Create) && empty($majorChallenge->getModels())) ? Html::a('<i class="ft-plus"></i> Add Major Challenge', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('project-challenges/create?major=1&pId=' . $pId . '&typeId=' . $typeId) . '", \'tab19\')']) : '' ?>	
+	<?= (isset($rights->Create) && empty($majorChallenge->getModels())) ? Html::a('<i class="ft-plus"></i> Add Major Challenge', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('project-challenges/create?major=1&pId=' . $pId . '&typeId=' . $typeId) . '", \'tab19\')']) : '' ?>
 </p>
 <?= GridView::widget([
 	'dataProvider' => $majorChallenge,
@@ -60,7 +60,7 @@ $this->params['breadcrumbs'][] = $this->title;
 		],
 		[
 			'class' => 'yii\grid\ActionColumn',
-			'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
+			'headerOptions' => ['width' => '13%', 'style' => 'color:black; text-align:center'],
 			'template' => '{view} {delete}',
 			'buttons' => [
 
@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <h4 class="form-section"><?= $this->title; ?></h4>
 <p>
-	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('project-challenges/create?major=0&pId=' . $pId . '&typeId=' . $typeId) . '", \'tab19\')']) : '' ?>	
+	<?= (isset($rights->Create)) ? Html::a('<i class="ft-plus"></i> Add', null, ['class' => 'btn btn-primary mr-1', 'onclick' => 'loadpage("' . Yii::$app->urlManager->createUrl('project-challenges/create?major=0&pId=' . $pId . '&typeId=' . $typeId) . '", \'tab19\')']) : '' ?>
 </p>
 <?= GridView::widget([
 	'dataProvider' => $dataProvider,
@@ -94,6 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
 			'headerOptions' => ['width' => '5%'],
 		],
 		'Challenge',
+		'challenge_description',
 		[
 			'attribute' => 'AgreedDate',
 			'format' => ['date', 'php:d/m/Y'],
@@ -110,14 +111,14 @@ $this->params['breadcrumbs'][] = $this->title;
 			'format' => ['date', 'php:d/m/Y h:i a'],
 			'headerOptions' => ['width' => '17%'],
 		],
-		[
+		/*[
 			'label' => 'Created By',
 			'attribute' => 'users.fullName',
 			'headerOptions' => ['width' => '15%'],
-		],
+		],*/
 		[
 			'class' => 'yii\grid\ActionColumn',
-			'headerOptions' => ['width' => '13%', 'style'=>'color:black; text-align:center'],
+			'headerOptions' => ['width' => '13%', 'style' => 'color:black; text-align:center'],
 			'template' => '{view} {delete}',
 			'buttons' => [
 

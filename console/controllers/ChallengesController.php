@@ -1,25 +1,19 @@
 <?php
 
-namespace backend\controllers;
+namespace console\controllers;
 
-use app\models\AuthItemType;
 use Yii;
-use app\models\AuthItem;
-use app\models\AuthItemSearch;
-use app\models\ProjectChallenges;
-use yii\data\ActiveDataProvider;
-use yii\filters\AccessControl;
-use yii\helpers\ArrayHelper;
-use yii\web\Controller;
+use console\models\ProjectChallenges;
+use yii\console\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
-use yii\httpClient\Client;
+use yii\helpers\Console;
 
 /**
  * AuthItemController implements the CRUD actions for AuthItem model.
  */
-class ChallengesBridgeController extends Controller
+class ChallengesController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -27,24 +21,7 @@ class ChallengesBridgeController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['index', 'view', 'create', 'update', 'delete', 'challenges'],
-                'rules' => [
-                    // Guest Users
-                    [
-                        'allow' => true,
-                        'actions' => ['none', 'index', 'challenges'],
-                        'roles' => ['?'],
-                    ],
-                    // Authenticated Users
-                    [
-                        'allow' => true,
-                        'actions' => ['view', 'create', 'update', 'delete'],
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
+
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -60,11 +37,13 @@ class ChallengesBridgeController extends Controller
      * Lists all AuthItem models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($type = 'fund_delay')
     {
 
         $challenges = [];
-        $apiPayLoad = $this->actionChallenges();
+        $apiPayLoad = $this->actionChallenges($type);
+
+
 
         foreach ($apiPayLoad as $k => $challenge) {
 
@@ -76,20 +55,38 @@ class ChallengesBridgeController extends Controller
             ];
         }
 
-
+        Console::output(print_r($challenges));
         // Update or Create Challenges Model
         foreach ($challenges as $shida) {
+            if (!$shida['ProjectID']) {
+                continue;
+            }
             $model = ProjectChallenges::find()->where(['ProjectID' => $shida['ProjectID']])->one();
             if ($model) {
                 $model->Challenge = Yii::$app->params['challengeDictionary'][$shida['challenge']] ?? 'Other';
                 $model->challenge_description = $shida['description'] ?? '';
-                $model->save(false);
+                if ($model->save()) {
+                    Console::output('Challenge Updated Successfully. \r\n');
+                    Console::output('Challenge of type: ' . $type);
+                    Console::output(print_r($model));
+                    return true;
+                } else {
+                    Console::errorSummary('Error: ' . $model->ErrorSummary);
+                }
+                return true;
             } else {
                 $model = new ProjectChallenges();
                 $model->ProjectID = $shida['ProjectID'];
                 $model->Challenge = Yii::$app->params['challengeDictionary'][$shida['challenge']] ?? 'Other';
                 $model->challenge_description = $shida['description'] ?? '';
-                $model->save(false);
+                if ($model->save()) {
+                    Console::output('Challenge Saved Successfully.');
+                    Console::output(print_r($model));
+                    // return true;
+                } else {
+
+                    Console::errorSummary('Error: ' . $model->ErrorSummary);
+                }
             }
 
             sleep(5);
@@ -133,65 +130,5 @@ class ChallengesBridgeController extends Controller
         curl_close($curl);
         //echo $response;
         return json_decode($response);
-    }
-
-    /**
-     * Displays a single AuthItem model.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new AuthItem model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-    }
-
-    /**
-     * Updates an existing AuthItem model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionUpdate($id)
-    {
-    }
-
-    /**
-     * Deletes an existing AuthItem model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-    }
-
-    /**
-     * Finds the AuthItem model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
-     * @return AuthItem the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    protected function findModel($id)
-    {
-        if (($model = AuthItem::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('The requested page does not exist.');
     }
 }
