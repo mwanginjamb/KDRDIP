@@ -9,5 +9,8 @@ return [
 		'cache' => [
 			'class' => 'yii\caching\FileCache',
 		],
+		'logger' => [
+            'class' => 'app\Library\Logger'
+        ],
 	],
 ];

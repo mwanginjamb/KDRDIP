@@ -69,12 +69,16 @@ class ChallengesController extends Controller
                     Console::output('Challenge Updated Successfully. \r\n');
                     Console::output('Challenge of type: ' . $type);
                     Console::output(print_r($model));
-                    return true;
+                    $this->log('Just Updated .......');
+                    $this->log($model);
                 } else {
-                    Console::errorSummary('Error: ' . $model->ErrorSummary);
+                    $this->log('Updating Error ...');
+                    $this->log($model->errors);
+                    Console::errorSummary('Error: ' . $model->errors);
                 }
-                return true;
             } else {
+                $this->log('Attempting to save .......');
+                $this->log($shida);
                 $model = new ProjectChallenges();
                 $model->ProjectID = $shida['ProjectID'];
                 $model->Challenge = Yii::$app->params['challengeDictionary'][$shida['challenge']] ?? 'Other';
@@ -82,20 +86,17 @@ class ChallengesController extends Controller
                 if ($model->save()) {
                     Console::output('Challenge Saved Successfully.');
                     Console::output(print_r($model));
-                    // return true;
+                    $this->log('Just saved .......');
+                    $this->log($model);
                 } else {
-
-                    Console::errorSummary('Error: ' . $model->ErrorSummary);
+                    $this->log('Saving Error ...');
+                    $this->log($model->errors);
+                    Console::errorSummary('Error: ' . $model->errors);
                 }
             }
 
             sleep(5);
         }
-
-
-
-        //print_r($challenges);
-        //exit;
     }
 
     // Get Project Chalenges
@@ -130,5 +131,17 @@ class ChallengesController extends Controller
         curl_close($curl);
         //echo $response;
         return json_decode($response);
+    }
+
+    public function log($message)
+    {
+        $message = print_r($message, true);
+
+        $filename = Yii::getAlias('@console') . '/log/challenge.log';
+
+        $req_dump = print_r($message, TRUE);
+        $fp = fopen($filename, 'a');
+        fwrite($fp, $req_dump);
+        fclose($fp);
     }
 }
