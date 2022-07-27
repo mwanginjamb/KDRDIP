@@ -42,42 +42,57 @@ class ComplaintsController extends Controller
 	public function behaviors()
 	{
 		$this->rights = RightsController::Permissions(80);
-
 		$rightsArray = [];
-		if (isset($this->rights->View)) {
-			array_push($rightsArray, 'index', 'view');
-		}
-		if (isset($this->rights->Create)) {
-			array_push($rightsArray, 'view', 'create');
-		}
-		if (isset($this->rights->Edit)) {
-			array_push($rightsArray, 'index', 'view', 'update');
-		}
-		if (isset($this->rights->Delete)) {
-			array_push($rightsArray, 'delete');
-		}
-		$rightsArray = array_unique($rightsArray);
-		
-		if (count($rightsArray) <= 0) {
-			$rightsArray = ['none'];
-		}
-		
 		return [
-		'access' => [
-			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [
-					// Guest Users
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => ['index', 'view', 'create', 'update', 'delete'],
+				'rules' => [
 					[
-						'allow' => true,
-						'actions' => ['none'],
+						'allow' => false,
 						'roles' => ['?'],
 					],
-					// Authenticated Users
 					[
+						'actions' => ['create'],
 						'allow' => true,
-						'actions' => $rightsArray, //['index', 'view', 'create', 'update', 'delete'],
-						'roles' => ['@'],
+						'roles' => [
+							'create-complaint'
+						],
+					],
+					[
+						'actions' => ['index'],
+						'allow' => true,
+						'roles' => [
+							'access-complaints'
+						],
+					],
+					[
+						'actions' => ['update'],
+						'allow' => true,
+						'roles' => [
+							'update-complaint'
+						],
+					],
+					[
+						'actions' => ['upload'],
+						'allow' => true,
+						'roles' => [
+							'create-complaint'
+						],
+					],
+					[
+						'actions' => ['view'],
+						'allow' => true,
+						'roles' => [
+							'view-complaint'
+						],
+					],
+					[
+						'actions' => ['delete'],
+						'allow' => true,
+						'roles' => [
+							'delete-complaint'
+						],
 					],
 				],
 			],
@@ -101,7 +116,7 @@ class ComplaintsController extends Controller
 
 		// print('<pre>');
 		// print_r(Yii::$app->request->post()); exit;
-		
+
 		if ($filter->load(Yii::$app->request->post()) && $filter->validate()) {
 			$params = Yii::$app->request->post()['ComplaintsFilter'];
 			foreach ($params as $key => $value) {
@@ -110,7 +125,7 @@ class ComplaintsController extends Controller
 						$model->andWhere(['projects.' . $key => $value]);
 					} elseif ($key == 'StartDate') {
 						$model->andWhere(['>=', 'complaints.IncidentDate', $value]);
-					}  elseif ($key == 'EndDate') {
+					} elseif ($key == 'EndDate') {
 						$model->andWhere(['<=', 'complaints.IncidentDate', $value]);
 					} else {
 						$model->andWhere(['complaints.' . $key => $value]);
@@ -179,7 +194,7 @@ class ComplaintsController extends Controller
 		$counties = ArrayHelper::map(Counties::find()->orderBy('CountyName')->all(), 'CountyID', 'CountyName');
 		$subCounties = ArrayHelper::map(SubCounties::find()->orderBy('SubCountyName')->where(['CountyID' => $filter->CountyID])->all(), 'SubCountyID', 'SubCountyName');
 		$wards = ArrayHelper::map(Wards::find()->orderBy('WardName')->where(['SubCountyID' => $filter->SubCountyID])->all(), 'WardID', 'WardName');
-		
+
 		return $this->render('index', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
@@ -379,7 +394,7 @@ class ComplaintsController extends Controller
 	}
 
 	public function actionDeleteDocument($id)
-	{		
+	{
 		$model = Documents::findOne($id);
 		if ($model) {
 			$ComplaintID = $model->RefNumber;
@@ -409,7 +424,7 @@ class ComplaintsController extends Controller
 		throw new NotFoundHttpException('The requested page does not exist.');
 	}
 
-	
+
 	public function print($dataProvider, $filter)
 	{
 		$arrayData = ArrayHelper::index($dataProvider->getModels(), null, 'sectionId');
@@ -418,7 +433,7 @@ class ComplaintsController extends Controller
 		$title = 'Complaints List';
 		// get your HTML raw content without any layouts or scripts
 		$content = $this->renderPartial('report', ['filter' => $filter, 'arrayData' => $arrayData]);
-		
+
 		// setup kartik\mpdf\Pdf component
 		$pdf = new Pdf([
 			// set to use core fonts only
@@ -437,21 +452,21 @@ class ComplaintsController extends Controller
 			// any css to be embedded if required
 			// 'cssInline' => '.kv-heading-1{font-size:18px}',
 			'cssFile' => 'css/pdf.css',
-				// set mPDF properties on the fly
+			// set mPDF properties on the fly
 			'options' => ['title' => $title],
-				// call mPDF methods on the fly
+			// call mPDF methods on the fly
 			'methods' => [
 				// 'SetHeader'=>[$title],
 				'SetFooter' => ['page: {PAGENO}'],
 			]
 		]);
 		// $pdf->defaultfooterline=0;
-		
+
 		// return the pdf output as per the destination setting
 		//return $pdf->render();
 		$content = $pdf->render('', 'S');
-		$content = chunk_split(base64_encode($content));		
-		
+		$content = chunk_split(base64_encode($content));
+
 		//$pdf->Output('test.pdf', 'F');
 		return $this->render('viewreport', [
 			'content' => $content,
@@ -462,35 +477,35 @@ class ComplaintsController extends Controller
 	{
 		require_once 'PHPExcel/PHPExcel/IOFactory.php';
 		$objPHPExcel = new \PHPExcel(); // Create new PHPExcel object
-		
+
 		$objPHPExcel->getProperties()->setCreator('M & E System')
-		->setLastModifiedBy('M & E System')
-		->setTitle('')
-		->setSubject('')
-		->setDescription('')
-		->setKeywords('')
-		->setCategory('');
+			->setLastModifiedBy('M & E System')
+			->setTitle('')
+			->setSubject('')
+			->setDescription('')
+			->setKeywords('')
+			->setCategory('');
 		// create style
 		$default_border = [
-									'style' => \PHPExcel_Style_Border::BORDER_THIN,
-									'color' => ['rgb' => '1006A3']
-								];
+			'style' => \PHPExcel_Style_Border::BORDER_THIN,
+			'color' => ['rgb' => '1006A3']
+		];
 		$style_header = [
-								'borders' => [
-													'bottom' => $default_border,
-													'left' => $default_border,
-													'top' => $default_border,
-													'right' => $default_border,
-												],
-												'fill' => [
-													'type' => \PHPExcel_Style_Fill::FILL_SOLID,
-													'color' => ['rgb' => 'E1E0F7'],
-												],
-												'font' => [
-													'bold' => true,
-													'size' => 12,
-												]
-								];
+			'borders' => [
+				'bottom' => $default_border,
+				'left' => $default_border,
+				'top' => $default_border,
+				'right' => $default_border,
+			],
+			'fill' => [
+				'type' => \PHPExcel_Style_Fill::FILL_SOLID,
+				'color' => ['rgb' => 'E1E0F7'],
+			],
+			'font' => [
+				'bold' => true,
+				'size' => 12,
+			]
+		];
 		$style_content = [
 			'borders' => [
 				'bottom' => $default_border,
@@ -505,7 +520,7 @@ class ComplaintsController extends Controller
 			'font' => [
 				'size' => 12,
 			]
-			];
+		];
 
 		// Create Header
 		$firstRow = isset($model[0]) ? $model[0] : [];
@@ -516,24 +531,24 @@ class ComplaintsController extends Controller
 				$objPHPExcel->setActiveSheetIndex(0)->setCellValue($column . '1', $diplayFields[$key]);
 				// set Column Width
 				$objPHPExcel->getActiveSheet()->getColumnDimension($column)->setWidth(20);
-				$column ++;
+				$column++;
 			}
 		}
 		if ($model) {
 			$column = chr(ord($column) - 1); // Decrement
 			$objPHPExcel->getActiveSheet()->getStyle('A1:' . $column . '1')->applyFromArray($style_header); // give style to header
-			
+
 			// Create Data
 			$column = 'A';
-			$firststyle='A2';
+			$firststyle = 'A2';
 			$row = 1;
 			foreach ($model as $rows) {
 				$column = 'A';
-				$row ++;
+				$row++;
 				foreach ($rows as $key => $value) {
 					if (self::findKey($diplayFields, $key)) {
 						$objPHPExcel->setActiveSheetIndex(0)->setCellValue($column . (string) $row, $value);
-						$column ++;
+						$column++;
 					}
 				}
 			}
@@ -541,12 +556,12 @@ class ComplaintsController extends Controller
 			$laststyle = $column . $row;
 			$objPHPExcel->getActiveSheet()->getStyle($firststyle . ':' . $laststyle)->applyFromArray($style_content); // give style to header
 		}
-		
+
 		// Rename worksheet
 		$objPHPExcel->getActiveSheet()->setTitle($filename);
 		// Set active sheet index to the first sheet, so Excel opens this as the first sheet
 		$objPHPExcel->setActiveSheetIndex(0);
-		
+
 		// Redirect output to a client’s web browser (Excel5)
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment; filename=' . $filename . '.xls'); // file name of excel
@@ -558,7 +573,7 @@ class ComplaintsController extends Controller
 		header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT'); // always modified
 		header('Cache-Control: cache, must-revalidate'); // HTTP/1.1
 		header('Pragma: public'); // HTTP/1.0
-		
+
 		$objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
 		$objWriter->save('php://output');
 		exit;

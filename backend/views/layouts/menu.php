@@ -800,8 +800,6 @@ $rights = ArrayHelper::getColumn($rights, 'PageID');
 
 
 
-						<li <?= ($currentPage == 'auth-assignment') ? 'class="active"' : ''; ?>><a class="menu-item" href="<?= $baseUrl; ?>/auth-assignment"><i class="material-icons"></i><span data-i18n="nav.project.project_bugs">Permissions Assignment</span></a>
-						</li>
 
 					</ul>
 				</li>

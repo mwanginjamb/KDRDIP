@@ -77,9 +77,9 @@ class AuthAssignmentController extends Controller
         return $this->render('create', [
             'model' => $model,
             'users' => ArrayHelper::map(User::find()
-                ->select(['concat(FirstName," ",LastName," ",Mobile) as username ','UserID'])
-                ->where(['UserStatusID' => User::STATUS_ACTIVE])->asArray()->all(),'UserID','username'),
-            'authItems' => ArrayHelper::map(AuthItem::find()->all(),'name', 'name'),
+                ->select(['concat(FirstName," ",LastName," ",Mobile) as username ', 'UserID'])
+                ->where(['UserStatusID' => User::STATUS_ACTIVE])->asArray()->all(), 'UserID', 'username'),
+            'authItems' => ArrayHelper::map(AuthItem::find()->all(), 'name', 'name'),
         ]);
     }
 
@@ -100,8 +100,8 @@ class AuthAssignmentController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'users' => ArrayHelper::map(User::find()->where(['status' => 10])->all(),'id','username'),
-            'authItems' => ArrayHelper::map(AuthItem::find()->all(),'name', 'name'),
+            'users' => ArrayHelper::map(User::find()->all(), 'id', 'username'),
+            'authItems' => ArrayHelper::map(AuthItem::find()->all(), 'name', 'name'),
         ]);
     }
 
