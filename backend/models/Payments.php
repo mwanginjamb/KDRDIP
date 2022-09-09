@@ -67,15 +67,15 @@ class Payments extends \yii\db\ActiveRecord
 			[['RefNumber', 'InvoiceNumber'], 'string', 'max' => 45],
 			[['Supplier'], 'string', 'max' => 300],
 			[['Description'], 'string', 'max' => 500],
-			[[ 'PaymentMethodID', 'Amount', 'Date', 'BankAccountID', 'PaymentTypeID', 'ProcurementPlanLineID', 'ProjectID', 'InvoiceDate', 'InvoiceNumber', 'Supplier'], 'required'],
+			[['PaymentMethodID', 'Amount', 'Date', 'BankAccountID', 'PaymentTypeID', 'ProcurementPlanLineID', 'ProjectID', 'InvoiceDate', 'InvoiceNumber', 'Supplier'], 'required'],
 			//[['Amount'], 'validateAmount'],
-			['filePath','string','max' => 100],
-            [['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
-            ['imageFile', 'file','skipOnEmpty' => false,'mimeTypes' => ['application/pdf']],
-            ['imageFile', 'file','skipOnEmpty' => false,'maxSize' => (35*1024*1024)]
-		// 	[['SupplierID', 'InvoiceID',], 'required', 'when' => function($model) {
-		// 		return $model->PaymentTypeID == 1;
-		//   }]
+			['filePath', 'string', 'max' => 100],
+			[['imageFile'], 'file', 'skipOnEmpty' => false, 'extensions' => 'pdf'],
+			['imageFile', 'file', 'skipOnEmpty' => false, 'mimeTypes' => ['application/pdf']],
+			['imageFile', 'file', 'skipOnEmpty' => false, 'maxSize' => (35 * 1024 * 1024)]
+			// 	[['SupplierID', 'InvoiceID',], 'required', 'when' => function($model) {
+			// 		return $model->PaymentTypeID == 1;
+			//   }]
 		];
 	}
 
@@ -100,10 +100,10 @@ class Payments extends \yii\db\ActiveRecord
 			'CreatedDate' => 'Created Date',
 			'CreatedBy' => 'Created By',
 			'Deleted' => 'Deleted',
-            'Supplier' => 'Supplier',
-            'InvoiceNumber' => 'Invoice Number',
-            'InvoiceDate' => 'Invoice Date',
-            'imageFile' => 'Payment Attachment'
+			'Supplier' => 'Supplier',
+			'InvoiceNumber' => 'Invoice Number',
+			'InvoiceDate' => 'Invoice Date',
+			'imageFile' => 'Payment Attachment'
 		];
 	}
 
@@ -111,7 +111,7 @@ class Payments extends \yii\db\ActiveRecord
 
 	public function validateAmount($attribute, $params)
 	{
-	    // Client - KDRDIP, Removed this validation
+		// Client - KDRDIP, Removed this validation
 		// print_r($this->ApprovalStatusID); exit;
 		if ($this->ApprovalStatusID < 1) {
 			// no real check at the moment to be sure that the error is triggered
@@ -125,33 +125,33 @@ class Payments extends \yii\db\ActiveRecord
 
 	// upload file
 
-    public function upload()
-    {
-        $destName = Yii::$app->security->generateRandomString(6);
-        $this->imageFile->saveAs('./uploads/'.$destName.'.'.$this->imageFile->extension,false); // Life saver
-        $this->filePath = Url::home(true).'uploads/'.$destName.'.'.$this->imageFile->extension;
-        return true;
-    }
+	public function upload()
+	{
+		$destName = Yii::$app->security->generateRandomString(6);
+		$this->imageFile->saveAs('./uploads/' . $destName . '.' . $this->imageFile->extension, false); // Life saver
+		$this->filePath = Url::home(true) . 'uploads/' . $destName . '.' . $this->imageFile->extension;
+		return true;
+	}
 
-    public function read(){
+	public function read()
+	{
 
-	    if(empty($this->filePath) )
-        {
-            return false;
-        }
-        $finfo = new \finfo(FILEINFO_MIME_TYPE);
-        $content = file_get_contents($this->filePath); //read file into a string or get a file handle resource from fs
+		if (empty($this->filePath) || !is_file($this->filePath)) {
+			return false;
+		}
+
+		$finfo = new \finfo(FILEINFO_MIME_TYPE);
+		$content = file_get_contents($this->filePath); //read file into a string or get a file handle resource from fs
 		$content = chunk_split(base64_encode($content));
-        $mimetype = $finfo->buffer($content); //get mime type
+		$mimetype = $finfo->buffer($content); //get mime type
 
-        if($content)
-        {
-            return 'data:'.$mimetype.';base64,'.$content;
-        }
+		if ($content) {
+			return 'data:' . $mimetype . ';base64,' . $content;
+		}
 
-        return $content; // should be false if read was unsuccessful
+		return $content; // should be false if read was unsuccessful
 
-    }
+	}
 
 	public function getPaymentMethods()
 	{

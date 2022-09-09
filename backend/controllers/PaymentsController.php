@@ -40,10 +40,10 @@ class PaymentsController extends Controller
 	{
 
 		return [
-		'access' => [
-			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [				
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => ['index', 'view', 'create', 'update', 'delete'],
+				'rules' => [
 					// Guest Users
 					[
 						'allow' => true,
@@ -93,7 +93,7 @@ class PaymentsController extends Controller
 				$searchstring = $params['Search']['searchstring'];
 				$where = "Amount like '%$searchstring%'";
 			}
-			
+
 			$search->searchfor = $params['Search']['searchfor'];
 			$search->searchstring = $params['Search']['searchstring'];
 		}
@@ -102,27 +102,26 @@ class PaymentsController extends Controller
 			return $this->export($where);
 		}
 
-        $query = Payments::find()->where($where);
-        $countQuery = clone $query;
+		$query = Payments::find()->where($where);
+		$countQuery = clone $query;
 
 		$dataProvider = new ActiveDataProvider([
 			'query' => $query,
-            'pagination' =>  [
-                'pageSize' => $countQuery->count()
-            ],
-            'totalCount' => $countQuery->count(),
-            'sort' => [
-                'defaultOrder' => [
-                    'PaymentID' => SORT_DESC
-                ],
-            ],
+			'pagination' =>  [
+				'pageSize' => $countQuery->count()
+			],
+			'totalCount' => $countQuery->count(),
+			'sort' => [
+				'defaultOrder' => [
+					'PaymentID' => SORT_DESC
+				],
+			],
 		]);
 
 		return $this->render('index', [
 			'dataProvider' => $dataProvider, 'search' => $search, 'searchfor' => $searchfor,
 			'rights' => $this->rights,
 		]);
-
 	}
 
 	/**
@@ -134,8 +133,12 @@ class PaymentsController extends Controller
 	public function actionView($id)
 	{
 		//$model = $this->findModel($id);
-        $model = Payments::find()->where(['PaymentID' => $id])->one();
+		$model = Payments::find()->where(['PaymentID' => $id])->one();
 
+		if (!$model) {
+			Yii::$app->session->setFlash('error', 'Payment details not found.');
+			return $this->redirect(['index']);
+		}
 		$invoice = Invoices::findOne($model->InvoiceID);
 		$PurchaseID = null;
 		if ($invoice) {
@@ -146,7 +149,7 @@ class PaymentsController extends Controller
 		$purchases = [];
 		$deliveries = [];
 		if ($PurchaseID) {
-			$sql ="select * from deliverylines
+			$sql = "select * from deliverylines
 			join deliveries on deliveries.DeliveryID = deliverylines.DeliveryID
 			join purchaselines on purchaselines.PurchaseLineID = deliverylines.PurchaseLineID
 			join product on product.ProductID = purchaselines.ProductID
@@ -154,7 +157,7 @@ class PaymentsController extends Controller
 			ORDER BY deliveries.DeliveryID";
 			$deliveries = DeliveryLines::findBySql($sql)->asArray()->all();
 
-			$sql ="select * from purchaselines
+			$sql = "select * from purchaselines
 			LEFT Join purchases on purchases.PurchaseID = purchaselines.PurchaseID
 			LEFT JOIN product on product.ProductID = purchaselines.ProductID
 			WHERE purchases.PurchaseID = $PurchaseID";
@@ -163,7 +166,7 @@ class PaymentsController extends Controller
 		}
 
 		$approvalNotesProvider = new ActiveDataProvider([
-			'query' => ApprovalNotes::find()->where(['ApprovalID'=> $id, 'ApprovalTypeID' => 6]),
+			'query' => ApprovalNotes::find()->where(['ApprovalID' => $id, 'ApprovalTypeID' => 6]),
 		]);
 
 		$documentsProvider = new ActiveDataProvider([
@@ -178,7 +181,7 @@ class PaymentsController extends Controller
 			'rights' => $this->rights,
 			'documentsProvider' => $documentsProvider,
 			'approvalNotesProvider' => $approvalNotesProvider,
-            'document' => $model->read()
+			'document' => $model->read()
 		]);
 	}
 
@@ -197,11 +200,10 @@ class PaymentsController extends Controller
 
 
 		if ($model->load(Yii::$app->request->post())) {
-            $model->imageFile = UploadedFile::getInstanceByName('attachment');
-            if($model->imageFile)
-            {
-                $model->upload();
-            }
+			$model->imageFile = UploadedFile::getInstanceByName('attachment');
+			if ($model->imageFile) {
+				$model->upload();
+			}
 
 			if ($model->save()) {
 
@@ -246,12 +248,12 @@ class PaymentsController extends Controller
 	{
 		$model = $this->findModel($id);
 
-		if ($model->load(Yii::$app->request->post()) ) {
-            $model->imageFile = UploadedFile::getInstanceByName('attachment');
-            $model->upload();
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->PaymentID]);
-            }
+		if ($model->load(Yii::$app->request->post())) {
+			$model->imageFile = UploadedFile::getInstanceByName('attachment');
+			$model->upload();
+			if ($model->save()) {
+				return $this->redirect(['view', 'id' => $model->PaymentID]);
+			}
 		}
 
 		$suppliers = ArrayHelper::map(Suppliers::find()->all(), 'SupplierID', 'SupplierName');
@@ -296,12 +298,11 @@ class PaymentsController extends Controller
 		// $this->findModel($id)->delete();
 		$model = $model = Payments::find()->where(['PaymentID' => $id])->one();
 
-		if($model->delete()) {
-            Yii::$app->session->setFlash('success', 'Record Purged Successfully.', true);
-        }else{
-            Yii::$app->session->setFlash('error', 'Sorry, Could not delete the record at this time.', true);
-
-        }
+		if ($model->delete()) {
+			Yii::$app->session->setFlash('success', 'Record Purged Successfully.', true);
+		} else {
+			Yii::$app->session->setFlash('error', 'Sorry, Could not delete the record at this time.', true);
+		}
 
 		return $this->redirect(['index']);
 	}
@@ -310,7 +311,7 @@ class PaymentsController extends Controller
 	 * Finds the Payments model based on its primary key value.
 	 * If the model is not found, a 404 HTTP exception will be thrown.
 	 * @param integer $idionView
-     *
+	 *
 	 * @return Payments the loaded model
 	 * @throws NotFoundHttpException if the model cannot be found
 	 */
@@ -326,14 +327,14 @@ class PaymentsController extends Controller
 	public function actionSubmit($id)
 	{
 		// $model = $this->findModel($id);
-        $model = Payments::find()->where(['PaymentID' => $id])->one();
+		$model = Payments::find()->where(['PaymentID' => $id])->one();
 		$model->ApprovalStatusID = 1;
 		if ($model->save(false) && $model) {
-            Yii::$app->session->setFlash('success','Document sent for approval successfully.');
+			Yii::$app->session->setFlash('success', 'Document sent for approval successfully.');
 			// $result = UsersController::sendEmailNotification(29);
 			return $this->redirect(['view', 'id' => $model->PaymentID]);
 		} else {
-		    Yii::$app->session->setFlash('error','Could not send this document for approval. ');
+			Yii::$app->session->setFlash('error', 'Could not send this document for approval. ');
 			return $this->redirect(['index']);
 		}
 	}
@@ -342,9 +343,9 @@ class PaymentsController extends Controller
 	{
 		$sql = "SELECT InvoiceID, CONCAT('Inv No.: ',InvoiceID, ' - ', COALESCE(format(`Amount`,2), format(0,2))) as InvoiceName 
 					FROM invoices
-					WHERE SupplierID = $id AND ApprovalStatusID = 3"; 
+					WHERE SupplierID = $id AND ApprovalStatusID = 3";
 		$model = Invoices::findBySql($sql)->asArray()->all();
-		echo '<option></option>';	
+		echo '<option></option>';
 		if (!empty($model)) {
 			foreach ($model as $item) {
 				echo "<option value='" . $item['InvoiceID'] . "'>" . $item['InvoiceName'] . "</option>";
@@ -354,33 +355,35 @@ class PaymentsController extends Controller
 		}
 	}
 
-	public static function export($where) {
+	public static function export($where)
+	{
 		$model = Payments::find()->joinWith('suppliers')
-											->joinWith('paymentMethods')
-											->joinWith('approvalstatus')
-											->select(
-												[	
-													'Date', 
-													'suppliers.SupplierID', 
-													'suppliers.SupplierName', 
-													'paymentMethods.PaymentMethodID',
-													'paymentMethods.PaymentMethodName',
-													'approvalstatus.ApprovalStatusID',
-													'approvalstatus.ApprovalStatusName',
-													'ApprovalDate'
-												])
-											->asArray()
-											->all();
+			->joinWith('paymentMethods')
+			->joinWith('approvalstatus')
+			->select(
+				[
+					'Date',
+					'suppliers.SupplierID',
+					'suppliers.SupplierName',
+					'paymentMethods.PaymentMethodID',
+					'paymentMethods.PaymentMethodName',
+					'approvalstatus.ApprovalStatusID',
+					'approvalstatus.ApprovalStatusName',
+					'ApprovalDate'
+				]
+			)
+			->asArray()
+			->all();
 		$diplayFields = ['Date', 'SupplierName', 'PaymentMethodName', 'ApprovalStatusName', 'ApprovalDate'];
 		return ReportsController::WriteExcel($model, 'Payment Report', $diplayFields);
 	}
-	
+
 	public function actionProcurementPlanLines($id)
 	{
 		$model = ProcurementPlanLines::find()->joinWith('procurementPlan')->andWhere(['ProjectID' => $id])->all();
 		// print('<pre>');
 		// print_r($model); exit;
-		echo '<option value="0">Select...</option>';			
+		echo '<option value="0">Select...</option>';
 		foreach ($model as $item) {
 			echo "<option value='" . $item->ProcurementPlanLineID . "'>" . $item->ServiceDescription . "</option>";
 		}
@@ -389,13 +392,13 @@ class PaymentsController extends Controller
 	public function actionPaymentVoucher($id)
 	{
 		$model = Payments::find()->where(['PaymentID' => $id])
-										//->joinWith('suppliers')
-										->joinWith('bankAccounts')
-										->joinWith('paymentMethods')
-										->one();
-										 
-										// print '<pre>';
-										// print_r($model); exit;
+			//->joinWith('suppliers')
+			->joinWith('bankAccounts')
+			->joinWith('paymentMethods')
+			->one();
+
+		// print '<pre>';
+		// print_r($model); exit;
 		$Title = 'Payment Voucher';
 		$amountWords = $this->convert_number_to_words($model->Amount);
 
@@ -405,41 +408,42 @@ class PaymentsController extends Controller
 		// setup kartik\mpdf\Pdf component
 		$pdf = new Pdf([
 			// set to use core fonts only
-			'mode' => Pdf::MODE_CORE, 
+			'mode' => Pdf::MODE_CORE,
 			// A4 paper format
-			'format' => Pdf::FORMAT_A4, 
+			'format' => Pdf::FORMAT_A4,
 			// portrait orientation
-			'orientation' => Pdf::ORIENT_PORTRAIT, 
+			'orientation' => Pdf::ORIENT_PORTRAIT,
 			// stream to browser inline
-			'destination' => Pdf::DEST_STRING, 
+			'destination' => Pdf::DEST_STRING,
 			// your html content input
-			'content' => $content,  
+			'content' => $content,
 			// format content from your own css file if needed or use the
 			// enhanced bootstrap css built by Krajee for mPDF formatting 
 			'cssFile' => 'css/pdf.css',
 			// 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
 			// any css to be embedded if required
 			// 'cssInline' => '.kv-heading-1{font-size:18px}', 
-				// set mPDF properties on the fly
+			// set mPDF properties on the fly
 			'options' => ['title' => $Title],
-				// call mPDF methods on the fly
-			'methods' => [ 
+			// call mPDF methods on the fly
+			'methods' => [
 				// 'SetHeader'=>[$Title], 
 				// 'SetFooter'=>['{PAGENO}'],
 			]
 		]);
 		// $pdf->SetTitle('My Title');
-		
+
 		// return the pdf output as per the destination setting
 		//return $pdf->render(); 
-		$content = $pdf->render('', 'S'); 
+		$content = $pdf->render('', 'S');
 		$content = chunk_split(base64_encode($content));
-		
+
 		//$pdf->Output('test.pdf', 'F');
 		return $this->render('viewreport', ['content' => $content, 'model' => $model]);
 	}
 
-	function convert_number_to_words($number) {
+	function convert_number_to_words($number)
+	{
 
 		$hyphen      = '-';
 		$conjunction = ' and ';
@@ -491,8 +495,8 @@ class PaymentsController extends Controller
 		if (($number >= 0 && (int) $number < 0) || (int) $number < 0 - PHP_INT_MAX) {
 			// overflow
 			trigger_error(
-					'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
-					E_USER_WARNING
+				'convert_number_to_words only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
+				E_USER_WARNING
 			);
 			return false;
 		}
@@ -509,47 +513,45 @@ class PaymentsController extends Controller
 
 		switch (true) {
 			case $number < 21:
-					$string = $dictionary[$number];
-					break;
+				$string = $dictionary[$number];
+				break;
 			case $number < 100:
-					$tens   = ((int) ($number / 10)) * 10;
-					$units  = $number % 10;
-					$string = $dictionary[$tens];
-					if ($units) {
-						$string .= $hyphen . $dictionary[$units];
-					}
-					break;
+				$tens   = ((int) ($number / 10)) * 10;
+				$units  = $number % 10;
+				$string = $dictionary[$tens];
+				if ($units) {
+					$string .= $hyphen . $dictionary[$units];
+				}
+				break;
 			case $number < 1000:
-					$hundreds  = $number / 100;
-					$remainder = $number % 100;
-					$string = $dictionary[$hundreds] . ' ' . $dictionary[100];
-					if ($remainder) {
-						$string .= $conjunction . $this->convert_number_to_words($remainder);
-					}
-					break;
+				$hundreds  = $number / 100;
+				$remainder = $number % 100;
+				$string = $dictionary[$hundreds] . ' ' . $dictionary[100];
+				if ($remainder) {
+					$string .= $conjunction . $this->convert_number_to_words($remainder);
+				}
+				break;
 			default:
-					$baseUnit = pow(1000, (log($number, 1000)));
-					$numBaseUnits = (int) ($number / $baseUnit);
-					$remainder = $number % $baseUnit;
-					$string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
-					if ($remainder) {
-						$string .= $remainder < 100 ? $conjunction : $separator;
-						$string .= $this->convert_number_to_words($remainder);
-					}
-					break;
+				$baseUnit = pow(1000, (log($number, 1000)));
+				$numBaseUnits = (int) ($number / $baseUnit);
+				$remainder = $number % $baseUnit;
+				$string = $this->convert_number_to_words($numBaseUnits) . ' ' . $dictionary[$baseUnit];
+				if ($remainder) {
+					$string .= $remainder < 100 ? $conjunction : $separator;
+					$string .= $this->convert_number_to_words($remainder);
+				}
+				break;
 		}
 
 		if (null !== $fraction && is_numeric($fraction)) {
 			$string .= $decimal;
 			$words = array();
 			foreach (str_split((string) $fraction) as $number) {
-					$words[] = $dictionary[$number];
+				$words[] = $dictionary[$number];
 			}
 			$string .= implode(' ', $words);
 		}
 
 		return $string;
 	}
-
-
 }
