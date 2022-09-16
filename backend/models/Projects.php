@@ -61,10 +61,11 @@ class Projects extends \yii\db\ActiveRecord
 		return 'projects';
 	}
 
-/* 	public static function find()
+	public static function find()
 	{
-		return parent::find()->andWhere(['=', 'projects.Deleted', 0]);
-	} */
+		//return parent::find()->andWhere(['=', 'projects.Deleted', 0]);
+		return parent::find()->andWhere(['ComponentID' => 1])->orWhere(['ComponentID' => 2]);
+	}
 
 	public function delete()
 	{
@@ -83,17 +84,21 @@ class Projects extends \yii\db\ActiveRecord
 	public function rules()
 	{
 		return [
-			[['ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
+			[[
+				'ProjectParentID', 'ProjectStatusID', 'CreatedBy', 'Deleted', 'ReportingPeriodID', 'WardID',
 				'ComponentID', 'CurrencyID', 'CommunityID', 'CountyID', 'SubCountyID', 'LocationID', 'SubLocationID',
-				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID', 'SubComponentID', 'SubComponentCategoryID','SectorInterventionID','financial_year'], 'integer'],
+				'OrganizationID', 'EnterpriseTypeID', 'ProjectSectorID', 'SubComponentID', 'SubComponentCategoryID', 'SectorInterventionID', 'financial_year'
+			], 'integer'],
 			[['Objective', 'Justification', 'SafeguardsRecommendedAction', 'IntegrationID'], 'string'],
 			[['StartDate', 'EndDate', 'ApprovalDate', 'CreatedDate'], 'safe'],
 			[['ProjectCost', 'Longitude', 'Latitude'], 'number'],
 			[['ProjectName'], 'string', 'max' => 300],
-			[['ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
+			[[
+				'ProjectName', 'Objective', 'Justification', 'StartDate', 'CountyID',
 				'ProjectStatusID', 'ComponentID', 'CurrencyID', 'CommunityID', 'SubCountyID',
-				'SubLocationID', 'WardID','financial_year'], 'required'],
-			[['Non_Wage','Labour'], 'number'],
+				'SubLocationID', 'WardID', 'financial_year'
+			], 'required'],
+			[['Non_Wage', 'Labour'], 'number'],
 		];
 	}
 
@@ -215,17 +220,17 @@ class Projects extends \yii\db\ActiveRecord
 	}
 
 	public function getDisbursements()
-    {
-        //return $this->hasMany(CashDisbursements::class,['ProjectID' => 'ProjectID']);
-        return CashDisbursements::find()->Where(['ProjectID' => $this->ProjectID ])->sum('Amount');
-    }
+	{
+		//return $this->hasMany(CashDisbursements::class,['ProjectID' => 'ProjectID']);
+		return CashDisbursements::find()->Where(['ProjectID' => $this->ProjectID])->sum('Amount');
+	}
 
-    public function getFinancialyear()
-    {
-        $query = FinancialYear::find()->where(['id' => 'financial_year' ])->one();
-        return $query->year ?? null;
-        //$this->hasOne(FinancialYear::class,['id' => 'financial_year']);
-    }
+	public function getFinancialyear()
+	{
+		$query = FinancialYear::find()->where(['id' => 'financial_year'])->one();
+		return $query->year ?? null;
+		//$this->hasOne(FinancialYear::class,['id' => 'financial_year']);
+	}
 
 
 	public function getAmountSpent()
@@ -267,11 +272,11 @@ class Projects extends \yii\db\ActiveRecord
 		}
 
 		return Payments::find()->joinWith('invoices')
-										->joinWith('invoices.purchases')
-										->andWhere(['purchases.ProjectID' => $this->ProjectID])
-										->andWhere(['>=','purchases.ApprovalDate', $startDate])
-										->andWhere(['<=','purchases.ApprovalDate', $endDate])
-										->sum('payments.Amount');
+			->joinWith('invoices.purchases')
+			->andWhere(['purchases.ProjectID' => $this->ProjectID])
+			->andWhere(['>=', 'purchases.ApprovalDate', $startDate])
+			->andWhere(['<=', 'purchases.ApprovalDate', $endDate])
+			->sum('payments.Amount');
 	}
 
 	public function getEnterpriseTypes()
@@ -312,7 +317,7 @@ class Projects extends \yii\db\ActiveRecord
 	}
 
 	public function getFy()
-    {
-        return $this->hasOne(FinancialYear::class,['id' => 'financial_year']);
-    }
+	{
+		return $this->hasOne(FinancialYear::class, ['id' => 'financial_year']);
+	}
 }
