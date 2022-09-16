@@ -12,6 +12,7 @@ use yii\web\UploadedFile;
 use yii\filters\AccessControl;
 use backend\controllers\RightsController;
 use backend\controllers\EmployeesController;
+use yii\web\Response;
 
 /**
  * ProjectGalleryController implements the CRUD actions for ProjectGallery model.
@@ -42,16 +43,16 @@ class ProjectGalleryController extends Controller
 			array_push($rightsArray, 'delete');
 		}
 		$rightsArray = array_unique($rightsArray);
-		
+
 		if (count($rightsArray) <= 0) {
 			$rightsArray = ['none'];
 		}
-		
+
 		return [
-		'access' => [
-			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => ['index', 'view', 'create', 'update', 'delete'],
+				'rules' => [
 					// Guest Users
 					[
 						'allow' => true,
@@ -114,14 +115,14 @@ class ProjectGalleryController extends Controller
 	 */
 	public function actionCreate($pId)
 	{
-		
+
 		$model = new ProjectGallery();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
 		$model->ProjectID = $pId;
 
 		if (Yii::$app->request->isPost) {
 			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
-			
+
 			$data = file_get_contents($model->imageFile->tempName);
 			$type = $model->imageFile->type;
 			$model->Image = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -129,7 +130,10 @@ class ProjectGalleryController extends Controller
 		}
 
 		if ($model->load(Yii::$app->request->post()) && $model->save()) {
-			return $this->redirect(['index', 'pId' => $model->ProjectID]);
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			Yii::$app->session->setFlash('success', 'Sub-project Image uploaded successfully.');
+			return ['note' => 'File Uploaded Successfully.'];
+			// return $this->redirect(['index', 'pId' => $model->ProjectID]);
 		}
 
 		return $this->renderPartial('create', [
@@ -172,13 +176,12 @@ class ProjectGalleryController extends Controller
 
 		//$this->findModel($id)->delete();
 
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        if($model->save())
-        {
-            return ['note' => '<div class="alert alert-success">Record Deleted Successfully. </div>' ];
-        }else{
-            return ['note' => $model->errors];
-        }
+		Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+		if ($model->save()) {
+			return ['note' => '<div class="alert alert-success">Record Deleted Successfully. </div>'];
+		} else {
+			return ['note' => $model->errors];
+		}
 
 
 		// return $this->redirect(['index', 'pId' => $model->ProjectID]);

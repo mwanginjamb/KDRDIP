@@ -9,8 +9,14 @@ function submittheform(form)
 
 async function submitForm(url, destination, formName, btn)
 {
-    
-    console.log(formName);
+    let variables = {
+        url: url,
+        destination: destination,
+        form: formName,
+        triggerBtn: btn,
+        currentPage: window.location.href
+    }
+    console.table(variables);
     // Disable Button
     var bt = document.getElementById(btn);
     if (bt) {
@@ -44,16 +50,17 @@ try{
         {
             alert(res.errors);
             location.reload(true);
-        }else{
-
-            window.location.replace(currentPage);
         }
-       
 
+        location.reload(true);
+        
+    }else{
+        throw Error(response.statusText);
     }
 }catch(e)
 {
-        console.log(e.error.message);
+        console.log(e);
+        return false;
 }
   
     return true;

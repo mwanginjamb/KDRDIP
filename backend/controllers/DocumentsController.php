@@ -31,13 +31,13 @@ class DocumentsController extends Controller
 	{
 		$this->rights = RightsController::Permissions(144);
 
-		
-		
+
+
 		return [
-		'access' => [
-			'class' => AccessControl::className(),
-			'only' => ['index', 'view', 'create', 'update', 'delete'],
-			'rules' => [
+			'access' => [
+				'class' => AccessControl::className(),
+				'only' => ['index', 'view', 'create', 'update', 'delete'],
+				'rules' => [
 					// Guest Users
 					[
 						'allow' => true,
@@ -102,37 +102,36 @@ class DocumentsController extends Controller
 	public function actionCreate()
 	{
 
-        $pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
+		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
 
-        $model = new Documents();
-        $model->CreatedBy = Yii::$app->user->identity->UserID;
-        $model->DocumentCategoryID = 2;
-        $model->RefNumber = $pId;
+		$model = new Documents();
+		$model->CreatedBy = Yii::$app->user->identity->UserID;
+		$model->DocumentCategoryID = 2;
+		$model->RefNumber = $pId;
 
-        if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
+		if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
 
-           // Yii::$app->response->format = Response::FORMAT_JSON;
+			// Yii::$app->response->format = Response::FORMAT_JSON;
 
-            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+			$model->imageFile = UploadedFile::getInstance($model, 'imageFile');
 
-           // return ['note' => $model->upload() ];
-            if ($model->upload() == true) {
+			// return ['note' => $model->upload() ];
+			Yii::$app->response->format = Response::FORMAT_JSON;
+			if ($model->upload() == true) {
+				Yii::$app->session->setFlash('success', 'Sub-project document uploaded successfully.');
+				return ['note' => 'File Uploaded Successfully.'];
+			} else {
+				Yii::$app->session->setFlash('error', 'Couldn\'t upload sub-project document successfully.');
+				return ['note' => 'Could not upload documents Successfully.'];
+			}
+		}
 
-                // return $this->redirect(['index', 'pId' => $pId]);
+		$documentTypes = ArrayHelper::map(DocumentTypes::find()->orderBy('DocumentTypeName')->all(), 'DocumentTypeID', 'DocumentTypeName');
 
-                Yii::$app->session->setFlash('success', 'Sub-project document uploaded successfully.');
-
-            }else {
-                Yii::$app->session->setFlash('error', 'Couldn\'t upload sub-project document successfully.');
-            }
-        }
-
-        $documentTypes = ArrayHelper::map(DocumentTypes::find()->orderBy('DocumentTypeName')->all(), 'DocumentTypeID', 'DocumentTypeName');
-
-        return $this->renderPartial('create', [
-            'model' => $model,
-            'documentTypes' => $documentTypes
-        ]);
+		return $this->renderPartial('create', [
+			'model' => $model,
+			'documentTypes' => $documentTypes
+		]);
 	}
 
 	/**
