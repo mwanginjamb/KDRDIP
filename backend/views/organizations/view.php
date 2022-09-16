@@ -59,6 +59,13 @@ $this->params['breadcrumbs'][] = $this->title;
                             <li class="nav-item">
                                 <a class="nav-link" id="base-tab5" data-toggle="tab" aria-controls="tab5" href="#tab5" aria-expanded="false">Disbursement</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="base-tab6" data-toggle="tab" aria-controls="tab6" href="#tab6" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('documents/index?oId=' . $model->OrganizationID . '&type=Minutes'); ?>', 'tab6')">Meeting Minutes</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" id="base-tab7" data-toggle="tab" aria-controls="tab7" href="#tab7" aria-expanded="false" onclick="loadpage('<?= Yii::$app->urlManager->createUrl('documents/index?oId=' . $model->OrganizationID . '&type=Registration Certificate'); ?>', 'tab7')">Registration Certficate</a>
+                            </li>
                         </ul>
                         <div class="tab-content px-1 pt-1">
                             <div role="tabpanel" class="tab-pane active" id="tab1" aria-expanded="true" aria-labelledby="base-tab1">
@@ -149,6 +156,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
                             <div class="tab-pane" id="tab5" aria-labelledby="base-tab5">
                                 <h4 class="form-section">Disbursement</h4>
+                            </div>
+
+                            <div class="tab-pane" id="tab6" aria-labelledby="base-tab6">
+                                <h4 class="form-section">Minutes</h4>
+                            </div>
+
+                            <div class="tab-pane" id="tab7" aria-labelledby="base-tab7">
+                                <h4 class="form-section">Registration Certificate</h4>
                             </div>
                         </div>
                     </div>

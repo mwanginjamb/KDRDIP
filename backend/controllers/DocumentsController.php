@@ -23,6 +23,7 @@ class DocumentsController extends Controller
 {
 	// public const MAIN_URL = '';
 	public $rights;
+	public $doc;
 
 	/**
 	 * @inheritdoc
@@ -68,15 +69,36 @@ class DocumentsController extends Controller
 	public function actionIndex()
 	{
 		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
+		$oId = isset(Yii::$app->request->get()['oId']) ? Yii::$app->request->get()['oId'] : 0;
+		$type = isset(Yii::$app->request->get()['type']) ? Yii::$app->request->get()['type'] : '';
+
+		$query = null;
+		if ($pId) {
+			$query = Documents::find()->andWhere(['RefNumber' => $pId, 'DocumentCategoryID' => 2]);
+		} else if ($oId) {
+			$documentType = DocumentTypes::find()->where(['like', 'DocumentTypeName', $type])->one();
+			$category = $documentType->DocumentTypeID ?? '';
+			$query = Documents::find()->andWhere(['RefNumber' => $oId, 'DocumentTypeID' => $category]);
+		}
 
 		$dataProvider = new ActiveDataProvider([
-			'query' => Documents::find()->andWhere(['RefNumber' => $pId, 'DocumentCategoryID' => 2]),
+			'query' => $query,
 		]);
+
+		$this->doc = (object)[
+			'pId' => $pId,
+			'oId' => $oId,
+			'type' => $type
+		];
 
 		return $this->renderPartial('index', [
 			'dataProvider' => $dataProvider,
 			'rights' => $this->rights,
 			'pId' => $pId,
+			'oId' => $oId,
+			'type' => $type,
+			'document' => $this->doc,
+
 		]);
 	}
 
@@ -103,11 +125,26 @@ class DocumentsController extends Controller
 	{
 
 		$pId = isset(Yii::$app->request->get()['pId']) ? Yii::$app->request->get()['pId'] : 0;
+		$oId = isset(Yii::$app->request->get()['oId']) ? Yii::$app->request->get()['oId'] : 0;
+		$type = isset(Yii::$app->request->get()['type']) ? Yii::$app->request->get()['type'] : '';
 
 		$model = new Documents();
 		$model->CreatedBy = Yii::$app->user->identity->UserID;
-		$model->DocumentCategoryID = 2;
-		$model->RefNumber = $pId;
+		if ($oId) // Organization Document
+		{
+			// Get particular Organization Document Categories - Minutes / Registration Certificate
+			$documentType = DocumentTypes::find()->where(['like', 'DocumentTypeName', $type])->one();
+			$model->RefNumber = $oId;
+			$model->DocumentTypeID = $documentType->DocumentTypeID ?? '';
+			$model->DocumentCategoryID = $documentType->DocumentTypeID ?? '';
+		} else if ($pId) { // Default to  Project Documents
+			$model->DocumentCategoryID = 2;
+			$model->RefNumber = $pId;
+		}
+
+		/*print '<pre>';
+		print_r($model);
+		exit;*/
 
 		if (Yii::$app->request->isPost && $model->load(Yii::$app->request->post())) {
 
@@ -118,10 +155,10 @@ class DocumentsController extends Controller
 			// return ['note' => $model->upload() ];
 			Yii::$app->response->format = Response::FORMAT_JSON;
 			if ($model->upload() == true) {
-				Yii::$app->session->setFlash('success', 'Sub-project document uploaded successfully.');
-				return ['note' => 'File Uploaded Successfully.'];
+				Yii::$app->session->setFlash('success', 'File uploaded successfully.');
+				return ['note' => 'File Uploaded Successfully.', 'model' => $model];
 			} else {
-				Yii::$app->session->setFlash('error', 'Couldn\'t upload sub-project document successfully.');
+				Yii::$app->session->setFlash('error', 'Couldn\'t upload document successfully.');
 				return ['note' => 'Could not upload documents Successfully.'];
 			}
 		}
