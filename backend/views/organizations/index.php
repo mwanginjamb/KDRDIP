@@ -56,6 +56,14 @@ $this->params['breadcrumbs'][] = $this->title;
 									'format' => ['date', 'php:d/m/Y'],
 									'headerOptions' => ['width' => '15%'],
 								],
+								[
+									'label' => '# Males',
+									'value' => 'Males'
+								],
+								[
+									'label' => '# Females',
+									'value' => 'Females'
+								],
 								'county.CountyName',
 								[
 									'attribute' => 'subCounty.SubCountyName',

@@ -222,32 +222,32 @@ class Organizations extends \yii\db\ActiveRecord
 
     public function getTotalMembers()
     {
-        return $this->FemaleMembers + $this->MaleMembers;
+        return $this->Females + $this->Males;
     }
 
     public function getFemalePercentage()
     {
-        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1 : ($this->FemaleMembers + $this->MaleMembers);
-        return $this->FemaleMembers / $divisor  * 100;
+        $divisor = (($this->Females + $this->Males)) < 1 ? 1 : ($this->Females + $this->Males);
+        return $this->Females / $divisor  * 100;
     }
 
     public function getMalePercentage()
     {
-        $divisor = (($this->FemaleMembers + $this->MaleMembers)) < 1 ? 1 : ($this->FemaleMembers + $this->MaleMembers);
-        return $this->MaleMembers / $divisor * 100;
+        $divisor = (($this->Females + $this->Males)) < 1 ? 1 : ($this->Females + $this->Males);
+        return $this->Males / $divisor * 100;
     }
 
     // Calculate Actual Gender Clustering
 
     public function getMales()
     {
-        $count  = OrganizationMembers::find()->where(['Gender' => 'M', 'OrganizationMemberID' => $this->OrganizationID])->count();
-        return $count;
+        $count  = OrganizationMembers::find()->where(['Gender' => 'M', 'OrganizationID' => $this->OrganizationID])->count();
+        return  $count;
     }
 
     public function getFemales()
     {
-        $count  = OrganizationMembers::find()->where(['Gender' => 'F', 'OrganizationMemberID' => $this->OrganizationID])->count();
+        $count  = OrganizationMembers::find()->where(['Gender' => 'F', 'OrganizationID' => $this->OrganizationID])->count();
         return $count;
     }
 }

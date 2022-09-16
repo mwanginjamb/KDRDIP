@@ -90,6 +90,7 @@ class OrganizationsController extends Controller
     public function actionIndex()
     {
         $query = Organizations::find();
+
         $countQuery = clone $query;
 
         $dataProvider = new ActiveDataProvider([
